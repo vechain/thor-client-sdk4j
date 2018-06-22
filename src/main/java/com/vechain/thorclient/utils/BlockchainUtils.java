@@ -1,36 +1,34 @@
 package com.vechain.thorclient.utils;
 
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Blockchain utility, include address check, blockId check, balance calculate.
  */
 public class BlockchainUtils {
 
     /**
      * Check if the block revision is valid.
-     * @param blockRevision
-     * @return
+     * @param revision block revision string.
+     * @return boolean value.
      */
-    public static boolean isValidBlockRevision(String blockRevision){
+    public static boolean isValidRevision(String revision){
 
         String blockNumPattern = "^[0-9]\\d*$";
 
-        /**
-         * block revision illegal
-         */
-        if(blockRevision == null || StringUtils.isBlank(blockRevision)){
+        if(StringUtils.isBlank(revision)){
             return false;
         }
 
-        //block revision
-        if((blockRevision.startsWith(Prefix.ZeroLowerX.getPrefixString()))
-                &&blockRevision.length() == 66){
+        if((StringUtils.isHex( revision )
+                &&revision.length() == 66)){
             return true;
-        }else if(Pattern.matches(blockNumPattern, blockRevision)){
+        }else if(Pattern.matches(blockNumPattern, revision)){
             return true;
-        }else if("best".equalsIgnoreCase(blockRevision)){
+        }else if("best".equalsIgnoreCase(revision)){
             return true;
         }
         return false;
@@ -38,17 +36,18 @@ public class BlockchainUtils {
 
     /**
      * Check if the address hex string is valid.
-     * @param address
-     * @return
+     * @param address address hex string start with "0x", "VX" or without prefix string.
+     * @return boolean value.
      */
-    public static boolean isAddress(String address){
-        if(!StringUtils.isBlank(address)
-                &&(address.startsWith(Prefix.ZeroLowerX.getPrefixString()) || address.startsWith(Prefix.VeChainX.getPrefixString()))
-                &&address.length() == 42){
-            return true;
-        }
+    public static boolean isAddress(final String address){
+        String addressStr = address;
+        if(!StringUtils.isBlank(addressStr)
+                &&(addressStr.startsWith(Prefix.ZeroLowerX.getPrefixString()) || addressStr.startsWith(Prefix.VeChainX.getPrefixString()))
+                &&addressStr.length() == 42){
+            addressStr = addressStr.substring( 2 );
 
-        return false;
+        }
+        return StringUtils.isHex( addressStr );
     }
 
 
@@ -68,21 +67,20 @@ public class BlockchainUtils {
 
 
     /**
-     * Check if the Transaction id hex string is valid.
-     * @param txId
-     * @return
+     * Check if hexId string is valid.
+     * @param hexId is block Id or txId.
+     * @return true or false.
      */
-    public static boolean isTxId(String txId){
-        if(!StringUtils.isBlank(txId)
-                &&(txId.startsWith("0x") || txId.startsWith("0X"))
-                &&txId.length() == 66){
-            return true;
-        }
-        return false;
+    public static boolean isId(String hexId){
+        return !StringUtils.isBlank( hexId )
+                && StringUtils.isHex( hexId )
+                && hexId.length() == 66;
     }
 
+
+
     /**
-     * check if the address is correct for checksum.
+     * Check if the address is correct for checksum.
      * @param address
      * @return
      */
@@ -95,9 +93,9 @@ public class BlockchainUtils {
     }
 
     /**
-     * get checksum address from hex string address with 0x prefix
-     * @param address
-     * @return
+     * Get checksum address from hex string address with 0x prefix
+     * @param address hex string
+     * @return checksum address string.
      */
     public static String getChecksumAddress(String address){
 
@@ -143,5 +141,21 @@ public class BlockchainUtils {
         }else {
             return value - '0';
         }
+    }
+
+    /**
+     * get balance of {@link BigDecimal} value.
+     * @param hexString hex string of the balance.
+     * @param precision the precision of the balance, with is 18 by default
+     * @param scale the remain digits numbers of fractional part
+     * @return the balance value which can show to the end user.
+     */
+    public static BigDecimal balance(String hexString, int precision, int scale){
+        byte[] balBytes = BytesUtils.toByteArray(hexString);
+        if(balBytes == null){
+            return null;
+        }
+        BigInteger balInteger = BytesUtils.bytesToBigInt(balBytes);
+        return BytesUtils.bigIntToBigDecimal(balInteger, precision, scale);
     }
 }

@@ -1,7 +1,7 @@
 package com.vechain.thorclient.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vechain.thorclient.core.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.core.wallet.CipherException;
 import com.vechain.thorclient.core.wallet.Wallet;
 import com.vechain.thorclient.core.wallet.WalletFile;

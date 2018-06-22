@@ -1,7 +1,8 @@
 package com.vechain.thorclient;
 
-import com.vechain.thorclient.core.model.RawClause;
-import com.vechain.thorclient.core.model.RawTransaction;
+import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.RawClause;
+import com.vechain.thorclient.core.model.blockchain.RawTransaction;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.RawTransactionBuilder;
@@ -30,7 +31,7 @@ public class RawTransactionBuilderTest  extends BaseTest {
         logger.info("Current chainTag:" + n);
         builder.update(Byte.valueOf(chainTag), "chainTag");
 
-        byte[] expirationBytes = BytesUtils.integerToBytes(720);
+        byte[] expirationBytes = BytesUtils.longToBytes(720);
         builder.update(expirationBytes, "expiration");
 
         byte[] blockRef = blockchainAPI.getBestBlockRef();
@@ -39,7 +40,7 @@ public class RawTransactionBuilderTest  extends BaseTest {
         byte[] nonce = CryptoUtils.generateTxNonce();
         builder.update(nonce , "nonce");
 
-        byte[] gas = BytesUtils.integerToBytes(21000);
+        byte[] gas = BytesUtils.longToBytes(21000);
         builder.update(gas, "gas");
 
 

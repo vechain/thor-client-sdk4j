@@ -1,11 +1,11 @@
 package com.vechain.thorclient.utils;
 
-import com.vechain.thorclient.core.model.RawClause;
-import com.vechain.thorclient.core.model.RawTransaction;
-import com.vechain.thorclient.core.rlp.RlpEncoder;
-import com.vechain.thorclient.core.rlp.RlpList;
-import com.vechain.thorclient.core.rlp.RlpString;
-import com.vechain.thorclient.core.rlp.RlpType;
+import com.vechain.thorclient.core.model.blockchain.RawClause;
+import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.utils.rlp.RlpEncoder;
+import com.vechain.thorclient.utils.rlp.RlpList;
+import com.vechain.thorclient.utils.rlp.RlpString;
+import com.vechain.thorclient.utils.rlp.RlpType;
 
 
 import java.util.ArrayList;

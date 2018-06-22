@@ -4,21 +4,19 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.utils.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.vechain.thorclient.core.crypto.ECKeyPair;
-import com.vechain.thorclient.core.model.Account;
-import com.vechain.thorclient.core.model.Clause;
-import com.vechain.thorclient.core.model.RawTransaction;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.core.model.blockchain.Account;
+import com.vechain.thorclient.core.model.blockchain.Clause;
+import com.vechain.thorclient.core.model.blockchain.RawTransaction;
 import com.vechain.thorclient.core.wallet.WalletInfo;
 import com.vechain.thorclient.service.WalletAPI;
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.CryptoUtils;
-import com.vechain.thorclient.utils.Prefix;
-import com.vechain.thorclient.utils.TransactionFactory;
 
 @RunWith(JUnit4.class)
 public class WalletAPITest extends BaseTest {
@@ -86,7 +84,7 @@ public class WalletAPITest extends BaseTest {
         Account account = blockchainAPI.getBalance(oneAddress, "best");
         String  balance = account.getBalance();
 
-        BigDecimal balanceAmt = BytesUtils.balance(balance, 18, 2);
+        BigDecimal balanceAmt = BlockchainUtils.balance(balance, 18, 2);
         Assert.assertEquals(amount, balanceAmt.toString());
         logger.info("The balance is " + balanceAmt.toString());
 
@@ -100,7 +98,7 @@ public class WalletAPITest extends BaseTest {
 
         account = blockchainAPI.getBalance(oneAddress, "best");
         String energy = account.getEnergy();
-        BigDecimal energyBal = BytesUtils.balance(energy, 18, 2);
+        BigDecimal energyBal = BlockchainUtils.balance(energy, 18, 2);
         logger.info("The energy balance is " + energyBal.toString());
 
         //从wallet one 发交易到新建的wallet two
@@ -123,7 +121,7 @@ public class WalletAPITest extends BaseTest {
         Account twoAddressAccount = blockchainAPI.getBalance(twoAddress, "best");
 
         String     transferBalance = twoAddressAccount.getBalance();
-        BigDecimal twoBalanceAmt   = BytesUtils.balance(transferBalance, 18, 2);
+        BigDecimal twoBalanceAmt   = BlockchainUtils.balance(transferBalance, 18, 2);
         Assert.assertEquals(transferAmount, twoBalanceAmt.toString());
         logger.info("The balance is " + twoBalanceAmt.toString());
 

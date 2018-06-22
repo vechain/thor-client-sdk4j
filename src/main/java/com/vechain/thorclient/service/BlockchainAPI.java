@@ -1,7 +1,8 @@
 package com.vechain.thorclient.service;
 
-import com.vechain.thorclient.core.crypto.ECKeyPair;
-import com.vechain.thorclient.core.model.*;
+
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.core.model.blockchain.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

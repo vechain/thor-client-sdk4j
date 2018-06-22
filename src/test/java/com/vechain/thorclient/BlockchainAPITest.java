@@ -1,8 +1,9 @@
 package com.vechain.thorclient;
 
 import com.alibaba.fastjson.JSON;
-import com.vechain.thorclient.core.crypto.ECKeyPair;
-import com.vechain.thorclient.core.model.*;
+import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.utils.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,8 +63,8 @@ public class BlockchainAPITest extends BaseTest {
         Account account = blockchainAPI.getBalance( MyAccountAddr,"best");
 
         logger.info("Current block account:" +JSON.toJSONString( account ));
-        logger.info("balance vet: " + BytesUtils.balance(account.getBalance(), 18, 2).toString());
-		logger.info("balance energe: " + BytesUtils.balance(account.getEnergy(), 18, 2).toString());
+        logger.info("balance vet: " + BlockchainUtils.balance(account.getBalance(), 18, 2).toString());
+		logger.info("balance energe: " + BlockchainUtils.balance(account.getEnergy(), 18, 2).toString());
         Assert.assertNotNull("Account is null", account);
     }
 

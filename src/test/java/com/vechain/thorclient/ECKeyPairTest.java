@@ -1,6 +1,7 @@
 package com.vechain.thorclient;
 
-import com.vechain.thorclient.core.crypto.ECKeyPair;
+import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

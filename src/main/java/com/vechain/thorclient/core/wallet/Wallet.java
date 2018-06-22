@@ -1,6 +1,6 @@
 package com.vechain.thorclient.core.wallet;
 
-import com.vechain.thorclient.core.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.CryptoUtils;
 import org.bouncycastle.crypto.digests.SHA256Digest;

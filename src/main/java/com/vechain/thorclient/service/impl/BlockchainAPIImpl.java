@@ -1,9 +1,9 @@
 package com.vechain.thorclient.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.vechain.thorclient.core.crypto.ECKeyPair;
-import com.vechain.thorclient.core.crypto.Signing;
-import com.vechain.thorclient.core.model.*;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.ECDSASigning;
+import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.service.BlockchainAPI;
 import com.vechain.thorclient.utils.*;
 
@@ -44,7 +44,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
     }
 
     private Block getBlockByRevision(String revision) throws IOException {
-        if(!BlockchainUtils.isValidBlockRevision(String.valueOf(revision))){
+        if(!BlockchainUtils.isValidRevision(String.valueOf(revision))){
             throw new IllegalArgumentException("blockNumber is not a legal argument");
         }
 
@@ -78,7 +78,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
         uriParams.put("address", hexAddress);
 
         HashMap<String, String> queryMap = new HashMap<>();
-        if(BlockchainUtils.isValidBlockRevision(revision)) {
+        if(BlockchainUtils.isValidRevision(revision)) {
             //Add query parameter
             queryMap.put( "revision", revision);
         }
@@ -112,7 +112,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
         uriParams.put("key", key);
 
         HashMap<String, String> queryMap = new HashMap<>( );
-        if (BlockchainUtils.isValidBlockRevision( revision )){
+        if (BlockchainUtils.isValidRevision( revision )){
             queryMap.put( "revision", revision );
         }
         String url = URLUtils.urlComposite( path, uriParams, queryMap );
@@ -141,7 +141,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
         uriParams.put( "address", hexAddress );
 
         HashMap<String, String> queryParams = new HashMap<>(  );
-        if(BlockchainUtils.isValidBlockRevision( revision )){
+        if(BlockchainUtils.isValidRevision( revision )){
             queryParams.put( "revision" , revision);
         }
         String url = URLUtils.urlComposite( path, uriParams, queryParams );
@@ -159,7 +159,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
 
     @Override
     public Transaction getTransaction(String txId, boolean isRaw, String revision) throws IOException {
-        if(!BlockchainUtils.isTxId(txId)){
+        if(!BlockchainUtils.isId(txId)){
             throw new IllegalArgumentException("Illegal transaction id.");
         }
 
@@ -170,7 +170,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
 
 
         HashMap<String, String> queryMap = new HashMap<>();
-        if(BlockchainUtils.isValidBlockRevision(revision)) {
+        if(BlockchainUtils.isValidRevision(revision)) {
             //Add query parameter
             queryMap.put( "revision", revision);
         }
@@ -193,7 +193,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
             throw new IllegalArgumentException("Can not sign the txRaw without keypair.");
         }else if (rawTransaction.getSignature() == null){
             byte[] rawTx = RLPUtils.encodeRawTransaction(rawTransaction);
-            Signing.SignatureData signature = Signing.signMessage(rawTx, keyPair);
+            ECDSASigning.SignatureData signature = ECDSASigning.signMessage(rawTx, keyPair);
             rawTransaction.setSignature(signature.toByteArray());
         }
         byte[] signRawTx = RLPUtils.encodeRawTransaction(rawTransaction);
@@ -220,7 +220,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
 
 	@Override
 	public Receipt getTransactionReceipt(String txId, String revision) throws IOException {
-        if(!BlockchainUtils.isTxId(txId)){
+        if(!BlockchainUtils.isId(txId)){
             throw new IllegalArgumentException("Illegal txId, must be a hex string with 0x prefix");
         }
         //Add url parameter
@@ -229,7 +229,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
         uriParams.put("id", txId);
 
         HashMap<String, String> queryMap = new HashMap<>();
-        if(BlockchainUtils.isValidBlockRevision(revision)) {
+        if(BlockchainUtils.isValidRevision(revision)) {
             //Add query parameter
             queryMap.put( "revision", revision);
         }

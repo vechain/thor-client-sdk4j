@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-
+/**
+ * Byte array relative
+ */
 public class BytesUtils {
 
 
@@ -14,7 +16,7 @@ public class BytesUtils {
      * @param offset
      * @param length
      * @param prefix {@link Prefix}
-     * @return
+     * @return blank string.
      */
     public static String toHexString(byte[] input, int offset, int length,Prefix prefix) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -41,18 +43,14 @@ public class BytesUtils {
     /**
      * Convert hex string to byte array
      * @param hexString hex string with prefix "0x"
-     * @return {@link byte[]} value.
+     * @return {@link byte[]} value, if failed return null;
      */
     public static byte[] toByteArray(String hexString){
         if(hexString == null || StringUtils.isBlank(hexString)){
             return null;
         }
 
-        if(hexString.startsWith(Prefix.ZeroLowerX.getPrefixString())
-                || hexString.startsWith( Prefix.VeChainX.getPrefixString() )){
-            hexString = hexString.substring(2);
-        }
-
+        cleanHexPrefix( hexString );
         int len = hexString.length();
         if (len == 0) {
             return new byte[] {};
@@ -79,9 +77,9 @@ public class BytesUtils {
     /**
      * Get byte array from {@link BigInteger} object.
      * @param bigInteger {@link BigInteger} object.
-     * @return {@link byte[]} value.
+     * @return {@link byte[]} value, if failed return null;
      */
-    private static byte[] bigIntegerToBytes(BigInteger bigInteger) {
+    private static byte[] bigIntToBytes(BigInteger bigInteger) {
         if(bigInteger == null){
             return null;
         }
@@ -89,30 +87,33 @@ public class BytesUtils {
     }
 
 
-
-    public static byte[] integerToBytes(long value){
+    /**
+     * Convert long value to byte array.
+     * @param value long value.
+     * @return byte array, if failed return null.
+     */
+    public static byte[] longToBytes(long value){
         BigInteger bigInteger = BigInteger.valueOf(value);
-        return bigIntegerToBytes(bigInteger);
+        return bigIntToBytes(bigInteger);
     }
 
     /**
-     * get BigInteger from byte array, the side effect is stripping the leading zeros.
-     * @param bytes
+     * Get BigInteger from byte array, the side effect is stripping the leading zeros.
+     * @param bytes byte array.
      * @return
      */
-    public static BigInteger bytesToBigInteger(byte[] bytes) {
+    public static BigInteger bytesToBigInt(byte[] bytes) {
         if (bytes == null) {
             return null;
         }
-        BigInteger bigInteger = new BigInteger(1,bytes);
-        return bigInteger;
+        return new BigInteger(1,bytes);
     }
 
 
     /**
      * Trim the leading byte
-     * @param bytes
-     * @param b
+     * @param bytes the input byte array.
+     * @param b the byte need to be trimmed.
      * @return
      */
     public static byte[] trimLeadingBytes(byte[] bytes, byte b) {
@@ -142,7 +143,7 @@ public class BytesUtils {
      * @param scale the remain digits number of fractional part.
      * @return {@link BigDecimal} value.
      */
-    private static BigDecimal bigIntToBigDecimal(BigInteger bgInt, int precision, int scale){
+    public static BigDecimal bigIntToBigDecimal(BigInteger bgInt, int precision, int scale){
         if(bgInt == null || precision < 0 || scale < 0){
             return null;
         }
@@ -152,22 +153,6 @@ public class BytesUtils {
         return value;
     }
 
-
-    /**
-     * get balance of {@link BigDecimal} value.
-     * @param hexString hex string of the balance.
-     * @param precision the precision of the balance, with is 18 by default
-     * @param scale the remain digits numbers of fractional part
-     * @return the balance value which can show to the end user.
-     */
-    public static BigDecimal balance(String hexString, int precision, int scale){
-        byte[] balBytes = toByteArray(hexString);
-        if(balBytes == null){
-            return null;
-        }
-        BigInteger balInteger = bytesToBigInteger(balBytes);
-        return bigIntToBigDecimal(balInteger, precision, scale);
-    }
 
     /**
      * Convert a decimal defaultDecimalStringToByteArray to a byte array.
@@ -200,6 +185,12 @@ public class BytesUtils {
     }
 
 
+    /**
+     *
+     * @param value
+     * @param length
+     * @return
+     */
     public static byte[] toBytesPadded(BigInteger value, int length) {
         byte[] result = new byte[length];
         byte[] bytes = value.toByteArray();

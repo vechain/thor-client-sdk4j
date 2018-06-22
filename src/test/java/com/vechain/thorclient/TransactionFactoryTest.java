@@ -2,8 +2,9 @@ package com.vechain.thorclient;
 
 
 
-import com.vechain.thorclient.core.model.Clause;
-import com.vechain.thorclient.core.model.RawTransaction;
+import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.Clause;
+import com.vechain.thorclient.core.model.blockchain.RawTransaction;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.RLPUtils;
@@ -26,7 +27,7 @@ public class TransactionFactoryTest extends BaseTest {
      builder.update(Byte.valueOf(chainTag), "chainTag");
 
      //Expiration
-     byte[] expirationBytes = BytesUtils.integerToBytes(720);
+     byte[] expirationBytes = BytesUtils.longToBytes(720);
      builder.update(expirationBytes, "expiration");
 
      //BlockRef
@@ -38,7 +39,7 @@ public class TransactionFactoryTest extends BaseTest {
      builder.update(nonce , "nonce");
 
      //gas
-     byte[] gas = BytesUtils.integerToBytes(21000);
+     byte[] gas = BytesUtils.longToBytes(21000);
      builder.update(gas, "gas");
 
      builder.update((byte)0x01, "gasPriceCoef");

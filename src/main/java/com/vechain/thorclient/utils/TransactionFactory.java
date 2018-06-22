@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vechain.thorclient.core.model.Clause;
-import com.vechain.thorclient.core.model.RawClause;
-import com.vechain.thorclient.core.model.RawTransaction;
+import com.vechain.thorclient.core.model.blockchain.Clause;
+import com.vechain.thorclient.core.model.blockchain.RawClause;
+import com.vechain.thorclient.core.model.blockchain.RawTransaction;
 import com.vechain.thorclient.service.BlockchainAPI;
 
 public class TransactionFactory {
@@ -52,7 +52,7 @@ public class TransactionFactory {
         builder.update(Byte.valueOf(chainTag), "chainTag");
 
         //Expiration
-        byte[] expirationBytes = BytesUtils.integerToBytes(expiration);
+        byte[] expirationBytes = BytesUtils.longToBytes(expiration);
         builder.update(expirationBytes, "expiration");
 
         //BlockRef
@@ -64,7 +64,7 @@ public class TransactionFactory {
         builder.update(trimedNonce , "nonce");
 
         //gas
-        byte[] gas = BytesUtils.integerToBytes( gasInt );
+        byte[] gas = BytesUtils.longToBytes( gasInt );
         builder.update(gas, "gas");
 
         builder.update(Byte.valueOf( gasPriceCoef ), "gasPriceCoef");
@@ -108,7 +108,7 @@ public class TransactionFactory {
     public RawTransaction createVETTransfer(BlockchainAPI blockchainAPI, int expiration, int gas, byte gasPriceCoef, ArrayList<Clause> clauses) throws IllegalArgumentException, IOException {
 
         if (blockchainAPI == null){
-            throw new IllegalArgumentException("The argument thor api of create VET is illegal.");
+            throw new IllegalArgumentException("The argument thor blockchain of create VET is illegal.");
         }
         byte[] blockRef = blockchainAPI.getBestBlockRef();
         byte chainTag = blockchainAPI.getChainTag();

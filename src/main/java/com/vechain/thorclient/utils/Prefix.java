@@ -25,7 +25,7 @@ public enum Prefix {
      * Get prefix string.
      * @return prefix string "0x" or "VX"
      */
-    String getPrefixString(){
+    public String getPrefixString(){
         return this.prefixString;
     }
 }

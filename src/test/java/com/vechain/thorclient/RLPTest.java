@@ -1,10 +1,11 @@
 package com.vechain.thorclient;
 
 
-import com.vechain.thorclient.core.rlp.RlpEncoder;
-import com.vechain.thorclient.core.rlp.RlpList;
-import com.vechain.thorclient.core.rlp.RlpString;
-import com.vechain.thorclient.core.rlp.RlpType;
+import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.utils.rlp.RlpEncoder;
+import com.vechain.thorclient.utils.rlp.RlpList;
+import com.vechain.thorclient.utils.rlp.RlpString;
+import com.vechain.thorclient.utils.rlp.RlpType;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.Prefix;
 import org.junit.Test;

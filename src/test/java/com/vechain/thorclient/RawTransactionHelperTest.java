@@ -2,10 +2,11 @@ package com.vechain.thorclient;
 
 
 
-import com.vechain.thorclient.core.crypto.ECKeyPair;
-import com.vechain.thorclient.core.crypto.Signing;
-import com.vechain.thorclient.core.model.RawClause;
-import com.vechain.thorclient.core.model.RawTransaction;
+import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.ECDSASigning;
+import com.vechain.thorclient.core.model.blockchain.RawClause;
+import com.vechain.thorclient.core.model.blockchain.RawTransaction;
 import com.vechain.thorclient.utils.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class RawTransactionHelperTest extends BaseTest {
         builder.update(Byte.valueOf(chainTag), "chainTag");
 
         //Expiration
-        byte[] expirationBytes = BytesUtils.integerToBytes(720);
+        byte[] expirationBytes = BytesUtils.longToBytes(720);
         builder.update(expirationBytes, "expiration");
 
         //BlockRef
@@ -47,7 +48,7 @@ public class RawTransactionHelperTest extends BaseTest {
         builder.update(nonce , "nonce");
 
         //gas
-        byte[] gas = BytesUtils.integerToBytes(21000);
+        byte[] gas = BytesUtils.longToBytes(21000);
         builder.update(gas, "gas");
 
         builder.update((byte)0x01, "gasPriceCoef");
@@ -82,7 +83,7 @@ public class RawTransactionHelperTest extends BaseTest {
         byte[] rlpTransactionEncoded = RLPUtils.encodeRawTransaction(rawTransaction);
         byte[] rawTxHash = CryptoUtils.blake2b(rlpTransactionEncoded);
         ECKeyPair keyPair = ECKeyPair.create(BytesUtils.toByteArray("0xc8c53657e41a8d669349fc287f57457bd746cb1fcfc38cf94d235deb2cfca81b"));
-        Signing.SignatureData signature = Signing.signMessage(rawTxHash, keyPair, false);
+        ECDSASigning.SignatureData signature = ECDSASigning.signMessage(rawTxHash, keyPair, false);
 
         logger.info("R:" + BytesUtils.toHexString(signature.getR(), Prefix.ZeroLowerX));
         logger.info("S:" + BytesUtils.toHexString(signature.getS(), Prefix.ZeroLowerX));
