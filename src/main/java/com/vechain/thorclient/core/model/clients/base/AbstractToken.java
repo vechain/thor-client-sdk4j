@@ -1,7 +1,5 @@
 package com.vechain.thorclient.core.model.clients.base;
 
-
-
 import java.math.BigDecimal;
 
 /**
@@ -44,8 +42,5 @@ public class AbstractToken {
         this.precision = BigDecimal.valueOf( 18 );
         this.scale = BigDecimal.valueOf( 8 );
     }
-
-
-
 
 }
