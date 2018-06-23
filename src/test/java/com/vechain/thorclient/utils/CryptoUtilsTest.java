@@ -1,4 +1,4 @@
-package com.vechain.thorclient;
+package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.utils.BytesUtils;

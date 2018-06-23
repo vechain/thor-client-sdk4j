@@ -1,6 +1,8 @@
-package com.vechain.thorclient;
+package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.clients.BlockClient;
+import com.vechain.thorclient.clients.BlockchainClient;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.BytesUtils;
@@ -20,13 +22,11 @@ import java.io.IOException;
 @RunWith(JUnit4.class)
 public class RawTransactionBuilderTest  extends BaseTest {
 
-
-
     @Test
     public void testUpdateBuild() throws IOException {
         RawTransactionBuilder builder  = new RawTransactionBuilder();
 
-        byte chainTag = blockchainAPI.getChainTag();
+        byte chainTag = BlockchainClient.getChainTag();
         int  n = chainTag & 0xFF;
         logger.info("Current chainTag:" + n);
         builder.update(Byte.valueOf(chainTag), "chainTag");
@@ -34,7 +34,7 @@ public class RawTransactionBuilderTest  extends BaseTest {
         byte[] expirationBytes = BytesUtils.longToBytes(720);
         builder.update(expirationBytes, "expiration");
 
-        byte[] blockRef = blockchainAPI.getBestBlockRef();
+        byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
         builder.update(blockRef, "blockRef");
 
         byte[] nonce = CryptoUtils.generateTxNonce();

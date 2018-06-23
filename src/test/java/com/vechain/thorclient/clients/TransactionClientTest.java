@@ -24,7 +24,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
-    static String hexId = "0xa8488f297015797667adf92abd942c3016320710882e1a1dd867f6070455553f";
+    static String hexId = "0x3073ca33f3b777e381ecb1b086c3baa9b7ca866f71c3fc361d5c0dee513d1e01";
 
     @Test
     public void testGetTransaction() throws IOException {
@@ -76,7 +76,7 @@ public class TransactionClientTest extends BaseTest {
                 amount,
                 ToData.ZERO );
         RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
-        TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( "0xedbc62392034f159c248e453908475e7e4bee795459d33adf2f7e8047bb033c4" ) );
+        TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
         logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
         Assert.assertNotNull( result );
     }

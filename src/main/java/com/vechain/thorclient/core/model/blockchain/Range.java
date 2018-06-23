@@ -5,6 +5,18 @@ public class Range {
     private long from;
     private long to;
 
+    public static Range createBlockRange(long from, long to){
+        if(from >= to){
+            throw new IllegalArgumentException( "Range from to error." );
+        }
+        Range range = new Range();
+        range.from = from;
+        range.to = to;
+        range.unit = "block";
+        return range;
+    }
+    private Range(){};
+
     public String getUnit() {
         return unit;
     }

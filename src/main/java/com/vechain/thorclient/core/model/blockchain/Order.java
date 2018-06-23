@@ -1,12 +1,12 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public enum OrderFilter {
+public enum Order {
     DESC("DESC"),
     ASC("ASC");
 
     private final String value;
 
-    OrderFilter(String value){
+    Order(String value){
         this.value = value;
     }
 

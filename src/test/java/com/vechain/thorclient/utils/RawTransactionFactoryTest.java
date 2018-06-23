@@ -1,4 +1,4 @@
-package com.vechain.thorclient;
+package com.vechain.thorclient.utils;
 
 
 

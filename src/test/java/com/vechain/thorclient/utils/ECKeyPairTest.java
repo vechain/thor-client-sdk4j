@@ -1,4 +1,4 @@
-package com.vechain.thorclient;
+package com.vechain.thorclient.utils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

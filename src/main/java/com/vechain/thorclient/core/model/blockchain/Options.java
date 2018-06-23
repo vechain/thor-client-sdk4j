@@ -4,6 +4,21 @@ public class Options {
     private long offset;
     private long limit;
 
+    public static Options create(long offset, long limit){
+        if(offset < 0){
+            throw new IllegalArgumentException( "Offset invalid." );
+        }
+        if(limit <= 0){
+            throw new IllegalArgumentException( "limit invalid." );
+        }
+        Options options = new Options();
+        options.offset = offset;
+        options.limit = limit;
+        return options;
+    }
+
+    private Options(){}
+
     public long getOffset() {
         return offset;
     }

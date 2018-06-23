@@ -1,5 +1,7 @@
 package com.vechain.thorclient.core.model.blockchain;
 
+import com.vechain.thorclient.utils.BlockchainUtils;
+
 import java.util.ArrayList;
 
 public class EventFilter {
@@ -7,27 +9,35 @@ public class EventFilter {
     private Options options;
     private ArrayList<TopicSet> topicSets;
 
-    public void setRange(String unit, long from , long to){
-
-        Range currRange = new Range();
-        currRange.setUnit(unit);
-        currRange.setFrom(from);
-        currRange.setTo(to);
-        this.range = currRange;
+    public static EventFilter createFilter(Range range, Options options){
+        EventFilter eventFilter = new EventFilter();
+        eventFilter.range = range;
+        eventFilter.options = options;
+        return eventFilter;
     }
 
-    public void setOptions(long offset, int limit){
-        Options opt = new Options();
-        opt.setLimit(limit);
-        opt.setOffset(offset);
-        this.options = opt;
+    private EventFilter(){
+        this.topicSets = new ArrayList<>();
     }
 
     public void addTopicSet(String topic0, String topic1, String topic2, String topic3, String topic4){
-
-        if(this.topicSets == null){
-            this.topicSets = new ArrayList<TopicSet>();
+        if(topic0 != null && !BlockchainUtils.isId( topic0 )){
+            throw new IllegalArgumentException( "Invalid topic0" );
         }
+        if(topic1 != null && !BlockchainUtils.isId( topic1 )){
+            throw new IllegalArgumentException( "Invalid topic1" );
+        }
+        if(topic2 != null && !BlockchainUtils.isId( topic2 )){
+            throw new IllegalArgumentException( "Invalid topic2" );
+        }
+        if(topic3 != null && !BlockchainUtils.isId( topic3 )){
+            throw new IllegalArgumentException( "Invalid topic3" );
+        }
+        if(topic4 != null && !BlockchainUtils.isId( topic4 )){
+            throw new IllegalArgumentException( "Invalid topic4" );
+        }
+
+
 
         TopicSet topicSet = new TopicSet();
         topicSet.setTopic0(topic0);

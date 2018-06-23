@@ -5,4 +5,6 @@ public class FilteredEvent {
     private String data;
     private BlockContext block;
     private TxContext tx;
+
+
 }

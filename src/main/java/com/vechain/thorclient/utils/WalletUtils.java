@@ -1,4 +1,4 @@
-package com.vechain.thorclient.service;
+package com.vechain.thorclient.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
@@ -11,9 +11,9 @@ import com.vechain.thorclient.utils.StringUtils;
 import java.io.IOException;
 
 /**
- * Wallet API is used to create or load keystore.
+ * Wallet Utils is used to create or load keystore.
  */
-public class WalletAPI {
+public class WalletUtils {
 
     /**
      * Load keystore for keystore string and passphases.

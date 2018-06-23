@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class AbstractContract {
 
-    protected List<AbiDefinition> abiDefinitionList;
+    private List<AbiDefinition> abiDefinitionList;
 
     public AbstractContract(String abiJsonString){
         this.abiDefinitionList = parseAbiList( abiJsonString );
@@ -26,7 +26,7 @@ public class AbstractContract {
      * @param hexParameters hex string array.
      * @return {@link ContractCall}
      */
-    public ContractCall buildCall( AbiDefinition definition, String...hexParameters ){
+    public static ContractCall buildCall( AbiDefinition definition, String...hexParameters ){
         if(definition == null){
             throw new IllegalArgumentException( "definition is null" );
         }
@@ -60,28 +60,33 @@ public class AbstractContract {
      * @param params hex string format parameters.
      * @return hex string of data.
      */
-    public static String buildData(AbiDefinition abiDefinition, String... params){
-        int index = 0;
+    protected static String buildData(AbiDefinition abiDefinition, String... params){
+        if(abiDefinition == null){
+            return null;
+        }
+        int index ;
         List<AbiDefinition.NamedType> inputs = abiDefinition.getInputs();
         if(inputs.size() != params.length){
             throw new IllegalArgumentException( "Parameters length is not valid" );
         }
-        StringBuffer dataBuffer = new StringBuffer();
+        StringBuilder dataBuffer = new StringBuilder();
         dataBuffer.append( abiDefinition.getHexMethodCodeNoPefix() );
-        for(index = 0; index < params.length; index ++){
-            if(!StringUtils.isHex( params[index] )){
-                throw new IllegalArgumentException("Parameter format is not hex string");
-            }
-            byte[] paramBytes = BytesUtils.toByteArray( params[index] );
-            if(paramBytes == null || paramBytes.length > 32){
-                throw new IllegalArgumentException("Parameter format is hex string size too large, or null");
-            }
-            if(paramBytes.length < 32){
-                byte[] fillingZero = new byte[32];
-                System.arraycopy(paramBytes,0, fillingZero, 32 - paramBytes.length, paramBytes.length);
-                dataBuffer.append( BytesUtils.toHexString(fillingZero, null) );
-            }else{
-                dataBuffer.append( params[0] );
+        if(params != null) {
+            for(index = 0; index < params.length; index ++) {
+                if (!StringUtils.isHex( params[index] )) {
+                    throw new IllegalArgumentException( "Parameter format is not hex string" );
+                }
+                byte[] paramBytes = BytesUtils.toByteArray( params[index] );
+                if (paramBytes == null || paramBytes.length > 32) {
+                    throw new IllegalArgumentException( "Parameter format is hex string size too large, or null" );
+                }
+                if (paramBytes.length < 32) {
+                    byte[] fillingZero = new byte[32];
+                    System.arraycopy( paramBytes, 0, fillingZero, 32 - paramBytes.length, paramBytes.length );
+                    dataBuffer.append( BytesUtils.toHexString( fillingZero, null ) );
+                } else {
+                    dataBuffer.append( params[0] );
+                }
             }
 
         }
@@ -91,9 +96,9 @@ public class AbstractContract {
     /**
      * Get list of {@link AbiDefinition}
      * @param abisString abi string.
-     * @return
+     * @return list of {@link AbiDefinition}
      */
-    public static List<AbiDefinition> parseAbiList(String abisString){
+    private static List<AbiDefinition> parseAbiList(String abisString){
         ObjectMapper objectMapper = new ObjectMapper(  );
         AbiDefinition[] list = null;
         try {

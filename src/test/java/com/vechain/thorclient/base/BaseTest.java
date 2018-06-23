@@ -1,28 +1,23 @@
 package com.vechain.thorclient.base;
 
+import com.vechain.thorclient.core.model.blockchain.NodeProvider;
+import com.vechain.thorclient.utils.StringUtils;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.vechain.thorclient.core.model.blockchain.NodeProvider;
-import com.vechain.thorclient.service.BlockchainAPI;
-import com.vechain.thorclient.service.impl.BlockchainAPIImpl;
-import com.vechain.thorclient.utils.StringUtils;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
-
 public abstract class BaseTest implements SlatKeys {
 
     protected Logger            logger        = LoggerFactory.getLogger(this.getClass());
     private final String        TOKEN_ADDRESS = "0x0000000000000000000000000000456e65726779";
-    protected BlockchainAPI     blockchainAPI;
+
     protected String            privateKey;
     protected String            nodeProviderUrl;
     protected String            fromAddress;
@@ -66,11 +61,11 @@ public abstract class BaseTest implements SlatKeys {
             throw new RuntimeException("Can not find valid nodeProviderUrl~");
         }
         environment.put(VTHO_TOKEN_ADDRESS, TOKEN_ADDRESS);
-        blockchainAPI = new BlockchainAPIImpl();
+
         NodeProvider nodeProvider = NodeProvider.getNodeProvider();
         nodeProvider.setProvider(this.nodeProviderUrl);
         nodeProvider.setTimeout(timeout);
-        blockchainAPI.setProvider(nodeProvider);
+
         this.recoverAddress();
     }
 

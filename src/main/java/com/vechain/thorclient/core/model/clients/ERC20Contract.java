@@ -206,13 +206,17 @@ public class ERC20Contract extends AbstractContract {
         }
 
         AbiDefinition abiDefinition = defaultERC20Contract.findAbiDefinition( "transfer" );
+        if(abiDefinition == null){
+            throw new RuntimeException( "can not find transfer abi method" );
+        }
         String data = buildData( abiDefinition, toAddress.toHexString( null ), BytesUtils.toHexString( amount.toByteArray(), null ) );
+
         ToData toData = new ToData();
         toData.setData( data );
         return new ToClause(token.contractAddress, Amount.ZERO, toData);
     }
 
 
-    private static final ERC20Contract defaultERC20Contract = new ERC20Contract();
+    public static final ERC20Contract defaultERC20Contract = new ERC20Contract();
 
 }
