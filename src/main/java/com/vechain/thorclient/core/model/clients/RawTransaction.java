@@ -1,5 +1,6 @@
-package com.vechain.thorclient.core.model.blockchain;
+package com.vechain.thorclient.core.model.clients;
 
+import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.utils.RLPUtils;
 
 public class RawTransaction {

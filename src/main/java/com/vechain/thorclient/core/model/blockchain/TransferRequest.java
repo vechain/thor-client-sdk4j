@@ -1,6 +1,6 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class RawTransactionRequest {
+public class TransferRequest {
     private String raw;
 
     public String getRaw() {

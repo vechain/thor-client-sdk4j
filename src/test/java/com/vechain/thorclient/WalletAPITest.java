@@ -14,7 +14,7 @@ import org.junit.runners.JUnit4;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.core.model.blockchain.Account;
 import com.vechain.thorclient.core.model.blockchain.Clause;
-import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.core.wallet.WalletInfo;
 import com.vechain.thorclient.service.WalletAPI;
 

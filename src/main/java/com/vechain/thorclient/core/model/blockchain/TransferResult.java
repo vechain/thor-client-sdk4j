@@ -1,6 +1,6 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class RawTransactionResult {
+public class TransferResult {
     private String id;
 
     public String getId() {

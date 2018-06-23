@@ -2,7 +2,7 @@ package com.vechain.thorclient;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
-import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.RawTransactionBuilder;

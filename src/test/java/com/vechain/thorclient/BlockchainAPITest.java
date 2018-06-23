@@ -2,6 +2,7 @@ package com.vechain.thorclient;
 
 import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.utils.*;
@@ -119,7 +120,7 @@ public class BlockchainAPITest extends BaseTest {
         clause.setValue("11.11");
         clausesList.add(clause);
 
-        RawTransaction rawTransaction = RawTransactionFactory.factory().createRawTransaction((byte)0xab,blockRef,720, 21000, (byte)1, CryptoUtils.generateTxNonce(), clausesList);
+        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction((byte)0xab,blockRef,720, 21000, (byte)1, CryptoUtils.generateTxNonce(), clausesList);
 
         ECKeyPair keyPair = ECKeyPair.create("0xc8c53657e41a8d669349fc287f57457bd746cb1fcfc38cf94d235deb2cfca81b");
         String txId = blockchainAPI.signAndSendRawTransaction(rawTransaction, keyPair);

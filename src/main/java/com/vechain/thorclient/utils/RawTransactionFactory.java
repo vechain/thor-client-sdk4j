@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vechain.thorclient.clients.BlockClient;
+import com.vechain.thorclient.clients.BlockchainClient;
+import com.vechain.thorclient.core.model.blockchain.Block;
 import com.vechain.thorclient.core.model.blockchain.Clause;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
-import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.service.BlockchainAPI;
 
 public class RawTransactionFactory {
@@ -198,6 +201,22 @@ public class RawTransactionFactory {
 		}
 	}
 
+
+    public RawTransaction createRawTransaction(int expiration, int gas, byte gasPriceCoef, List<Clause> clauses, String contractAddress)
+            throws IllegalArgumentException, IOException {
+
+	    Block bestBlock =  BlockClient.getBlock(null);
+	    if(bestBlock == null){
+	        throw new RuntimeException( "Get best block reference failed." );
+        }
+        byte[] blockRef = bestBlock.blockRef().toByteArray();
+        byte chainTag = BlockchainClient.getChainTag();
+        if (StringUtils.isBlank(contractAddress)) {
+            return createRawTransaction(chainTag, blockRef, expiration, gas, gasPriceCoef, clauses);
+        } else {
+            return createRawTransaction(chainTag, blockRef, expiration, gas, gasPriceCoef, clauses, contractAddress);
+        }
+    }
 	public static RawTransactionFactory getInstance() {
 		return INSTANCE;
 	}

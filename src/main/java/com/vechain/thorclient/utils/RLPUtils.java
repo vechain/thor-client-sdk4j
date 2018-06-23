@@ -1,7 +1,7 @@
 package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.core.model.blockchain.RawClause;
-import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.rlp.RlpEncoder;
 import com.vechain.thorclient.utils.rlp.RlpList;
 import com.vechain.thorclient.utils.rlp.RlpString;

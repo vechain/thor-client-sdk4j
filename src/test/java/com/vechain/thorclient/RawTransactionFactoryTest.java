@@ -4,7 +4,7 @@ package com.vechain.thorclient;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.Clause;
-import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.RLPUtils;
@@ -58,7 +58,7 @@ public class RawTransactionFactoryTest extends BaseTest {
         clause.setTo("0x42191bd624aBffFb1b65e92F1E51EB16f4d2A3Ce");
         clause.setValue("42.42");
         rawClauseList.add(clause);
-       RawTransaction rawTransaction = RawTransactionFactory.factory().createRawTransaction((byte)0xab, BytesUtils.trimLeadingZeroes( BytesUtils.toByteArray("0x0002049d16168115")), 720, 21000, (byte)0x01 , BytesUtils.toByteArray("0x0002049d16068015"), rawClauseList);
+       RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction((byte)0xab, BytesUtils.trimLeadingZeroes( BytesUtils.toByteArray("0x0002049d16168115")), 720, 21000, (byte)0x01 , BytesUtils.toByteArray("0x0002049d16068015"), rawClauseList);
         byte[] rlpTransactionEncoded = RLPUtils.encodeRawTransaction(rawTransaction);
 
         String hexRLPTransaction = BytesUtils.toHexString(rlpTransactionEncoded, Prefix.ZeroLowerX);

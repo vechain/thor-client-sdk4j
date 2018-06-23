@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vechain.thorclient.core.model.blockchain.Clause;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
-import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.core.model.blockchain.TransactionAttributes.ERC20ContractMethod;
 
 public class RawTransactionBuilder {

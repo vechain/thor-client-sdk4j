@@ -6,7 +6,7 @@ import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.utils.crypto.ECDSASigning;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
-import com.vechain.thorclient.core.model.blockchain.RawTransaction;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.*;
 import org.junit.Assert;
 import org.junit.Test;

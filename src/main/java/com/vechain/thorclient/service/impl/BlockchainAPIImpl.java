@@ -1,6 +1,7 @@
 package com.vechain.thorclient.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.utils.crypto.ECDSASigning;
 import com.vechain.thorclient.core.model.blockchain.*;
@@ -198,14 +199,14 @@ public class BlockchainAPIImpl implements BlockchainAPI {
         }
         byte[] signRawTx = RLPUtils.encodeRawTransaction(rawTransaction);
         if(signRawTx != null){
-            RawTransactionRequest request = new RawTransactionRequest();
+            TransferRequest request = new TransferRequest();
             request.setRaw(BytesUtils.toHexString(signRawTx, Prefix.ZeroLowerX));
             String postString = JSON.toJSONString( request);
             String response = URLUtils.post( postString, APPLICATION_JSON_VALUE,"utf-8", path );
             if(StringUtils.isBlank( response )){
                 return null;
             }
-            RawTransactionResult result = JSON.parseObject( response, RawTransactionResult.class );
+            TransferResult result = JSON.parseObject( response, TransferResult.class );
             return result.getId();
         }else{
             return null;

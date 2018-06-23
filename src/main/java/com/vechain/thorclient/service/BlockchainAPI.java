@@ -1,6 +1,7 @@
 package com.vechain.thorclient.service;
 
 
+import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.core.model.blockchain.*;
 
