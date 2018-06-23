@@ -11,10 +11,10 @@ import org.junit.runners.JUnit4;
 public class StorageKeyTest extends BaseTest {
 
     @Test
-    public void testStorageKey(){
-        byte[] address = BytesUtils.toByteArray( MyAccountAddr );
-        StorageKey key = StorageKey.create( 4,  address);
-        logger.info( "key hex:" + key.hexKey() );
+    public void testStorageKey() {
+        byte[] address = BytesUtils.toByteArray(fromAddress);
+        StorageKey key = StorageKey.create(4, address);
+        logger.info("key hex:" + key.hexKey());
     }
 
 }

@@ -80,7 +80,6 @@ public class Address {
         public byte[] toByteArray(){
             return new byte[]{};
         }
-
     }
 
 }

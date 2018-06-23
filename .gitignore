@@ -35,8 +35,9 @@ gen
 *~
 .DS_Store
 .project
-/thorifyjava/thorify-java (1) (org.springframework.boot).iml
-/thorifyjava/.project
-/thorifyjava/.classpath
-/thorifyjava/target/
-/thorifyjava/.settings/
+/src/test/test.iml
+/.classpath
+/.project
+/src/main/main.iml
+/target/
+/.settings/
