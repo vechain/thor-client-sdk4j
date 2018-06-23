@@ -8,27 +8,30 @@ import com.vechain.thorclient.utils.StringUtils;
 public class NodeProvider {
 
     private static NodeProvider INSTANCE = new NodeProvider();
-    public static NodeProvider getNodeProvider(){
+
+    public static NodeProvider getNodeProvider() {
         return INSTANCE;
     }
 
-    private NodeProvider(){
+    private NodeProvider() {
         this.timeout = 5000;
     }
 
     /**
      * get provider url
+     * 
      * @return
      */
     public String getProvider() {
-        if(StringUtils.isBlank( this.provider )|| !this.provider.startsWith( "http" )){
-            throw new RuntimeException( "The blockchain provider url must be set." );
+        if (StringUtils.isBlank(this.provider) || !this.provider.startsWith("http")) {
+            throw new RuntimeException("The blockchain provider url must be set.");
         }
         return provider;
     }
 
     /**
      * Set provider url
+     * 
      * @param provider
      */
     public void setProvider(String provider) {
@@ -37,6 +40,7 @@ public class NodeProvider {
 
     /**
      * get connect timeout
+     * 
      * @return
      */
     public int getTimeout() {
@@ -48,5 +52,5 @@ public class NodeProvider {
     }
 
     private String provider;
-    private int timeout;
+    private int    timeout;
 }
