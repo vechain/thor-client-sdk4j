@@ -71,7 +71,7 @@ public class WalletAPITest extends BaseTest {
         clauseList.add(clause);
 
         logger.info("The oneAddress is " + oneAddress);
-        RawTransaction rawTransaction = TransactionFactory.getInstance().createRawTransaction((byte) 0xab, blockRef, 720, 21000, (byte) 1, CryptoUtils.generateTxNonce(), clauseList);
+        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction((byte) 0xab, blockRef, 720, 21000, (byte) 1, CryptoUtils.generateTxNonce(), clauseList);
 
         ECKeyPair keyPair = ECKeyPair.create(privateKey);
         String    id      = blockchainAPI.signAndSendRawTransaction(rawTransaction, keyPair);
@@ -90,7 +90,7 @@ public class WalletAPITest extends BaseTest {
 
         clauseList.clear();
         clauseList.add(new Clause(oneAddress, "0xa968163f0a57b4000000", ""));
-        RawTransaction vthoRawTransaction = TransactionFactory.getInstance().createRawTransaction((byte) 0xab, blockRef, 720, 80000, (byte) 1, clauseList, contractAddress);
+        RawTransaction vthoRawTransaction = RawTransactionFactory.getInstance().createRawTransaction((byte) 0xab, blockRef, 720, 80000, (byte) 1, clauseList, contractAddress);
         String         vthoId             = blockchainAPI.signAndSendRawTransaction(vthoRawTransaction, keyPair);
         logger.info("The VTHO TX id is " + vthoId);
 
@@ -110,7 +110,7 @@ public class WalletAPITest extends BaseTest {
         String transferAmount = "1000.11";
         clauseList.clear();
         clauseList.add(new Clause(twoAddress, transferAmount, ""));
-        RawTransaction rawTransactionForNewWallet = TransactionFactory.getInstance().createRawTransaction((byte) 0xab, blockRef, 720, 21000, (byte) 1, CryptoUtils.generateTxNonce(), clauseList);
+        RawTransaction rawTransactionForNewWallet = RawTransactionFactory.getInstance().createRawTransaction((byte) 0xab, blockRef, 720, 21000, (byte) 1, CryptoUtils.generateTxNonce(), clauseList);
 
         ECKeyPair walletKeyPair = ECKeyPair.create(onePrivateKey);
         String    txId          = blockchainAPI.signAndSendRawTransaction(rawTransactionForNewWallet, walletKeyPair);

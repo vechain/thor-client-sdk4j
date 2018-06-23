@@ -16,7 +16,7 @@ public class Revision {
      * @param blockNumber block number.
      * @return {@link Revision}
      */
-    public static Revision fromBlockNumber(long blockNumber){
+    public static Revision create(long blockNumber){
         Revision revision = new Revision();
         revision.revision = "" + blockNumber;
         return revision;

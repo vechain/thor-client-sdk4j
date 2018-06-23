@@ -28,7 +28,7 @@ public class BlockchainAPITest extends BaseTest {
 	@Test
 	public void testSendThorTransaction() throws IOException {
 
-		TransactionFactory transactionFactory = TransactionFactory.getInstance();
+		RawTransactionFactory transactionFactory = RawTransactionFactory.getInstance();
 		String contractAddress = "0x0000000000000000000000000000456e65726779";
 		List<Clause> clauses = new ArrayList<Clause>();
 		clauses.add(new Clause("0x42191bd624aBffFb1b65e92F1E51EB16f4d2A3Ce", Integer.toHexString(1200000), ""));
@@ -119,7 +119,7 @@ public class BlockchainAPITest extends BaseTest {
         clause.setValue("11.11");
         clausesList.add(clause);
 
-        RawTransaction rawTransaction = TransactionFactory.factory().createRawTransaction((byte)0xab,blockRef,720, 21000, (byte)1, CryptoUtils.generateTxNonce(), clausesList);
+        RawTransaction rawTransaction = RawTransactionFactory.factory().createRawTransaction((byte)0xab,blockRef,720, 21000, (byte)1, CryptoUtils.generateTxNonce(), clausesList);
 
         ECKeyPair keyPair = ECKeyPair.create("0xc8c53657e41a8d669349fc287f57457bd746cb1fcfc38cf94d235deb2cfca81b");
         String txId = blockchainAPI.signAndSendRawTransaction(rawTransaction, keyPair);

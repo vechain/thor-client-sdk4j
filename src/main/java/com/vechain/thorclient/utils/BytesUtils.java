@@ -46,12 +46,12 @@ public class BytesUtils {
      * @return {@link byte[]} value, if failed return null;
      */
     public static byte[] toByteArray(String hexString){
-        if(hexString == null || StringUtils.isBlank(hexString)){
+        String currentHex = hexString;
+        if(currentHex == null || StringUtils.isBlank(currentHex)){
             return null;
         }
-
-        cleanHexPrefix( hexString );
-        int len = hexString.length();
+        currentHex = cleanHexPrefix( currentHex );
+        int len = currentHex.length();
         if (len == 0) {
             return new byte[] {};
         }
@@ -60,7 +60,7 @@ public class BytesUtils {
         int startIdx;
         if (len % 2 != 0) {
             data = new byte[(len / 2) + 1];
-            data[0] = (byte) Character.digit(hexString.charAt(0), 16);
+            data[0] = (byte) Character.digit(currentHex.charAt(0), 16);
             startIdx = 1;
         } else {
             data = new byte[len / 2];
@@ -68,8 +68,8 @@ public class BytesUtils {
         }
 
         for (int i = startIdx; i < len; i += 2) {
-            data[(i + 1) / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
-                    + Character.digit(hexString.charAt(i + 1), 16));
+            data[(i + 1) / 2] = (byte) ((Character.digit(currentHex.charAt(i), 16) << 4)
+                    + Character.digit(currentHex.charAt(i + 1), 16));
         }
         return data;
     }
@@ -155,13 +155,29 @@ public class BytesUtils {
 
 
     /**
-     * Convert a decimal defaultDecimalStringToByteArray to a byte array.
+     * Convert a decimal defaultDecimalStringToByteArray to a byte array, with default 18 level precision, means 10 power 18.
      * @param amountString it is a decimal string. e.g. "42.42"
      * @return
      */
     public static byte[] defaultDecimalStringToByteArray(String amountString){
+        return decimalStringToByteArray( amountString, 18 );
+    }
+
+    /**
+     * Convert a decimal defaultDecimalStringToByteArray to a byte array.
+     * @param amountString it is a decimal string. e.g. "42.42"
+     * @param precisionLevel the precision level, means 10 power 18 precision.
+     * @return
+     */
+    public static byte[] decimalStringToByteArray(String amountString, int precisionLevel){
+        if(StringUtils.isBlank( amountString )){
+            throw new IllegalArgumentException( "amount string is blank." );
+        }
+        if(precisionLevel < 0){
+            throw new IllegalArgumentException( "precision level is null." );
+        }
         BigDecimal amountDecimal = new BigDecimal(amountString);
-        BigDecimal precisionDecimal = new BigDecimal(10).pow(18);
+        BigDecimal precisionDecimal = new BigDecimal(10).pow(precisionLevel);
         BigDecimal realAmount = amountDecimal.multiply(precisionDecimal);
         return trimLeadingZeroes(realAmount.toBigInteger().toByteArray());
     }

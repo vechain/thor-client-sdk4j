@@ -18,7 +18,7 @@ public class ERC20ContractClient extends AbstractClient{
      * @return {@link Balance}
      * @throws IOException {@link IOException}
      */
-    public static Balance getERC20Balance(Address address, ERC20Token token, Revision revision) throws IOException{
+    public static Amount getERC20Balance(Address address, ERC20Token token, Revision revision) throws IOException{
         Address contractAddr = token.getContractAddress();
         Revision currRevision = revision;
         if(currRevision == null){

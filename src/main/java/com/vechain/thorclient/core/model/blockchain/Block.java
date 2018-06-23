@@ -1,5 +1,7 @@
 package com.vechain.thorclient.core.model.blockchain;
 
+import com.vechain.thorclient.core.model.clients.BlockRef;
+
 public class Block {
 
     public String getNumber() {
@@ -116,6 +118,10 @@ public class Block {
 
     public String toString(){
         return "number:" + this.number + "  block:"+ id + " parentId:" + parentId;
+    }
+
+    public BlockRef blockRef(){
+        return BlockRef.create( this.id );
     }
 
     private String number;

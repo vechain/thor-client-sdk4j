@@ -3,14 +3,14 @@ package com.vechain.thorclient.core.model.clients;
 import java.util.ArrayList;
 
 public class AccountInfo {
-    ArrayList<Balance> balances;
+    ArrayList<Amount> balances;
     boolean hasCode;
 
-    public ArrayList<Balance> getBalances() {
+    public ArrayList<Amount> getBalances() {
         return balances;
     }
 
-    public void setBalances(ArrayList<Balance> balances) {
+    public void setBalances(ArrayList<Amount> balances) {
         this.balances = balances;
     }
 

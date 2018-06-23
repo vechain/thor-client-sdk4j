@@ -1,6 +1,6 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-import com.vechain.thorclient.core.model.clients.Balance;
+import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 
 public class ContractCallResult {
@@ -50,8 +50,8 @@ public class ContractCallResult {
         this.caller = caller;
     }
 
-    public Balance getBalance(AbstractToken token){
-        Balance balance = Balance.createFromToken( token );
+    public Amount getBalance(AbstractToken token){
+        Amount balance = Amount.createFromToken( token );
         balance.setHexAmount( data );
         return balance;
     }

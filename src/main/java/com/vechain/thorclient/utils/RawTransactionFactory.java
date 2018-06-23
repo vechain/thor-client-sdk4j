@@ -9,16 +9,16 @@ import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.core.model.blockchain.RawTransaction;
 import com.vechain.thorclient.service.BlockchainAPI;
 
-public class TransactionFactory {
+public class RawTransactionFactory {
 
 
-    private static TransactionFactory INSTANCE = new TransactionFactory();
+    private static RawTransactionFactory INSTANCE = new RawTransactionFactory();
 
 	/**
 	 *
 	 * @return
 	 */
-	public static TransactionFactory factory(){
+	public static RawTransactionFactory factory(){
 		return INSTANCE;
 	}
 
@@ -198,7 +198,7 @@ public class TransactionFactory {
 		}
 	}
 
-	public static TransactionFactory getInstance() {
+	public static RawTransactionFactory getInstance() {
 		return INSTANCE;
 	}
 

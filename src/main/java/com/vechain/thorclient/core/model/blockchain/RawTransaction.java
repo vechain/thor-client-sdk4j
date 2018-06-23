@@ -1,5 +1,7 @@
 package com.vechain.thorclient.core.model.blockchain;
 
+import com.vechain.thorclient.utils.RLPUtils;
+
 public class RawTransaction {
     private byte chainTag; // 1 bytes
     private byte[] blockRef; //8 bytes
@@ -99,5 +101,11 @@ public class RawTransaction {
     public byte[][] getReserved() {
         return reserved;
     }
+
+
+    public byte[] encode(){
+        return RLPUtils.encodeRawTransaction(this);
+    }
+
 
 }
