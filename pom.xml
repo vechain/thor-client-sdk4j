@@ -64,7 +64,7 @@
 			<artifactId>logback-core</artifactId>
 			<version>1.1.7</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -87,26 +87,31 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>com.vechain.thorclient.clients.ThorMain</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 				<executions>
 					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
 						<goals>
-							<goal>exec</goal>
+							<goal>assembly</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<executable>maven</executable>
-					<!-- optional -->
-					<workingDirectory>/tmp</workingDirectory>
-					<arguments>
-						<argument>-XX:MaxPermSize=256m</argument>
-						<argument>myproject:dist</argument>
-					</arguments>
-				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 	<repositories>
