@@ -15,7 +15,7 @@ public class ERC20ContractTest extends BaseTest {
     public void testERC20BalanceOfCode(){
         ERC20Contract  contract = new ERC20Contract();
         AbiDefinition abiDefinition = contract.findAbiDefinition( "balanceOf" );
-        String hexString = ERC20Contract.getHexMethodCodeNoPefix( abiDefinition );
+        String hexString = abiDefinition.getHexMethodCodeNoPefix();
         logger.info( "balanceOf abi:" + hexString );
         Assert.assertEquals("70a08231", hexString);
     }
@@ -24,7 +24,7 @@ public class ERC20ContractTest extends BaseTest {
     public void testERC20TransferCode(){
         ERC20Contract  contract = new ERC20Contract();
         AbiDefinition abiDefinition = contract.findAbiDefinition( "transfer" );
-        String hexString = ERC20Contract.getHexMethodCodeNoPefix( abiDefinition );
+        String hexString = abiDefinition.getHexMethodCodeNoPefix();
         logger.info( "transfer abi:" + hexString );
         Assert.assertEquals("a9059cbb", hexString);
     }

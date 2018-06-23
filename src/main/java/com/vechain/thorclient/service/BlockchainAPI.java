@@ -42,7 +42,7 @@ public interface BlockchainAPI {
 	Block getBestBlock() throws IOException;
 
 	/**
-	 * get balance from an address and block revision.
+	 * get amount from an address and block revision.
 	 * @param accountAddr the account address, a hex string like "0x7567D83b7b8d80ADdCb281A71d54Fc7B3364ffed"
 	 * @param revision it could be null or blockId with prefix 0x, or block number or "best".
 	 * @return {@link Account}

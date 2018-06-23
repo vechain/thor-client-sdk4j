@@ -91,7 +91,7 @@ public class ECKeyPair {
     }
 
     public static ECKeyPair create(BigInteger privateKey) {
-        return new ECKeyPair(privateKey, ECDSASigning.publicKeyFromPrivate(privateKey));
+        return new ECKeyPair(privateKey, ECDSASign.publicKeyFromPrivate(privateKey));
     }
 
     public static ECKeyPair create(String privateKeyHex) {

@@ -4,7 +4,7 @@ package com.vechain.thorclient;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
-import com.vechain.thorclient.utils.crypto.ECDSASigning;
+import com.vechain.thorclient.utils.crypto.ECDSASign;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.*;
@@ -83,7 +83,7 @@ public class RawTransactionHelperTest extends BaseTest {
         byte[] rlpTransactionEncoded = RLPUtils.encodeRawTransaction(rawTransaction);
         byte[] rawTxHash = CryptoUtils.blake2b(rlpTransactionEncoded);
         ECKeyPair keyPair = ECKeyPair.create(BytesUtils.toByteArray("0xc8c53657e41a8d669349fc287f57457bd746cb1fcfc38cf94d235deb2cfca81b"));
-        ECDSASigning.SignatureData signature = ECDSASigning.signMessage(rawTxHash, keyPair, false);
+        ECDSASign.SignatureData signature = ECDSASign.signMessage(rawTxHash, keyPair, false);
 
         logger.info("R:" + BytesUtils.toHexString(signature.getR(), Prefix.ZeroLowerX));
         logger.info("S:" + BytesUtils.toHexString(signature.getS(), Prefix.ZeroLowerX));

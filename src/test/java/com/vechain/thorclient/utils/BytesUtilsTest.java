@@ -17,8 +17,8 @@ public class BytesUtilsTest {
     @Test
     public void testBalance(){
         String balanceHex = "0x1af38bec818ff7d52fbad8f0";
-        BigDecimal balanceAmt = BlockchainUtils.balance(balanceHex, 18, 2);
-        logger.info("Test BytesUtils balance");
+        BigDecimal balanceAmt = BlockchainUtils.amount(balanceHex, 18, 2);
+        logger.info("Test BytesUtils amount");
         Assert.assertEquals("8341040001.22", balanceAmt.toString());
     }
 

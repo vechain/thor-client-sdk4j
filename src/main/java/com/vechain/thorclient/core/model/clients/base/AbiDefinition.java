@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.clients.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.CryptoUtils;
 
 import java.util.List;
 
@@ -234,5 +236,34 @@ public class AbiDefinition {
             result = 31 * result + (isIndexed() ? 1 : 0);
             return result;
         }
+
+
+    }
+    /**
+     * Get method code from abi definition
+     * @return hex string without prefix.
+     */
+    public  String getHexMethodCodeNoPefix(){
+
+        String name = this.getName();
+        String methodSignature = buildMethodSignature(name);
+        byte[] hashCode = CryptoUtils.keccak256( methodSignature.getBytes());
+        return BytesUtils.toHexString(hashCode, null).substring( 0,8 );
+    }
+
+    private  String buildMethodSignature(String methodName) {
+        StringBuilder result = new StringBuilder();
+        result.append(methodName);
+        result.append("(");
+        int index = 0;
+        for(AbiDefinition.NamedType namedType: this.getInputs()){
+            result.append(namedType.getType());
+            index ++;
+            if(index < this.getInputs().size()){
+                result.append( "," );
+            }
+        }
+        result.append(")");
+        return result.toString();
     }
 }

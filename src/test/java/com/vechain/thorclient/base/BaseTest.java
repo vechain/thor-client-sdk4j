@@ -23,7 +23,7 @@ public abstract class BaseTest {
 	public void setProvider() {
 		blockchainAPI = new BlockchainAPIImpl();
 
-		NodeProvider.getNodeProvider().setProvider("");
+		NodeProvider.getNodeProvider().setProvider("https://vethor-node-test.vechaindev.com");
 		if(!NodeProvider.getNodeProvider().getProvider().startsWith( "http" )){
 			throw new RuntimeException( "Please set your own node address. " );
 		}

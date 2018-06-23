@@ -10,7 +10,9 @@ import java.math.BigDecimal;
 /**
  *
  */
-public final class Amount {
+public  class Amount {
+    public static final Amount ZERO = new Zero();
+
     private AbstractToken abstractToken;
     private BigDecimal amount;
 
@@ -37,8 +39,20 @@ public final class Amount {
             throw ClientArgumentException.exception( "setHexValue argument hex value." );
         }
         String noPrefixAmount = StringUtils.sanitizeHex( hexAmount );
-        amount = BlockchainUtils.balance( noPrefixAmount, abstractToken.getPrecision().intValue(), abstractToken.getPrecision().intValue() );
+        amount = BlockchainUtils.amount( noPrefixAmount, abstractToken.getPrecision().intValue(), abstractToken.getPrecision().intValue() );
     }
+
+    /**
+     * Set decimal amount string
+     * @param decimalAmount decimal amount string.
+     */
+    public void setDecimalAmount(String decimalAmount){
+        if(StringUtils.isBlank( decimalAmount )){
+            throw new IllegalArgumentException( "Decimal amount string is blank" );
+        }
+        amount = new BigDecimal( decimalAmount );
+    }
+
 
     /**
      * Get amount
@@ -47,4 +61,22 @@ public final class Amount {
     public BigDecimal getAmount(){
         return  amount;
     }
+
+    /**
+     * Convert to byte array.
+     * @return byte[]
+     */
+    public byte[] toByteArray(){
+        return BlockchainUtils.byteArrayAmount( amount, abstractToken.getPrecision().intValue() );
+    }
+
+    private static class Zero extends Amount{
+        public byte[] toByteArray(){
+            return  new byte[]{};
+        }
+        public BigDecimal getAmount(){
+            return  new BigDecimal( 0 );
+        }
+    }
+
 }

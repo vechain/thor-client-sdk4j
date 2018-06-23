@@ -2,15 +2,18 @@ package com.vechain.thorclient.clients;
 
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.*;
-import com.vechain.thorclient.core.model.clients.RawTransaction;
-import com.vechain.thorclient.core.model.clients.Revision;
+import com.vechain.thorclient.core.model.clients.*;
+import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.utils.BlockchainUtils;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.Prefix;
+import com.vechain.thorclient.utils.RawTransactionFactory;
+import com.vechain.thorclient.utils.crypto.ECDSASign;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -58,6 +61,12 @@ public class TransactionClient extends AbstractClient {
     }
 
 
+    /**
+     *
+     * @param transaction
+     * @return
+     * @throws IOException
+     */
     public static TransferResult transfer(final RawTransaction transaction) throws IOException {
         if(transaction == null || transaction.getSignature() == null){
             ClientArgumentException.exception( "Raw transaction is invalid" );
@@ -79,6 +88,28 @@ public class TransactionClient extends AbstractClient {
      * @return {@link RawTransaction} with signature.
      */
     public static RawTransaction sign(RawTransaction rawTransaction, ECKeyPair keyPair){
-        return null;
+        if(rawTransaction == null){
+            throw ClientArgumentException.exception( "raw transaction object is invalid" );
+        }
+        ECDSASign.SignatureData signature = ECDSASign.signMessage( rawTransaction.encode(), keyPair, true );
+        byte[] signBytes = signature.toByteArray();
+        rawTransaction.setSignature( signBytes );
+        return rawTransaction;
     }
+
+
+    /**
+     * Sign and transfer the raw transaction.
+     * @param rawTransaction
+     * @param keyPair
+     * @return
+     * @throws IOException
+     */
+    public static TransferResult signThenTransfer(RawTransaction rawTransaction, ECKeyPair keyPair) throws IOException {
+       RawTransaction signedRawTxn =  sign( rawTransaction, keyPair );
+       return transfer( signedRawTxn );
+    }
+
+
+
 }

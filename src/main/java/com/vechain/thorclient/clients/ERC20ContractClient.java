@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ERC20ContractClient extends AbstractClient{
 
     /**
-     * Get balance from ERC20 contract.
+     * Get amount from ERC20 contract.
      * @param address address of token holder.
      * @param token {@link ERC20Token} required, the token {@link ERC20Token}
      * @param revision {@link Revision} if it is null, it will fallback to default {@link Revision.BEST}
@@ -26,9 +26,7 @@ public class ERC20ContractClient extends AbstractClient{
         }
         ERC20Contract contract = new ERC20Contract();
         AbiDefinition abiDefinition = contract.findAbiDefinition("balanceOf");
-
-        ContractCall call = contract.buildCall( abiDefinition, "balanceOf", address.toHexString( null ) );
-
+        ContractCall call = contract.buildCall( abiDefinition, address.toHexString( null ) );
         ContractCallResult contractCallResult = AccountClient.callContractInfo(contractAddr,  currRevision,  call );
         if(contractCallResult == null){
             return null;

@@ -17,10 +17,10 @@ import static com.vechain.thorclient.utils.Assertions.verifyPrecondition;
 /**
  * Sign a message with ECDSA algrithm and secp256k1 curve.
  */
-public class ECDSASigning {
+public class ECDSASign {
 
 
-    public static ECDSASigning.SignatureData signMessage(byte[] message, ECKeyPair keyPair) {
+    public static ECDSASign.SignatureData signMessage(byte[] message, ECKeyPair keyPair) {
         return signMessage(message, keyPair, true);
     }
 
@@ -32,7 +32,7 @@ public class ECDSASigning {
      * @param needToHash set if the message to be hashed before signing. If it is true, hashed first,then sign. If it is false, signed directly.
      * @return signature data which contains 32 bytes r, 32 bytes s, 1 byte v.
      */
-    public static ECDSASigning.SignatureData signMessage(byte[] message, ECKeyPair keyPair, boolean needToHash) {
+    public static ECDSASign.SignatureData signMessage(byte[] message, ECKeyPair keyPair, boolean needToHash) {
 
         BigInteger publicKey = keyPair.getPublicKey();
         byte[] messageHash;
@@ -60,7 +60,7 @@ public class ECDSASigning {
         byte[] r = BytesUtils.toBytesPadded(sig.r, 32);
         byte[] s = BytesUtils.toBytesPadded(sig.s, 32);
 
-        return new ECDSASigning.SignatureData(v, r, s);
+        return new ECDSASign.SignatureData(v, r, s);
 
     }
 
@@ -188,7 +188,7 @@ public class ECDSASigning {
                 return false;
             }
 
-            ECDSASigning.SignatureData that = (ECDSASigning.SignatureData) o;
+            ECDSASign.SignatureData that = (ECDSASign.SignatureData) o;
 
             if (v != that.v) {
                 return false;

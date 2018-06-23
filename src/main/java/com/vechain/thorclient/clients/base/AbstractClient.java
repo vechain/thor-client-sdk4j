@@ -83,7 +83,7 @@ public abstract class AbstractClient {
      * @param tClass  the class of result java object.
      * @param <T> Type of result java object.
      * @return response java object, could be null, mean can not find any result.
-     * @throws IOException http status 4xx means not enough energy balance.
+     * @throws IOException http status 4xx means not enough energy amount.
      */
     public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws IOException{
         String rawURL = rawUrl( path );

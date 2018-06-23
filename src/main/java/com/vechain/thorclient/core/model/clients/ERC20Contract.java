@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.clients;
 
+import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
 import com.vechain.thorclient.core.model.clients.base.AbstractContract;
+import com.vechain.thorclient.utils.BytesUtils;
 
 public class ERC20Contract extends AbstractContract {
     private static final String ERC20ABIString =
@@ -184,5 +186,33 @@ public class ERC20Contract extends AbstractContract {
     public ERC20Contract(){
         super(ERC20ABIString);
     }
+
+    /**
+     * Build transfer to clause.
+     * @param token required token to transfer.
+     * @param toAddress transfer to address.
+     * @param amount amount
+     * @return
+     */
+    public static ToClause buildTranferToClause(ERC20Token token, Address toAddress, Amount amount){
+        if(token == null){
+            throw  new IllegalArgumentException( "token is null" );
+        }
+        if(toAddress == null){
+            throw new IllegalArgumentException( "toAddress is null" );
+        }
+        if(amount == null){
+            throw new IllegalArgumentException( "amount is null" );
+        }
+
+        AbiDefinition abiDefinition = defaultERC20Contract.findAbiDefinition( "transfer" );
+        String data = buildData( abiDefinition, toAddress.toHexString( null ), BytesUtils.toHexString( amount.toByteArray(), null ) );
+        ToData toData = new ToData();
+        toData.setData( data );
+        return new ToClause(token.contractAddress, Amount.ZERO, toData);
+    }
+
+
+    private static final ERC20Contract defaultERC20Contract = new ERC20Contract();
 
 }

@@ -3,7 +3,7 @@ package com.vechain.thorclient.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
-import com.vechain.thorclient.utils.crypto.ECDSASigning;
+import com.vechain.thorclient.utils.crypto.ECDSASign;
 import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.service.BlockchainAPI;
 import com.vechain.thorclient.utils.*;
@@ -194,7 +194,7 @@ public class BlockchainAPIImpl implements BlockchainAPI {
             throw new IllegalArgumentException("Can not sign the txRaw without keypair.");
         }else if (rawTransaction.getSignature() == null){
             byte[] rawTx = RLPUtils.encodeRawTransaction(rawTransaction);
-            ECDSASigning.SignatureData signature = ECDSASigning.signMessage(rawTx, keyPair);
+            ECDSASign.SignatureData signature = ECDSASign.signMessage(rawTx, keyPair);
             rawTransaction.setSignature(signature.toByteArray());
         }
         byte[] signRawTx = RLPUtils.encodeRawTransaction(rawTransaction);

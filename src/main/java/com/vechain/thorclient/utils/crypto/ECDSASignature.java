@@ -21,7 +21,7 @@ class ECDSASignature {
      * <a href="https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#Low_S_values_in_signatures">
      * BIP62</a>.
      */
-    public boolean isCanonical() {
+    boolean isCanonical() {
         return s.compareTo( ECKeyPair.HALF_CURVE_ORDER) <= 0;
     }
 

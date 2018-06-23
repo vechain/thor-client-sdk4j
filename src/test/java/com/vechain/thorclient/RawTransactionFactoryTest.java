@@ -51,20 +51,20 @@ public class RawTransactionFactoryTest extends BaseTest {
      builder.update(clauses);
      */
 
-    @Test
-    public void testCreateRawTxn(){
-        ArrayList<Clause> rawClauseList = new ArrayList<>();
-        Clause clause = new Clause();
-        clause.setTo("0x42191bd624aBffFb1b65e92F1E51EB16f4d2A3Ce");
-        clause.setValue("42.42");
-        rawClauseList.add(clause);
-       RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction((byte)0xab, BytesUtils.trimLeadingZeroes( BytesUtils.toByteArray("0x0002049d16168115")), 720, 21000, (byte)0x01 , BytesUtils.toByteArray("0x0002049d16068015"), rawClauseList);
-        byte[] rlpTransactionEncoded = RLPUtils.encodeRawTransaction(rawTransaction);
-
-        String hexRLPTransaction = BytesUtils.toHexString(rlpTransactionEncoded, Prefix.ZeroLowerX);
-        logger.info("RLP encoded:" + hexRLPTransaction);
-
-        Assert.assertEquals("The RLP is not correct.","0xf83d81ab8702049d161681158202d0e1e09442191bd624abfffb1b65e92f1e51eb16f4d2a3ce89024cb21d3fcc1200008001825208808702049d16068015c0", hexRLPTransaction);
-    }
+//    @Test
+//    public void testCreateRawTxn(){
+//        ArrayList<Clause> rawClauseList = new ArrayList<>();
+//        Clause clause = new Clause();
+//        clause.setTo("0x42191bd624aBffFb1b65e92F1E51EB16f4d2A3Ce");
+//        clause.setValue("42.42");
+//        rawClauseList.add(clause);
+//       RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction((byte)0xab, BytesUtils.trimLeadingZeroes( BytesUtils.toByteArray("0x0002049d16168115")), 720, 21000, (byte)0x01 , BytesUtils.toByteArray("0x0002049d16068015"), rawClauseList);
+//        byte[] rlpTransactionEncoded = RLPUtils.encodeRawTransaction(rawTransaction);
+//
+//        String hexRLPTransaction = BytesUtils.toHexString(rlpTransactionEncoded, Prefix.ZeroLowerX);
+//        logger.info("RLP encoded:" + hexRLPTransaction);
+//
+//        Assert.assertEquals("The RLP is not correct.","0xf83d81ab8702049d161681158202d0e1e09442191bd624abfffb1b65e92f1e51eb16f4d2a3ce89024cb21d3fcc1200008001825208808702049d16068015c0", hexRLPTransaction);
+//    }
 
 }

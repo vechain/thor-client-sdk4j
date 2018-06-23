@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.regex.Pattern;
 
 /**
- * Blockchain utility, include address check, blockId check, balance calculate.
+ * Blockchain utility, include address check, blockId check, amount calculate.
  */
 public class BlockchainUtils {
 
@@ -144,18 +144,37 @@ public class BlockchainUtils {
     }
 
     /**
-     * get balance of {@link BigDecimal} value.
-     * @param hexString hex string of the balance.
-     * @param precision the precision of the balance, with is 18 by default
+     * get amount of {@link BigDecimal} value.
+     * @param hexString hex string of the amount.
+     * @param precision the precision of the amount, with is 18 by default
      * @param scale the remain digits numbers of fractional part
-     * @return the balance value which can show to the end user.
+     * @return the amount value which can show to the end user.
      */
-    public static BigDecimal balance(String hexString, int precision, int scale){
+    public static BigDecimal amount(String hexString, int precision, int scale){
         byte[] balBytes = BytesUtils.toByteArray(hexString);
         if(balBytes == null){
             return null;
         }
         BigInteger balInteger = BytesUtils.bytesToBigInt(balBytes);
         return BytesUtils.bigIntToBigDecimal(balInteger, precision, scale);
+    }
+
+
+    /**
+     * Convert big decimal to byte array.
+     * @param amount amount {@link BigDecimal}
+     * @param precision must >= 0
+     * @return byte array.
+     */
+    public static byte[] byteArrayAmount(BigDecimal amount, int precision){
+        if(amount == null){
+           throw new IllegalArgumentException( "amount is null" );
+        }
+        if(precision < 0){
+            throw  new IllegalArgumentException( "precision is invalid" );
+        }
+        BigDecimal bigDecimal = amount.multiply( BigDecimal.TEN.pow( precision ) );
+        BigInteger bigInt = bigDecimal.toBigInteger();
+        return BytesUtils.trimLeadingZeroes( bigInt .toByteArray());
     }
 }

@@ -10,6 +10,7 @@ import com.vechain.thorclient.utils.StringUtils;
  * Address object is wrapped address string or byte array.
  */
 public class Address {
+    public static Address ZERO = new ZeroAddress();
     public static Address VTHO_Address = Address.fromHexString( "0x0000000000000000000000000000456e65726779" );
 
     private  static final int ADDRESS_SIZE = 20;
@@ -53,6 +54,7 @@ public class Address {
         this.sanitizeHexAddress = sanitizeHexAddress;
     }
 
+    private Address(){}
     /**
      * Convert Address to byte array.
      * @return byte[] value.
@@ -72,6 +74,13 @@ public class Address {
         }else{
             return this.sanitizeHexAddress;
         }
+    }
+
+    private static class ZeroAddress extends Address{
+        public byte[] toByteArray(){
+            return new byte[]{};
+        }
+
     }
 
 }
