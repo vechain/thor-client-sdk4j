@@ -7,6 +7,7 @@ import com.vechain.thorclient.core.model.blockchain.Receipt;
 import com.vechain.thorclient.core.model.blockchain.Transaction;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.*;
+import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
@@ -49,7 +50,6 @@ public class TransactionClientTest extends BaseTest {
     }
 
     @Test
-
     public void testSendVTHOTransaction() throws IOException{
         byte chainTag = BlockchainClient.getChainTag();
         byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
@@ -61,8 +61,24 @@ public class TransactionClientTest extends BaseTest {
         RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
 
         TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( "0xedbc62392034f159c248e453908475e7e4bee795459d33adf2f7e8047bb033c4" ) );
-        logger.info( "transfer result:" + JSON.toJSONString( result ) );
+        logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
+        Assert.assertNotNull( result );
+    }
 
+    @Test
+    public void testSendVETTransaction() throws IOException{
+        byte chainTag = BlockchainClient.getChainTag();
+        byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
+        Amount amount = Amount.createFromToken( AbstractToken.VET );
+        amount.setDecimalAmount( "21.12" );
+        ToClause clause = TransactionClient.buildVETToClause(
+                Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),
+                amount,
+                ToData.ZERO );
+        RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+        TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( "0xedbc62392034f159c248e453908475e7e4bee795459d33adf2f7e8047bb033c4" ) );
+        logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
+        Assert.assertNotNull( result );
     }
 
 }

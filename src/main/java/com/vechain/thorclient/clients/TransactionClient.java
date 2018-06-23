@@ -62,7 +62,7 @@ public class TransactionClient extends AbstractClient {
 
 
     /**
-     *
+     * Transfer amount.
      * @param transaction
      * @return
      * @throws IOException
@@ -110,6 +110,27 @@ public class TransactionClient extends AbstractClient {
        return transfer( signedRawTxn );
     }
 
+
+    /**
+     * Build a transaction clause
+     * @param toAddress {@link Address} destination address.
+     * @param amount {@link Amount} amount to transfer.
+     * @param data {@link ToData} some comments maybe.
+     * @return {@link ToClause} to clause.
+     */
+    public static ToClause buildVETToClause(Address toAddress, Amount amount, ToData data){
+        if(toAddress == null){
+            throw ClientArgumentException.exception( "toAddress is null" );
+        }
+        if(amount == null){
+            throw ClientArgumentException.exception( "amount is null" );
+        }
+        if(data == null){
+            throw ClientArgumentException.exception( "data is null" );
+        }
+        ToClause toClause = new ToClause( toAddress, amount, data );
+        return toClause;
+    }
 
 
 }

@@ -57,7 +57,6 @@ public class AbstractContract {
     /**
      * Build call data
      * @param abiDefinition {@link AbiDefinition} abi definition
-     * @param methodId method id hex string.
      * @param params hex string format parameters.
      * @return hex string of data.
      */
@@ -88,22 +87,6 @@ public class AbstractContract {
         }
         return "0x" + dataBuffer.toString();
     }
-
-//    /**
-//     * Get method code from abi definition
-//     * @param abiDefinition {@link AbiDefinition}
-//     * @return hex string.
-//     */
-//    public static String getHexMethodCodeNoPefix(AbiDefinition abiDefinition){
-//        if(abiDefinition == null){
-//            throw new IllegalArgumentException( "AbiDefinition is null" );
-//        }
-//        String name = abiDefinition.getName();
-//        String methodSignature = buildMethodSignature(name, abiDefinition.getInputs());
-//        byte[] hashCode =CryptoUtils.keccak256( methodSignature.getBytes());
-//        return BytesUtils.toHexString(hashCode, null).substring( 0,8 );
-//    }
-
 
     /**
      * Get list of {@link AbiDefinition}
