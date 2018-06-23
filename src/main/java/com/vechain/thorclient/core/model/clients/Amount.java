@@ -10,22 +10,22 @@ import java.math.BigDecimal;
 /**
  *
  */
-public final class Balance {
+public final class Amount {
     private AbstractToken abstractToken;
     private BigDecimal amount;
 
     /**
-     * Create {@link Balance} from abstractToken
+     * Create {@link Amount} from abstractToken
      * @param token {@link AbstractToken}
-     * @return {@link Balance} object
+     * @return {@link Amount} object
      */
-    public static Balance createFromToken(AbstractToken token){
-        Balance balance = new Balance();
-        balance.abstractToken = token;
-        return balance;
+    public static Amount createFromToken(AbstractToken token){
+        Amount amount = new Amount();
+        amount.abstractToken = token;
+        return amount;
     }
 
-    private Balance(){
+    private Amount(){
     }
 
     /**
