@@ -13,7 +13,7 @@ import com.vechain.thorclient.core.wallet.WalletInfo;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.WalletUtils;
 
-public class ThorMain {
+public class Main {
 
     private static final String SIGN          = "sign";
 
@@ -66,12 +66,14 @@ public class ThorMain {
         if (args[0].equals(CHAIN_TAG)) {
             byte chainTagByte = BlockchainClient.getChainTag();
             String chainTag = String.format("%02x", chainTagByte);
+            System.out.println("ChainTag:");
             System.out.println("0x" + chainTag);
         }
 
         if (args[0].equals(BLOCK_REF)) {
             byte[] blockRefByte = BlockClient.getBlock(Revision.BEST).blockRef().toByteArray();
             String blockRef = ByteUtils.toHexString(blockRefByte);
+            System.out.println("BlockRef:");
             System.out.println("0x" + blockRef);
         }
         if (args[0].equals(CREATE_WALLET)) {
