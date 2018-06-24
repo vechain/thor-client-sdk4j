@@ -15,7 +15,7 @@ public class ThorMain {
     public static void main(String[] args) {
 
         if (args.length == 0) {
-            System.out.println("找不到有效的参数~");
+            System.out.println("can not find arguments");
             return;
         }
 
