@@ -208,3 +208,27 @@ Some case may be failed because of the account or block is not existed on your b
 ```
 mvn clean install
 ```
+
+
+### 4 Java console approach
+
+The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction; Run with maven：
+
+```
+mvn clean package
+
+The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.2.jar
+```
+
+```
+Run the following command:
+
+There is a example transaction file in src/main/resources/exchange_example.xlsx
+ 
+- Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar chainTag {blockchain-server-url}
+- Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar blockRef {blockchain-server-url}
+- Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
+- Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar sign {your-file-path} {privateKey}
+- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar send {blockchain-server-url} {privateKey} {your-file-path}
+```
+

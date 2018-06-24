@@ -1,14 +1,13 @@
 package com.vechain.thorclient.core.model.clients;
 
+import java.math.BigDecimal;
+
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.utils.BlockchainUtils;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
-import sun.jvm.hotspot.runtime.Bytes;
-
-import java.math.BigDecimal;
 
 /**
  *

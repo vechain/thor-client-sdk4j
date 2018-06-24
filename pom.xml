@@ -4,7 +4,7 @@
 
 	<groupId>com.vechain.client</groupId>
 	<artifactId>thor-client-sdk4j</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -71,6 +71,17 @@
 			<version>1.1.7</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.17</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.17</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -97,7 +108,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>com.vechain.thorclient.clients.ThorMain</mainClass>
+							<mainClass>com.vechain.thorclient.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

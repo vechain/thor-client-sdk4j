@@ -1,27 +1,28 @@
 package com.vechain.thorclient.base;
 
-import com.vechain.thorclient.core.model.blockchain.NodeProvider;
-import com.vechain.thorclient.utils.StringUtils;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
-import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vechain.thorclient.core.model.blockchain.NodeProvider;
+import com.vechain.thorclient.core.model.clients.Address;
+import com.vechain.thorclient.utils.Prefix;
+import com.vechain.thorclient.utils.StringUtils;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
+
 public abstract class BaseTest implements SlatKeys {
 
-    protected Logger            logger        = LoggerFactory.getLogger(this.getClass());
-    private final String        TOKEN_ADDRESS = "0x0000000000000000000000000000456e65726779";
+    protected Logger            logger      = LoggerFactory.getLogger(this.getClass());
 
     protected String            privateKey;
     protected String            nodeProviderUrl;
     protected String            fromAddress;
-    private Map<String, String> environment   = new HashMap<String, String>();
+    private Map<String, String> environment = new HashMap<String, String>();
 
     @Before
     public void setProvider() {
@@ -34,8 +35,8 @@ public abstract class BaseTest implements SlatKeys {
         int timeout = 5000;
         try {
             properties.load(is);
-        } catch (IOException e) {
-            logger.error("Can not read file config.properties~");
+        } catch (Exception e) {
+            logger.error("Can not find the file config.properties in classpath~");
         } finally {
             if (StringUtils.isBlank(nodeTimeout)) {
                 nodeTimeout = properties.getProperty(NODE_TIMEOUT);
@@ -60,7 +61,7 @@ public abstract class BaseTest implements SlatKeys {
         if (StringUtils.isBlank(this.nodeProviderUrl) || !this.nodeProviderUrl.startsWith("http")) {
             throw new RuntimeException("Can not find valid nodeProviderUrl~");
         }
-        environment.put(VTHO_TOKEN_ADDRESS, TOKEN_ADDRESS);
+        environment.put(VTHO_TOKEN_ADDRESS, Address.VTHO_Address.toHexString(Prefix.VeChainX));
 
         NodeProvider nodeProvider = NodeProvider.getNodeProvider();
         nodeProvider.setProvider(this.nodeProviderUrl);
@@ -73,7 +74,6 @@ public abstract class BaseTest implements SlatKeys {
         return this.environment;
     }
 
-
     protected void recoverAddress() {
         if (!StringUtils.isBlank(privateKey)) {
             ECKeyPair keyPair = ECKeyPair.create(privateKey);
@@ -81,6 +81,5 @@ public abstract class BaseTest implements SlatKeys {
             environment.put(FROM_ADDRESS, fromAddress);
         }
     }
-
 
 }
