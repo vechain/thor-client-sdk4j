@@ -168,19 +168,19 @@ public class ProtoTypeContractClient extends ContractClient{
 
     /**
      * Set user plan
-     * @param users {@link Address} array.
+     * @param receivers {@link Address} array.
      * @param credits {@link Amount} array.
      * @param recoveries {@link Amount} array.
      * @return {@link TransferResult}
      * @throws IOException network error.
      */
-    public static TransferResult setUserPlans( Address[] users,
+    public static TransferResult setUserPlans( Address[] receivers,
                                       Amount[] credits, Amount[] recoveries,
                                       int gas, byte gasCoef, int expiration , ECKeyPair keyPair
     ) throws IOException {
 
-        if(users == null){
-            throw ClientArgumentException.exception( "users is null" );
+        if(receivers == null){
+            throw ClientArgumentException.exception( "receivers is null" );
         }
         if(credits == null){
             throw ClientArgumentException.exception( "credits is null" );
@@ -188,19 +188,19 @@ public class ProtoTypeContractClient extends ContractClient{
         if(recoveries == null){
             throw ClientArgumentException.exception( "recoveries is null" );
         }
-        if(users.length != credits.length || users.length != recoveries.length){
+        if(receivers.length != credits.length || receivers.length != recoveries.length){
             throw ClientArgumentException.exception( "users.length must equal to credits.length and equal to recoveries.length" );
         }
         AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "setUserPlan" );
         if(abi == null){
             throw new IllegalArgumentException( "Can not find abi master method" );
         }
-        ToClause[] clauses = new ToClause[users.length];
-        for(int index = 0; index < users.length; index ++){
+        ToClause[] clauses = new ToClause[receivers.length];
+        for(int index = 0; index < receivers.length; index ++){
             clauses[index] = ProtoTypeContract.buildToClause(
                     ProtoTypeContract.ContractAddress,
                     abi,
-                    users[index].toHexString( Prefix.ZeroLowerX ),
+                    receivers[index].toHexString( Prefix.ZeroLowerX ),
                     credits[index].toHexString(),
                     recoveries[index].toHexString());
 
@@ -232,19 +232,19 @@ public class ProtoTypeContractClient extends ContractClient{
     }
 
     /**
-     *
-     * @param user
-     * @param revision
-     * @return
-     * @throws IOException
+     * Get user plan
+     * @param receiver required {@link Address}
+     * @param revision optional
+     * @return {@link ContractCallResult}
+     * @throws IOException network error.
      */
-    public static ContractCallResult getUserPlan(Address user, Revision revision) throws IOException {
-        if(user == null){
-            throw ClientArgumentException.exception( "User is null" );
+    public static ContractCallResult getUserPlan(Address receiver, Revision revision) throws IOException {
+        if(receiver == null){
+            throw ClientArgumentException.exception( "receiver is null" );
         }
         AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "userPlan" );
         ContractCall call = ProtoTypeContract.buildCall(abi,
-                user.toHexString( Prefix.ZeroLowerX ));
+                receiver.toHexString( Prefix.ZeroLowerX ));
 
         return callContract( call, ProtoTypeContract.ContractAddress,revision );
     }

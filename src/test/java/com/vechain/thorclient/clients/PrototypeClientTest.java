@@ -35,7 +35,7 @@ public class PrototypeClientTest extends BaseTest {
 
     @Test
     public void testIsUser() throws  IOException{
-        ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),
+        ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( UserAddress),
                 Revision.BEST);
         logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
     }
@@ -65,10 +65,10 @@ public class PrototypeClientTest extends BaseTest {
         Amount credit = Amount.VTHO();
         credit.setDecimalAmount( "12.00" );
         Amount recovery = Amount.VTHO();
-        recovery.setDecimalAmount( "0.00" );
+        recovery.setDecimalAmount( "0.00001" );
 
         TransferResult result = ProtoTypeContractClient.setUserPlans(
-                new Address[]{Address.fromHexString( UserAddress)},
+                new Address[]{Address.fromHexString( fromAddress)},
                 new Amount[]{credit},
                 new Amount[]{recovery},
                 ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );

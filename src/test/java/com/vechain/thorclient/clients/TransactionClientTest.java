@@ -25,9 +25,9 @@ import org.junit.runners.JUnit4;
 public class TransactionClientTest extends BaseTest {
 
     static String hexId = "0xa82d1dd26bae27a04fe1567658963b870232d2c9c73222b70f3227c7b086ae8a";
-    static String addUserTxId = "0x5485ab3aaf5ff9160a33566de7d727aa5eb9e49b041edbb72b5e7877ada9b168";
+    static String addUserTxId = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
     static String removeUserTxId = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
-    static String setUserPlanTxId = "0xbce3d27c6e4fc70ab0e46c48ee773ebd0d7a2d35e4668f39e2c6108b8e7c6219";
+    static String setUserPlanTxId = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
 
 
     @Test
@@ -48,7 +48,7 @@ public class TransactionClientTest extends BaseTest {
 
     @Test
     public void testGetTransactionReceipt() throws IOException {
-        Receipt receipt = TransactionClient.getTransactionReceipt(removeUserTxId, null);
+        Receipt receipt = TransactionClient.getTransactionReceipt(setUserPlanTxId, null);
         logger.info("Receipt:" + JSON.toJSONString(receipt));
         Assert.assertNotNull(receipt);
     }
