@@ -1,91 +1,210 @@
 # Thor Java Client SDK
+- - - -
+A SDK for client toolkit to call Restful API.
 
-A SDK for client to call Restful API.
+## License
+Thor Java Client SDK is licensed under the GNU Lesser General Public License v3.0, also included in LICENSE file in repository.
+- - - -
 
-## 1、Query the transactions, account, blocks, receipt, blockRef, .
-You can find the code from test code as follows:
+
+
+##  You can find the clients toolkit under the directory :
+ **src/main/java/com/vechain/thorclients/clients**
+
+### AccountClient
+User can use this client :
+- Get Account information: VET balance and VTHO balance
+```
+Address address = Address.fromHexString(fromAddress);
+Account account = AccountClient.getAccountInfo(address, null);
+logger.info("account info:" + JSON.toJSONString(account));
+logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
+Assert.assertNotNull(account);
 
 ```
-@Test
-	public void testGetBestBlock(){
-		Block block = blockchainAPI.getBestBlock();
-        logger.info("BestBlock Info  " + block);
-        Assert.notNull(block, "BEST BLOCK IS NULL");
-	}
+- Call Contract view method.
+```
+Address contractAddr = token.getContractAddress();
+Revision currRevision = revision;
+if(currRevision == null){
+    currRevision = Revision.**BEST**;
+}
+AbiDefinition abiDefinition = ERC20Contract.**defaultERC20Contract**.findAbiDefinition("balanceOf");
+ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString( null ) );
+ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
 
+```
+- Get code on a address.
+```
+Address tokenAddr = Address.VTHO_Address;
+AccountCode code = AccountClient.getAccountCode(tokenAddr, null);
+logger.info("code:" + JSON.toJSONString(code));
 
-	@Test
-    public void testGetBlockByNumber(){
-        Block block = blockchainAPI.getBlockByNumber(4);
-        logger.info("Getting Block Info  " + JSON.toJSONString(block));
-        Assert.notNull(block, "BLOCK IS NULL");
-    }
-
-
-    @Test
-    public void testGetBlockByid(){
-        Block block = blockchainAPI.getBlockById("0x000000016e44c77ae7b7b804df6af935586ecf641869ea479b0eb17b594b3fd5");
-        logger.info("Getting Block Info  " + JSON.toJSONString(block));
-        Assert.notNull(block, "BLOCK IS NULL");
-    }
-
-    @Test
-    public void testGetBalance(){
-        Account account = blockchainAPI.getBalance("0x7567D83b7b8d80ADdCb281A71d54Fc7B3364ffed","best");
-        String balanceString =  account.getBalance();
-        logger.info("Current block balance:" +balanceString);
-        logger.info("balance: " + BytesUtils.balance(balanceString, 18, 2).toString());
-        Assert.notNull(account, "Account is null");
-    }
-
-    @Test
-    public void testGetBlockRef(){
-        byte[] blockRef = blockchainAPI.getBestBlockRef();
-        logger.info("Block reference: " + BytesUtils.toHexString(blockRef, Prefix.ZeroLowerX));
-    }
 ```
 
-## 2、Post raw transaction.
+- - - -
+### TransactionClient
+- Send VET to account
+```
+byte chainTag = BlockchainClient.getChainTag();
+byte[] blockRef = BlockchainClient.getBlockRef( Revision.**BEST**).toByteArray();
+Amount amount = Amount.createFromToken( AbstractToken.**VET**);
+amount.setDecimalAmount( "21.12" );
+ToClause clause = TransactionClient.buildVETToClause(
+        Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),
+        amount,
+        ToData.ZERO );
+RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
+logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
 
-###  2.1 The detail step as follows
+```
+- Send VTHO to account
+```
+byte chainTag = BlockchainClient.getChainTag();
+byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
+Amount amount = Amount.createFromToken( ERC20Token.**VTHO**);
+amount.setDecimalAmount( "11.12" );
+ToClause clause = ERC20Contract.buildTranferToClause( ERC20Token.**VTHO**,
+        Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),
+        amount);
+RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
 
-    - 1. Construct a raw transaction Of RawTransaction class without signature.
-    - 2. Encode the raw transaction with RLP.
-    - 3. Use blake2b 32 bytes algrithm to hash the rlp encoded transaction
-    - 4. Sign the hash with private key.
-    - 5. Construct a raw transaction of RawTransaction class with signature.
-    - 6. Encode the raw transaction with RLP
-    - 7. Convert the encoded byte array to hex string with '0x'.
-    - 8. Post the Json string to VeChain blockchain node.
+TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
+logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
+
+```
+- Query transaction receipt
+```
+Receipt receipt = TransactionClient.getTransactionReceipt(setUserPlanTxId, null);
+logger.info("Receipt:" + JSON.toJSONString(receipt));
+
+```
+- Query transaction
+```
+Transaction transaction = TransactionClient.getTransaction(hexId, true, null);
+logger.info("Transaction:" + JSON.toJSONString(transaction));
+
+```
+
+- - - -
+### BlockClient
+You can get block by specified the block revision.
+```
+Transaction transaction = TransactionClient.getTransaction(hexId, false, null);
+logger.info("Transaction:" + JSON.toJSONString(transaction));
+
+```
+
+- - - -
+### LogsClient
+You can get events logs and transfer logs, the api is also supporting pagination query.
+- Query events logs.
+```
+EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
+ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.**DESC**, null);
+
+```
+- Query transfer logs.
+```
+TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
+ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.**DESC**);
+```
+
+- - - -
+### BlockchainClient
+You can get the chain tag and block reference.
+- Get chain tag
+```
+byte chainTag = BlockchainClient.getChainTag();
+int chainTagInt = chainTag & 0xff;
+logger.info( "chainTag: " + chainTagInt);
+```
+- Get block reference
+```
+ArrayList list = BlockchainClient.getPeerStatusList();
+logger.info( "nodes list:" + list );
+```
 
 
-###  2.2 You can find all apis in BlockchainAPI.java
+- - - -
+### ProtoTypeClient
+The detail information you can refer to the page[ProtoType Wiki](https://github.com/vechain/thor/wiki/Prototype(CN))
+- Get master address 
+```
+ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( fromAddress ) , Revision.**BEST**);
+logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
+
+```
+
+- Set master address
+```
+TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( fromAddress ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
+logger.info( "result: " + JSON.toJSONString( result ) );
+
+```
+
+- Add user
+```
+TransferResult transferResult = ProtoTypeContractClient.addUser(
+        new Address[]{Address.fromHexString( fromAddress )},
+        new Address[]{Address.fromHexString(**UserAddress**)},
+        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+logger.info("Add user:" + JSON.toJSONString( transferResult ));
+
+```
+
+- Check if it is user
+```
+ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( **UserAddress**),
+        Revision.**BEST**);
+logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
+```
+- Remove user
+```
+TransferResult transferResult = ProtoTypeContractClient.removeUsers(
+      new Address[]{Address.fromHexString( fromAddress )},
+      new Address[]{Address.fromHexString( **UserAddress**)},
+        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
+
+```
+- Set User plan
+```
+Amount credit = Amount.VTHO();
+credit.setDecimalAmount( "12.00" );
+Amount recovery = Amount.VTHO();
+recovery.setDecimalAmount( "0.00001" );
+
+TransferResult result = ProtoTypeContractClient.setUserPlans(
+        new Address[]{Address.fromHexString( fromAddress)},
+        new Amount[]{credit},
+        new Amount[]{recovery},
+        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+logger.info( "set user plans:" + JSON.toJSONString( result ) );
+
+```
+- Get User plan
+```
+ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.**BEST**);
+logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
+
+```
+- Get User credits
+```
+ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
+        Address.fromHexString( fromAddress ),
+        Address.fromHexString( **UserAddress**),
+        Revision.**BEST**);
+logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
+
+```
 
 
-## 3、Create wallet and serialized to keystore string, load keystore and decrypt keypair.
-
-You can find all apis in *WalletAPI.java*
-
-
-## 3. How to run the test
-
-### 3.1 First you need to replace <your thor node address> with the your blockchain node address in BaseTest.java under test directory .
-
-    ```
-    @Before
-    public void setProvider() {
-    		blockchainAPI = new BlockchainAPIImpl();
-    		NodeProvider provider = new NodeProvider();
-    		provider.setProvider("<your thor node address>");
-    		provider.setTimeout(5000);
-    		blockchainAPI.setProvider(provider);
-    }
-    ```
-
-### 3.2 Run the test.
-
+- - - -
+### Run the test.
 Some case may be failed because of the account or block is not existed on your blockchain env.
 
-    ```
-        mvn clean install
-    ```
+```
+mvn clean install
+```
