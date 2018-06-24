@@ -32,26 +32,6 @@ public class PrototypeClientTest extends BaseTest {
         logger.info( "result: " + JSON.toJSONString( result ) );
     }
 
-    @Test
-    public void testSetUserPlan() throws IOException{
-        Amount credit = Amount.VTHO();
-        credit.setDecimalAmount( "12.00" );
-        Amount recovery = Amount.VTHO();
-        recovery.setDecimalAmount( "0.00" );
-
-        TransferResult result = ProtoTypeContractClient.setUserPlans(
-                new Address[]{Address.fromHexString( UserAddress)},
-                new Amount[]{credit},
-                new Amount[]{recovery},
-                ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
-        logger.info( "set user plans:" + JSON.toJSONString( result ) );
-    }
-
-    @Test
-    public void testGetUserPlan () throws IOException {
-        ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.BEST);
-        logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
-    }
 
     @Test
     public void testIsUser() throws  IOException{
@@ -78,6 +58,37 @@ public class PrototypeClientTest extends BaseTest {
         logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
     }
 
+
+
+    @Test
+    public void testSetUserPlan() throws IOException{
+        Amount credit = Amount.VTHO();
+        credit.setDecimalAmount( "12.00" );
+        Amount recovery = Amount.VTHO();
+        recovery.setDecimalAmount( "0.00" );
+
+        TransferResult result = ProtoTypeContractClient.setUserPlans(
+                new Address[]{Address.fromHexString( UserAddress)},
+                new Amount[]{credit},
+                new Amount[]{recovery},
+                ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+        logger.info( "set user plans:" + JSON.toJSONString( result ) );
+    }
+
+    @Test
+    public void testGetUserPlan () throws IOException {
+        ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.BEST);
+        logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
+    }
+
+    @Test
+    public void testGetUserCredit() throws IOException{
+        ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
+                Address.fromHexString( fromAddress ),
+                Address.fromHexString( UserAddress ),
+                Revision.BEST);
+        logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
+    }
 
 
 }
