@@ -1,25 +1,40 @@
 package com.vechain.thorclient.utils;
 
+/**
+ * String operation utility class.
+ */
 public class StringUtils {
 
+	/**
+	 * Check if the string is blank string, null or space.
+	 * @param str a string
+	 * @return true or false.
+	 */
 	public static boolean isBlank(String str) {
-		if (str == null || str.trim().isEmpty()) {
-			return true;
-		}
-		return false;
+		return str == null || str.trim().isEmpty();
 	}
-	
+
+	/**
+	 * Remove the prefix "0x" or "VX"
+	 * @param value a string
+	 * @return string without prefix.
+	 */
 	public static String sanitizeHex(String value) {
 		if(StringUtils.isBlank(value)) {
 			return value;
 		}
-		if(value.toLowerCase().indexOf("0x") == 0 || value.toLowerCase().indexOf("vx") == 0) {
+		if(value.toLowerCase().indexOf(Prefix.ZeroLowerX.getPrefixString()) == 0 || value.toLowerCase().indexOf(Prefix.VeChainX.getPrefixString().toLowerCase()) == 0) {
 			return value.substring(2);
 		}
 		return value;
 	}
-	
+
+	/**
+	 * Check if the string is hex string or not.
+	 * @param value string object
+	 * @return true or false.
+	 */
 	public static boolean isHex(String value) {
-		return value.matches("^(-0x|0x)?[0-9a-fA-F]+$");
+		return value != null && value.matches( "^(-0x|0x|VX|vx)?[0-9a-fA-F]+$" );
 	}
 }

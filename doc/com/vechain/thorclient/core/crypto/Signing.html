@@ -48,8 +48,8 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.core.crypto"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.utils.crypto"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/vechain/thorclient/core/crypto/Signing.html" target="_top">Frames</a></li>
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">com.vechain.thorclient.core.crypto</div>
+<div class="subTitle">com.vechain.thorclient.utils.crypto</div>
 <h2 title="Class Signing" class="title">Class Signing</h2>
 </div>
 <div class="contentContainer">
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>com.vechain.thorclient.core.crypto.Signing</li>
+<li>com.vechain.thorclient.utils.crypto.ECDSASign</li>
 </ul>
 </li>
 </ul>
@@ -131,7 +131,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.core.crypto">Signing.SignatureData</a></span></code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.utils.crypto">Signing.SignatureData</a></span></code>
 <div class="block">A signature data</div>
 </td>
 </tr>
@@ -199,22 +199,22 @@ extends java.lang.Object</pre>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static java.math.BigInteger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.html#recoverFromSignature-int-com.vechain.thorclient.core.crypto.ECDSASignature-byte:A-">recoverFromSignature</a></span>(int&nbsp;recId,
-                    com.vechain.thorclient.core.crypto.ECDSASignature&nbsp;sig,
+                    com.vechain.thorclient.utils.crypto.ECDSASignature&nbsp;sig,
                     byte[]&nbsp;message)</code>
 <div class="block">Recover the public key from signature and message.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.core.crypto">Signing.SignatureData</a></code></td>
+<td class="colFirst"><code>static <a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.utils.crypto">Signing.SignatureData</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.html#signMessage-byte:A-com.vechain.thorclient.core.crypto.ECKeyPair-">signMessage</a></span>(byte[]&nbsp;message,
-           <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto">ECKeyPair</a>&nbsp;keyPair)</code>&nbsp;</td>
+           <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto">ECKeyPair</a>&nbsp;keyPair)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.core.crypto">Signing.SignatureData</a></code></td>
+<td class="colFirst"><code>static <a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.utils.crypto">Signing.SignatureData</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.html#signMessage-byte:A-com.vechain.thorclient.core.crypto.ECKeyPair-boolean-">signMessage</a></span>(byte[]&nbsp;message,
-           <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto">ECKeyPair</a>&nbsp;keyPair,
+           <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto">ECKeyPair</a>&nbsp;keyPair,
            boolean&nbsp;needToHash)</code>
-<div class="block">Sign the message with <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto"><code>ECKeyPair</code></a>.</div>
+<div class="block">Sign the message with <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto"><code>ECKeyPair</code></a>.</div>
 </td>
 </tr>
 </table>
@@ -288,8 +288,8 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>signMessage</h4>
-<pre>public static&nbsp;<a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.core.crypto">Signing.SignatureData</a>&nbsp;signMessage(byte[]&nbsp;message,
-                                                <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto">ECKeyPair</a>&nbsp;keyPair)</pre>
+<pre>public static&nbsp;<a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.utils.crypto">Signing.SignatureData</a>&nbsp;signMessage(byte[]&nbsp;message,
+                                                <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto">ECKeyPair</a>&nbsp;keyPair)</pre>
 </li>
 </ul>
 <a name="signMessage-byte:A-com.vechain.thorclient.core.crypto.ECKeyPair-boolean-">
@@ -298,14 +298,14 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>signMessage</h4>
-<pre>public static&nbsp;<a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.core.crypto">Signing.SignatureData</a>&nbsp;signMessage(byte[]&nbsp;message,
-                                                <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto">ECKeyPair</a>&nbsp;keyPair,
+<pre>public static&nbsp;<a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.utils.crypto">Signing.SignatureData</a>&nbsp;signMessage(byte[]&nbsp;message,
+                                                <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto">ECKeyPair</a>&nbsp;keyPair,
                                                 boolean&nbsp;needToHash)</pre>
-<div class="block">Sign the message with <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto"><code>ECKeyPair</code></a>. Only recovery id 0 or 1 is accepted, otherwise the method will continue to retry to sign til get recovery id is 0 or 1.</div>
+<div class="block">Sign the message with <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto"><code>ECKeyPair</code></a>. Only recovery id 0 or 1 is accepted, otherwise the method will continue to retry to sign til get recovery id is 0 or 1.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>message</code> - message to be signed.</dd>
-<dd><code>keyPair</code> - <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto"><code>ECKeyPair</code></a></dd>
+<dd><code>keyPair</code> - <a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto"><code>ECKeyPair</code></a></dd>
 <dd><code>needToHash</code> - set if the message to be hashed before signing. If it is true, hashed first,then sign. If it is false, signed directly.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>signature data which contains 32 bytes r, 32 bytes s, 1 byte v.</dd>
@@ -319,7 +319,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>recoverFromSignature</h4>
 <pre>public static&nbsp;java.math.BigInteger&nbsp;recoverFromSignature(int&nbsp;recId,
-                                                        com.vechain.thorclient.core.crypto.ECDSASignature&nbsp;sig,
+                                                        com.vechain.thorclient.utils.crypto.ECDSASignature&nbsp;sig,
                                                         byte[]&nbsp;message)</pre>
 <div class="block">Recover the public key from signature and message.</div>
 <dl>
@@ -375,8 +375,8 @@ extends java.lang.Object</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.core.crypto"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.core.crypto"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/vechain/thorclient/core/crypto/ECKeyPair.html" title="class in com.vechain.thorclient.utils.crypto"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/vechain/thorclient/core/crypto/Signing.SignatureData.html" title="class in com.vechain.thorclient.utils.crypto"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/vechain/thorclient/core/crypto/Signing.html" target="_top">Frames</a></li>

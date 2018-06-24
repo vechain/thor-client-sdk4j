@@ -1,7 +1,10 @@
-com.vechain.thorclient.core.crypto
-com.vechain.thorclient.core.model
-com.vechain.thorclient.core.rlp
+com.vechain.thorclient.clients
+com.vechain.thorclient.clients.base
+com.vechain.thorclient.core.model.blockchain
+com.vechain.thorclient.core.model.clients
+com.vechain.thorclient.core.model.clients.base
+com.vechain.thorclient.core.model.exception
 com.vechain.thorclient.core.wallet
-com.vechain.thorclient.service
-com.vechain.thorclient.service.impl
 com.vechain.thorclient.utils
+com.vechain.thorclient.utils.crypto
+com.vechain.thorclient.utils.rlp

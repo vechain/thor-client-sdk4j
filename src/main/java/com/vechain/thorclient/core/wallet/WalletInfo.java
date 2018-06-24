@@ -1,7 +1,7 @@
 package com.vechain.thorclient.core.wallet;
 
 import com.alibaba.fastjson.JSON;
-import com.vechain.thorclient.core.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 /**
  * WalletInfo contains the {@link WalletFile} instance and {@link ECKeyPair}

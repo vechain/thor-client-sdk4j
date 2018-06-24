@@ -3,10 +3,10 @@ package com.vechain.thorclient.utils;
 import java.util.HashMap;
 import java.util.List;
 
-import com.vechain.thorclient.core.model.Clause;
-import com.vechain.thorclient.core.model.RawClause;
-import com.vechain.thorclient.core.model.RawTransaction;
-import com.vechain.thorclient.core.model.TransactionAttributes.ERC20ContractMethod;
+import com.vechain.thorclient.core.model.blockchain.Clause;
+import com.vechain.thorclient.core.model.blockchain.RawClause;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
+import com.vechain.thorclient.core.model.blockchain.TransactionAttributes.ERC20ContractMethod;
 
 public class RawTransactionBuilder {
 
@@ -55,7 +55,7 @@ public class RawTransactionBuilder {
 		this.update(Byte.valueOf(chainTag), "chainTag");
 
 		// Expiration
-		byte[] expirationBytes = BytesUtils.integerToBytes(expiration);
+		byte[] expirationBytes = BytesUtils.longToBytes(expiration);
 		this.update(expirationBytes, "expiration");
 
 		// BlockRef
@@ -67,7 +67,7 @@ public class RawTransactionBuilder {
 		this.update(nonce, "nonce");
 
 		// update gas bytes
-		byte[] gasBytes = BytesUtils.integerToBytes(gas);
+		byte[] gasBytes = BytesUtils.longToBytes(gas);
 		this.update(gasBytes, "gas");
 
 		// update gas price coefficient
