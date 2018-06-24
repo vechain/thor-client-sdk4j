@@ -225,10 +225,10 @@ Run the following command:
 
 There is a example transaction file in src/main/resources/exchange_example.xlsx
  
-- Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar chainTag {blockchain server url}
-- Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar blockRef {blockchain server url}
-- Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet password}
-- Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar sign {your file path}/exhange_sign.xlsx {privateKey}
-- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar send {your file path}/exhange_sign.xlsx {privateKey}
+- Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar chainTag {blockchain-server-url}
+- Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar blockRef {blockchain-server-url}
+- Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
+- Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar sign {your-file-path} {privateKey}
+- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar send {blockchain-server-url} {privateKey} {your-file-path}
 ```
 

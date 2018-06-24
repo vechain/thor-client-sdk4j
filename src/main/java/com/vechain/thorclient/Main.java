@@ -40,7 +40,7 @@ public class Main {
         }
         if (args[0].equals(CHAIN_TAG) || args[0].equals(BLOCK_REF) || args[0].equals(SEND)) {
             // args=chainTag/blockRef {providerUrl}
-            // args=send {providerUrl} {privateKey}
+            // args=send {providerUrl} {privateKey} {filePath}
             if (args.length > 1 && !StringUtils.isBlank(args[1]) && args[1].startsWith("http")) {
                 nodeProviderUrl = args[1];
             }
@@ -89,7 +89,7 @@ public class Main {
         }
 
         if (args[0].equals(SIGN)) {
-            // args={sign filePath privateKey}
+            // args=sign filePath privateKey
             if (args.length < 3) {
                 System.out.println("You have input invalid parameters.");
                 System.exit(0);
@@ -97,7 +97,7 @@ public class Main {
             File file = new File(args[1]);
             if (file.isFile()) {
                 List<String[]> transactionList = ConsoleUtils.readExcelFile(args[1]);
-                String rawTransaction = ConsoleUtils.doSign(transactionList, args[2], false);
+                String rawTransaction = ConsoleUtils.doSignVETTx(transactionList, privateKey, false);
                 System.out.println("Raw Transaction:");
                 System.out.println(rawTransaction);
             } else {
@@ -106,15 +106,15 @@ public class Main {
         }
 
         if (args[0].equals(SEND)) {
-            // args={send filePath privateKey}
+            // args=send {providerUrl} {privateKey} {filePath}
             if (args.length < 3) {
                 System.out.println("You have input invalid parameters.");
                 System.exit(0);
             }
-            File file = new File(args[1]);
+            File file = new File(args[3]);
             if (file.isFile()) {
-                List<String[]> transactionList = ConsoleUtils.readExcelFile(args[1]);
-                String result = ConsoleUtils.doSign(transactionList, args[2], true);
+                List<String[]> transactionList = ConsoleUtils.readExcelFile(args[3]);
+                String result = ConsoleUtils.doSignVETTx(transactionList, privateKey, true);
                 System.out.println("Send Result:");
                 System.out.println(result);
             } else {
