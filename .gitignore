@@ -12,6 +12,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+
 # Package Files #
 *.jar
 *.war
@@ -41,3 +42,4 @@ gen
 /src/main/main.iml
 /target/
 /.settings/
+/src/test/resources/config.properties
