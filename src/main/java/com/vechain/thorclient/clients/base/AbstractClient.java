@@ -2,8 +2,13 @@ package com.vechain.thorclient.clients.base;
 
 
 import com.alibaba.fastjson.JSON;
+import com.vechain.thorclient.core.model.blockchain.ContractCall;
+import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
+import com.vechain.thorclient.core.model.clients.Address;
+import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
+import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.URLUtils;
 
@@ -108,6 +113,7 @@ public abstract class AbstractClient {
         }
         return params;
     }
+
 
 
 }

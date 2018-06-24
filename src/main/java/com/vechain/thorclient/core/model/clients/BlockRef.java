@@ -1,6 +1,7 @@
 package com.vechain.thorclient.core.model.clients;
 
 import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
 
 /**
@@ -30,6 +31,14 @@ public class BlockRef {
         }
         byte[] blockIdBytes = BytesUtils.toByteArray( hexBlockId );
         return new BlockRef(blockIdBytes);
+    }
+
+    /**
+     * To hex string
+     * @return hex string with prefix "0x".
+     */
+    public String toString(){
+        return BytesUtils.toHexString( this.blockRef, Prefix.ZeroLowerX );
     }
 
     /**

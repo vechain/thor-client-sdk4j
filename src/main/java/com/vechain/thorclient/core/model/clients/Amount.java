@@ -3,7 +3,10 @@ package com.vechain.thorclient.core.model.clients;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.utils.BlockchainUtils;
+import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
+import sun.jvm.hotspot.runtime.Bytes;
 
 import java.math.BigDecimal;
 
@@ -25,6 +28,14 @@ public  class Amount {
         Amount amount = new Amount();
         amount.abstractToken = token;
         return amount;
+    }
+
+    public static Amount VET(){
+        return Amount.createFromToken( AbstractToken.VET );
+    }
+
+    public static Amount VTHO(){
+        return Amount.createFromToken( ERC20Token.VTHO );
     }
 
     private Amount(){
@@ -51,6 +62,12 @@ public  class Amount {
             throw new IllegalArgumentException( "Decimal amount string is blank" );
         }
         amount = new BigDecimal( decimalAmount );
+    }
+
+    public String toHexString(){
+        BigDecimal fullDecimal = amount.multiply( BigDecimal.TEN.pow( abstractToken.getPrecision().intValue() ) );
+        byte[] bytes = BytesUtils.trimLeadingZeroes( fullDecimal.toBigInteger().toByteArray() );
+        return BytesUtils.toHexString( bytes, Prefix.ZeroLowerX );
     }
 
 

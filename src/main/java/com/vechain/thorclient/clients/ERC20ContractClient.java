@@ -1,14 +1,14 @@
 package com.vechain.thorclient.clients;
 
-import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
+
 import java.io.IOException;
 
 
-public class ERC20ContractClient extends AbstractClient{
+public class ERC20ContractClient extends ContractClient{
 
     /**
      * Get amount from ERC20 contract.

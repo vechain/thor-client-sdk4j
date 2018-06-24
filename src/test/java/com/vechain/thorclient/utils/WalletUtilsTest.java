@@ -1,16 +1,13 @@
-package com.vechain.thorclient;
+package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.wallet.WalletInfo;
-import com.vechain.thorclient.utils.WalletUtils;
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.Prefix;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class WalletAPITest extends BaseTest {
+public class WalletUtilsTest extends BaseTest {
 
 	@Test
 	public void testCreateWallet() {

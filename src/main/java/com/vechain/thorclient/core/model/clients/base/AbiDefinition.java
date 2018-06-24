@@ -244,12 +244,20 @@ public class AbiDefinition {
      * @return hex string without prefix.
      */
     public  String getHexMethodCodeNoPefix(){
-
-        String name = this.getName();
-        String methodSignature = buildMethodSignature(name);
-        byte[] hashCode = CryptoUtils.keccak256( methodSignature.getBytes());
+        byte[] hashCode = getBytesMethodCode();
         return BytesUtils.toHexString(hashCode, null).substring( 0,8 );
     }
+
+    /**
+     * Get method code.
+     * @return byte array.
+     */
+    public byte[] getBytesMethodCode(){
+        String name = this.getName();
+        String methodSignature = buildMethodSignature(name);
+        return CryptoUtils.keccak256( methodSignature.getBytes());
+    }
+
 
     private  String buildMethodSignature(String methodName) {
         StringBuilder result = new StringBuilder();

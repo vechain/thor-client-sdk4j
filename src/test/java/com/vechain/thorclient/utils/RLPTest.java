@@ -33,4 +33,15 @@ public class RLPTest extends BaseTest {
         logger.info("RLP empty array:" + BytesUtils.toHexString(empty, Prefix.ZeroLowerX));
 
     }
+    @Test
+    public void testBytesZero(){
+        List<RlpType> result = new ArrayList<>();
+        byte zeros[] = new byte[32];
+        result.add( RlpString.create(zeros));
+
+        RlpList rlpList = new RlpList(result);
+        byte[] empty =  RlpEncoder.encode(rlpList);
+        logger.info("RLP zeros array:" + BytesUtils.toHexString(empty, Prefix.ZeroLowerX));
+    }
+
 }

@@ -3,6 +3,7 @@ package com.vechain.thorclient.clients;
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.Block;
 import com.vechain.thorclient.core.model.blockchain.PeerStat;
+import com.vechain.thorclient.core.model.clients.BlockRef;
 import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.utils.BlockchainUtils;
 import com.vechain.thorclient.utils.BytesUtils;
@@ -11,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Get information of blockchain. It can get block tag, nodes status of blockchain.
+ * Get information of blockchain. It can get block tag, block reference, nodes status of blockchain.
  */
 public class BlockchainClient extends AbstractClient{
 
@@ -44,5 +45,21 @@ public class BlockchainClient extends AbstractClient{
    public static ArrayList getPeerStatusList()throws IOException{
 
         return sendGetRequest( Path.GetNodeInfoPath, null, null, ArrayList.class );
+   }
+
+    /**
+     * Get block reference from block chain node.
+     * @param revision optional, if set null, it will be the best block, or set {@linkplain Revision#BEST Best},
+     * or specify block number {@linkplain Revision#create(long) create(blocknumber)}.
+     * @return {@linkplain BlockRef block reference}
+     * throw IOException network error.
+     */
+   public static BlockRef getBlockRef(Revision revision) throws IOException {
+       Block block = BlockClient.getBlock(revision );
+       if(block != null){
+           return block.blockRef();
+       }else{
+           return null;
+       }
    }
 }

@@ -1,6 +1,5 @@
 package com.vechain.thorclient.core.model.clients;
 
-import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
 import com.vechain.thorclient.core.model.clients.base.AbstractContract;
 
 /**
@@ -17,19 +16,7 @@ public class ProtoTypeContract extends AbstractContract{
     }
 
 
-    /**
-     * build transaction clause
-     * @param toAddress {@link Address}
-     * @param abiDefinition {@link AbiDefinition} Abi definition.
-     * @param hexArguments {@link String}
-     * @return {@link ToClause}
-     */
-    public static ToClause buildToClause(Address toAddress, AbiDefinition abiDefinition, String... hexArguments){
-        ToData toData = new ToData();
-        String data = buildData( abiDefinition, hexArguments );
-        toData.setData( data );
-        return new ToClause( toAddress, Amount.ZERO,  toData);
-    }
+
 
 
     private  final static String ProtoTypeABI = "[\n" +

@@ -62,10 +62,11 @@ public class TransactionClient extends AbstractClient {
 
 
     /**
-     * Transfer amount.
-     * @param transaction
-     * @return
-     * @throws IOException
+     * Transfer amount, raw transaction will be encoded by rlp encoder and convert to hex string with prefix "0x".
+     * Then the hex string will be packaged into {@link TransferRequest} bean object and serialized to JSON string.
+     * @param transaction {@link RawTransaction} raw transaction to to send
+     * @return {@link TransferResult}
+     * @throws IOException network error, 5xx http status means request error, 4xx http status means no enough gas or balance.
      */
     public static TransferResult transfer(final RawTransaction transaction) throws IOException {
         if(transaction == null || transaction.getSignature() == null){
@@ -100,9 +101,9 @@ public class TransactionClient extends AbstractClient {
 
     /**
      * Sign and transfer the raw transaction.
-     * @param rawTransaction
-     * @param keyPair
-     * @return
+     * @param rawTransaction {@link RawTransaction} raw transaction without signature data
+     * @param keyPair {@link ECKeyPair} the key pair for the private key.
+     * @return {@link TransferResult}
      * @throws IOException
      */
     public static TransferResult signThenTransfer(RawTransaction rawTransaction, ECKeyPair keyPair) throws IOException {
@@ -128,8 +129,7 @@ public class TransactionClient extends AbstractClient {
         if(data == null){
             throw ClientArgumentException.exception( "data is null" );
         }
-        ToClause toClause = new ToClause( toAddress, amount, data );
-        return toClause;
+        return new ToClause( toAddress, amount, data );
     }
 
 

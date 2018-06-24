@@ -2,10 +2,15 @@ package com.vechain.thorclient.core.model.clients.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vechain.thorclient.core.model.blockchain.ContractCall;
+import com.vechain.thorclient.core.model.clients.Address;
+import com.vechain.thorclient.core.model.clients.Amount;
+import com.vechain.thorclient.core.model.clients.ToClause;
+import com.vechain.thorclient.core.model.clients.ToData;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.StringUtils;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,6 +58,19 @@ public class AbstractContract {
         }
         return null;
     }
+    /**
+     * build transaction clause
+     * @param toAddress {@link Address}
+     * @param abiDefinition {@link AbiDefinition} Abi definition.
+     * @param hexArguments {@link String}
+     * @return {@link ToClause}
+     */
+    public static ToClause buildToClause(Address toAddress, AbiDefinition abiDefinition, String... hexArguments){
+        ToData toData = new ToData();
+        String data = buildData( abiDefinition, hexArguments );
+        toData.setData( data );
+        return new ToClause( toAddress, Amount.ZERO,  toData);
+    }
 
     /**
      * Build call data
@@ -66,32 +84,30 @@ public class AbstractContract {
         }
         int index ;
         List<AbiDefinition.NamedType> inputs = abiDefinition.getInputs();
-        if(inputs.size() != params.length){
+        if(inputs == null || params == null ||inputs.size() != params.length){
             throw new IllegalArgumentException( "Parameters length is not valid" );
         }
         StringBuilder dataBuffer = new StringBuilder();
         dataBuffer.append( abiDefinition.getHexMethodCodeNoPefix() );
-        if(params != null) {
-            for(index = 0; index < params.length; index ++) {
-                if (!StringUtils.isHex( params[index] )) {
-                    throw new IllegalArgumentException( "Parameter format is not hex string" );
-                }
-                byte[] paramBytes = BytesUtils.toByteArray( params[index] );
-                if (paramBytes == null || paramBytes.length > 32) {
-                    throw new IllegalArgumentException( "Parameter format is hex string size too large, or null" );
-                }
-                if (paramBytes.length < 32) {
-                    byte[] fillingZero = new byte[32];
-                    System.arraycopy( paramBytes, 0, fillingZero, 32 - paramBytes.length, paramBytes.length );
-                    dataBuffer.append( BytesUtils.toHexString( fillingZero, null ) );
-                } else {
-                    dataBuffer.append( params[0] );
-                }
+        for(index = 0; index < params.length; index ++) {
+            if (!StringUtils.isHex( params[index] )) {
+                throw new IllegalArgumentException( "Parameter format is not hex string" );
             }
-
+            byte[] paramBytes = BytesUtils.toByteArray( params[index] );
+            if (paramBytes == null || paramBytes.length > 32) {
+                throw new IllegalArgumentException( "Parameter format is hex string size too large, or null" );
+            }
+            if (paramBytes.length < 32) {
+                byte[] fillingZero = new byte[32];
+                System.arraycopy( paramBytes, 0, fillingZero, 32 - paramBytes.length, paramBytes.length );
+                dataBuffer.append( BytesUtils.toHexString( fillingZero, null ) );
+            } else {
+                dataBuffer.append( params[0] );
+            }
         }
         return "0x" + dataBuffer.toString();
     }
+
 
     /**
      * Get list of {@link AbiDefinition}
