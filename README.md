@@ -210,7 +210,7 @@ mvn clean install
 ```
 
 
-###4 Java console approach
+### 4 Java console approach
 
 The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction; Run with maven：
 
