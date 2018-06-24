@@ -27,9 +27,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 public class ConsoleUtils {
 
-    public static final String SAMPLE_XLSX_FILE_PATH = "/Users/freddy/workspace/gitlabsrc/wallet-java/thor-client-sdk4j/src/main/resources/exhange_sign.xlsx";
-
-    public static String doSign(List<String[]> transactions, String privateKey, boolean isSend) throws IOException {
+    public static String doSignVETTx(List<String[]> transactions, String privateKey, boolean isSend) throws IOException {
 
         byte chainTag = 0;
         byte[] blockRef = null;
@@ -42,8 +40,8 @@ public class ConsoleUtils {
             chainTag = BytesUtils.toByteArray(transaction[2])[0];
             blockRef = BytesUtils.toByteArray(transaction[3]);
         }
-
-        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 21000, (byte) 0x01, CryptoUtils.generateTxNonce(),
+        int gas = clauses.size() * 21000;
+        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, gas, (byte) 0x01, CryptoUtils.generateTxNonce(),
                 clauses.toArray(new ToClause[0]));
         if (isSend) {
             TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
@@ -79,15 +77,5 @@ public class ConsoleUtils {
         });
         workbook.close();
         return results;
-    }
-
-    public static void main(String[] args) throws Exception {
-        List<String[]> res = ConsoleUtils.readExcelFile(SAMPLE_XLSX_FILE_PATH);
-        for (String[] re : res) {
-            for (String r : re) {
-                System.out.print(r + " ");
-            }
-            System.out.println();
-        }
     }
 }
