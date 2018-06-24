@@ -115,5 +115,25 @@ public abstract class AbstractClient {
     }
 
 
+    /**
+     * Call the contract view function.
+     * @param call {@link ContractCall}
+     * @param contractAddress {@link Address}
+     * @param revision {@link Revision}
+     * @return {@link ContractCallResult}
+     * @throws IOException network error
+     */
+    public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)throws IOException {
+        Revision currentRevision = revision;
+        if(currentRevision == null){
+            currentRevision = Revision.BEST;
+        }
+
+        HashMap<String, String> uriParams = parameters( new String[]{"address"}, new String[]{ contractAddress.toHexString( Prefix.ZeroLowerX )} );
+        HashMap<String, String> queryParams = parameters(new String[]{"revision"}, new String[]{currentRevision.toString()}   );
+
+        return sendPostRequest( Path.PostContractCallPath, uriParams, queryParams,call, ContractCallResult.class);
+    }
+
 
 }

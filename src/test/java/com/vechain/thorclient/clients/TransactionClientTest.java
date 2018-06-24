@@ -72,7 +72,7 @@ public class TransactionClientTest extends BaseTest {
     @Test
     public void testSendVETTransaction() throws IOException{
         byte chainTag = BlockchainClient.getChainTag();
-        byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
+        byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST ).toByteArray();
         Amount amount = Amount.createFromToken( AbstractToken.VET );
         amount.setDecimalAmount( "21.12" );
         ToClause clause = TransactionClient.buildVETToClause(

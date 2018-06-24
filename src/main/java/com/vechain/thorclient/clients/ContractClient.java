@@ -17,25 +17,7 @@ public class ContractClient extends TransactionClient {
 
     protected final static int GasLimit = 70000;
 
-    /**
-     *
-     * @param call
-     * @param contractAddress
-     * @param revision
-     * @return
-     * @throws IOException
-     */
-    public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)throws IOException {
-        Revision currentRevision = revision;
-        if(currentRevision == null){
-            currentRevision = Revision.BEST;
-        }
 
-        HashMap<String, String> uriParams = parameters( new String[]{"address"}, new String[]{ contractAddress.toHexString( Prefix.ZeroLowerX )} );
-        HashMap<String, String> queryParams = parameters(new String[]{"revision"}, new String[]{currentRevision.toString()}   );
-
-        return sendPostRequest( Path.PostContractCallPath, uriParams, queryParams,call, ContractCallResult.class);
-    }
 
     /**
      *

@@ -35,27 +35,6 @@ public class AccountClient extends AbstractClient {
         return sendGetRequest(Path.GetAccountPath, uriParams, queryParams, Account.class );
     }
 
-    /**
-     * Call contract method.
-     * @param contractAddress {@link Address} required contract address.
-     * @param revision {@link Revision} optional  block revision, could be null.
-     * @param contractCall {@link ContractCall} required contract call object.
-     * @return {@link ContractCallResult}
-     * @throws IOException if network error or invalid request.
-     */
-    public static ContractCallResult callContractInfo(Address contractAddress, Revision revision, ContractCall contractCall) throws IOException{
-        if(contractAddress == null){
-            throw ClientArgumentException.exception( "contractAddress is null" );
-        }
-        Revision currRevision = revision;
-        if(currRevision == null){
-            currRevision = Revision.BEST;
-        }
-        HashMap<String, String> uriParams = parameters( new String[]{"address"}, new String[]{contractAddress.toHexString( Prefix.ZeroLowerX )} );
-        HashMap<String, String> queryParams = parameters( new String[]{"revision"}, new String[]{currRevision.toString()} );
-
-        return sendPostRequest( Path.PostContractCallPath, uriParams, queryParams, contractCall, ContractCallResult.class );
-    }
 
     /**
      * Deploy a Contract.
