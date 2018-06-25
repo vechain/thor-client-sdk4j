@@ -21,8 +21,9 @@ public class PrototypeClientTest extends BaseTest {
     static final String UserAddress = "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
     @Test
     public void testGetMaster() throws IOException {
-
-        ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( fromAddress ) , Revision.BEST);
+        String currentPrivateKeyAddr = ECKeyPair.create(privateKey ).getAddress();
+        logger.info( "current privatekey address:"+ currentPrivateKeyAddr );
+        ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( currentPrivateKeyAddr ) , Revision.BEST);
         logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
     }
 
@@ -90,5 +91,48 @@ public class PrototypeClientTest extends BaseTest {
         logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
     }
 
+    @Test
+    public void testSponsor() throws IOException{
+
+        TransferResult transferResult = ProtoTypeContractClient.sponsor(
+                new Address[]{Address.fromHexString( fromAddress )},
+                Boolean.TRUE,
+                ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( sponsorKey ) );
+        logger.info( "sponsor the address result:" + JSON.toJSONString( transferResult ) );
+    }
+
+    @Test
+    public void testIsOnSponsor() throws  IOException{
+        String addressHex = ECKeyPair.create( sponsorKey ).getAddress();
+        ContractCallResult contractCallResult = ProtoTypeContractClient.isSponsor(
+                Address.fromHexString( fromAddress ),
+                Address.fromHexString( addressHex ),null );
+        logger.info( "get isSponsor result :" + JSON.toJSONString( contractCallResult ) );
+    }
+
+    @Test
+    public void testSelectSponsor() throws  IOException{
+        String addressHex = ECKeyPair.create( sponsorKey ).getAddress();
+        TransferResult transferResult = ProtoTypeContractClient.selectSponsor(
+                new Address[]{Address.fromHexString( fromAddress )},
+                new Address[]{Address.fromHexString( addressHex )},
+                ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+        logger.info( "Select sponsor result:" + JSON.toJSONString( transferResult ) );
+    }
+
+    @Test
+    public void testQueryCurrentSponsor() throws IOException{
+        ContractCallResult result = ProtoTypeContractClient.getCurrentSponsor( Address.fromHexString( fromAddress ), null );
+        logger.info( "getCurrentSponsor result :" + JSON.toJSONString( result ) );
+    }
+
+    @Test
+    public  void testUnSponsor() throws  IOException{
+        TransferResult transferResult = ProtoTypeContractClient.sponsor(
+                new Address[]{Address.fromHexString( fromAddress )},
+                Boolean.FALSE,
+                ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( sponsorKey ) );
+        logger.info( "un-sponsor the address result:" + JSON.toJSONString( transferResult ) );
+    }
 
 }
