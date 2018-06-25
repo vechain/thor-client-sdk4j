@@ -14,7 +14,7 @@ public class ECKeyPairTest extends BaseTest {
     public void testGetAddress() {
         String privateKey = this.getEnvironment().get(PRIVATE_KEY);
         ECKeyPair keyPair = ECKeyPair.create(privateKey);
-        String address = keyPair.getAddress();
+        String address = keyPair.getHexAddress();
         logger.info("Address is : " + address);
     }
 }

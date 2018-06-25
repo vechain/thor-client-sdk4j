@@ -82,7 +82,7 @@ public abstract class BaseTest implements SlatKeys {
     protected void recoverAddress() {
         if (!StringUtils.isBlank(privateKey)) {
             ECKeyPair keyPair = ECKeyPair.create(privateKey);
-            fromAddress = keyPair.getAddress();
+            fromAddress = keyPair.getHexAddress();
             environment.put(FROM_ADDRESS, fromAddress);
         }
     }
