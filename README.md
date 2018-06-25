@@ -11,8 +11,8 @@ Set blockchain nodes sample as follows
 
 ```
 NodeProvider nodeProvider = NodeProvider.getNodeProvider();
-nodeProvider.setProvider(this.nodeProviderUrl);
-nodeProvider.setTimeout(timeout);
+nodeProvider.setProvider("http://blockchain-nodes-url");
+nodeProvider.setTimeout(10000);
 ```
 
 ##  You can find the clients toolkit under the directory :
@@ -209,6 +209,8 @@ ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
+
+
 
 
 - - - -
