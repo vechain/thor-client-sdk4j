@@ -10,7 +10,7 @@ import com.vechain.thorclient.utils.StringUtils;
 import java.math.BigDecimal;
 
 /**
- *
+ * Amount java object
  */
 public  class Amount {
     public static final Amount ZERO = new Zero();

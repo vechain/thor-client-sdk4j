@@ -1,13 +1,12 @@
 package com.vechain.thorclient.clients;
 
-import com.vechain.thorclient.clients.base.AbstractClient;
-import com.vechain.thorclient.core.model.blockchain.*;
+import com.vechain.thorclient.core.model.blockchain.ContractCall;
+import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
+import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
-import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
-import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 import java.io.IOException;
@@ -21,15 +20,20 @@ import java.io.IOException;
  * the sender A need to pay the transaction fee(gas).
  *
  * However, for some realistic reason, the receiver A want to pay the transaction fee. Then the mpp can do such a thing.
- * The sender A can be a user of receiver B({@linkplain #addUser(Address[], Address[], int, byte, int, ECKeyPair)}), then the receiver B can set user plan (credit and recovery) to sender A.
+ * The sender A can be a user of receiver B({@linkplain #addUser(Address[], Address[], int, byte, int, ECKeyPair)}),
+ * then the receiver B can set user plan (credit and recovery) for all senders.
  * After all the things is done, then the sender A do transaction to receiver B, if the fee is less than the credit,
  * the ProtoType native contract is going to book fee(gas) from receiver B's account.
  *
  * <br>How to use ProtoType?</br>
  * First, you must be the master of the to address. By call {@link #setMasterAddress}, then you can query the master by
  * {@link #getMasterAddress(Address, Revision)}
+ *
  * Second, you as a Master, you can set add user to user plan. This step is to set candidate, the one you want to give
- * credit. You can call
+ * credit. {@link #addUser(Address[], Address[], int, byte, int, ECKeyPair)}
+ *
+ * Third, set a user plan to receiver address for all users on the users list.
+ * {@link #setUserPlans(Address[], Amount[], Amount[], int, byte, int, ECKeyPair)}
  *
  *
  */
