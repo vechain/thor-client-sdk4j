@@ -42,5 +42,5 @@ gen
 /src/main/main.iml
 /target/
 /.settings/
-/src/test/resources/config.properties
 /logs/
+/thor-client-sdk4j.iml

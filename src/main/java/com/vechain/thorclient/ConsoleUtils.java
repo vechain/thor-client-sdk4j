@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vechain.thorclient.utils.*;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -19,10 +20,6 @@ import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.core.model.clients.ToClause;
 import com.vechain.thorclient.core.model.clients.ToData;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.CryptoUtils;
-import com.vechain.thorclient.utils.RawTransactionFactory;
-import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 public class ConsoleUtils {
@@ -48,7 +45,7 @@ public class ConsoleUtils {
             return JSON.toJSONString(result);
         } else {
             RawTransaction result = TransactionClient.sign(rawTransaction, ECKeyPair.create(privateKey));
-            return JSON.toJSONString(result);
+            return BytesUtils.toHexString(result.encode(), Prefix.ZeroLowerX);
         }
     }
 

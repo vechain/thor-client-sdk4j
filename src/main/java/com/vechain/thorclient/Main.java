@@ -27,6 +27,8 @@ public class Main {
 
     private static final String BLOCK_REF     = "blockRef";
 
+//    private static final String SEND_RAW     = "sendRaw";
+
     public static void main(String[] args) throws Exception {
 
         if (args.length == 0) {
@@ -37,12 +39,13 @@ public class Main {
         // String nodeProviderUrl = System.getenv(NODE_PROVIDER_URL);
         String privateKey = null;
         String nodeProviderUrl = null;
-        for (String arg : args) {
-            System.out.println(arg);
-        }
+//        for (String arg : args) {
+//            System.out.println(arg);
+//        }
         if (args[0].equals(CHAIN_TAG) || args[0].equals(BLOCK_REF) || args[0].equals(SEND)) {
             // args=chainTag/blockRef {providerUrl}
             // args=send {providerUrl} {privateKey} {filePath}
+            // args=sign filePath privateKey
             if (args.length > 1 && !StringUtils.isBlank(args[1]) && args[1].startsWith("http")) {
                 nodeProviderUrl = args[1];
             }
@@ -63,6 +66,15 @@ public class Main {
             NodeProvider nodeProvider = NodeProvider.getNodeProvider();
             nodeProvider.setProvider(nodeProviderUrl);
             nodeProvider.setTimeout(5000);
+        }
+
+        if(args[0].equals(SIGN)) {
+            // args=sign filePath privateKey
+            if (args.length < 3 || StringUtils.isBlank(args[2])) {
+                System.out.println("You have input invalid parameters.");
+                System.exit(0);
+            }
+            privateKey = args[2];
         }
 
         if (args[0].equals(CHAIN_TAG)) {
@@ -95,11 +107,7 @@ public class Main {
         }
 
         if (args[0].equals(SIGN)) {
-            // args=sign filePath privateKey
-            if (args.length < 3) {
-                System.out.println("You have input invalid parameters.");
-                System.exit(0);
-            }
+
             File file = new File(args[1]);
             if (file.isFile()) {
                 List<String[]> transactionList = ConsoleUtils.readExcelFile(args[1]);
