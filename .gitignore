@@ -43,3 +43,4 @@ gen
 /target/
 /.settings/
 /src/test/resources/config.properties
+/logs/

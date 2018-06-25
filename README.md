@@ -11,6 +11,8 @@ Thor Java Client SDK is licensed under the GNU Lesser General Public License v3.
 ##  You can find the clients toolkit under the directory :
  **src/main/java/com/vechain/thorclients/clients**
 
+And also there is the detail documents <a href="https://github.com/vechain/thor-client-sdk4j/blob/dev/doc/index.html"> doc folder </a>
+
 ### AccountClient
 User can use this client :
 - Get Account information: VET balance and VTHO balance
@@ -27,9 +29,9 @@ Assert.assertNotNull(account);
 Address contractAddr = token.getContractAddress();
 Revision currRevision = revision;
 if(currRevision == null){
-    currRevision = Revision.**BEST**;
+    currRevision = Revision.BEST;
 }
-AbiDefinition abiDefinition = ERC20Contract.**defaultERC20Contract**.findAbiDefinition("balanceOf");
+AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition("balanceOf");
 ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString( null ) );
 ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
 
@@ -47,8 +49,8 @@ logger.info("code:" + JSON.toJSONString(code));
 - Send VET to account
 ```
 byte chainTag = BlockchainClient.getChainTag();
-byte[] blockRef = BlockchainClient.getBlockRef( Revision.**BEST**).toByteArray();
-Amount amount = Amount.createFromToken( AbstractToken.**VET**);
+byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST).toByteArray();
+Amount amount = Amount.createFromToken( AbstractToken.VET);
 amount.setDecimalAmount( "21.12" );
 ToClause clause = TransactionClient.buildVETToClause(
         Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),
@@ -63,9 +65,9 @@ logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
 ```
 byte chainTag = BlockchainClient.getChainTag();
 byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
-Amount amount = Amount.createFromToken( ERC20Token.**VTHO**);
+Amount amount = Amount.createFromToken( ERC20Token.VTHO);
 amount.setDecimalAmount( "11.12" );
-ToClause clause = ERC20Contract.buildTranferToClause( ERC20Token.**VTHO**,
+ToClause clause = ERC20Contract.buildTranferToClause( ERC20Token.VTHO,
         Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),
         amount);
 RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
@@ -102,13 +104,13 @@ You can get events logs and transfer logs, the api is also supporting pagination
 - Query events logs.
 ```
 EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
-ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.**DESC**, null);
+ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.DESC, null);
 
 ```
 - Query transfer logs.
 ```
 TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
-ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.**DESC**);
+ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
 ```
 
 - - - -
@@ -122,8 +124,9 @@ logger.info( "chainTag: " + chainTagInt);
 ```
 - Get block reference
 ```
-ArrayList list = BlockchainClient.getPeerStatusList();
-logger.info( "nodes list:" + list );
+Revision revision = Revision.create(0);
+Block block = BlockClient.getBlock(revision);
+logger.info("blockRef;" + BytesUtils.toHexString(block.blockRef().toByteArray(), Prefix.ZeroLowerX));
 ```
 
 
@@ -139,7 +142,7 @@ logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
 
 - Set master address
 ```
-TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( fromAddress ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
+TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( fromAddress ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
 logger.info( "result: " + JSON.toJSONString( result ) );
 
 ```
@@ -148,7 +151,7 @@ logger.info( "result: " + JSON.toJSONString( result ) );
 ```
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
-        new Address[]{Address.fromHexString(**UserAddress**)},
+        new Address[]{Address.fromHexString(UserAddress)},
         ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
@@ -156,16 +159,16 @@ logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
 - Check if it is user
 ```
-ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( **UserAddress**),
-        Revision.**BEST**);
+ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( UserAddress),
+        Revision.BEST);
 logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 ```
 - Remove user
 ```
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
       new Address[]{Address.fromHexString( fromAddress )},
-      new Address[]{Address.fromHexString( **UserAddress**)},
-        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+      new Address[]{Address.fromHexString( UserAddress)},
+        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 
 ```
@@ -180,13 +183,13 @@ TransferResult result = ProtoTypeContractClient.setUserPlans(
         new Address[]{Address.fromHexString( fromAddress)},
         new Amount[]{credit},
         new Amount[]{recovery},
-        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
 logger.info( "set user plans:" + JSON.toJSONString( result ) );
 
 ```
 - Get User plan
 ```
-ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.**BEST**);
+ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
@@ -194,8 +197,8 @@ logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
         Address.fromHexString( fromAddress ),
-        Address.fromHexString( **UserAddress**),
-        Revision.**BEST**);
+        Address.fromHexString( UserAddress),
+        Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
@@ -208,3 +211,27 @@ Some case may be failed because of the account or block is not existed on your b
 ```
 mvn clean install
 ```
+
+
+### 4 Java console approach
+
+The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction; Run with maven：
+
+```
+mvn clean package
+
+The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.2.jar
+```
+
+```
+Run the following command:
+
+There is a example transaction file in src/main/resources/exchange_example.xlsx
+ 
+- Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar chainTag {blockchain-server-url}
+- Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar blockRef {blockchain-server-url}
+- Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
+- Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar sign {your-file-path} {privateKey}
+- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar send {blockchain-server-url} {privateKey} {your-file-path}
+```
+
