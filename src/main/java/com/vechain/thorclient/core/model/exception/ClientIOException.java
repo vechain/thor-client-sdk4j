@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A exception wrapper for {@link IOException}. You can get http status from {@link #getHttpStatus()} method.
+ * A exception wrapper for {@link IOException}. You can get http status from {@link #getHttpStatus} method.
  */
 public class ClientIOException extends IOException{
 
