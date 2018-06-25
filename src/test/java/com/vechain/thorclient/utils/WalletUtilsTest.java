@@ -17,7 +17,7 @@ public class WalletUtilsTest extends BaseTest {
 		logger.info("KeyStore:" + keyStoreString);
 		logger.info("privKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
 		logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
-		logger.info("address:" + walletInfo.getKeyPair().getAddress());
+		logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
 		/**
 		 *
 		 * 2018-06-19 15:12:50.351 INFO 23601 --- [ main] thorclient :
@@ -38,7 +38,7 @@ public class WalletUtilsTest extends BaseTest {
 
 		logger.info("privKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
 		logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
-		logger.info("address:" + walletInfo.getKeyPair().getAddress());
+		logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
 	}
 
 

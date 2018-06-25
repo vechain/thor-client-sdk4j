@@ -70,7 +70,7 @@ public class ECKeyPair {
         return Arrays.copyOfRange(hash, hash.length - 20, hash.length);  // right most 160 bits
     }
 
-    public String getAddress(){
+    public String getHexAddress(){
         byte[] addressBytes = getRawAddress();
         return BytesUtils.toHexString( addressBytes, Prefix.ZeroLowerX );
     }

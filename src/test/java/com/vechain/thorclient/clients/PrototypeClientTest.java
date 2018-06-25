@@ -23,7 +23,7 @@ public class PrototypeClientTest extends BaseTest {
     @Test
     public void testGetMaster() throws IOException {
 
-        String currentPrivateKeyAddr = ECKeyPair.create(privateKey ).getAddress();
+        String currentPrivateKeyAddr = ECKeyPair.create(privateKey ).getHexAddress();
         logger.info( "current privatekey address:"+ currentPrivateKeyAddr );
         ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( currentPrivateKeyAddr ) , Revision.BEST);
         logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
@@ -94,7 +94,7 @@ public class PrototypeClientTest extends BaseTest {
 
     @Test
     public void testIsOnSponsor() throws  IOException{
-        String addressHex = ECKeyPair.create( sponsorKey ).getAddress();
+        String addressHex = ECKeyPair.create( sponsorKey ).getHexAddress();
         ContractCallResult contractCallResult = ProtoTypeContractClient.isSponsor(
                 Address.fromHexString( fromAddress ),
                 Address.fromHexString( addressHex ),null );
@@ -103,7 +103,7 @@ public class PrototypeClientTest extends BaseTest {
 
     @Test
     public void testSelectSponsor() throws  IOException{
-        String addressHex = ECKeyPair.create( sponsorKey ).getAddress();
+        String addressHex = ECKeyPair.create( sponsorKey ).getHexAddress();
         TransferResult transferResult = ProtoTypeContractClient.selectSponsor(
                 new Address[]{Address.fromHexString( fromAddress )},
                 new Address[]{Address.fromHexString( addressHex )},
