@@ -1,13 +1,12 @@
 package com.vechain.thorclient.clients;
 
-import com.vechain.thorclient.clients.base.AbstractClient;
-import com.vechain.thorclient.core.model.blockchain.*;
+import com.vechain.thorclient.core.model.blockchain.ContractCall;
+import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
+import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
-import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
-import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 import java.io.IOException;
@@ -21,15 +20,20 @@ import java.io.IOException;
  * the sender A need to pay the transaction fee(gas).
  *
  * However, for some realistic reason, the receiver A want to pay the transaction fee. Then the mpp can do such a thing.
- * The sender A can be a user of receiver B({@linkplain #addUser(Address[], Address[], int, byte, int, ECKeyPair)}), then the receiver B can set user plan (credit and recovery) to sender A.
+ * The sender A can be a user of receiver B({@linkplain #addUser(Address[], Address[], int, byte, int, ECKeyPair)}),
+ * then the receiver B can set user plan (credit and recovery) for all senders.
  * After all the things is done, then the sender A do transaction to receiver B, if the fee is less than the credit,
  * the ProtoType native contract is going to book fee(gas) from receiver B's account.
  *
  * <br>How to use ProtoType?</br>
  * First, you must be the master of the to address. By call {@link #setMasterAddress}, then you can query the master by
  * {@link #getMasterAddress(Address, Revision)}
+ *
  * Second, you as a Master, you can set add user to user plan. This step is to set candidate, the one you want to give
- * credit. You can call
+ * credit. {@link #addUser(Address[], Address[], int, byte, int, ECKeyPair)}
+ *
+ * Third, set a user plan to receiver address for all users on the users list.
+ * {@link #setUserPlans(Address[], Amount[], Amount[], int, byte, int, ECKeyPair)}
  *
  *
  */
@@ -273,5 +277,116 @@ public class ProtoTypeContractClient extends ContractClient{
 
         return callContract( call, ProtoTypeContract.ContractAddress,revision );
     }
+
+
+    /**
+     * Sponsor the address or un-sponsor the address.
+     * @param receivers required {@link Address} the targets address
+     * @param yesOrNo required Boolean value.
+     * @param gas required int gas
+     * @param gasCoef required byte gas coef
+     * @param expiration required int expiration
+     * @param keyPair required {@link Address}
+     * @return {@link TransferResult}
+     * @throws IOException network error.
+     */
+    public static TransferResult sponsor(Address[] receivers, Boolean yesOrNo,  int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws IOException{
+        if(receivers == null){
+            throw ClientArgumentException.exception( "receivers is null" );
+        }
+        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "sponsor" );
+        if(abi == null){
+            throw new IllegalArgumentException( "Can not find abi master method" );
+        }
+        ToClause[] clauses = new ToClause[receivers.length];
+        String yesOrNoHex = yesOrNo? "0x01": "0x00";
+        for(int index = 0; index < receivers.length; index ++){
+            clauses[index] = ProtoTypeContract.buildToClause(
+                    ProtoTypeContract.ContractAddress,
+                    abi,
+                    receivers[index].toHexString( Prefix.ZeroLowerX ),
+                    yesOrNoHex
+                    );
+        }
+        return invokeContractMethod( clauses,gas,gasCoef,expiration, keyPair );
+    }
+
+    /**
+     * As a master to select sponsors for receivers addresses.
+     * @param receivers required {@link Address} array
+     * @param sponsors required {@link Address} array
+     * @param gas required int gas
+     * @param gasCoef required byte gasCoef
+     * @param expiration required int recommendation value is 720
+     * @param keyPair required {@link ECKeyPair}
+     * @return {@link TransferResult}
+     * throw IOException network error.
+     */
+    public static TransferResult selectSponsor(Address[] receivers, Address[] sponsors, int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws IOException{
+        if (receivers == null){
+            throw ClientArgumentException.exception( "receivers is null" );
+        }
+        if (sponsors == null){
+            throw ClientArgumentException.exception( "sponsors is null" );
+        }
+
+        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "selectSponsor" );
+        if(abi == null){
+            throw new IllegalArgumentException( "Can not find abi master method" );
+        }
+        ToClause[] clauses = new ToClause[receivers.length];
+
+        for(int index = 0; index < receivers.length; index ++){
+            clauses[index] = ProtoTypeContract.buildToClause(
+                    ProtoTypeContract.ContractAddress,
+                    abi,
+                    receivers[index].toHexString( Prefix.ZeroLowerX ),
+                    sponsors[index].toHexString( Prefix.ZeroLowerX )
+            );
+        }
+        return invokeContractMethod( clauses,gas,gasCoef,expiration, keyPair );
+    }
+
+    /**
+     * Get current sponsor from receiver address.
+     * @param receiver {@link Address}
+     * @param revision {@link Revision}
+     * @return {@link ContractCallResult}
+     * throw IOException network error.
+     */
+    public static ContractCallResult getCurrentSponsor(Address receiver, Revision revision)throws IOException{
+        if(receiver == null){
+            throw ClientArgumentException.exception( "receiver is null" );
+        }
+        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "currentSponsor" );
+        ContractCall call = ProtoTypeContract.buildCall(abi,
+                receiver.toHexString( Prefix.ZeroLowerX ));
+
+        return callContract( call, ProtoTypeContract.ContractAddress,revision );
+    }
+
+    /**
+     * Get boolean value if the sponsor address sponsored the receiver address.
+     * @param receiver required {@link Address} receiver address.
+     * @param sponsor required {@link Address} sponsor
+     * @param revision optional {@link Revision} block revision
+     * @return {@link ContractCallResult}
+     * throw IOException network error.
+     */
+    public static ContractCallResult isSponsor(Address receiver, Address sponsor, Revision revision)throws IOException{
+        if(receiver == null){
+            throw ClientArgumentException.exception( "receiver is null" );
+        }
+        if(sponsor == null){
+            throw ClientArgumentException.exception( "sponsor is null" );
+        }
+        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "isSponsor" );
+        ContractCall call = ProtoTypeContract.buildCall(abi,
+                receiver.toHexString( Prefix.ZeroLowerX ),
+                sponsor.toHexString( Prefix.ZeroLowerX ));
+
+        return callContract( call, ProtoTypeContract.ContractAddress,revision );
+    }
+
 
 }

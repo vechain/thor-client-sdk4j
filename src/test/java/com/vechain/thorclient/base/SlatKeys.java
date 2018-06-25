@@ -4,6 +4,8 @@ public interface SlatKeys {
 
     final String PRIVATE_KEY        = "privateKey";
 
+    final String SPONSOR_KEY        = "sponsorPrivateKey";
+
     final String NODE_PROVIDER_URL  = "nodeProviderUrl";
 
     final String NODE_TIMEOUT       = "timeout";

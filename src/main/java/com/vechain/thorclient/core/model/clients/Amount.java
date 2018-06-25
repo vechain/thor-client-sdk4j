@@ -11,7 +11,7 @@ import com.vechain.thorclient.utils.StringUtils;
 
 
 /**
- *
+ * Amount java object
  */
 public  class Amount {
     public static final Amount ZERO = new Zero();
