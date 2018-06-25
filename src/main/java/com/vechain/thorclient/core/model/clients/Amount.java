@@ -6,7 +6,6 @@ import com.vechain.thorclient.utils.BlockchainUtils;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
-import sun.jvm.hotspot.runtime.Bytes;
 
 import java.math.BigDecimal;
 
