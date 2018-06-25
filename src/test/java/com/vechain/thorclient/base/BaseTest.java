@@ -20,6 +20,7 @@ public abstract class BaseTest implements SlatKeys {
     protected Logger            logger      = LoggerFactory.getLogger(this.getClass());
 
     protected String            privateKey;
+    protected String            sponsorKey;
     protected String            nodeProviderUrl;
     protected String            fromAddress;
     private Map<String, String> environment = new HashMap<String, String>();
@@ -27,6 +28,7 @@ public abstract class BaseTest implements SlatKeys {
     @Before
     public void setProvider() {
         privateKey = System.getenv(PRIVATE_KEY);
+        sponsorKey = System.getenv(SPONSOR_KEY);
         nodeProviderUrl = System.getenv(NODE_PROVIDER_URL);
         String nodeTimeout = System.getenv(NODE_TIMEOUT);
 
@@ -51,6 +53,9 @@ public abstract class BaseTest implements SlatKeys {
             environment.put(NODE_TIMEOUT, String.valueOf(timeout));
             if (StringUtils.isBlank(privateKey)) {
                 privateKey = properties.getProperty(PRIVATE_KEY);
+            }
+            if (StringUtils.isBlank( sponsorKey )){
+                sponsorKey = properties.getProperty( SPONSOR_KEY );
             }
             environment.put(PRIVATE_KEY, privateKey);
             if (StringUtils.isBlank(nodeProviderUrl)) {

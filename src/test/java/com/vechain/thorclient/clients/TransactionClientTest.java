@@ -28,7 +28,9 @@ public class TransactionClientTest extends BaseTest {
     static String addUserTxId = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
     static String removeUserTxId = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
     static String setUserPlanTxId = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
-
+    static String addSponsorTxId = "0x010fed13ca1d699674529a0c8621fe1ac61dfdf2f7a6d6fce77fbf7cbb77e092";
+    static String selectSponsorTxId = "0x9cc90d37cf088b63b8180ab7978b673822a36000c39b5ce38da525e2a17ea5f0";
+    static String unsponsorTxId = "0xe86d6b5546e12741ce894ba25d5c3ed0a16e700ed93e18c6050451592b3f2b8c";
 
     @Test
     public void testGetTransaction() throws IOException {
@@ -48,7 +50,7 @@ public class TransactionClientTest extends BaseTest {
 
     @Test
     public void testGetTransactionReceipt() throws IOException {
-        Receipt receipt = TransactionClient.getTransactionReceipt(setUserPlanTxId, null);
+        Receipt receipt = TransactionClient.getTransactionReceipt(unsponsorTxId, null);
         logger.info("Receipt:" + JSON.toJSONString(receipt));
         Assert.assertNotNull(receipt);
     }

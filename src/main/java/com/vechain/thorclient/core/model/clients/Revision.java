@@ -4,7 +4,7 @@ import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.utils.BlockchainUtils;
 
 /**
- * Block revision object.
+ * Block revision object, it is constructed by block number, block hex string Id or "best" refer to {@link #BEST}.
  */
 public class Revision {
 
