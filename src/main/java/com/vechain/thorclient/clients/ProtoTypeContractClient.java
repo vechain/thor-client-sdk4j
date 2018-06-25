@@ -174,12 +174,12 @@ public class ProtoTypeContractClient extends ContractClient{
      * Set user plan
      * @param receivers {@link Address} array.
      * @param credits {@link Amount} array.
-     * @param recoveries {@link Amount} array.
+     * @param recoveryRates {@link Amount} array. thor per seconds.
      * @return {@link TransferResult}
      * @throws IOException network error.
      */
     public static TransferResult setUserPlans( Address[] receivers,
-                                      Amount[] credits, Amount[] recoveries,
+                                      Amount[] credits, Amount[] recoveryRates,
                                       int gas, byte gasCoef, int expiration , ECKeyPair keyPair
     ) throws IOException {
 
@@ -189,10 +189,10 @@ public class ProtoTypeContractClient extends ContractClient{
         if(credits == null){
             throw ClientArgumentException.exception( "credits is null" );
         }
-        if(recoveries == null){
+        if(recoveryRates == null){
             throw ClientArgumentException.exception( "recoveries is null" );
         }
-        if(receivers.length != credits.length || receivers.length != recoveries.length){
+        if(receivers.length != credits.length || receivers.length != recoveryRates.length){
             throw ClientArgumentException.exception( "users.length must equal to credits.length and equal to recoveries.length" );
         }
         AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "setUserPlan" );
@@ -206,7 +206,7 @@ public class ProtoTypeContractClient extends ContractClient{
                     abi,
                     receivers[index].toHexString( Prefix.ZeroLowerX ),
                     credits[index].toHexString(),
-                    recoveries[index].toHexString());
+                    recoveryRates[index].toHexString());
 
         }
         return invokeContractMethod( clauses,gas,gasCoef,expiration, keyPair );

@@ -1,17 +1,15 @@
 package com.vechain.thorclient.clients;
 
-import com.vechain.thorclient.core.model.blockchain.ContractCall;
-import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
-import com.vechain.thorclient.core.model.clients.*;
+import com.vechain.thorclient.core.model.clients.BlockRef;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
+import com.vechain.thorclient.core.model.clients.ToClause;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.utils.CryptoUtils;
-import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class ContractClient extends TransactionClient {
 
@@ -20,7 +18,7 @@ public class ContractClient extends TransactionClient {
 
 
     /**
-     *
+     * invokeContractMethod send transaction to contract.
      * @param toClauses
      * @param gas
      * @param gasCoef
