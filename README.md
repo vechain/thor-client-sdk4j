@@ -18,7 +18,7 @@ nodeProvider.setTimeout(timeout);
 ##  You can find the clients toolkit under the directory :
  **src/main/java/com/vechain/thorclients/clients**
 
-And also there is the detail documents <a href="https://github.com/vechain/thor-client-sdk4j/blob/dev/doc/index.html"> doc folder </a>
+And also there is the detail documents <a href="https://github.com/vechain/thor-client-sdk4j/blob/dev/doc"> sdk4j doc </a>
 
 ### AccountClient
 User can use this client :
