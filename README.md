@@ -11,7 +11,7 @@ Thor Java Client SDK is licensed under the GNU Lesser General Public License v3.
 ##  You can find the clients toolkit under the directory :
  **src/main/java/com/vechain/thorclients/clients**
 
-And also there is the detail documents <a href="https://github.com/vechain/thor-client-sdk4j/blob/dev/doc/index.html"> click here</a>
+And also there is the detail documents <a href="https://github.com/vechain/thor-client-sdk4j/blob/dev/doc/index.html"> doc folder </a>
 
 ### AccountClient
 User can use this client :
@@ -124,8 +124,9 @@ logger.info( "chainTag: " + chainTagInt);
 ```
 - Get block reference
 ```
-ArrayList list = BlockchainClient.getPeerStatusList();
-logger.info( "nodes list:" + list );
+Revision revision = Revision.create(0);
+Block block = BlockClient.getBlock(revision);
+logger.info("blockRef;" + BytesUtils.toHexString(block.blockRef().toByteArray(), Prefix.ZeroLowerX));
 ```
 
 
