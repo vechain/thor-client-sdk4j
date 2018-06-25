@@ -27,9 +27,9 @@ Assert.assertNotNull(account);
 Address contractAddr = token.getContractAddress();
 Revision currRevision = revision;
 if(currRevision == null){
-    currRevision = Revision.**BEST**;
+    currRevision = Revision.BEST;
 }
-AbiDefinition abiDefinition = ERC20Contract.**defaultERC20Contract**.findAbiDefinition("balanceOf");
+AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition("balanceOf");
 ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString( null ) );
 ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
 
@@ -47,8 +47,8 @@ logger.info("code:" + JSON.toJSONString(code));
 - Send VET to account
 ```
 byte chainTag = BlockchainClient.getChainTag();
-byte[] blockRef = BlockchainClient.getBlockRef( Revision.**BEST**).toByteArray();
-Amount amount = Amount.createFromToken( AbstractToken.**VET**);
+byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST).toByteArray();
+Amount amount = Amount.createFromToken( AbstractToken.VET);
 amount.setDecimalAmount( "21.12" );
 ToClause clause = TransactionClient.buildVETToClause(
         Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),
@@ -63,9 +63,9 @@ logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
 ```
 byte chainTag = BlockchainClient.getChainTag();
 byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
-Amount amount = Amount.createFromToken( ERC20Token.**VTHO**);
+Amount amount = Amount.createFromToken( ERC20Token.VTHO);
 amount.setDecimalAmount( "11.12" );
-ToClause clause = ERC20Contract.buildTranferToClause( ERC20Token.**VTHO**,
+ToClause clause = ERC20Contract.buildTranferToClause( ERC20Token.VTHO,
         Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),
         amount);
 RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
@@ -102,13 +102,13 @@ You can get events logs and transfer logs, the api is also supporting pagination
 - Query events logs.
 ```
 EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
-ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.**DESC**, null);
+ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.DESC, null);
 
 ```
 - Query transfer logs.
 ```
 TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
-ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.**DESC**);
+ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
 ```
 
 - - - -
@@ -139,7 +139,7 @@ logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
 
 - Set master address
 ```
-TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( fromAddress ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
+TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( fromAddress ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
 logger.info( "result: " + JSON.toJSONString( result ) );
 
 ```
@@ -148,7 +148,7 @@ logger.info( "result: " + JSON.toJSONString( result ) );
 ```
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
-        new Address[]{Address.fromHexString(**UserAddress**)},
+        new Address[]{Address.fromHexString(UserAddress)},
         ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
@@ -156,16 +156,16 @@ logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
 - Check if it is user
 ```
-ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( **UserAddress**),
-        Revision.**BEST**);
+ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( UserAddress),
+        Revision.BEST);
 logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 ```
 - Remove user
 ```
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
       new Address[]{Address.fromHexString( fromAddress )},
-      new Address[]{Address.fromHexString( **UserAddress**)},
-        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+      new Address[]{Address.fromHexString( UserAddress)},
+        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 
 ```
@@ -180,13 +180,13 @@ TransferResult result = ProtoTypeContractClient.setUserPlans(
         new Address[]{Address.fromHexString( fromAddress)},
         new Amount[]{credit},
         new Amount[]{recovery},
-        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
 logger.info( "set user plans:" + JSON.toJSONString( result ) );
 
 ```
 - Get User plan
 ```
-ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.**BEST**);
+ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
@@ -194,8 +194,8 @@ logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
         Address.fromHexString( fromAddress ),
-        Address.fromHexString( **UserAddress**),
-        Revision.**BEST**);
+        Address.fromHexString( UserAddress),
+        Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
