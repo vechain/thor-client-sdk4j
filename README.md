@@ -60,36 +60,47 @@ byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST).toByteArray();
 Amount amount = Amount.createFromToken( AbstractToken.VET);
 amount.setDecimalAmount( "21.12" );
 ToClause clause = TransactionClient.buildVETToClause(
-        Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),
-        amount,
-        ToData.ZERO );
-RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+        Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),  //接收方地址
+        amount,                                                                 //转账金额
+        ToData.ZERO );                                                          //默认为ToData.ZERO
+//创建交易RawTransaction
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+//执行签名并发送交易
 TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
 logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
 
 ```
+
 - Send VTHO to account
+
 ```
 byte chainTag = BlockchainClient.getChainTag();
 byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
 Amount amount = Amount.createFromToken( ERC20Token.VTHO);
 amount.setDecimalAmount( "11.12" );
-ToClause clause = ERC20Contract.buildTranferToClause( ERC20Token.VTHO,
-        Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),
-        amount);
-RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+//构建交易字句
+ToClause clause = ERC20Contract.buildTranferToClause( 
+        ERC20Token.VTHO,                                                        //默认ERC20Token.VTHO
+        Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),    //接收方地址
+        amount);                                                                //转账金额
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
 
 TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
 logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
 
 ```
+
 - Query transaction receipt
+
 ```
+//获取交易Receipt信息
 Receipt receipt = TransactionClient.getTransactionReceipt(setUserPlanTxId, null);
 logger.info("Receipt:" + JSON.toJSONString(receipt));
 
 ```
+
 - Query transaction
+
 ```
 Transaction transaction = TransactionClient.getTransaction(hexId, true, null);
 logger.info("Transaction:" + JSON.toJSONString(transaction));
@@ -254,7 +265,10 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx
 - Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar sign {your-file-path} {privateKey}
   Raw Transaction:
   0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
-- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar send {blockchain-server-url} {privateKey} {your-file-path}
   
+- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar send {blockchain-server-url} {privateKey} {your-file-path}
+  Send Result:
+  {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
+
 ```
 
