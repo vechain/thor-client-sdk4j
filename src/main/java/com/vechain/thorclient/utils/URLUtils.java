@@ -108,6 +108,7 @@ public class URLUtils {
             while ((line = reader.read()) != -1) {
                 context.append( (char) line );
             }
+            result = context.toString();
             reader.close();
             buffer.close();
         }catch(IOException e){
