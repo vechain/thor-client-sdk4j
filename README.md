@@ -11,6 +11,8 @@ Thor Java Client SDK is licensed under the GNU Lesser General Public License v3.
 ##  You can find the clients toolkit under the directory :
  **src/main/java/com/vechain/thorclients/clients**
 
+And also there is the detail documents <a href="https://github.com/vechain/thor-client-sdk4j/blob/dev/doc/index.html"> click here</a>
+
 ### AccountClient
 User can use this client :
 - Get Account information: VET balance and VTHO balance
