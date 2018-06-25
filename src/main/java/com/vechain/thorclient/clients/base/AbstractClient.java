@@ -8,6 +8,7 @@ import com.vechain.thorclient.core.model.blockchain.NodeProvider;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.URLUtils;
@@ -70,14 +71,19 @@ public abstract class AbstractClient {
      * @return response java object, could be null, mean can not find any result.
      * @throws IOException node is not reachable or request is not valid.
      */
-    public static  <T> T sendGetRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Class<T> tClass) throws IOException{
+    public static  <T> T sendGetRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Class<T> tClass) throws ClientIOException {
         String rawURL = rawUrl( path );
         String getURL =  URLUtils.urlComposite(rawURL, uriParams, queryParams);
-        String response =  URLUtils.get(null, APPLICATION_JSON_VALUE, "utf-8", getURL);
-        if(StringUtils.isBlank( response )){
-            return null;
+        try {
+            String response =  URLUtils.get(null, APPLICATION_JSON_VALUE, "utf-8", getURL);
+            if(StringUtils.isBlank( response )){
+                return null;
+            }
+            return JSON.parseObject(response, tClass);
+        }catch (IOException ex){
+            throw new ClientIOException(ex);
         }
-        return JSON.parseObject(response, tClass);
+
     }
 
     /**
@@ -90,7 +96,7 @@ public abstract class AbstractClient {
      * @return response java object, could be null, mean can not find any result.
      * @throws IOException http status 4xx means not enough energy amount.
      */
-    public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws IOException{
+    public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException{
         String rawURL = rawUrl( path );
         String postURL =  URLUtils.urlComposite(rawURL, uriParams, queryParams);
         String postString = JSON.toJSONString( postBody );
@@ -121,9 +127,9 @@ public abstract class AbstractClient {
      * @param contractAddress {@link Address}
      * @param revision {@link Revision}
      * @return {@link ContractCallResult}
-     * @throws IOException network error
+     * @throws ClientIOException network error
      */
-    public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)throws IOException {
+    public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)throws ClientIOException {
         Revision currentRevision = revision;
         if(currentRevision == null){
             currentRevision = Revision.BEST;

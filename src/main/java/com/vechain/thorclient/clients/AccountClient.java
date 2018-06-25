@@ -4,9 +4,8 @@ import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
-
-import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -19,9 +18,9 @@ public class AccountClient extends AbstractClient {
      * @param address required, if null will throw the {@link ClientArgumentException}.
      * @param revision block revision.
      * @return {@link Account}
-     * @throws IOException if network error or invalid request.
+     * @throws ClientIOException if network error or invalid request.
      */
-    public static Account getAccountInfo(Address address,  Revision revision) throws IOException{
+    public static Account getAccountInfo(Address address,  Revision revision) throws ClientIOException {
 
         if (address == null){
             throw ClientArgumentException.exception( "Address account is null" );
@@ -40,9 +39,9 @@ public class AccountClient extends AbstractClient {
      * Deploy a Contract.
      * @param contractCall {@link ContractCall}
      * @return {@link ContractCallResult}
-     * @throws IOException if network error or invalid request.
+     * @throws ClientIOException if network error or invalid request.
      */
-    public static ContractCallResult deployContractInfo(ContractCall contractCall) throws IOException{
+    public static ContractCallResult deployContractInfo(ContractCall contractCall) throws ClientIOException{
         if(contractCall  == null){
             throw ClientArgumentException.exception( "contract call object is null" );
         }
@@ -54,9 +53,9 @@ public class AccountClient extends AbstractClient {
      * @param address the address which has contract code or data.
      * @param revision block revision.
      * @return {@link AccountCode} codes on the account address.
-     * @throws IOException if network error or invalid request.
+     * @throws ClientIOException if network error or invalid request.
      */
-    public static AccountCode getAccountCode(Address address, Revision revision) throws IOException {
+    public static AccountCode getAccountCode(Address address, Revision revision) throws ClientIOException {
         if (address == null){
             throw ClientArgumentException.exception( "Address account is null" );
         }
@@ -76,9 +75,9 @@ public class AccountClient extends AbstractClient {
      * @param key {@link StorageKey} required key.
      * @param revision {@link Revision} optional block revision.
      * @return {@link StorageKey} storage key.
-     * @throws IOException if network error or invalid request.
+     * @throws ClientIOException if network error or invalid request.
      */
-    public static StorageData getStorageAt(Address address, StorageKey key, Revision revision) throws IOException {
+    public static StorageData getStorageAt(Address address, StorageKey key, Revision revision) throws ClientIOException {
         if (address == null){
             throw ClientArgumentException.exception( "Address account is null" );
         }

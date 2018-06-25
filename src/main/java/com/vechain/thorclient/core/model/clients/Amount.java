@@ -11,9 +11,12 @@ import com.vechain.thorclient.utils.StringUtils;
 
 
 /**
- * Amount java object
+ * Amount for {@link ToClause} to use.
  */
 public  class Amount {
+    /**
+     * If you need send 0 amount, the use {@link Amount#ZERO}
+     */
     public static final Amount ZERO = new Zero();
 
     private AbstractToken abstractToken;
@@ -30,10 +33,18 @@ public  class Amount {
         return amount;
     }
 
+    /**
+     * Create a VET amount
+     * @return {@link Amount}
+     */
     public static Amount VET(){
         return Amount.createFromToken( AbstractToken.VET );
     }
 
+    /**
+     * Create a VTHO amount
+     * @return {@link Amount}
+     */
     public static Amount VTHO(){
         return Amount.createFromToken( ERC20Token.VTHO );
     }
@@ -43,7 +54,7 @@ public  class Amount {
 
     /**
      * Set hex string to abstractToken value.
-     * @param hexAmount hex amount
+     * @param hexAmount hex amount with "0x", if it is 0, use {@link Amount#ZERO} constant instance.
      */
     public void setHexAmount(String hexAmount){
         if(!StringUtils.isHex( hexAmount )){

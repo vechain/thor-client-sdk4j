@@ -1,19 +1,19 @@
 package com.vechain.thorclient.clients;
 
 import com.vechain.thorclient.clients.base.AbstractClient;
-import com.vechain.thorclient.core.model.blockchain.*;
+import com.vechain.thorclient.core.model.blockchain.Receipt;
+import com.vechain.thorclient.core.model.blockchain.Transaction;
+import com.vechain.thorclient.core.model.blockchain.TransferRequest;
+import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.*;
-import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.BlockchainUtils;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.Prefix;
-import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECDSASign;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -25,9 +25,9 @@ public class TransactionClient extends AbstractClient {
      * @param isRaw is response raw transaction.
      * @param revision {@link Revision} revision.
      * @return Transaction {@link Transaction}
-     * @throws IOException
+     * @throws ClientIOException
      */
-    public static Transaction getTransaction(String txId, boolean isRaw, Revision revision) throws IOException {
+    public static Transaction getTransaction(String txId, boolean isRaw, Revision revision) throws ClientIOException {
         if (!BlockchainUtils.isId( txId )){
             throw ClientArgumentException.exception( "Tx id is invalid" );
         }
@@ -45,9 +45,9 @@ public class TransactionClient extends AbstractClient {
      * @param txId  txId hex string start with "0x"
      * @param revision {@link Revision}
      * @return {@link Receipt} return Receipt .
-     * @throws IOException
+     * @throws ClientIOException
      */
-    public static Receipt getTransactionReceipt(String txId, Revision revision) throws IOException{
+    public static Receipt getTransactionReceipt(String txId, Revision revision) throws ClientIOException{
         if( !BlockchainUtils.isId( txId )){
             throw ClientArgumentException.exception( "Tx id is invalid" );
         }
@@ -66,9 +66,9 @@ public class TransactionClient extends AbstractClient {
      * Then the hex string will be packaged into {@link TransferRequest} bean object and serialized to JSON string.
      * @param transaction {@link RawTransaction} raw transaction to to send
      * @return {@link TransferResult}
-     * @throws IOException network error, 5xx http status means request error, 4xx http status means no enough gas or balance.
+     * @throws ClientIOException network error, 5xx http status means request error, 4xx http status means no enough gas or balance.
      */
-    public static TransferResult transfer(final RawTransaction transaction) throws IOException {
+    public static TransferResult transfer(final RawTransaction transaction) throws ClientIOException {
         if(transaction == null || transaction.getSignature() == null){
             ClientArgumentException.exception( "Raw transaction is invalid" );
         }
@@ -104,9 +104,9 @@ public class TransactionClient extends AbstractClient {
      * @param rawTransaction {@link RawTransaction} raw transaction without signature data
      * @param keyPair {@link ECKeyPair} the key pair for the private key.
      * @return {@link TransferResult}
-     * @throws IOException
+     * @throws ClientIOException
      */
-    public static TransferResult signThenTransfer(RawTransaction rawTransaction, ECKeyPair keyPair) throws IOException {
+    public static TransferResult signThenTransfer(RawTransaction rawTransaction, ECKeyPair keyPair) throws ClientIOException {
        RawTransaction signedRawTxn =  sign( rawTransaction, keyPair );
        return transfer( signedRawTxn );
     }

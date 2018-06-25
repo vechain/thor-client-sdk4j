@@ -4,8 +4,7 @@ import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
-
-import java.io.IOException;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 
 
 public class ERC20ContractClient extends ContractClient{
@@ -16,9 +15,9 @@ public class ERC20ContractClient extends ContractClient{
      * @param token {@link ERC20Token} required, the token {@link ERC20Token}
      * @param revision {@link Revision} if it is null, it will fallback to default {@link Revision#BEST}
      * @return {@link Amount}
-     * @throws IOException {@link IOException}
+     * @throws ClientIOException {@link ClientIOException}
      */
-    public static Amount getERC20Balance(Address address, ERC20Token token, Revision revision) throws IOException{
+    public static Amount getERC20Balance(Address address, ERC20Token token, Revision revision) throws ClientIOException {
         Address contractAddr = token.getContractAddress();
         Revision currRevision = revision;
         if(currRevision == null){

@@ -76,7 +76,7 @@ public class AbstractContract {
      * Build call data
      * @param abiDefinition {@link AbiDefinition} abi definition
      * @param params hex string format parameters.
-     * @return hex string of data.
+     * @return hex string of data without "0x"
      */
     protected static String buildData(AbiDefinition abiDefinition, String... params){
         if(abiDefinition == null){

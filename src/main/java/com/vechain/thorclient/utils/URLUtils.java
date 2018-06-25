@@ -1,6 +1,7 @@
 package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import io.mikael.urlbuilder.UrlBuilder;
 
 import java.io.*;
@@ -9,128 +10,138 @@ import java.util.HashMap;
 
 public class URLUtils {
 
-	public static String get(String parameters, String mediaType, String encoding, String url) throws IOException {
+	public static String get(String parameters, String mediaType, String encoding, String url) throws ClientIOException {
 		String result = null;
 		HttpURLConnection uc = null;
+        OutputStream out = null;
+        Reader reader = null;
+        BufferedInputStream buffer = null;
+        try {
+            URL u = new URL( url );
+            uc = (HttpURLConnection) u.openConnection();
+            uc.setDoOutput( true );
+            uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
+            uc.setRequestMethod( "GET" );
+            mediaType = mediaType == null ? "application/json;charset=utf-8" : mediaType;
+            uc.addRequestProperty( "accept", mediaType );
+            if (null != parameters && !parameters.trim().isEmpty()) {
+                out = uc.getOutputStream();
+                out.write( parameters.getBytes( encoding ) );
+                out.flush();
+                out.close();
+                out = null;
+            }
 
-		URL u = new URL(url);
-		uc = (HttpURLConnection) u.openConnection();
-		uc.setDoOutput(true);
-		uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
-		uc.setRequestMethod("GET");
-		mediaType = mediaType == null ? "application/json;charset=utf-8" : mediaType;
-		uc.addRequestProperty("accept", mediaType);
-		if (null != parameters && !parameters.trim().isEmpty()) {
-		    OutputStream out = uc.getOutputStream();
-		    out.write(parameters.getBytes(encoding));
-		    out.flush();
-		    out.close();
-		}
-		for (int i = 0;; i++) {
-		    String header = uc.getHeaderField(i);
-		    if (header == null)
-		        break;
-		}
-		InputStream buffer = new BufferedInputStream(uc.getInputStream());
-		Reader reader = new InputStreamReader(buffer);
-		StringBuffer context = new StringBuffer();
-		int line;
-		while ((line = reader.read()) != -1) {
-		    context.append((char) line);
-		}
-		reader.close();
-		buffer.close();
-		result = context.toString();
+            buffer = new BufferedInputStream( uc.getInputStream() );
+            reader = new InputStreamReader( buffer );
+            StringBuilder context = new StringBuilder();
+            int line;
+            while ((line = reader.read()) != -1) {
+                context.append( (char) line );
+            }
 
+            result = context.toString();
+        }catch (IOException e){
+            throw ClientIOException.create( e );
+        }finally {
+            if(uc != null){
+                uc.disconnect();
+            }
+
+            if(out != null){
+                try{
+                    out.close();
+                }catch(IOException e){
+                    throw ClientIOException.create( e );
+                }
+            }
+            if(buffer != null){
+                try {
+                    buffer.close();
+                } catch (IOException e) {
+                    throw ClientIOException.create( e );
+                }
+            }
+            if(reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    throw ClientIOException.create( e );
+                }
+            }
+
+
+        }
 		return result;
 	}
 
-	public static String post(String params, String mediaType, String encoding, String url) throws IOException {
+	public static String post(String params, String mediaType, String encoding, String url) throws ClientIOException {
 		return doSend(params, mediaType, encoding, url, "POST");
 	}
 
-	public static String put(String params, String mediaType, String encoding, String url) throws IOException {
-		return doSend(params, mediaType, encoding, url, "PUT");
-	}
-
-	public static String delete(String mediaType, String encoding, String url) throws IOException {
+	private static String doSend(String params, String mediaType, String encoding, String url, String method) throws ClientIOException {
 		String result = null;
 		HttpURLConnection uc = null;
+        OutputStream out = null;
+        Reader reader = null;
+        BufferedInputStream buffer = null;
+        try {
+            URL u = new URL( url );
+            uc = (HttpURLConnection) u.openConnection();
+            uc.setDoOutput( true );
+            uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
+            uc.setRequestMethod( method );
+            if (null != mediaType) {
+                uc.addRequestProperty( "Content-Type", mediaType );
+            }
+            uc.addRequestProperty( "accept", "*" );
+            uc.connect();
+            out = uc.getOutputStream();
+            out.write( params.getBytes( encoding ) );
+            out.flush();
+            out.close();
+            out = null;
+            buffer = new BufferedInputStream( uc.getInputStream() );
+            reader = new InputStreamReader( buffer );
+            StringBuffer context = new StringBuffer();
+            int line;
+            while ((line = reader.read()) != -1) {
+                context.append( (char) line );
+            }
+            reader.close();
+            buffer.close();
+        }catch(IOException e){
+            throw ClientIOException.create( e );
+        }finally {
+            if(uc != null){
+                uc.disconnect();
+            }
+            if(out != null){
+                try{
+                    out.close();
+                }catch(IOException e){
+                    throw ClientIOException.create( e );
+                }
+            }
+            if(buffer != null){
+                try {
+                    buffer.close();
+                } catch (IOException e) {
+                    throw ClientIOException.create( e );
+                }
+            }
+            if(reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    throw ClientIOException.create( e );
+                }
+            }
+        }
 
-		URL u = new URL(url);
-		uc = (HttpURLConnection) u.openConnection();
-		uc.setRequestMethod("DELETE");
-		if (null != mediaType) {
-		    uc.addRequestProperty("Content-Type", mediaType);
-		}
-		uc.addRequestProperty("accept", "*");
-		uc.connect();
-		uc.disconnect();
-		InputStream buffer = new BufferedInputStream(uc.getInputStream());
-		Reader reader = new InputStreamReader(buffer);
-		StringBuffer context = new StringBuffer();
-		int line;
-		while ((line = reader.read()) != -1) {
-		    context.append((char) line);
-		}
-		reader.close();
-		buffer.close();
-		result = context.toString();
+
 		return result;
 	}
-
-	private static String doSend(String params, String mediaType, String encoding, String url, String method) throws IOException {
-		String result = null;
-		HttpURLConnection uc = null;
-
-		URL u = new URL(url);
-		uc = (HttpURLConnection) u.openConnection();
-		uc.setDoOutput(true);
-		uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
-		uc.setRequestMethod(method);
-		if (null != mediaType) {
-		    uc.addRequestProperty("Content-Type", mediaType);
-		}
-		uc.addRequestProperty("accept", "*");
-		uc.connect();
-		OutputStream out = uc.getOutputStream();
-		out.write(params.getBytes(encoding));
-		out.flush();
-
-		InputStream buffer = new BufferedInputStream(uc.getInputStream());
-		Reader reader = new InputStreamReader(buffer);
-		StringBuffer context = new StringBuffer();
-		int line;
-		while ((line = reader.read()) != -1) {
-		    context.append((char) line);
-		}
-		reader.close();
-		buffer.close();
-		result = context.toString();
-
-		return result;
-	}
-
-
-	public static boolean download(String uri, String folder, String filename) throws IOException {
-
-	    URL $url = new URL(uri);
-	    HttpURLConnection connection = (HttpURLConnection) $url.openConnection();
-	    DataInputStream in = new DataInputStream(connection.getInputStream());
-	    DataOutputStream out = new DataOutputStream(new FileOutputStream(folder + filename));
-	    byte[] buffer = new byte[1024];
-	    int line = 0;
-	    while ((line = in.read(buffer)) > 0) {
-	        out.write(buffer, 0, line);
-	    }
-	    out.close();
-	    in.close();
-	    connection.disconnect();
-	    return true;
-	}
-
-
-
 
 	public static String urlComposite(String urlString, HashMap<String, String> pathMap, HashMap<String, String> queryMap)  {
 		String compositeURL = String.valueOf( urlString );

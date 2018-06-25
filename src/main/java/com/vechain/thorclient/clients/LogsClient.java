@@ -4,9 +4,10 @@ import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,9 +22,9 @@ public class LogsClient extends AbstractClient {
      * @param order optional ,{@link Order} a time order for the events list.
      * @param address optional, {@link Address} a address which has events log.
      * @return array of {@link FilteredEvent}, could be null.
-     * throws IOException network error or request invalid.
+     * throws ClientIOException network error or request invalid.
      */
-    public static ArrayList filterEvents(EventFilter filter, Order order, Address address) throws IOException{
+    public static ArrayList filterEvents(EventFilter filter, Order order, Address address) throws ClientIOException {
         if(filter == null){
             throw ClientArgumentException.exception( "filter is null" );
         }
@@ -43,9 +44,9 @@ public class LogsClient extends AbstractClient {
      * @param filter required {@link TransferFilter} filter.
      * @param order optional {@link Order} the result order.
      * @return  array of {@link TransferLog} could be null.
-     * @throws IOException network error
+     * @throws ClientIOException network error
      */
-    public static ArrayList filterTransferLogs(TransferFilter filter, Order order) throws IOException{
+    public static ArrayList filterTransferLogs(TransferFilter filter, Order order) throws ClientIOException{
         if(filter == null){
             throw ClientArgumentException.exception( "filter is null" );
         }

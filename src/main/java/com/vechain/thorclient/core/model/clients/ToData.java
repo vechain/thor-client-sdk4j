@@ -5,8 +5,10 @@ import com.vechain.thorclient.utils.StringUtils;
 
 /**
  * ToData is contained by {@link ToClause}
+ * If it is 0 value, use the {@link ToData#ZERO}.
  */
 public class ToData {
+
     public static ToData ZERO = new Zero();
 
     private String hexString;
@@ -16,7 +18,7 @@ public class ToData {
 
     /**
      * Add hex string contract codes to to clause data.
-     * @param hexString
+     * @param hexString the hex string with "0x"
      */
     public void setData(String hexString){
         if(!StringUtils.isHex( hexString )){

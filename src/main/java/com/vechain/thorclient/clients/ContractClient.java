@@ -5,11 +5,11 @@ import com.vechain.thorclient.core.model.clients.BlockRef;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.core.model.clients.ToClause;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
-import java.io.IOException;
 
 public class ContractClient extends TransactionClient {
 
@@ -25,9 +25,9 @@ public class ContractClient extends TransactionClient {
      * @param expiration
      * @param keyPair
      * @return
-     * @throws IOException
+     * @throws ClientIOException
      */
-    public static TransferResult invokeContractMethod(ToClause[] toClauses, int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws IOException{
+    public static TransferResult invokeContractMethod(ToClause[] toClauses, int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws ClientIOException{
 
         if(keyPair == null){
             throw ClientArgumentException.exception( "ECKeyPair is null." );
@@ -51,7 +51,7 @@ public class ContractClient extends TransactionClient {
         byte chainTag = BlockchainClient.getChainTag();
         BlockRef bestRef = BlockchainClient.getBlockRef(null);
         if(bestRef == null || chainTag == 0){
-            throw new IOException( "Get chainTag: "+ chainTag + " BlockRef: "+ bestRef );
+            throw new ClientIOException( "Get chainTag: "+ chainTag + " BlockRef: "+ bestRef );
         }
         RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag,
                 bestRef.toByteArray(),

@@ -6,10 +6,10 @@ import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
-import java.io.IOException;
 
 /**
  * ProtoType Contract is a native contract for user to do multiple parties payment(mpp).
@@ -45,9 +45,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param receiver required {@link Address} receiver address, means transfer to address.
      * @param revision optional can be null {@link Revision} block revision.
      * @return Contract call result {@link Revision}
-     * @throws IOException
+     * @throws ClientIOException
      */
-    public static ContractCallResult getMasterAddress(Address receiver, Revision revision) throws IOException {
+    public static ContractCallResult getMasterAddress(Address receiver, Revision revision) throws ClientIOException {
 
         if(receiver == null){
             throw new IllegalArgumentException( "receiver is null" );
@@ -70,9 +70,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param expiration expiration, suggest 720
      * @param keyPair private key {@link ECKeyPair}
      * @return {@link TransferResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
-    public static TransferResult setMasterAddress(Address[] receivers, Address[] newMasters, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws IOException {
+    public static TransferResult setMasterAddress(Address[] receivers, Address[] newMasters, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws ClientIOException {
         if(receivers == null){
             throw ClientArgumentException.exception( "receivers is null" );
         }
@@ -104,9 +104,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param expiration expiration, suggest it is 720.
      * @param keyPair {@link ECKeyPair}
      * @return {@link TransferResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
-    public static TransferResult addUser(Address[] receivers, Address[] users, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws IOException{
+    public static TransferResult addUser(Address[] receivers, Address[] users, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws ClientIOException{
         if(receivers == null){
             throw ClientArgumentException.exception( "receivers is null" );
         }
@@ -142,9 +142,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param expiration expiration, suggest it is 720.
      * @param keyPair {@link ECKeyPair}
      * @return {@link TransferResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
-    public  static TransferResult removeUsers(Address[] receivers, Address[] users, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws IOException {
+    public  static TransferResult removeUsers(Address[] receivers, Address[] users, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws ClientIOException {
         if(receivers == null){
             throw ClientArgumentException.exception( "receivers is null" );
         }
@@ -176,12 +176,12 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param credits {@link Amount} array.
      * @param recoveryRates {@link Amount} array. thor per seconds.
      * @return {@link TransferResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
     public static TransferResult setUserPlans( Address[] receivers,
                                       Amount[] credits, Amount[] recoveryRates,
                                       int gas, byte gasCoef, int expiration , ECKeyPair keyPair
-    ) throws IOException {
+    ) throws ClientIOException {
 
         if(receivers == null){
             throw ClientArgumentException.exception( "receivers is null" );
@@ -218,9 +218,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param user required {@link Address} the user address.
      * @param revision optional {@link Revision}.
      * @return {@link ContractCallResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
-    public static ContractCallResult isUser(Address receiver, Address user, Revision revision) throws IOException{
+    public static ContractCallResult isUser(Address receiver, Address user, Revision revision) throws ClientIOException{
         if(receiver == null){
             throw ClientArgumentException.exception( "receiver address is null" );
         }
@@ -240,9 +240,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param receiver required {@link Address}
      * @param revision optional
      * @return {@link ContractCallResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
-    public static ContractCallResult getUserPlan(Address receiver, Revision revision) throws IOException {
+    public static ContractCallResult getUserPlan(Address receiver, Revision revision) throws ClientIOException {
         if(receiver == null){
             throw ClientArgumentException.exception( "receiver is null" );
         }
@@ -260,9 +260,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param user {@link Address} user address.
      * @param revision {@link Revision} revision.
      * @return {@link ContractCallResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
-    public static ContractCallResult getUserCredit(Address receiver, Address user, Revision revision) throws IOException{
+    public static ContractCallResult getUserCredit(Address receiver, Address user, Revision revision) throws ClientIOException{
         if(receiver == null){
             throw ClientArgumentException.exception( "receiver address is null" );
         }
@@ -288,9 +288,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param expiration required int expiration
      * @param keyPair required {@link Address}
      * @return {@link TransferResult}
-     * @throws IOException network error.
+     * @throws ClientIOException network error.
      */
-    public static TransferResult sponsor(Address[] receivers, Boolean yesOrNo,  int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws IOException{
+    public static TransferResult sponsor(Address[] receivers, Boolean yesOrNo,  int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws ClientIOException{
         if(receivers == null){
             throw ClientArgumentException.exception( "receivers is null" );
         }
@@ -320,9 +320,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param expiration required int recommendation value is 720
      * @param keyPair required {@link ECKeyPair}
      * @return {@link TransferResult}
-     * throw IOException network error.
+     * throw ClientIOException network error.
      */
-    public static TransferResult selectSponsor(Address[] receivers, Address[] sponsors, int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws IOException{
+    public static TransferResult selectSponsor(Address[] receivers, Address[] sponsors, int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws ClientIOException{
         if (receivers == null){
             throw ClientArgumentException.exception( "receivers is null" );
         }
@@ -352,9 +352,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param receiver {@link Address}
      * @param revision {@link Revision}
      * @return {@link ContractCallResult}
-     * throw IOException network error.
+     * throw ClientIOException network error.
      */
-    public static ContractCallResult getCurrentSponsor(Address receiver, Revision revision)throws IOException{
+    public static ContractCallResult getCurrentSponsor(Address receiver, Revision revision)throws ClientIOException{
         if(receiver == null){
             throw ClientArgumentException.exception( "receiver is null" );
         }
@@ -371,9 +371,9 @@ public class ProtoTypeContractClient extends ContractClient{
      * @param sponsor required {@link Address} sponsor
      * @param revision optional {@link Revision} block revision
      * @return {@link ContractCallResult}
-     * throw IOException network error.
+     * throw ClientIOException network error.
      */
-    public static ContractCallResult isSponsor(Address receiver, Address sponsor, Revision revision)throws IOException{
+    public static ContractCallResult isSponsor(Address receiver, Address sponsor, Revision revision)throws ClientIOException{
         if(receiver == null){
             throw ClientArgumentException.exception( "receiver is null" );
         }
