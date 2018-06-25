@@ -3,7 +3,8 @@ package com.vechain.thorclient.core.model.blockchain;
 import com.vechain.thorclient.utils.StringUtils;
 
 /**
- * @author albertma
+ * The blockchain node provider pojo object.
+ * Set and get url and connecting timeout(in milliseconds).
  */
 public class NodeProvider {
 
@@ -19,8 +20,7 @@ public class NodeProvider {
 
     /**
      * get provider url
-     * 
-     * @return
+     * @return the url of the nodes.
      */
     public String getProvider() {
         if (StringUtils.isBlank(this.provider) || !this.provider.startsWith("http")) {
@@ -31,8 +31,7 @@ public class NodeProvider {
 
     /**
      * Set provider url
-     * 
-     * @param provider
+     * @param provider the completed url of the nodes
      */
     public void setProvider(String provider) {
         this.provider = provider;
@@ -40,13 +39,16 @@ public class NodeProvider {
 
     /**
      * get connect timeout
-     * 
-     * @return
+     * @return milliseconds
      */
     public int getTimeout() {
         return timeout;
     }
 
+    /**
+     * Set connect timeout
+     * @param timeout milliseconds
+     */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }

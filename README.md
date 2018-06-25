@@ -6,7 +6,14 @@ A SDK for client toolkit to call Restful API.
 Thor Java Client SDK is licensed under the GNU Lesser General Public License v3.0, also included in LICENSE file in repository.
 - - - -
 
+## Set blockchain nodes provider
+Set blockchain nodes sample as follows
 
+```
+NodeProvider nodeProvider = NodeProvider.getNodeProvider();
+nodeProvider.setProvider("http://blockchain-nodes-url");
+nodeProvider.setTimeout(10000);
+```
 
 ##  You can find the clients toolkit under the directory :
  **src/main/java/com/vechain/thorclients/clients**
@@ -202,6 +209,8 @@ ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
+
+
 
 
 - - - -

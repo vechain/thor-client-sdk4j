@@ -1,5 +1,6 @@
 package com.vechain.thorclient.utils;
 
+import com.vechain.thorclient.core.model.blockchain.NodeProvider;
 import io.mikael.urlbuilder.UrlBuilder;
 
 import java.io.*;
@@ -15,6 +16,7 @@ public class URLUtils {
 		URL u = new URL(url);
 		uc = (HttpURLConnection) u.openConnection();
 		uc.setDoOutput(true);
+		uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
 		uc.setRequestMethod("GET");
 		mediaType = mediaType == null ? "application/json;charset=utf-8" : mediaType;
 		uc.addRequestProperty("accept", mediaType);
@@ -84,6 +86,7 @@ public class URLUtils {
 		URL u = new URL(url);
 		uc = (HttpURLConnection) u.openConnection();
 		uc.setDoOutput(true);
+		uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
 		uc.setRequestMethod(method);
 		if (null != mediaType) {
 		    uc.addRequestProperty("Content-Type", mediaType);
