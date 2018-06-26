@@ -93,7 +93,7 @@ ToClause clause = TransactionClient.buildVETToClause(
         amount,                                                                 // transfer amount
         ToData.ZERO );                                                          // The default value ToData.ZERO
 //construct RawTransaction
-RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x0, CryptoUtils.generateTxNonce(), clause);
 //sign and transfer
 TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
 logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
@@ -113,7 +113,7 @@ ToClause clause = ERC20Contract.buildTranferToClause(
         ERC20Token.VTHO,                                                        // the default ERC20Token.VTHO
         Address.fromHexString("0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),    // receiver address
         amount);                                                                // transfer amount
-RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x0, CryptoUtils.generateTxNonce(), clause);
 
 TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
 logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
@@ -215,7 +215,7 @@ logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
 - Set master address
 
 ```
-TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
+TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create(privateKey ) );
 logger.info( "result: " + JSON.toJSONString( result ) );
 
 ```
@@ -226,7 +226,7 @@ logger.info( "result: " + JSON.toJSONString( result ) );
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
         new Address[]{Address.fromHexString(UserAddress)},
-        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
+        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
 
@@ -248,7 +248,7 @@ String privateKey = "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c75
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
       new Address[]{Address.fromHexString( targetAddress )},
       new Address[]{Address.fromHexString( userAddress)},
-        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( privateKey ) );
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 
 ```
@@ -264,7 +264,7 @@ TransferResult result = ProtoTypeContractClient.setUserPlans(
         new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A")},
         new Amount[]{credit},
         new Amount[]{recovery},
-        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
+        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
 logger.info( "set user plans:" + JSON.toJSONString( result ) );
 
 ```
@@ -302,7 +302,7 @@ TransferResult transferResult = ProtoTypeContractClient.addUser(
 	new Address[] { Address.fromHexString(targetAddress) },   //target address to add user
 	new Address[] { Address.fromHexString(userAddress) },     //user address to be added
         TransactionClient.ContractGasLimit,                       //TransactionClient.ContractGasLimit = 70000 gas
-	(byte) 0x1,                                               //gasCoef
+	(byte) 0x0,                                               //gasCoef
 	expirationBlock,                                          //720 block
 	ECKeyPair.create(privateKey));
 if (transferResult != null) {
@@ -320,7 +320,7 @@ TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(
 	new Amount[] { credit },
         new Amount[] { recovery }, 
 	TransactionClient.ContractGasLimit, 
-	(byte) 0x1, 720, 
+	(byte) 0x0, 720, 
 	ECKeyPair.create(privateKey));
 if (setUserPlansResult != null) {
     logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
