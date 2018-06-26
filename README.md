@@ -1,4 +1,4 @@
-# Thor Java Client SDK
+# # Thor Java Client SDK
 - - - -
 A SDK for client toolkit to call Restful API.
 
@@ -51,6 +51,7 @@ Get address: walletInfo.getKeyPair().getHexAddress());
 
 ### AccountClient
 User can use this client :
+
 - Get Account information: VET balance and VTHO balance
 
 ```
@@ -68,8 +69,8 @@ account info:
 
 ```
 
-```
-- Get code on a address.
+
+-  Get code on a address.
 
 ```
 Address tokenAddr = Address.VTHO_Address;
@@ -88,7 +89,7 @@ byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST).toByteArray();
 Amount amount = Amount.createFromToken( AbstractToken.VET);
 amount.setDecimalAmount( "21.12" );
 ToClause clause = TransactionClient.buildVETToClause(
-        Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),  // reveiver address
+        Address.fromHexString( "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),  // reveiver address
         amount,                                                                 // transfer amount
         ToData.ZERO );                                                          // The default value ToData.ZERO
 //construct RawTransaction
@@ -110,7 +111,7 @@ amount.setDecimalAmount( "11.12" );
 // construct transaction clause
 ToClause clause = ERC20Contract.buildTranferToClause( 
         ERC20Token.VTHO,                                                        // the default ERC20Token.VTHO
-        Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),    // receiver address
+        Address.fromHexString("0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),    // receiver address
         amount);                                                                // transfer amount
 RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
 
@@ -132,7 +133,7 @@ AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefiniti
 ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString( null ) );
 ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
 
-
+```
 - Query transaction
 
 ```
