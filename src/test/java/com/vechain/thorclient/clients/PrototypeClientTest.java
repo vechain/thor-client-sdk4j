@@ -135,6 +135,11 @@ public class PrototypeClientTest extends BaseTest {
 
     private void checkReceipt(String id, long start, long expiration) {
         if (!StringUtils.isBlank(id)) {
+            try {
+                Thread.sleep(10 * 1000);
+            } catch (InterruptedException e) {
+                throw new ThorException(e);
+            }
             long startBlockNumber = 0;
             Receipt receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
             if (receipt != null) {

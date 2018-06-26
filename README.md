@@ -22,9 +22,37 @@ There are some SDK specifications <a href="https://github.com/vechain/thor-clien
 
 For JUnit Test example: there are some required parameters in config.properties file to support JUnit Test running. 
 
+### WalletUtils
+
+Create Wallet and ouput keystore:
+
+```
+WalletInfo walletInfo = WalletUtils.createWallet("123456");
+String keyStoreString = walletInfo.toKeystoreString();
+
+logger.info("KeyStore:" + keyStoreString);
+logger.info("privKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
+logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
+logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
+		
+```
+
+Load keystore:
+
+```
+
+String keyStore = "{\"address\":\"0xf56a23f7b9c3b1fd68d812e3d2357bbe68bfd087\",\"crypto\":{\"cipher\":\"aes-128-ctr\",\"cipherparams\":{\"iv\":\"f390a8c9328ea46779cb17d02d7ef2a5\"},\"ciphertext\":\"622375a3ae80035f99b19d17639b1c4da12153d60b6735a3009065aa38766f64\",\"kdf\":\"scrypt\",\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8,\"salt\":\"c2d13d5476d7b807c8630cf931f4e0e474bbeae590fa43f90197214aa607d426\"},\"mac\":\"10cdadfdb6ecdeec40fe3330480a2978dff4d10c02e5d7231a88cafe7af711af\"},\"id\":\"6417d351-1cb9-421b-b446-1bd7f887dfbe\",\"version\":3}";
+		WalletInfo walletInfo = WalletUtils.loadKeystore(keyStore, "123456");
+
+privateKey: BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
+publicKey: BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
+Get address: walletInfo.getKeyPair().getHexAddress());
+```
+
 ### AccountClient
 User can use this client :
 - Get Account information: VET balance and VTHO balance
+
 ```
 Address address = Address.fromHexString(fromAddress);
 Account account = AccountClient.getAccountInfo(address, null);
@@ -32,9 +60,19 @@ logger.info("account info:" + JSON.toJSONString(account));
 logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
 Assert.assertNotNull(account);
 
+eg. 
+Address address = Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A");
+Account account = AccountClient.getAccountInfo(address, null);
+logger.info("account info:" + JSON.toJSONString(account));
+logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
+account info:
+{"balance":"0x42aeda6af58002f600000","energy":"0x14234c71f08e4db8e504","hasCode":false}
+
 ```
 - Call Contract view method.
+
 ```
+
 Address contractAddr = token.getContractAddress();
 Revision currRevision = revision;
 if(currRevision == null){
@@ -46,6 +84,7 @@ ContractCallResult contractCallResult = callContract(call, contractAddr,  currRe
 
 ```
 - Get code on a address.
+
 ```
 Address tokenAddr = Address.VTHO_Address;
 AccountCode code = AccountClient.getAccountCode(tokenAddr, null);
@@ -56,6 +95,7 @@ logger.info("code:" + JSON.toJSONString(code));
 - - - -
 ### TransactionClient
 - Send VET to account
+
 ```
 byte chainTag = BlockchainClient.getChainTag();
 byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST).toByteArray();
@@ -97,7 +137,7 @@ logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
 
 ```
 //query receipt info
-Receipt receipt = TransactionClient.getTransactionReceipt(setUserPlanTxId, null);
+Receipt receipt = TransactionClient.getTransactionReceipt("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", null);
 logger.info("Receipt:" + JSON.toJSONString(receipt));
 
 ```
@@ -105,7 +145,7 @@ logger.info("Receipt:" + JSON.toJSONString(receipt));
 - Query transaction
 
 ```
-Transaction transaction = TransactionClient.getTransaction(hexId, true, null);
+Transaction transaction = TransactionClient.getTransaction("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", true, null);
 logger.info("Transaction:" + JSON.toJSONString(transaction));
 
 ```
@@ -113,6 +153,7 @@ logger.info("Transaction:" + JSON.toJSONString(transaction));
 - - - -
 ### BlockClient
 You can get block by specified the block revision.
+
 ```
 Revision revision = Revision.create(0);
 Block block = BlockClient.getBlock(revision);
@@ -124,12 +165,14 @@ logger.info("block:" + JSON.toJSONString(block));
 ### LogsClient
 You can get events logs and transfer logs, the api is also supporting pagination query.
 - Query events logs.
+
 ```
 EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
 ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.DESC, null);
 
 ```
 - Query transfer logs.
+
 ```
 TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
 ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
@@ -138,13 +181,16 @@ ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
 - - - -
 ### BlockchainClient
 You can get the chain tag and block reference.
+
 - Get chain tag
+
 ```
 byte chainTag = BlockchainClient.getChainTag();
 int chainTagInt = chainTag & 0xff;
 logger.info( "chainTag: " + chainTagInt);
 ```
 - Get block reference
+
 ```
 Revision revision = Revision.create(0);
 Block block = BlockClient.getBlock(revision);
@@ -155,37 +201,43 @@ logger.info("blockRef;" + BytesUtils.toHexString(block.blockRef().toByteArray(),
 - - - -
 ### ProtoTypeClient
 The detail information you can refer to the page[ProtoType Wiki](https://github.com/vechain/thor/wiki/Prototype(CN))
+
 - Get master address 
+
 ```
-ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( fromAddress ) , Revision.**BEST**);
+ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
 logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
 
 ```
 
 - Set master address
+
 ```
-TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( fromAddress ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
+TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
 logger.info( "result: " + JSON.toJSONString( result ) );
 
 ```
 
 - Add user
+
 ```
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
         new Address[]{Address.fromHexString(UserAddress)},
-        ContractClient.**GasLimit**, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
 ```
 
 - Check if it is user
+
 ```
-ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( fromAddress ) ,Address.fromHexString( UserAddress),
+ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) ,Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ),
         Revision.BEST);
 logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 ```
 - Remove user
+
 ```
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
       new Address[]{Address.fromHexString( fromAddress )},
@@ -195,6 +247,7 @@ logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 
 ```
 - Set User plan
+
 ```
 Amount credit = Amount.VTHO();
 credit.setDecimalAmount( "12.00" );
@@ -202,24 +255,26 @@ Amount recovery = Amount.VTHO();
 recovery.setDecimalAmount( "0.00001" );
 
 TransferResult result = ProtoTypeContractClient.setUserPlans(
-        new Address[]{Address.fromHexString( fromAddress)},
+        new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A")},
         new Amount[]{credit},
         new Amount[]{recovery},
-        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
 logger.info( "set user plans:" + JSON.toJSONString( result ) );
 
 ```
 - Get User plan
+
 ```
-ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( fromAddress ) , Revision.BEST);
+ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
 - Get User credits
+
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
-        Address.fromHexString( fromAddress ),
-        Address.fromHexString( UserAddress),
+        Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ),
+        Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A"),
         Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
@@ -231,7 +286,8 @@ logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 Some case may be failed because of the account or block is not existed on your blockchain env.
 
 ```
-mvn clean install
+mvn clean install  -Dmaven.test.skip=true
+
 ```
 
 
@@ -240,16 +296,17 @@ mvn clean install
 The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction; Run with maven：
 
 ```
-mvn clean package
+mvn clean package -Dmaven.test.skip=true
 
 The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.2.jar
-```
 
 ```
 
 Run the following command:
 
 There is a example transaction file in src/main/resources/exchange_example.xlsx
+
+```
  
 Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
 
@@ -426,6 +483,10 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
   {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
 
 ```
+
+
+
+
 
 
 
