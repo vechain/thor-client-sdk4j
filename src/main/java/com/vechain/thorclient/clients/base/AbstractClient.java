@@ -22,6 +22,7 @@ import java.util.HashMap;
 public abstract class AbstractClient {
 
     public enum Path{
+
         //Accounts
         GetAccountPath("/accounts/{address}"),
         PostContractCallPath("/accounts/{address}"),
@@ -44,32 +45,31 @@ public abstract class AbstractClient {
         PostFilterTransferLogPath("/transfers"),
 
         //Nodes
-        GetNodeInfoPath("/node/network/peers"),
-
-        ;
+        GetNodeInfoPath("/node/network/peers"),;
         private final String value;
 
-        Path(String value){
+        Path(String value) {
             this.value = value;
         }
 
         public String getPath() {
-            return  value;
+            return value;
         }
 
     }
 
-    private static String rawUrl(Path path){
-        return NodeProvider.getNodeProvider().getProvider(  ) + path.getPath();
+    private static String rawUrl(Path path) {
+        return NodeProvider.getNodeProvider().getProvider() + path.getPath();
     }
 
     /**
      * Get the request
-     * @param path  {@link Path}
-     * @param uriParams uri parameters
+     *
+     * @param path        {@link Path}
+     * @param uriParams   uri parameters
      * @param queryParams query string parameters
-     * @param tClass the class of result java object.
-     * @param <T> Type of result java object.
+     * @param tClass      the class of result java object.
+     * @param <T>         Type of result java object.
      * @return response java object, could be null, mean can not find any result.
      * @throws IOException node is not reachable or request is not valid.
      */
@@ -82,9 +82,8 @@ public abstract class AbstractClient {
             jsonNode = Unirest.get( getURL ).asJson();
         }catch (UnirestException e) {
             e.printStackTrace();
-            throw ClientIOException.create(e);
+            throw new ClientIOException(e);
         }
-
         return parseResult( tClass, jsonNode );
 
     }
@@ -98,7 +97,7 @@ public abstract class AbstractClient {
             }else if( status == 403){
                 exception_msg = "request forbidden";
             }
-            ClientIOException clientIOException = ClientIOException.create(exception_msg);
+            ClientIOException clientIOException = new ClientIOException(exception_msg);
             clientIOException.setHttpStatus( status );
             throw  clientIOException;
         }else{
@@ -109,39 +108,38 @@ public abstract class AbstractClient {
 
     /**
      * Post the request
-     * @param path {@link Path}
-     * @param uriParams uri parameters
+     *
+     * @param path        {@link Path}
+     * @param uriParams   uri parameters
      * @param queryParams query string parameters
-     * @param tClass  the class of result java object.
-     * @param <T> Type of result java object.
+     * @param tClass      the class of result java object.
+     * @param <T>         Type of result java object.
      * @return response java object, could be null, mean can not find any result.
      * @throws IOException http status 4xx means not enough energy amount.
      */
-    public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException {
+    public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) {
         Unirest.setTimeouts(NodeProvider.getNodeProvider().getConnectTimeout(), NodeProvider.getNodeProvider().getSocketTimeout());
-        String rawURL = rawUrl( path );
-        String postURL =  URLUtils.urlComposite(rawURL, uriParams, queryParams);
-        String postString = JSON.toJSONString( postBody );
-        HttpResponse<JsonNode> jsonNode = null;
+        String                 rawURL     = rawUrl(path);
+        String                 postURL    = URLUtils.urlComposite(rawURL, uriParams, queryParams);
+        String                 postString = JSON.toJSONString(postBody);
+        HttpResponse<JsonNode> jsonNode   = null;
         try {
-            jsonNode =  Unirest.post( postURL ).body( postString ).asJson();
+            jsonNode = Unirest.post(postURL).body(postString).asJson();
         } catch (UnirestException e) {
-            e.printStackTrace();
-            throw ClientIOException.create(e);
+            throw new ClientIOException(e);
         }
         return parseResult( tClass, jsonNode );
-
     }
 
 
-    protected  static HashMap<String , String> parameters(String[] keys, String[] values){
-        if(keys == null || values == null || keys.length != values.length){
-            throw ClientArgumentException.exception( "Parameters creating failed" );
+    protected static HashMap<String, String> parameters(String[] keys, String[] values) {
+        if (keys == null || values == null || keys.length != values.length) {
+            throw ClientArgumentException.exception("Parameters creating failed");
         }
 
         HashMap<String, String> params = new HashMap<>();
-        for(int index = 0; index < keys.length; index++){
-            params.put( keys[index], values[index] );
+        for (int index = 0; index < keys.length; index++) {
+            params.put(keys[index], values[index]);
         }
         return params;
     }
@@ -149,22 +147,23 @@ public abstract class AbstractClient {
 
     /**
      * Call the contract view function.
-     * @param call {@link ContractCall}
+     *
+     * @param call            {@link ContractCall}
      * @param contractAddress {@link Address}
-     * @param revision {@link Revision}
+     * @param revision        {@link Revision}
      * @return {@link ContractCallResult}
      * @throws ClientIOException network error
      */
-    public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)throws ClientIOException {
+    public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision) throws ClientIOException {
         Revision currentRevision = revision;
-        if(currentRevision == null){
+        if (currentRevision == null) {
             currentRevision = Revision.BEST;
         }
 
-        HashMap<String, String> uriParams = parameters( new String[]{"address"}, new String[]{ contractAddress.toHexString( Prefix.ZeroLowerX )} );
-        HashMap<String, String> queryParams = parameters(new String[]{"revision"}, new String[]{currentRevision.toString()}   );
+        HashMap<String, String> uriParams   = parameters(new String[]{"address"}, new String[]{contractAddress.toHexString(Prefix.ZeroLowerX)});
+        HashMap<String, String> queryParams = parameters(new String[]{"revision"}, new String[]{currentRevision.toString()});
 
-        return sendPostRequest( Path.PostContractCallPath, uriParams, queryParams,call, ContractCallResult.class);
+        return sendPostRequest(Path.PostContractCallPath, uriParams, queryParams, call, ContractCallResult.class);
     }
 
 
