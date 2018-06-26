@@ -1,4 +1,4 @@
-# # Thor Java Client SDK
+# Thor Java Client SDK
 - - - -
 A SDK for client toolkit to call Restful API.
 
