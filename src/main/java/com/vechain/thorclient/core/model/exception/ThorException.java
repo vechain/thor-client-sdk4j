@@ -11,7 +11,7 @@ public class ThorException extends RuntimeException {
 
     public ThorException() {
         super();
-        logger.error("error apperance.");
+        logger.error("error occurs.");
     }
 
     public ThorException(String message) {

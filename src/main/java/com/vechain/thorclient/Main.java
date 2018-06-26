@@ -22,23 +22,23 @@ import com.vechain.thorclient.utils.WalletUtils;
 
 public class Main {
 
-    private static final String SIGN = "signVET";
+    private static final String SIGN                    = "signVET";
 
-    private static final String CREATE_WALLET = "createWallet";
+    private static final String CREATE_WALLET           = "createWallet";
 
-    private static final String SEND = "sendVET";
+    private static final String SEND                    = "signAndSendVET";
 
-    private static final String CHAIN_TAG = "getChainTag";
+    private static final String CHAIN_TAG               = "getChainTag";
 
-    private static final String BLOCK_REF = "getBlockRef";
+    private static final String BLOCK_REF               = "getBlockRef";
 
-    private static final String GET_BLOCK = "getBlock";
+    private static final String GET_BLOCK               = "getBlock";
 
-    private static final String GET_TRANSACTION = "getTransaction";
+    private static final String GET_TRANSACTION         = "getTransaction";
 
     private static final String GET_TRANSACTION_RECEIPT = "getTransactionReceipt";
 
-//    private static final String SEND_RAW     = "sendRaw";
+    private static final String SEND_VET_RAW            = "sendVETRaw";
 
     public static void main(String[] args) throws Exception {
 
@@ -48,12 +48,12 @@ public class Main {
         }
         // String privateKey = System.getenv(PRIVATE_KEY);
         // String nodeProviderUrl = System.getenv(NODE_PROVIDER_URL);
-        String privateKey      = null;
+        String privateKey = null;
         String nodeProviderUrl = null;
-//        for (String arg : args) {
-//            System.out.println(arg);
-//        }
-        if (args[0].equals(CHAIN_TAG) || args[0].equals(BLOCK_REF) || args[0].equals(GET_BLOCK) || args[0].equals(SEND)) {
+        // for (String arg : args) {
+        // System.out.println(arg);
+        // }
+        if (args[0].equals(CHAIN_TAG) || args[0].equals(BLOCK_REF) || args[0].equals(GET_BLOCK) || args[0].equals(SEND) || args[0].equals(SEND_VET_RAW)) {
             // args=chainTag/blockRef {providerUrl}
             // args=send {providerUrl} {privateKey} {filePath}
             // args=sign filePath privateKey
@@ -85,7 +85,7 @@ public class Main {
                 System.out.println("You have input invalid parameters.");
                 System.exit(0);
             }
-            String txId    = args[1];
+            String txId = args[1];
             String nodeUrl = args[2];
             if (StringUtils.isBlank(nodeUrl) && !nodeUrl.startsWith("http")) {
                 System.out.println("You have input invalid parameters.");
@@ -104,7 +104,7 @@ public class Main {
                 System.out.println("You have input invalid parameters.");
                 System.exit(0);
             }
-            String txId    = args[1];
+            String txId = args[1];
             String nodeUrl = args[2];
             if (StringUtils.isBlank(nodeUrl) && !nodeUrl.startsWith("http")) {
                 System.out.println("You have input invalid parameters.");
@@ -127,8 +127,8 @@ public class Main {
         }
 
         if (args[0].equals(CHAIN_TAG)) {
-            byte   chainTagByte = BlockchainClient.getChainTag();
-            String chainTag     = String.format("%02x", chainTagByte);
+            byte chainTagByte = BlockchainClient.getChainTag();
+            String chainTag = String.format("%02x", chainTagByte);
             System.out.println("ChainTag:");
             System.out.println("0x" + chainTag);
         }
@@ -141,7 +141,7 @@ public class Main {
 
         if (args[0].equals(BLOCK_REF)) {
             byte[] blockRefByte = BlockClient.getBlock(Revision.BEST).blockRef().toByteArray();
-            String blockRef     = ByteUtils.toHexString(blockRefByte);
+            String blockRef = ByteUtils.toHexString(blockRefByte);
             System.out.println("BlockRef:");
             System.out.println("0x" + blockRef);
         }
@@ -152,10 +152,10 @@ public class Main {
                 System.out.println("You have input invalid parameters.");
                 System.exit(0);
             }
-            WalletInfo walletInfo    = WalletUtils.createWallet(args[1]);
-            byte[]     rawPrivateKey = walletInfo.getKeyPair().getRawPrivateKey();
-            String     newPrivateKey = BytesUtils.toHexString(rawPrivateKey, Prefix.ZeroLowerX);
-            String     keyStoreStr   = walletInfo.toKeystoreString();
+            WalletInfo walletInfo = WalletUtils.createWallet(args[1]);
+            byte[] rawPrivateKey = walletInfo.getKeyPair().getRawPrivateKey();
+            String newPrivateKey = BytesUtils.toHexString(rawPrivateKey, Prefix.ZeroLowerX);
+            String keyStoreStr = walletInfo.toKeystoreString();
             System.out.println("The wallet created successfully and the key store is:");
             System.out.println(keyStoreStr);
             System.out.println("The wallet created successfully and the privateKey is:");
@@ -167,7 +167,7 @@ public class Main {
             File file = new File(args[1]);
             if (file.isFile()) {
                 List<String[]> transactionList = ConsoleUtils.readExcelFile(args[1]);
-                String         rawTransaction  = ConsoleUtils.doSignVETTx(transactionList, privateKey, false);
+                String rawTransaction = ConsoleUtils.doSignVETTx(transactionList, privateKey, false);
                 System.out.println("Raw Transaction:");
                 System.out.println(rawTransaction);
             } else {
@@ -176,20 +176,31 @@ public class Main {
         }
 
         if (args[0].equals(SEND)) {
-            // args=send {providerUrl} {privateKey} {filePath}
-            if (args.length < 3) {
+            // args=signAndSendVET {providerUrl} {privateKey} {filePath}
+            if (args.length < 4) {
                 System.out.println("You have input invalid parameters.");
                 System.exit(0);
             }
             File file = new File(args[3]);
             if (file.isFile()) {
                 List<String[]> transactionList = ConsoleUtils.readExcelFile(args[3]);
-                String         result          = ConsoleUtils.doSignVETTx(transactionList, privateKey, true);
+                String result = ConsoleUtils.doSignVETTx(transactionList, privateKey, true);
                 System.out.println("Send Result:");
                 System.out.println(result);
             } else {
                 System.out.println("You have input invalid parameters.");
             }
+        }
+
+        if (args[0].equals(SEND_VET_RAW)) {
+            // args=sendVETRaw {providerUrl} {rawTransaction}
+            if (args.length < 3) {
+                System.out.println("You have input invalid parameters.");
+                System.exit(0);
+            }
+            String result = ConsoleUtils.sendRawVETTx(args[2]);
+            System.out.println("Send Result:");
+            System.out.println(result);
         }
 
     }

@@ -1,14 +1,14 @@
 package com.vechain.thorclient.utils;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.core.wallet.CipherException;
 import com.vechain.thorclient.core.wallet.Wallet;
 import com.vechain.thorclient.core.wallet.WalletFile;
 import com.vechain.thorclient.core.wallet.WalletInfo;
-import com.vechain.thorclient.utils.StringUtils;
-
-import java.io.IOException;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 /**
  * Wallet Utils is used to create or load keystore.
@@ -17,12 +17,15 @@ public class WalletUtils {
 
     /**
      * Load keystore for keystore string and passphases.
-     * @param keystore  keystore string
-     * @param passphases password string to encrypt
+     * 
+     * @param keystore
+     *            keystore string
+     * @param passphases
+     *            password string to encrypt
      * @return {@link WalletInfo}
      */
     public static WalletInfo loadKeystore(String keystore, String passphases) {
-        if(StringUtils.isBlank( keystore ) && StringUtils.isBlank( passphases )){
+        if (StringUtils.isBlank(keystore) && StringUtils.isBlank(passphases)) {
             return null;
         }
 
@@ -36,31 +39,32 @@ public class WalletUtils {
             return null;
         }
 
-
         ECKeyPair ecKeyPair = null;
         try {
-            ecKeyPair = Wallet.decrypt( passphases, walletFile );
+            ecKeyPair = Wallet.decrypt(passphases, walletFile);
         } catch (CipherException e) {
             e.printStackTrace();
             return null;
         }
 
-        return new WalletInfo( walletFile, ecKeyPair);
+        return new WalletInfo(walletFile, ecKeyPair);
     }
 
     /**
      * Create wallet from password.
-     * @param passphases passsword to encrypt the private key.
+     * 
+     * @param passphases
+     *            passsword to encrypt the private key.
      * @return {@link WalletInfo}
      */
-    public static WalletInfo createWallet(String passphases){
-        if(StringUtils.isBlank( passphases )){
+    public static WalletInfo createWallet(String passphases) {
+        if (StringUtils.isBlank(passphases)) {
             return null;
         }
         ECKeyPair keyPair = ECKeyPair.create();
         WalletFile walletFile = null;
         try {
-            walletFile = Wallet.createStandard(passphases,keyPair);
+            walletFile = Wallet.createStandard(passphases, keyPair);
         } catch (CipherException e) {
             e.printStackTrace();
         }
@@ -68,5 +72,27 @@ public class WalletUtils {
         return new WalletInfo(walletFile, keyPair);
     }
 
+    /**
+     * Create wallet from password.
+     * 
+     * @param passphases
+     *            passsword to encrypt the private key.
+     * @return {@link WalletInfo}
+     */
+    public static WalletInfo createWallet(String passphases, File filePath) {
+        if (StringUtils.isBlank(passphases)) {
+            return null;
+        }
+        ECKeyPair keyPair = ECKeyPair.create();
+        WalletFile walletFile = null;
+        try {
+            walletFile = Wallet.createStandard(passphases, keyPair);
+            
+        } catch (CipherException e) {
+            e.printStackTrace();
+        }
+
+        return new WalletInfo(walletFile, keyPair);
+    }
 
 }

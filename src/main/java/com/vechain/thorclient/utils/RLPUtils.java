@@ -66,8 +66,12 @@ public class RLPUtils {
         RlpList rlpList = new RlpList(clauses);
         result.add(rlpList);
 
+        if(rawTransaction.getGasPriceCoef() == 0){
+            result.add(RlpString.create(new byte[]{}));
+        }else{
+            result.add( RlpString.create( rawTransaction.getGasPriceCoef() ) );
+        }
 
-        result.add(RlpString.create(rawTransaction.getGasPriceCoef()));
 
 
         if(rawTransaction.getGas() == null){

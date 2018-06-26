@@ -27,7 +27,7 @@ public class RawTransactionFactory {
                 || blockRef == null
                 || expiration <= 0
                 || gasInt < 21000
-                || gasPriceCoef <= 0
+                || gasPriceCoef < 0
                 || toClauses == null){
             throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
         }

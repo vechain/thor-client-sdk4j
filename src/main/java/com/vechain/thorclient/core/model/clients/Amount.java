@@ -81,6 +81,9 @@ public  class Amount {
         return BytesUtils.toHexString( bytes, Prefix.ZeroLowerX );
     }
 
+    public AbstractToken getAbstractToken() {
+        return abstractToken;
+    }
 
     /**
      * Get amount

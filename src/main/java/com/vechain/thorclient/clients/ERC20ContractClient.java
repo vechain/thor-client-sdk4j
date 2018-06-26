@@ -39,16 +39,15 @@ public class ERC20ContractClient extends TransactionClient {
     /**
      * Transfer ERC20 token
      * @param receivers {@link Address} array
-     * @param amounts
-     * @param token
-     * @param gas
-     * @param gasCoef
-     * @param expiration
-     * @param keyPair
-     * @return
+     * @param amounts {@link Amount} array
+     * @param gas gas at least 7000
+     * @param gasCoef gas coef
+     * @param expiration  expiration
+     * @param keyPair your private key.
+     * @return {@link TransferResult}
      * @throws ClientIOException
      */
-    public static TransferResult transferERC20Token(Address[] receivers, Amount[] amounts, ERC20Token token, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws ClientIOException{
+    public static TransferResult transferERC20Token(Address[] receivers, Amount[] amounts, int gas, byte gasCoef, int expiration , ECKeyPair keyPair) throws ClientIOException{
         if(receivers == null){
             throw ClientArgumentException.exception( "receivers is null" );
         }
@@ -58,16 +57,17 @@ public class ERC20ContractClient extends TransactionClient {
         if(receivers.length != amounts.length){
             throw ClientArgumentException.exception( "receivers length equal to amounts length." );
         }
-        if(token == null){
-            throw ClientArgumentException.exception( "token is null." );
-        }
 
-        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "transfer" );
+        AbiDefinition abi =  ERC20Contract.defaultERC20Contract.findAbiDefinition( "transfer" );
         if(abi == null){
             throw new IllegalArgumentException( "Can not find abi master method" );
         }
         ToClause[] clauses = new ToClause[receivers.length];
         for(int index = 0; index < receivers.length; index ++){
+            if(!(amounts[index].getAbstractToken() instanceof ERC20Token)){
+                throw ClientArgumentException.exception("Token is not ERC20");
+            }
+            ERC20Token token = (ERC20Token) amounts[index].getAbstractToken();
             clauses[index] = ProtoTypeContract.buildToClause(
                     token.getContractAddress(),
                     abi,

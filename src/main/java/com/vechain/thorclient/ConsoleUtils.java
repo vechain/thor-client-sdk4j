@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vechain.thorclient.utils.*;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -20,6 +19,11 @@ import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.core.model.clients.ToClause;
 import com.vechain.thorclient.core.model.clients.ToData;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
+import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.CryptoUtils;
+import com.vechain.thorclient.utils.Prefix;
+import com.vechain.thorclient.utils.RawTransactionFactory;
+import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 public class ConsoleUtils {
@@ -38,7 +42,7 @@ public class ConsoleUtils {
             blockRef = BytesUtils.toByteArray(transaction[3]);
         }
         int gas = clauses.size() * 21000;
-        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, gas, (byte) 0x01, CryptoUtils.generateTxNonce(),
+        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, gas, (byte) 0x0, CryptoUtils.generateTxNonce(),
                 clauses.toArray(new ToClause[0]));
         if (isSend) {
             TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
@@ -47,6 +51,11 @@ public class ConsoleUtils {
             RawTransaction result = TransactionClient.sign(rawTransaction, ECKeyPair.create(privateKey));
             return BytesUtils.toHexString(result.encode(), Prefix.ZeroLowerX);
         }
+    }
+
+    public static String sendRawVETTx(String rawTransaction) throws IOException {
+        TransferResult result = TransactionClient.transfer(rawTransaction);
+        return JSON.toJSONString(result);
     }
 
     public static List<String[]> readExcelFile(String fiePath) throws Exception {

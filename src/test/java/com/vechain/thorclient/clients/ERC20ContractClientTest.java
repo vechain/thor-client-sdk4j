@@ -2,6 +2,9 @@ package com.vechain.thorclient.clients;
 
 import java.io.IOException;
 
+import com.alibaba.fastjson.JSON;
+import com.vechain.thorclient.core.model.blockchain.TransferResult;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +26,18 @@ public class ERC20ContractClientTest extends BaseTest {
         }
 
         Assert.assertNotNull(balance);
+    }
+
+    @Test
+    public void sendERC20Token(){
+        Amount amount = Amount.VTHO();
+        amount.setDecimalAmount( "122.33" );
+        TransferResult result = ERC20ContractClient.transferERC20Token(
+                new Address[]{Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" )} ,
+                new Amount[]{amount},
+                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey)
+                );
+        logger.info( "sendERC20Token: " + JSON.toJSONString(result) );
     }
 
 }
