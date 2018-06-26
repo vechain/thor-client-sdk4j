@@ -67,18 +67,6 @@ account info:
 {"balance":"0x42aeda6af58002f600000","energy":"0x14234c71f08e4db8e504","hasCode":false}
 
 ```
-- Call Contract view method.
-
-```
-
-Address contractAddr = token.getContractAddress();
-Revision currRevision = revision;
-if(currRevision == null){
-    currRevision = Revision.BEST;
-}
-AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition("balanceOf");
-ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString( null ) );
-ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
 
 ```
 - Get code on a address.
@@ -130,6 +118,20 @@ TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKe
 logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
 
 ```
+
+- Call Contract view method.
+
+```
+
+Address contractAddr = token.getContractAddress();
+Revision currRevision = revision;
+if(currRevision == null){
+    currRevision = Revision.BEST;
+}
+AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition("balanceOf");
+ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString( null ) );
+ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
+
 
 - Query transaction
 
@@ -226,6 +228,7 @@ TransferResult transferResult = ProtoTypeContractClient.addUser(
         ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
+
 ```
 
 - Check if it is user
@@ -238,9 +241,12 @@ logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 - Remove user
 
 ```
+String targetAddress = "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A";
+String userAddress = "0xba5f00a28f732f23ba946c594716496ebdc9aef5";
+String privateKey = "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f";
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
-      new Address[]{Address.fromHexString( fromAddress )},
-      new Address[]{Address.fromHexString( UserAddress)},
+      new Address[]{Address.fromHexString( targetAddress )},
+      new Address[]{Address.fromHexString( userAddress)},
         ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 
@@ -288,8 +294,6 @@ String userAddress = "0xba5f00a28f732f23ba946c594716496ebdc9aef5";
 String privateKey = "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f";
 // set expiration block
 int expirationBlock = 720;
-// transaction expiration time
-int expiration = 10 * expirationBlock * 1000;
 
 long start = System.currentTimeMillis();
 //add user(UserAddress) to owner (fromAddress)
@@ -302,9 +306,6 @@ TransferResult transferResult = ProtoTypeContractClient.addUser(
 	ECKeyPair.create(privateKey));
 if (transferResult != null) {
     logger.info("Add user:" + JSON.toJSONString(transferResult));
-    this.checkReceipt(transferResult.getId(), start, expiration);
-} else {
-    throw new ThorException("ProtoTypeContractClient.addUser出错了~");
 }
 
 start = System.currentTimeMillis();
@@ -322,53 +323,7 @@ TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(
 	ECKeyPair.create(privateKey));
 if (setUserPlansResult != null) {
     logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
-    this.checkReceipt(setUserPlansResult.getId(), start, expiration);
-} else {
-    throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
-}
-
-//check receipt
-private void checkReceipt(String id, long start, long expiration) {
-	if (!StringUtils.isBlank(id)) {
-	    try {
-		Thread.sleep(10 * 1000);
-	    } catch (InterruptedException e) {
-		throw new ThorException(e);
-	    }
-	    long startBlockNumber = 0;
-	    Receipt receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
-	    if (receipt != null) {
-		BlockContext blockContext = receipt.getBlock();
-		if (blockContext != null) {
-		    startBlockNumber = blockContext.getNumber();
-		}
-	    }
-	    while (true) {
-		try {
-		    Thread.sleep(10 * 1000);
-		} catch (InterruptedException e) {
-		    throw new ThorException(e);
-		}
-		final long current = System.currentTimeMillis();
-
-		if (current - start > expiration) {
-		    throw new ThorException("can not find valid receipt~");
-		}
-		receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
-		if (receipt != null) {
-		    BlockContext blockContext = receipt.getBlock();
-		    if (blockContext != null) {
-			long number = blockContext.getNumber();
-			if (number - startBlockNumber > 12) {
-			    break;
-			}
-		    }
-		}
-	    }
-	} else {
-	    throw new TransactionException("invalid tx id.");
-	}
-}
+} 
 
 ```
 
@@ -381,8 +336,6 @@ Some case may be failed because of the account or block is not existed on your b
 mvn clean install  -Dmaven.test.skip=true
 
 ```
-
-
 
 
 ### 4. Java console approach
