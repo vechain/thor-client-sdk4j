@@ -8,6 +8,7 @@ import com.vechain.thorclient.core.model.blockchain.Transaction;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
+import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
@@ -33,7 +34,7 @@ public class TransactionClientTest extends BaseTest {
     static String unsponsorTxId = "0xe86d6b5546e12741ce894ba25d5c3ed0a16e700ed93e18c6050451592b3f2b8c";
 
     @Test
-    public void testGetTransaction() throws IOException {
+    public void testGetTransaction() throws ClientIOException {
 
         Transaction transaction = TransactionClient.getTransaction(hexId, false, null);
         logger.info("Transaction:" + JSON.toJSONString(transaction));
@@ -41,7 +42,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     @Test
-    public void testGetTransactionRaw() throws IOException {
+    public void testGetTransactionRaw() throws ClientIOException {
         Transaction transaction = TransactionClient.getTransaction(hexId, true, null);
         logger.info("Transaction:" + JSON.toJSONString(transaction));
         Assert.assertNotNull(transaction);
@@ -49,14 +50,14 @@ public class TransactionClientTest extends BaseTest {
     }
 
     @Test
-    public void testGetTransactionReceipt() throws IOException {
+    public void testGetTransactionReceipt() throws ClientIOException {
         Receipt receipt = TransactionClient.getTransactionReceipt(unsponsorTxId, null);
         logger.info("Receipt:" + JSON.toJSONString(receipt));
         Assert.assertNotNull(receipt);
     }
 
     @Test
-    public void testSendVTHOTransaction() throws IOException{
+    public void testSendVTHOTransaction() throws ClientIOException{
         byte chainTag = BlockchainClient.getChainTag();
         byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
         Amount amount = Amount.createFromToken( ERC20Token.VTHO );
@@ -72,7 +73,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     @Test
-    public void testSendVETTransaction() throws IOException{
+    public void testSendVETTransaction() throws ClientIOException{
         byte chainTag = BlockchainClient.getChainTag();
         byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST ).toByteArray();
         Amount amount = Amount.createFromToken( AbstractToken.VET );
@@ -86,5 +87,7 @@ public class TransactionClientTest extends BaseTest {
         logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
         Assert.assertNotNull( result );
     }
+
+
 
 }
