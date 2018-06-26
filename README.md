@@ -114,8 +114,9 @@ logger.info("Transaction:" + JSON.toJSONString(transaction));
 ### BlockClient
 You can get block by specified the block revision.
 ```
-Transaction transaction = TransactionClient.getTransaction(hexId, false, null);
-logger.info("Transaction:" + JSON.toJSONString(transaction));
+Revision revision = Revision.create(0);
+Block block = BlockClient.getBlock(revision);
+logger.info("block:" + JSON.toJSONString(block));
 
 ```
 
