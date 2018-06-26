@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class TransactionClient extends AbstractClient {
 
-    protected final static int ContractGasLimit = 70000;
+    public final static int ContractGasLimit = 70000;
     /**
      * Get transaction by transaction Id.
      * @param txId required transaction id .
