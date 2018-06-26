@@ -471,9 +471,12 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
 ```
 java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
+The keystore.json file will be generated in current folder.
+
+eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
+
   
-  The wallet created successfully and the key store is:
+The wallet created successfully and the key store is: 
   
   {
     "address": "0xc283b29b9e46ec62b1cc78d95ad2598e58f8af17",
