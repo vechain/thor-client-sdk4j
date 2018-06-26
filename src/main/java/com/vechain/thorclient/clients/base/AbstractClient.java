@@ -2,6 +2,8 @@ package com.vechain.thorclient.clients.base;
 
 
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -18,6 +20,8 @@ import com.vechain.thorclient.utils.URLUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import static com.alibaba.fastjson.JSON.parseObject;
 
 public abstract class AbstractClient {
 
@@ -101,8 +105,16 @@ public abstract class AbstractClient {
             clientIOException.setHttpStatus( status );
             throw  clientIOException;
         }else{
-            String  response = jsonNode.getBody().toString();
-            return JSON.parseObject( response, tClass );
+            String  response =  jsonNode.getBody().getObject().toString();
+            ObjectMapper objectMapper = new ObjectMapper(  );
+            try {
+                return objectMapper.readValue( response, tClass );
+            } catch (IOException e) {
+                e.printStackTrace();
+                ClientIOException clientIOException = new ClientIOException(e);
+                throw clientIOException;
+            }
+
         }
     }
 

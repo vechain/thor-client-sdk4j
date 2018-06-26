@@ -28,12 +28,12 @@ public class Block {
         this.size = size;
     }
 
-    public String getParentId() {
-        return parentId;
+    public String getParentID() {
+        return parentID;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setParentID(String parentId) {
+        this.parentID = parentId;
     }
 
     public long getTimestamp() {
@@ -76,27 +76,27 @@ public class Block {
         this.totalScore = totalScore;
     }
 
-    public byte[] getTxsRoot() {
+    public String getTxsRoot() {
         return txsRoot;
     }
 
-    public void setTxsRoot(byte[] txsRoot) {
+    public void setTxsRoot(String txsRoot) {
         this.txsRoot = txsRoot;
     }
 
-    public byte[] getStateRoot() {
+    public String getStateRoot() {
         return stateRoot;
     }
 
-    public void setStateRoot(byte[] stateRoot) {
+    public void setStateRoot(String stateRoot) {
         this.stateRoot = stateRoot;
     }
 
-    public byte[] getReceiptsRoot() {
+    public String getReceiptsRoot() {
         return receiptsRoot;
     }
 
-    public void setReceiptsRoot(byte[] receiptsRoot) {
+    public void setReceiptsRoot(String receiptsRoot) {
         this.receiptsRoot = receiptsRoot;
     }
 
@@ -117,7 +117,14 @@ public class Block {
     }
 
     public String toString(){
-        return "number:" + this.number + "  block:"+ id + " parentId:" + parentId;
+        return "number:" + this.number + "  block:"+ id + " parentId:" + parentID;
+    }
+    public boolean getIsTrunk() {
+        return isTrunk;
+    }
+
+    public void setIsTrunk(boolean trunk) {
+        isTrunk = trunk;
     }
 
     public BlockRef blockRef(){
@@ -127,18 +134,19 @@ public class Block {
     private String number;
     private String id;
     private long size;
-    private String parentId;
+    private String parentID;
     private long timestamp;
     private long gasLimit;
     private String beneficiary;
     private long gasUsed;
     private long totalScore;
-    private byte[] txsRoot; //32 bytes
-    private byte[] stateRoot; //32 bytes
-    private byte[] receiptsRoot; //32 bytes
+    private String txsRoot; //32 bytes
+    private String stateRoot; //32 bytes
+    private String receiptsRoot; //32 bytes
     private String signer;
-
+    private boolean isTrunk;
     private Transaction[] transactions;
+
 
 
 }

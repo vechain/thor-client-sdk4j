@@ -11,15 +11,19 @@ public class ClientIOException extends ThorException {
     private int httpStatus;
 
     public ClientIOException(Throwable ex) {
+
         super(ex);
+        httpStatus = -1;
     }
 
     public ClientIOException(String message) {
         super(message);
+        httpStatus = -1;
     }
 
     public ClientIOException(String message, int status) {
         super(message);
+        httpStatus = -1;
     }
 
 
