@@ -2,9 +2,10 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import com.vechain.thorclient.utils.BlockchainUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TransferFilter {
+public class TransferFilter implements Serializable {
 
     private Range range;
     private Options options;

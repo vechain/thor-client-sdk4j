@@ -4,10 +4,12 @@ import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
 
+import java.io.Serializable;
+
 /**
  * The Account information.
  */
-public class Account {
+public class Account implements Serializable {
 
     public String getBalance() {
         return balance;

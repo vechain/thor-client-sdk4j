@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class AddressSet {
+import java.io.Serializable;
+
+public class AddressSet implements Serializable {
     private String txOrigin;
     private String sender;
     private String recipient;

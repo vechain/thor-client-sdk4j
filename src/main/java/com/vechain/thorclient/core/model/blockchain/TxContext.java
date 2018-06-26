@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class TxContext {
+import java.io.Serializable;
+
+public class TxContext implements Serializable {
     private String id;
     private String origin;
 

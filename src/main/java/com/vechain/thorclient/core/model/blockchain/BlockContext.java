@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class BlockContext {
+import java.io.Serializable;
+
+public class BlockContext implements Serializable {
 
     public String getId() {
         return id;

@@ -44,7 +44,7 @@ public class BlockchainClient extends AbstractClient{
      */
    public static ArrayList getPeerStatusList()throws ClientIOException{
 
-        return sendGetRequest( Path.GetNodeInfoPath, null, null, ArrayList.class );
+        return sendGetRequest( Path.GetNodeInfoPath, null, null, (new ArrayList<PeerStat>()).getClass() );
    }
 
     /**

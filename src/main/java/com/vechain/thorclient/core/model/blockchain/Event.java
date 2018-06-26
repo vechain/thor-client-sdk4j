@@ -3,11 +3,18 @@ package com.vechain.thorclient.core.model.blockchain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FilteredEvent implements Serializable {
+public class Event implements Serializable {
+    private String address;
     private ArrayList<String> topics;
     private String data;
-    private BlockContext block;
-    private TxContext tx;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public ArrayList<String> getTopics() {
         return topics;
@@ -23,21 +30,5 @@ public class FilteredEvent implements Serializable {
 
     public void setData(String data) {
         this.data = data;
-    }
-
-    public BlockContext getBlock() {
-        return block;
-    }
-
-    public void setBlock(BlockContext block) {
-        this.block = block;
-    }
-
-    public TxContext getTx() {
-        return tx;
-    }
-
-    public void setTx(TxContext tx) {
-        this.tx = tx;
     }
 }

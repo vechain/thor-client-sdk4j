@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class RawClause {
+import java.io.Serializable;
+
+public class RawClause  implements Serializable {
 
 	private byte[]	to;
 

@@ -35,7 +35,7 @@ public class LogsClient extends AbstractClient {
         if(address != null){
             queryParams.put( "address", address.toHexString( Prefix.ZeroLowerX) );
         }
-        return sendPostRequest( Path.PostFilterEventsLogPath, null, queryParams, filter, (new ArrayList<FilteredEvent>(  )).getClass() );
+        return sendPostRequest( Path.PostFilterEventsLogPath, null, queryParams, filter, (new ArrayList<FilteredEvent>()).getClass() );
 
     }
 

@@ -1,8 +1,11 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class ReceiptEvent {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class ReceiptEvent implements Serializable {
     private String address;
-    private String topics[];
+    private ArrayList<String> topics;
     private String data;
 
     public String getAddress() {
@@ -13,11 +16,11 @@ public class ReceiptEvent {
         this.address = address;
     }
 
-    public String[] getTopics() {
+    public ArrayList<String> getTopics() {
         return topics;
     }
 
-    public void setTopics(String[] topics) {
+    public void setTopics(ArrayList<String> topics) {
         this.topics = topics;
     }
 

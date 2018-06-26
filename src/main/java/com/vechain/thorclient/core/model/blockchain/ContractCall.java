@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class ContractCall {
+import java.io.Serializable;
+
+public class ContractCall implements Serializable {
     private String value;
     private String data;
     private String gas;

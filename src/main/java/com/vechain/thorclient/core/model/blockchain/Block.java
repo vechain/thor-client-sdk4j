@@ -2,7 +2,10 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import com.vechain.thorclient.core.model.clients.BlockRef;
 
-public class Block {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Block implements Serializable {
 
     public String getNumber() {
         return number;
@@ -108,11 +111,11 @@ public class Block {
         this.signer = signer;
     }
 
-    public Transaction[] getTransactions() {
+    public ArrayList<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(Transaction[] transactions) {
+    public void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
     }
 
@@ -145,7 +148,7 @@ public class Block {
     private String receiptsRoot; //32 bytes
     private String signer;
     private boolean isTrunk;
-    private Transaction[] transactions;
+    private ArrayList<Transaction> transactions;
 
 
 

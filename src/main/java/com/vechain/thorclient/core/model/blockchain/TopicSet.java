@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class TopicSet {
+import java.io.Serializable;
+
+public class TopicSet implements Serializable {
     private String topic0;
     private String topic1;
     private String topic2;

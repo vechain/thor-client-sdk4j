@@ -1,6 +1,9 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class Receipt {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Receipt implements Serializable {
     private long gasUsed;
     private String gasPayer;
     private String paid; //hex form of defaultDecimalStringToByteArray of paid energy
@@ -8,7 +11,7 @@ public class Receipt {
     private boolean reverted; //if it is true, then the transaction was reverted by blockchain network
     private BlockContext block;
     private TxContext tx;
-    private ReceiptOutput[] outputs;
+    private ArrayList<ReceiptOutput> outputs;
 
     public long getGasUsed() {
         return gasUsed;
@@ -66,11 +69,11 @@ public class Receipt {
         this.tx = tx;
     }
 
-    public ReceiptOutput[] getOutputs() {
+    public  ArrayList<ReceiptOutput> getOutputs() {
         return outputs;
     }
 
-    public void setOutputs(ReceiptOutput[] outputs) {
+    public void setOutputs( ArrayList<ReceiptOutput> outputs) {
         this.outputs = outputs;
     }
 }

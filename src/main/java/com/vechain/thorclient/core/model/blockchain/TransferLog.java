@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class TransferLog {
+import java.io.Serializable;
+
+public class TransferLog implements Serializable {
     private String sender;
     private String recipient;
     private String value;

@@ -1,6 +1,9 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class ReceiptOutput {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class ReceiptOutput implements Serializable {
     public String getContractAddress() {
         return contractAddress;
     }
@@ -9,23 +12,23 @@ public class ReceiptOutput {
         this.contractAddress = contractAddress;
     }
 
-    public ReceiptEvent[] getEvents() {
+    public ArrayList<ReceiptEvent> getEvents() {
         return events;
     }
 
-    public void setEvents(ReceiptEvent[] events) {
+    public void setEvents(ArrayList<ReceiptEvent> events) {
         this.events = events;
     }
 
-    public ReceiptTransfer[] getTransfers() {
+    public ArrayList<ReceiptTransfer> getTransfers() {
         return transfers;
     }
 
-    public void setTransfers(ReceiptTransfer[] transfers) {
+    public void setTransfers(ArrayList<ReceiptTransfer> transfers) {
         this.transfers = transfers;
     }
 
     private String contractAddress;
-    private ReceiptEvent[] events;
-    private ReceiptTransfer[] transfers;
+    private ArrayList<ReceiptEvent> events;
+    private ArrayList<ReceiptTransfer> transfers;
 }

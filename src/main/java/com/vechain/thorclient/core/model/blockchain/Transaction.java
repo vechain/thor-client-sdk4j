@@ -1,13 +1,16 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class Transaction {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Transaction implements Serializable {
 
     private String id; //32 bytes
     private int   size;
     private String chainTag;
     private String  blockRef; //8 bytes
     private int expiration;
-    private Clause[] clauses;
+    private ArrayList<Clause> clauses;
 
     private int gasPriceCoef;
 
@@ -64,11 +67,11 @@ public class Transaction {
         this.expiration = expiration;
     }
 
-    public Clause[] getClauses() {
+    public ArrayList<Clause> getClauses() {
         return clauses;
     }
 
-    public void setClauses(Clause[] clauses) {
+    public void setClauses(ArrayList<Clause> clauses) {
         this.clauses = clauses;
     }
 

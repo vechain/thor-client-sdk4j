@@ -2,9 +2,9 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.io.Serializable;
 
-public class ReceiptTransfer implements Serializable {
-    private String sender;
-    private String recipient;
+public class Transfer implements Serializable {
+    private  String sender;
+    private String  recipient;
     private String amount;
 
     public String getSender() {

@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class Range {
+import java.io.Serializable;
+
+public class Range implements Serializable {
     private String unit;
     private long from;
     private long to;

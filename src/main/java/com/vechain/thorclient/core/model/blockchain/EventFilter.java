@@ -2,9 +2,10 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import com.vechain.thorclient.utils.BlockchainUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EventFilter {
+public class EventFilter implements Serializable {
     private Range range;
     private Options options;
     private ArrayList<TopicSet> topicSets;

@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class TransferResult {
+import java.io.Serializable;
+
+public class TransferResult implements Serializable {
     private String id;
 
     public String getId() {

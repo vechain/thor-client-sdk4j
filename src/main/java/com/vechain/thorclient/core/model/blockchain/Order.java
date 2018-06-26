@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public enum Order {
+import java.io.Serializable;
+
+public enum Order implements Serializable {
     DESC("DESC"),
     ASC("ASC");
 

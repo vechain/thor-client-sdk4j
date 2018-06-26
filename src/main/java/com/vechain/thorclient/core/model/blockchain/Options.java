@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class Options {
+import java.io.Serializable;
+
+public class Options implements Serializable {
     private long offset;
     private long limit;
 

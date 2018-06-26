@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class TransactionAttributes {
+import java.io.Serializable;
+
+public class TransactionAttributes implements Serializable {
 
     public enum TransactionType {
 

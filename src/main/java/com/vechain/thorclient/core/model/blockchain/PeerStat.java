@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class PeerStat {
+import java.io.Serializable;
+
+public class PeerStat implements Serializable {
 
     private String bestBlockID;
     private int totalScore;

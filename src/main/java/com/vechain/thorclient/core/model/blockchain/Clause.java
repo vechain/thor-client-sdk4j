@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class Clause {
+import java.io.Serializable;
+
+public class Clause implements Serializable {
     private String to; //to address
     private String value; //hex form of coin to transferred
     private String data;

@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class TransferRequest {
+import java.io.Serializable;
+
+public class TransferRequest implements Serializable {
     private String raw;
 
     public String getRaw() {

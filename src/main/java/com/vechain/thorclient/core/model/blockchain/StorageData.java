@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class StorageData {
+import java.io.Serializable;
+
+public class StorageData implements Serializable {
     private String value;
 
     public String getValue() {

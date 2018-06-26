@@ -1,6 +1,8 @@
 package com.vechain.thorclient.core.model.blockchain;
 
-public class AccountCode {
+import java.io.Serializable;
+
+public class AccountCode implements Serializable {
     private String code;
 
     public String getCode() {
