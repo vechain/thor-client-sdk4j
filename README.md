@@ -193,7 +193,8 @@ Receipt:
 
 - - - -
 ### BlockClient
-You can get block by specified the block revision.
+
+#### Get block:
 
 ```
 Get specified block:
