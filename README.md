@@ -62,7 +62,10 @@ Assert.assertNotNull(account);
 
 eg. 
 Address address = Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A");
-Account account = AccountClient.getAccountInfo(address, null);
+Account account = AccountClient.getAccountInfo(
+	address,  // account address
+	null      // null = Revision.BEST
+	);
 logger.info("account info:" + JSON.toJSONString(account));
 account info:
 {"balance":"0x42aeda6af58002f600000","energy":"0x14234c71f08e4db8e504","hasCode":false}
@@ -137,6 +140,9 @@ ContractCallResult contractCallResult = callContract(call, contractAddr,  currRe
 - Query transaction
 
 ```
+Transaction transaction = TransactionClient.getTransaction(txId, isRaw, Revision);
+
+eg.
 Transaction transaction = TransactionClient.getTransaction("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", true, null);
 logger.info("Transaction:" + JSON.toJSONString(transaction));
 
@@ -145,9 +151,41 @@ logger.info("Transaction:" + JSON.toJSONString(transaction));
 - Query transaction receipt
 
 ```
+Receipt receipt = TransactionClient.getTransactionReceipt(txid, Revision);
+
+eg. 
 //query receipt info
 Receipt receipt = TransactionClient.getTransactionReceipt("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", null);
 logger.info("Receipt:" + JSON.toJSONString(receipt));
+Receipt:
+{
+  "block": {
+    "id": "0x00026b141a583c5d728f99ab305948c6299935af740465fc89a8f3c9ae825bfd",
+    "number": 158484,
+    "timestamp": 1530013840
+  },
+  "gasPayer": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
+  "gasUsed": 21000,
+  "outputs": [
+    {
+      "events": [],
+      "transfers": [
+        {
+          "amount": "0x125195019f8400000",
+          "recipient": "0xc71adc46c5891a8963ea5a5eeaf578e0a2959779",
+          "sender": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a"
+        }
+      ]
+    }
+  ],
+  "paid": "0x1236efcbcbb340000",
+  "reverted": false,
+  "reward": "0x576e189f04f60000",
+  "tx": {
+    "id": "0xb7a36e2e2ea92aad8aa90dfa7850eee743d9fc9855f364adf45c145e74d2995f",
+    "origin": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a"
+  }
+}
 
 ```
 
@@ -160,6 +198,24 @@ You can get block by specified the block revision.
 Revision revision = Revision.create(0);
 Block block = BlockClient.getBlock(revision);
 logger.info("block:" + JSON.toJSONString(block));
+block:
+{
+  "beneficiary": "0x25ae0ef84da4a76d5a1dfe80d3789c2c46fee30a",
+  "gasLimit": 10000000,
+  "gasUsed": 0,
+  "id": "0x000004d01623f9417f820f4801ef222bb67024a08ce281a26c1bd1119cfa1257",
+  "isTrunk": true,
+  "number": "1232",
+  "parentID": "0x000004cf44645a95789c634878b5856ceac57d9c40b37c1e81f1f06803f609db",
+  "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
+  "signer": "0x25ae0ef84da4a76d5a1dfe80d3789c2c46fee30a",
+  "size": 238,
+  "stateRoot": "0x120df3368f409525ed30fd98c999af8d66bfa553cae14005fc3b7f00bcc60de1",
+  "timestamp": 1528441070,
+  "totalScore": 1232,
+  "transactions": [],
+  "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
+}
 
 ```
 
