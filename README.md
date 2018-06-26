@@ -57,14 +57,12 @@ User can use this client :
 Address address = Address.fromHexString(fromAddress);
 Account account = AccountClient.getAccountInfo(address, null);
 logger.info("account info:" + JSON.toJSONString(account));
-logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
 Assert.assertNotNull(account);
 
 eg. 
 Address address = Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A");
 Account account = AccountClient.getAccountInfo(address, null);
 logger.info("account info:" + JSON.toJSONString(account));
-logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
 account info:
 {"balance":"0x42aeda6af58002f600000","energy":"0x14234c71f08e4db8e504","hasCode":false}
 
