@@ -16,12 +16,8 @@ import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.URLUtils;
-import org.apache.http.client.utils.URIBuilder;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 
 public abstract class AbstractClient {
