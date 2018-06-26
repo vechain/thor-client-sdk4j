@@ -131,6 +131,14 @@ logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
 
 ```
 
+- Query transaction
+
+```
+Transaction transaction = TransactionClient.getTransaction("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", true, null);
+logger.info("Transaction:" + JSON.toJSONString(transaction));
+
+```
+
 - Query transaction receipt
 
 ```
@@ -140,13 +148,6 @@ logger.info("Receipt:" + JSON.toJSONString(receipt));
 
 ```
 
-- Query transaction
-
-```
-Transaction transaction = TransactionClient.getTransaction("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", true, null);
-logger.info("Transaction:" + JSON.toJSONString(transaction));
-
-```
 
 - - - -
 ### BlockClient
