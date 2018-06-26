@@ -410,17 +410,72 @@ Run the following command:
 
 There is a example transaction file in src/main/resources/exchange_example.xlsx
 
+#### Get chainTag: 
+
 ```
  
-Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
 
 eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   ChainTag:
   0x9a
 ```
 
+
+#### Get blockRef: 
+
 ```
-- Get block: java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
+  java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef "http://localhost:8669"
+  
+  BlockRef:
+  0x000245e360d4cd1b
+  
+```
+
+#### Create wallet: 
+
+```
+java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
+  
+  The wallet created successfully and the key store is:
+  
+  {
+    "address": "0xc283b29b9e46ec62b1cc78d95ad2598e58f8af17",
+    "crypto": {
+      "cipher": "aes-128-ctr",
+      "cipherparams": {
+        "iv": "8bd06ab3901ec874c35c396736624800"
+      },
+      "ciphertext": "f69d08d62cdadae76da47e76e6d59b7c60e8e2bb8919c785bac0f6f8621ddfed",
+      "kdf": "scrypt",
+      "kdfparams": {
+        "dklen": 32,
+        "n": 262144,
+        "p": 1,
+        "r": 8,
+        "salt": "b4e5b39cadcb66f4682f7863dde854b4a87b3810864d1ab6fafd1cdc923a2a1c"
+      },
+      "mac": "a2ee21d526a1d0113fde864bf67c55ff2b2cd85fc6a8f232e21d3b59da9790b3"
+    },
+    "id": "656a8193-a670-48fc-bbf7-eedbdb2dd5e7",
+    "version": 3
+  }
+  
+  The wallet created successfully and the privateKey is:
+  0x5eabfe97a3854a16b2194ff18baf14471809896c73627414c7fbd35bd7431014
+  
+```
+
+
+
+#### Get block: 
+
+```
+ java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
 
   eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock "http://localhost:8669"
   
@@ -445,9 +500,11 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   
 ```
 
+#### Get transaction: 
+
 ```
   
-- Get transaction: java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
 
   eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669"
   
@@ -484,9 +541,11 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   
 ```
 
+#### Get transaction receipt: 
+
 ```
   
-  - Get transaction receipt: java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
+ java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
   
   eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669" 
   
@@ -542,51 +601,11 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   }
   
 ```
-```
-  
-- Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef "http://localhost:8669"
-  
-  BlockRef:
-  0x000245e360d4cd1b
-```
-```
-- Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
-
-  eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
-  
-  The wallet created successfully and the key store is:
-  
-  {
-    "address": "0xc283b29b9e46ec62b1cc78d95ad2598e58f8af17",
-    "crypto": {
-      "cipher": "aes-128-ctr",
-      "cipherparams": {
-        "iv": "8bd06ab3901ec874c35c396736624800"
-      },
-      "ciphertext": "f69d08d62cdadae76da47e76e6d59b7c60e8e2bb8919c785bac0f6f8621ddfed",
-      "kdf": "scrypt",
-      "kdfparams": {
-        "dklen": 32,
-        "n": 262144,
-        "p": 1,
-        "r": 8,
-        "salt": "b4e5b39cadcb66f4682f7863dde854b4a87b3810864d1ab6fafd1cdc923a2a1c"
-      },
-      "mac": "a2ee21d526a1d0113fde864bf67c55ff2b2cd85fc6a8f232e21d3b59da9790b3"
-    },
-    "id": "656a8193-a670-48fc-bbf7-eedbdb2dd5e7",
-    "version": 3
-  }
-  
-  The wallet created successfully and the privateKey is:
-  0x5eabfe97a3854a16b2194ff18baf14471809896c73627414c7fbd35bd7431014
-  
-```
+#### Sign transactions: 
 
 ```
-- Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar signVET {your-file-path} {privateKey}
+java -jar thor-client-sdk4j-0.0.2.jar signVET {your-file-path} {privateKey}
   java -jar thor-client-sdk4j-0.0.2.jar signVET src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
   
   Raw Transaction:
@@ -594,9 +613,11 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   
 ```
 
+#### Send transactions:
+
 ```
   
-- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar sendVET {blockchain-server-url} {privateKey} {your-file-path}
+java -jar thor-client-sdk4j-0.0.2.jar sendVET {blockchain-server-url} {privateKey} {your-file-path}
 
   eg. java -jar thor-client-sdk4j-0.0.2.jar sendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
