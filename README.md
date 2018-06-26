@@ -280,6 +280,43 @@ logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
 
+- Multiple Party Payment: without Sponsor
+
+
+```
+// set expiration block
+int expirationBlock = 720;
+// transaction expiration time
+int expiration = 10 * expirationBlock * 1000;
+
+long start = System.currentTimeMillis();
+//add user(UserAddress) to owner (fromAddress)
+TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[] { Address.fromHexString(fromAddress) }, new Address[] { Address.fromHexString(UserAddress) },
+        TransactionClient.ContractGasLimit, (byte) 0x1, expiration, ECKeyPair.create(privateKey));
+if (transferResult != null) {
+    logger.info("Add user:" + JSON.toJSONString(transferResult));
+    this.checkReceipt(transferResult.getId(), start, expiration);
+} else {
+    throw new ThorException("ProtoTypeContractClient.addUser出错了~");
+}
+
+start = System.currentTimeMillis();
+Amount credit = Amount.VTHO();
+credit.setDecimalAmount("100.00");
+Amount recovery = Amount.VTHO();
+recovery.setDecimalAmount("0.00001");
+//set user plan 
+TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+        new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+if (setUserPlansResult != null) {
+    logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
+    this.checkReceipt(setUserPlansResult.getId(), start, expiration);
+} else {
+    throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
+}
+
+```
+
 
 - - - -
 ### Run the test.
@@ -289,6 +326,8 @@ Some case may be failed because of the account or block is not existed on your b
 mvn clean install  -Dmaven.test.skip=true
 
 ```
+
+
 
 
 ### 4. Java console approach
@@ -310,10 +349,12 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx
  
 Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
+eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   ChainTag:
   0x9a
-  
+```
+
+```
 - Get block: java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
 
   eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock "http://localhost:8669"
@@ -336,6 +377,10 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
     isTrunk: true,
     transactions: [ '0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710' ] 
   }
+  
+```
+
+```
   
 - Get transaction: java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
 
@@ -372,7 +417,9 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
       "blockNumber": 148847
   }
   
-  
+```
+
+```
   
   - Get transaction receipt: java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
   
@@ -429,7 +476,8 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
       "status": "0x1"
   }
   
-
+```
+```
   
 - Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
 
@@ -437,7 +485,8 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
   
   BlockRef:
   0x000245e360d4cd1b
-  
+```
+```
 - Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
 
   eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
@@ -469,11 +518,18 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
   The wallet created successfully and the privateKey is:
   0x5eabfe97a3854a16b2194ff18baf14471809896c73627414c7fbd35bd7431014
   
+```
+
+```
 - Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar signVET {your-file-path} {privateKey}
   java -jar thor-client-sdk4j-0.0.2.jar signVET src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
   
   Raw Transaction:
   0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
+  
+```
+
+```
   
 - Send transactions: java -jar thor-client-sdk4j-0.0.2.jar sendVET {blockchain-server-url} {privateKey} {your-file-path}
 
@@ -483,10 +539,6 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
   {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
 
 ```
-
-
-
-
 
 
 
