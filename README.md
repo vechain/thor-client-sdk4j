@@ -37,7 +37,7 @@ logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
 		
 ```
 
-Load keystore:
+#### Load keystore:
 
 ```
 
@@ -50,9 +50,10 @@ Get address: walletInfo.getKeyPair().getHexAddress());
 ```
 
 ### AccountClient
+
 User can use this client :
 
-- Get Account information: VET balance and VTHO balance
+#### Get Account information: VET balance and VTHO balance
 
 ```
 Address address = Address.fromHexString(fromAddress);
@@ -73,7 +74,7 @@ account info:
 ```
 
 
--  Get code on a address.
+#### Get code on a address：
 
 ```
 Address tokenAddr = Address.VTHO_Address;
@@ -82,9 +83,9 @@ logger.info("code:" + JSON.toJSONString(code));
 
 ```
 
-- - - -
 ### TransactionClient
-- Send VET to account
+
+#### Send VET to account：
 
 ```
 byte chainTag = BlockchainClient.getChainTag();
@@ -103,7 +104,7 @@ logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
 
 ```
 
-- Send VTHO to account
+#### Send VTHO to account:
 
 ```
 byte chainTag = BlockchainClient.getChainTag();
@@ -123,7 +124,7 @@ logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
 
 ```
 
-- Call Contract view method.
+#### Call Contract view method:
 
 ```
 
@@ -137,7 +138,7 @@ ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString(
 ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
 
 ```
-- Query transaction
+#### Query transaction:
 
 ```
 Transaction transaction = TransactionClient.getTransaction(txId, isRaw, Revision);
@@ -148,7 +149,7 @@ logger.info("Transaction:" + JSON.toJSONString(transaction));
 
 ```
 
-- Query transaction receipt
+#### Query transaction receipt
 
 ```
 Receipt receipt = TransactionClient.getTransactionReceipt(txid, Revision);
@@ -195,24 +196,49 @@ Receipt:
 You can get block by specified the block revision.
 
 ```
+Get specified block:
 Revision revision = Revision.create(0);
 Block block = BlockClient.getBlock(revision);
 logger.info("block:" + JSON.toJSONString(block));
 block:
 {
-  "beneficiary": "0x25ae0ef84da4a76d5a1dfe80d3789c2c46fee30a",
+  "beneficiary": "0x0000000000000000000000000000000000000000",
   "gasLimit": 10000000,
   "gasUsed": 0,
-  "id": "0x000004d01623f9417f820f4801ef222bb67024a08ce281a26c1bd1119cfa1257",
+  "id": "0x00000000ef3b214ad627b051f42add3b93b2f913f2594b94a64b2377b0f9159a",
   "isTrunk": true,
-  "number": "1232",
-  "parentID": "0x000004cf44645a95789c634878b5856ceac57d9c40b37c1e81f1f06803f609db",
+  "number": "0",
+  "parentID": "0xffffffff00000000000000000000000000000000000000000000000000000000",
   "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
-  "signer": "0x25ae0ef84da4a76d5a1dfe80d3789c2c46fee30a",
-  "size": 238,
+  "signer": "0x0000000000000000000000000000000000000000",
+  "size": 170,
   "stateRoot": "0x120df3368f409525ed30fd98c999af8d66bfa553cae14005fc3b7f00bcc60de1",
-  "timestamp": 1528441070,
-  "totalScore": 1232,
+  "timestamp": 1528387200,
+  "totalScore": 0,
+  "transactions": [],
+  "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
+}
+
+or
+
+Get best block:
+Block block = BlockClient.getBlock(Revision.BEST);
+logger.info("block:" + JSON.toJSONString(block));
+block:
+{
+  "beneficiary": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+  "gasLimit": 10448965,
+  "gasUsed": 0,
+  "id": "0x00026bfa7cbbd7c8cf643e45eadff1ddce1395cc47a5c08c521498f693381840",
+  "isTrunk": true,
+  "number": "158714",
+  "parentID": "0x00026bf9c0828062b25d0b23df0c99f6571af389d273961b82c90906a0a96b1b",
+  "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
+  "signer": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+  "size": 239,
+  "stateRoot": "0xa8dd31b95e227b92e800d65c824d2fb124a36e924b398252ec995d3611a69d43",
+  "timestamp": 1530016140,
+  "totalScore": 1034108,
   "transactions": [],
   "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
 }
@@ -222,14 +248,15 @@ block:
 - - - -
 ### LogsClient
 You can get events logs and transfer logs, the api is also supporting pagination query.
-- Query events logs.
+
+#### Query events logs
 
 ```
 EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
 ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.DESC, null);
 
 ```
-- Query transfer logs.
+#### Query transfer logs
 
 ```
 TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
@@ -238,16 +265,17 @@ ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
 
 - - - -
 ### BlockchainClient
+
 You can get the chain tag and block reference.
 
-- Get chain tag
+#### Get chain tag:
 
 ```
 byte chainTag = BlockchainClient.getChainTag();
 int chainTagInt = chainTag & 0xff;
 logger.info( "chainTag: " + chainTagInt);
 ```
-- Get block reference
+#### Get block reference:
 
 ```
 Revision revision = Revision.create(0);
@@ -260,7 +288,7 @@ logger.info("blockRef;" + BytesUtils.toHexString(block.blockRef().toByteArray(),
 ### ProtoTypeClient
 The detail information you can refer to the page[ProtoType Wiki](https://github.com/vechain/thor/wiki/Prototype(CN))
 
-- Get master address 
+#### Get master address:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
@@ -268,7 +296,7 @@ logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
 
 ```
 
-- Set master address
+#### Set master address:
 
 ```
 TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create(privateKey ) );
@@ -276,7 +304,7 @@ logger.info( "result: " + JSON.toJSONString( result ) );
 
 ```
 
-- Add user
+#### Add user:
 
 ```
 TransferResult transferResult = ProtoTypeContractClient.addUser(
@@ -288,14 +316,15 @@ logger.info("Add user:" + JSON.toJSONString( transferResult ));
 
 ```
 
-- Check if it is user
+#### Check if it is user:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) ,Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ),
         Revision.BEST);
 logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 ```
-- Remove user
+
+#### Remove user:
 
 ```
 String targetAddress = "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A";
@@ -308,7 +337,7 @@ TransferResult transferResult = ProtoTypeContractClient.removeUsers(
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 
 ```
-- Set User plan
+#### Set User plan:
 
 ```
 Amount credit = Amount.VTHO();
@@ -324,14 +353,15 @@ TransferResult result = ProtoTypeContractClient.setUserPlans(
 logger.info( "set user plans:" + JSON.toJSONString( result ) );
 
 ```
-- Get User plan
+#### Get User plan:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
-- Get User credits
+
+#### Get User credits:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
@@ -342,7 +372,7 @@ logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
 
-- Multiple Party Payment:
+#### Multiple Party Payment:
 
 
 ```
@@ -386,11 +416,12 @@ if (setUserPlansResult != null) {
 
 
 - - - -
-### Run the test.
+### Run the test
+
 Some case may be failed because of the account or block is not existed on your blockchain env.
 
 ```
-mvn clean install  -Dmaven.test.skip=true
+mvn clean install
 
 ```
 
