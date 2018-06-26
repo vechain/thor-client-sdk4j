@@ -111,11 +111,11 @@ public class Block implements Serializable {
         this.signer = signer;
     }
 
-    public ArrayList<Transaction> getTransactions() {
+    public ArrayList<String> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(ArrayList<Transaction> transactions) {
+    public void setTransactions(ArrayList<String> transactions) {
         this.transactions = transactions;
     }
 
@@ -148,7 +148,7 @@ public class Block implements Serializable {
     private String receiptsRoot; //32 bytes
     private String signer;
     private boolean isTrunk;
-    private ArrayList<Transaction> transactions;
+    private ArrayList<String> transactions;
 
 
 

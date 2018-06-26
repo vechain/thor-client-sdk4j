@@ -12,23 +12,23 @@ public class ReceiptOutput implements Serializable {
         this.contractAddress = contractAddress;
     }
 
-    public ArrayList<ReceiptEvent> getEvents() {
+    public ArrayList<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(ArrayList<ReceiptEvent> events) {
+    public void setEvents(ArrayList<Event> events) {
         this.events = events;
     }
 
-    public ArrayList<ReceiptTransfer> getTransfers() {
+    public ArrayList<Transfer> getTransfers() {
         return transfers;
     }
 
-    public void setTransfers(ArrayList<ReceiptTransfer> transfers) {
+    public void setTransfers(ArrayList<Transfer> transfers) {
         this.transfers = transfers;
     }
 
     private String contractAddress;
-    private ArrayList<ReceiptEvent> events;
-    private ArrayList<ReceiptTransfer> transfers;
+    private ArrayList<Event> events;
+    private ArrayList<Transfer> transfers;
 }

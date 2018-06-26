@@ -102,10 +102,13 @@ public abstract class AbstractClient {
             throw  clientIOException;
         }else{
             if(jsonNode.getBody().isArray()){
+
                 String  response =  jsonNode.getBody().getArray().toString();
+                System.out.println( response );
                 return JSON.parseObject( response, tClass );
             }else{
                 String  response =  jsonNode.getBody().getObject().toString();
+                System.out.println( response );
                 return JSON.parseObject( response, tClass );
             }
 
