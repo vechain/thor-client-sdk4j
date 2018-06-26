@@ -15,7 +15,8 @@ public class NodeProvider {
     }
 
     private NodeProvider() {
-        this.timeout = 5000;
+        this.socketTimeout = 5000;
+        this.connectTimeout = 5000;
     }
 
     /**
@@ -38,21 +39,43 @@ public class NodeProvider {
     }
 
     /**
-     * get connect timeout
+     * set socket timeout
      * @return milliseconds
      */
-    public int getTimeout() {
-        return timeout;
+    public int getSocketTimeout() {
+        return socketTimeout;
     }
 
     /**
-     * Set connect timeout
+     * Set  socket timeout
      * @param timeout milliseconds
      */
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public void setSocketTimeout(int timeout) {
+        this.socketTimeout = timeout;
     }
 
+
+    /**
+     * Set connect timeout, socket timeout
+     * @param timeout milliseconds
+     */
+    public  void setTimeout(int timeout){
+        this.setSocketTimeout( timeout );
+        this.setConnectTimeout( timeout);
+    }
+
+
+    public void setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public  int getConnectTimeout(){
+        return this.connectTimeout;
+    }
+
+
     private String provider;
-    private int    timeout;
+    private int    socketTimeout;
+    private int connectTimeout;
+
 }

@@ -20,7 +20,7 @@ public class URLUtils {
             URL u = new URL( url );
             uc = (HttpURLConnection) u.openConnection();
             uc.setDoOutput( true );
-            uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
+            uc.setConnectTimeout( NodeProvider.getNodeProvider().getSocketTimeout() );
             uc.setRequestMethod( "GET" );
             mediaType = mediaType == null ? "application/json;charset=utf-8" : mediaType;
             uc.addRequestProperty( "accept", mediaType );
@@ -89,7 +89,7 @@ public class URLUtils {
             URL u = new URL( url );
             uc = (HttpURLConnection) u.openConnection();
             uc.setDoOutput( true );
-            uc.setConnectTimeout( NodeProvider.getNodeProvider().getTimeout() );
+            uc.setConnectTimeout( NodeProvider.getNodeProvider().getSocketTimeout() );
             uc.setRequestMethod( method );
             if (null != mediaType) {
                 uc.addRequestProperty( "Content-Type", mediaType );

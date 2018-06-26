@@ -2,6 +2,10 @@ package com.vechain.thorclient.clients.base;
 
 
 import com.alibaba.fastjson.JSON;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
@@ -12,8 +16,12 @@ import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.URLUtils;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
 public abstract class AbstractClient {
@@ -96,15 +104,34 @@ public abstract class AbstractClient {
      * @return response java object, could be null, mean can not find any result.
      * @throws IOException http status 4xx means not enough energy amount.
      */
-    public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException{
+    public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException {
+        Unirest.setTimeouts(NodeProvider.getNodeProvider().getConnectTimeout(), NodeProvider.getNodeProvider().getSocketTimeout());
         String rawURL = rawUrl( path );
         String postURL =  URLUtils.urlComposite(rawURL, uriParams, queryParams);
         String postString = JSON.toJSONString( postBody );
-        String response =  URLUtils.post(postString, APPLICATION_JSON_VALUE, "utf-8", postURL);
-        if(StringUtils.isBlank( response )){
-            return null;
+        HttpResponse<JsonNode> jsonNode = null;
+        try {
+            jsonNode =  Unirest.post( postURL ).body( postString ).asJson();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            throw ClientIOException.create(e);
         }
-        return JSON.parseObject(response, tClass);
+        int status = jsonNode.getStatus();
+        if(status != 200){
+            String exception_msg = "response exception";
+            if(status == 400){
+                exception_msg = "bad request";
+            }else if( status == 403){
+                exception_msg = "request forbidden";
+            }
+            ClientIOException clientIOException = ClientIOException.create(exception_msg);
+            clientIOException.setHttpStatus( status );
+            throw  clientIOException;
+        }else{
+            String  response = jsonNode.getBody().toString();
+            return JSON.parseObject( response, tClass );
+        }
+
     }
 
 

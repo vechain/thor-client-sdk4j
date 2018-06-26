@@ -65,7 +65,7 @@ public class Main {
             }
             NodeProvider nodeProvider = NodeProvider.getNodeProvider();
             nodeProvider.setProvider(nodeProviderUrl);
-            nodeProvider.setTimeout(5000);
+            nodeProvider.setSocketTimeout(5000);
         }
 
         if(args[0].equals(SIGN)) {
