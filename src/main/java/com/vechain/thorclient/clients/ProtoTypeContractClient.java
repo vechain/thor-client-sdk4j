@@ -37,7 +37,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
  *
  *
  */
-public class ProtoTypeContractClient extends ContractClient{
+public class ProtoTypeContractClient extends TransactionClient {
 
 
     /**

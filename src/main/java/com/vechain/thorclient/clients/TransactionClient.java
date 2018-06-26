@@ -6,11 +6,10 @@ import com.vechain.thorclient.core.model.blockchain.Transaction;
 import com.vechain.thorclient.core.model.blockchain.TransferRequest;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.*;
+import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
-import com.vechain.thorclient.utils.BlockchainUtils;
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.Prefix;
+import com.vechain.thorclient.utils.*;
 import com.vechain.thorclient.utils.crypto.ECDSASign;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
@@ -19,6 +18,7 @@ import java.util.HashMap;
 
 public class TransactionClient extends AbstractClient {
 
+    protected final static int ContractGasLimit = 70000;
     /**
      * Get transaction by transaction Id.
      * @param txId required transaction id .
@@ -132,5 +132,51 @@ public class TransactionClient extends AbstractClient {
         return new ToClause( toAddress, amount, data );
     }
 
+
+    /**
+     * invokeContractMethod send transaction to contract.
+     * @param toClauses
+     * @param gas
+     * @param gasCoef
+     * @param expiration
+     * @param keyPair
+     * @return
+     * @throws ClientIOException
+     */
+    protected static TransferResult invokeContractMethod(ToClause[] toClauses, int gas, byte gasCoef, int expiration , ECKeyPair keyPair)throws ClientIOException{
+
+        if(keyPair == null){
+            throw ClientArgumentException.exception( "ECKeyPair is null." );
+        }
+
+        if(gas < ContractGasLimit){
+            throw ClientArgumentException.exception( "gas is too small." );
+        }
+        if(gasCoef <= 0){
+            throw ClientArgumentException.exception( "gas coef is too small." );
+        }
+
+        if(expiration <= 0) {
+            throw ClientArgumentException.exception( "expiration is invalid." );
+        }
+
+        if(toClauses == null){
+            throw ClientArgumentException.exception( "To clause is null" );
+        }
+
+        byte chainTag = BlockchainClient.getChainTag();
+        BlockRef bestRef = BlockchainClient.getBlockRef(null);
+        if(bestRef == null || chainTag == 0){
+            throw new ClientIOException( "Get chainTag: "+ chainTag + " BlockRef: "+ bestRef );
+        }
+        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag,
+                bestRef.toByteArray(),
+                expiration,
+                gas,
+                gasCoef,
+                CryptoUtils.generateTxNonce(),
+                toClauses);
+        return TransactionClient.signThenTransfer( rawTransaction, keyPair );
+    }
 
 }

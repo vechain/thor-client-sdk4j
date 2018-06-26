@@ -14,7 +14,6 @@ import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
-import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.URLUtils;
 
 import java.io.IOException;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 
 public abstract class AbstractClient {
 
-    private final static String APPLICATION_JSON_VALUE = "application/json";
     public enum Path{
         //Accounts
         GetAccountPath("/accounts/{address}"),
@@ -78,16 +76,35 @@ public abstract class AbstractClient {
     public static  <T> T sendGetRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Class<T> tClass) throws ClientIOException {
         String rawURL = rawUrl( path );
         String getURL =  URLUtils.urlComposite(rawURL, uriParams, queryParams);
-        try {
-            String response =  URLUtils.get(null, APPLICATION_JSON_VALUE, "utf-8", getURL);
-            if(StringUtils.isBlank( response )){
-                return null;
-            }
-            return JSON.parseObject(response, tClass);
-        }catch (IOException ex){
-            throw new ClientIOException(ex);
+        Unirest.setTimeouts( NodeProvider.getNodeProvider().getConnectTimeout(), NodeProvider.getNodeProvider().getSocketTimeout());
+        HttpResponse<JsonNode> jsonNode = null;
+        try{
+            jsonNode = Unirest.get( getURL ).asJson();
+        }catch (UnirestException e) {
+            e.printStackTrace();
+            throw ClientIOException.create(e);
         }
 
+        return parseResult( tClass, jsonNode );
+
+    }
+
+    private static <T> T parseResult(Class<T> tClass, HttpResponse<JsonNode> jsonNode) throws ClientIOException {
+        int status = jsonNode.getStatus();
+        if(status != 200){
+            String exception_msg = "response exception";
+            if(status == 400){
+                exception_msg = "bad request";
+            }else if( status == 403){
+                exception_msg = "request forbidden";
+            }
+            ClientIOException clientIOException = ClientIOException.create(exception_msg);
+            clientIOException.setHttpStatus( status );
+            throw  clientIOException;
+        }else{
+            String  response = jsonNode.getBody().toString();
+            return JSON.parseObject( response, tClass );
+        }
     }
 
     /**
@@ -112,21 +129,7 @@ public abstract class AbstractClient {
             e.printStackTrace();
             throw ClientIOException.create(e);
         }
-        int status = jsonNode.getStatus();
-        if(status != 200){
-            String exception_msg = "response exception";
-            if(status == 400){
-                exception_msg = "bad request";
-            }else if( status == 403){
-                exception_msg = "request forbidden";
-            }
-            ClientIOException clientIOException = ClientIOException.create(exception_msg);
-            clientIOException.setHttpStatus( status );
-            throw  clientIOException;
-        }else{
-            String  response = jsonNode.getBody().toString();
-            return JSON.parseObject( response, tClass );
-        }
+        return parseResult( tClass, jsonNode );
 
     }
 
