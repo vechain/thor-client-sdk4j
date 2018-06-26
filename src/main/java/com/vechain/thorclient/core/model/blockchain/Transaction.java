@@ -7,7 +7,7 @@ public class Transaction implements Serializable {
 
     private String id; //32 bytes
     private int   size;
-    private String chainTag;
+    private int   chainTag;
     private String  blockRef; //8 bytes
     private int expiration;
     private ArrayList<Clause> clauses;
@@ -43,11 +43,11 @@ public class Transaction implements Serializable {
         this.size = size;
     }
 
-    public String getChainTag() {
+    public int getChainTag() {
         return chainTag;
     }
 
-    public void setChainTag(String chainTag) {
+    public void setChainTag(int chainTag) {
         this.chainTag = chainTag;
     }
 

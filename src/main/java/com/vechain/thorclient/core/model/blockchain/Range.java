@@ -17,6 +17,18 @@ public class Range implements Serializable {
         range.unit = "block";
         return range;
     }
+    public static  Range createTimeRange(long from, long to){
+        if(from >= to){
+            throw new IllegalArgumentException( "Range from to error." );
+        }
+        Range range = new Range();
+        range.from = from;
+        range.to = to;
+        range.unit = "time";
+        return range;
+    }
+
+
     private Range(){};
 
     public String getUnit() {

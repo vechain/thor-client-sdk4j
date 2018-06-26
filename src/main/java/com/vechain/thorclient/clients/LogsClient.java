@@ -43,7 +43,7 @@ public class LogsClient extends AbstractClient {
      * Get transfer logs by order and
      * @param filter required {@link TransferFilter} filter.
      * @param order optional {@link Order} the result order.
-     * @return  array of {@link TransferLog} could be null.
+     * @return  array of {@link FilteredTransfer} could be null.
      * @throws ClientIOException network error
      */
     public static ArrayList filterTransferLogs(TransferFilter filter, Order order) throws ClientIOException{
@@ -55,7 +55,7 @@ public class LogsClient extends AbstractClient {
             queryParams.put( "order", order.getValue() );
         }
 
-        return sendPostRequest( Path.PostFilterTransferLogPath, null, queryParams, filter, (new ArrayList<TransferLog>()).getClass());
+        return sendPostRequest( Path.PostFilterTransferLogPath, null, queryParams, filter, (new ArrayList<FilteredTransfer>()).getClass());
 
     }
 

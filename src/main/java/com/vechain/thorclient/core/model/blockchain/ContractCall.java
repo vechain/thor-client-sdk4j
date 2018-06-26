@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ContractCall implements Serializable {
     private String value;
     private String data;
-    private String gas;
+    private long gas;
     private String gasPrice;
     private String caller;
 
@@ -14,11 +14,11 @@ public class ContractCall implements Serializable {
         data = "0x0";
     }
 
-    public String getGas() {
+    public long getGas() {
         return gas;
     }
 
-    public void setGas(String gas) {
+    public void setGas(long gas) {
         this.gas = gas;
     }
 
