@@ -352,7 +352,7 @@ private void checkReceipt(String id, long start, long expiration) {
 		final long current = System.currentTimeMillis();
 
 		if (current - start > expiration) {
-		    throw new ThorException("找不到有效的交易Receipt~");
+		    throw new ThorException("can not find valid receipt~");
 		}
 		receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
 		if (receipt != null) {
