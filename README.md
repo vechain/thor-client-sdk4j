@@ -251,15 +251,17 @@ Run the following command:
 
 There is a example transaction file in src/main/resources/exchange_example.xlsx
  
-- Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
-  java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
+Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   ChainTag:
   0x9a
   
 - Get block: java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
-  java -jar thor-client-sdk4j-0.0.2.jar getBlock "http://localhost:8669"
-  Block:
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock "http://localhost:8669"
   
+  Block:
   { 
     number: 148847,
     id: '0x0002456fe81e6df0548a327faa3c1764eff7c3b7ce5cf1d1d27264818e78ea8c',
@@ -279,7 +281,8 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx
   }
   
 - Get transaction: java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
-  java -jar thor-client-sdk4j-0.0.2.jar getTransaction "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669"
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669"
   
   {
       "id": "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710",
@@ -315,7 +318,8 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx
   
   
   - Get transaction receipt: java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
-  java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669" 
+  
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669" 
   
   Return transaction receipt：this transaction contain two clauses，VET transfer and VTHO transfer。
   
@@ -371,13 +375,15 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx
 
   
 - Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
-  java -jar thor-client-sdk4j-0.0.2.jar getBlockRef "http://localhost:8669"
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef "http://localhost:8669"
   
   BlockRef:
   0x000245e360d4cd1b
   
 - Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
-  java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
   
   The wallet created successfully and the key store is:
   
@@ -413,10 +419,15 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx
   0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
   
 - Send transactions: java -jar thor-client-sdk4j-0.0.2.jar sendVET {blockchain-server-url} {privateKey} {your-file-path}
-  java -jar thor-client-sdk4j-0.0.2.jar sendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar sendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
   Send Result:
   {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
 
 ```
+
+
+
+
 

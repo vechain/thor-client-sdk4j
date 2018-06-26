@@ -1,8 +1,12 @@
 package com.vechain.thorclient.clients.base;
 
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -18,37 +22,29 @@ import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.URLUtils;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import static com.alibaba.fastjson.JSON.parseObject;
-
 public abstract class AbstractClient {
 
-    public enum Path{
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-        //Accounts
-        GetAccountPath("/accounts/{address}"),
-        PostContractCallPath("/accounts/{address}"),
-        PostDeployContractPath("/accounts"),
-        GetAccountCodePath("/accounts/{address}/code"),
-        GetStorageValuePath("/accounts/{address}/storage/{key}"),
+    public enum Path {
 
-        //Transactions
-        GetTransactionPath("/transactions/{id}"),
-        GetTransactionReceipt("/transactions/{id}/receipt"),
-        PostTransaction("/transactions"),
+        // Accounts
+        GetAccountPath("/accounts/{address}"), PostContractCallPath("/accounts/{address}"), PostDeployContractPath("/accounts"), GetAccountCodePath(
+                "/accounts/{address}/code"), GetStorageValuePath("/accounts/{address}/storage/{key}"),
 
-        //Blocks
+        // Transactions
+        GetTransactionPath("/transactions/{id}"), GetTransactionReceipt("/transactions/{id}/receipt"), PostTransaction("/transactions"),
+
+        // Blocks
         GetBlockPath("/blocks/{revision}"),
 
-        //Events
+        // Events
         PostFilterEventsLogPath("/events"),
 
-        //Transfers
+        // Transfers
         PostFilterTransferLogPath("/transfers"),
 
-        //Nodes
+        // Nodes
         GetNodeInfoPath("/node/network/peers"),;
         private final String value;
 
@@ -69,50 +65,53 @@ public abstract class AbstractClient {
     /**
      * Get the request
      *
-     * @param path        {@link Path}
-     * @param uriParams   uri parameters
-     * @param queryParams query string parameters
-     * @param tClass      the class of result java object.
-     * @param <T>         Type of result java object.
+     * @param path
+     *            {@link Path}
+     * @param uriParams
+     *            uri parameters
+     * @param queryParams
+     *            query string parameters
+     * @param tClass
+     *            the class of result java object.
+     * @param <T>
+     *            Type of result java object.
      * @return response java object, could be null, mean can not find any result.
-     * @throws IOException node is not reachable or request is not valid.
+     * @throws IOException
+     *             node is not reachable or request is not valid.
      */
-    public static  <T> T sendGetRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Class<T> tClass) throws ClientIOException {
-        String rawURL = rawUrl( path );
-        String getURL =  URLUtils.urlComposite(rawURL, uriParams, queryParams);
-        Unirest.setTimeouts( NodeProvider.getNodeProvider().getConnectTimeout(), NodeProvider.getNodeProvider().getSocketTimeout());
+    public static <T> T sendGetRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Class<T> tClass) throws ClientIOException {
+        String rawURL = rawUrl(path);
+        String getURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
+        Unirest.setTimeouts(NodeProvider.getNodeProvider().getConnectTimeout(), NodeProvider.getNodeProvider().getSocketTimeout());
         HttpResponse<JsonNode> jsonNode = null;
-        try{
-            jsonNode = Unirest.get( getURL ).asJson();
-        }catch (UnirestException e) {
-            e.printStackTrace();
+        try {
+            jsonNode = Unirest.get(getURL).asJson();
+        } catch (UnirestException e) {
             throw new ClientIOException(e);
         }
-        return parseResult( tClass, jsonNode );
+        return parseResult(tClass, jsonNode);
 
     }
 
     private static <T> T parseResult(Class<T> tClass, HttpResponse<JsonNode> jsonNode) throws ClientIOException {
         int status = jsonNode.getStatus();
-        if(status != 200){
+        if (status != 200) {
             String exception_msg = "response exception";
-            if(status == 400){
+            if (status == 400) {
                 exception_msg = "bad request";
-            }else if( status == 403){
+            } else if (status == 403) {
                 exception_msg = "request forbidden";
             }
             ClientIOException clientIOException = new ClientIOException(exception_msg);
-            clientIOException.setHttpStatus( status );
-            throw  clientIOException;
-        }else{
-            String  response =  jsonNode.getBody().getObject().toString();
-            ObjectMapper objectMapper = new ObjectMapper(  );
+            clientIOException.setHttpStatus(status);
+            throw clientIOException;
+        } else {
+            String response = jsonNode.getBody().getObject().toString();
+            ObjectMapper objectMapper = new ObjectMapper();
             try {
-                return objectMapper.readValue( response, tClass );
+                return objectMapper.readValue(response, tClass);
             } catch (IOException e) {
-                e.printStackTrace();
-                ClientIOException clientIOException = new ClientIOException(e);
-                throw clientIOException;
+                throw new ClientIOException(e);
             }
 
         }
@@ -121,28 +120,33 @@ public abstract class AbstractClient {
     /**
      * Post the request
      *
-     * @param path        {@link Path}
-     * @param uriParams   uri parameters
-     * @param queryParams query string parameters
-     * @param tClass      the class of result java object.
-     * @param <T>         Type of result java object.
+     * @param path
+     *            {@link Path}
+     * @param uriParams
+     *            uri parameters
+     * @param queryParams
+     *            query string parameters
+     * @param tClass
+     *            the class of result java object.
+     * @param <T>
+     *            Type of result java object.
      * @return response java object, could be null, mean can not find any result.
-     * @throws IOException http status 4xx means not enough energy amount.
+     * @throws IOException
+     *             http status 4xx means not enough energy amount.
      */
     public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams, HashMap<String, String> queryParams, Object postBody, Class<T> tClass) {
         Unirest.setTimeouts(NodeProvider.getNodeProvider().getConnectTimeout(), NodeProvider.getNodeProvider().getSocketTimeout());
-        String                 rawURL     = rawUrl(path);
-        String                 postURL    = URLUtils.urlComposite(rawURL, uriParams, queryParams);
-        String                 postString = JSON.toJSONString(postBody);
-        HttpResponse<JsonNode> jsonNode   = null;
+        String rawURL = rawUrl(path);
+        String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
+        String postString = JSON.toJSONString(postBody);
+        HttpResponse<JsonNode> jsonNode = null;
         try {
             jsonNode = Unirest.post(postURL).body(postString).asJson();
         } catch (UnirestException e) {
             throw new ClientIOException(e);
         }
-        return parseResult( tClass, jsonNode );
+        return parseResult(tClass, jsonNode);
     }
-
 
     protected static HashMap<String, String> parameters(String[] keys, String[] values) {
         if (keys == null || values == null || keys.length != values.length) {
@@ -156,15 +160,18 @@ public abstract class AbstractClient {
         return params;
     }
 
-
     /**
      * Call the contract view function.
      *
-     * @param call            {@link ContractCall}
-     * @param contractAddress {@link Address}
-     * @param revision        {@link Revision}
+     * @param call
+     *            {@link ContractCall}
+     * @param contractAddress
+     *            {@link Address}
+     * @param revision
+     *            {@link Revision}
      * @return {@link ContractCallResult}
-     * @throws ClientIOException network error
+     * @throws ClientIOException
+     *             network error
      */
     public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision) throws ClientIOException {
         Revision currentRevision = revision;
@@ -172,11 +179,10 @@ public abstract class AbstractClient {
             currentRevision = Revision.BEST;
         }
 
-        HashMap<String, String> uriParams   = parameters(new String[]{"address"}, new String[]{contractAddress.toHexString(Prefix.ZeroLowerX)});
-        HashMap<String, String> queryParams = parameters(new String[]{"revision"}, new String[]{currentRevision.toString()});
+        HashMap<String, String> uriParams = parameters(new String[] { "address" }, new String[] { contractAddress.toHexString(Prefix.ZeroLowerX) });
+        HashMap<String, String> queryParams = parameters(new String[] { "revision" }, new String[] { currentRevision.toString() });
 
         return sendPostRequest(Path.PostContractCallPath, uriParams, queryParams, call, ContractCallResult.class);
     }
-
 
 }

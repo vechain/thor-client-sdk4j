@@ -2,19 +2,22 @@ package com.vechain.thorclient.clients;
 
 import java.io.IOException;
 
-import com.vechain.thorclient.core.model.blockchain.*;
-import com.vechain.thorclient.core.model.exception.ThorException;
-import com.vechain.thorclient.core.model.exception.TransactionException;
-import com.vechain.thorclient.utils.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.BlockContext;
+import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
+import com.vechain.thorclient.core.model.blockchain.Receipt;
+import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.Revision;
+import com.vechain.thorclient.core.model.exception.ThorException;
+import com.vechain.thorclient.core.model.exception.TransactionException;
+import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 @RunWith(JUnit4.class)
@@ -34,8 +37,8 @@ public class PrototypeClientTest extends BaseTest {
 
     @Test
     public void testSetMaster() throws IOException {
-        TransferResult result = ProtoTypeContractClient.setMasterAddress(new Address[]{Address.fromHexString(fromAddress)}, new Address[]{Address.fromHexString(fromAddress)},
-                                                                         TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+        TransferResult result = ProtoTypeContractClient.setMasterAddress(new Address[] { Address.fromHexString(fromAddress) }, new Address[] { Address.fromHexString(fromAddress) },
+                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
 
         logger.info("result: " + JSON.toJSONString(result));
     }
@@ -49,8 +52,8 @@ public class PrototypeClientTest extends BaseTest {
     @Test
     public void testAddUser() throws IOException {
 
-        TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[]{Address.fromHexString(fromAddress)}, new Address[]{Address.fromHexString(UserAddress)},
-                                                                        TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+        TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[] { Address.fromHexString(fromAddress) }, new Address[] { Address.fromHexString(UserAddress) },
+                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
 
         logger.info("Add user:" + JSON.toJSONString(transferResult));
     }
@@ -58,8 +61,8 @@ public class PrototypeClientTest extends BaseTest {
     @Test
     public void testRemoveUser() throws IOException {
 
-        TransferResult transferResult = ProtoTypeContractClient.removeUsers(new Address[]{Address.fromHexString(fromAddress)},
-                                                                            new Address[]{Address.fromHexString(UserAddress)}, TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+        TransferResult transferResult = ProtoTypeContractClient.removeUsers(new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
 
         logger.info("Remove user:" + JSON.toJSONString(transferResult));
     }
@@ -71,8 +74,8 @@ public class PrototypeClientTest extends BaseTest {
         Amount recovery = Amount.VTHO();
         recovery.setDecimalAmount("0.00001");
 
-        TransferResult result = ProtoTypeContractClient.setUserPlans(new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit}, new Amount[]{recovery},
-                                                                     TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+        TransferResult result = ProtoTypeContractClient.setUserPlans(new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit }, new Amount[] { recovery },
+                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
 
         logger.info("set user plans:" + JSON.toJSONString(result));
     }
@@ -89,14 +92,11 @@ public class PrototypeClientTest extends BaseTest {
         logger.info("Get user plan result:" + JSON.toJSONString(callResult));
     }
 
-
     @Test
     public void testSponsor() throws IOException {
 
-        TransferResult transferResult = ProtoTypeContractClient.sponsor(
-                new Address[]{Address.fromHexString(fromAddress)},
-                Boolean.TRUE,
-                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(sponsorKey));
+        TransferResult transferResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, Boolean.TRUE, TransactionClient.ContractGasLimit,
+                (byte) 0x1, 720, ECKeyPair.create(sponsorKey));
         logger.info("sponsor the address result:" + JSON.toJSONString(transferResult));
 
     }
@@ -104,9 +104,7 @@ public class PrototypeClientTest extends BaseTest {
     @Test
     public void testIsOnSponsor() throws IOException {
         String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
-        ContractCallResult contractCallResult = ProtoTypeContractClient.isSponsor(
-                Address.fromHexString(fromAddress),
-                Address.fromHexString(addressHex), null);
+        ContractCallResult contractCallResult = ProtoTypeContractClient.isSponsor(Address.fromHexString(fromAddress), Address.fromHexString(addressHex), null);
         logger.info("get isSponsor result :" + JSON.toJSONString(contractCallResult));
     }
 
@@ -115,9 +113,8 @@ public class PrototypeClientTest extends BaseTest {
         String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
         TransferResult transferResult = ProtoTypeContractClient.selectSponsor(
 
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(addressHex)},
-                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+                new Address[] { Address.fromHexString(fromAddress) }, new Address[] { Address.fromHexString(addressHex) }, TransactionClient.ContractGasLimit, (byte) 0x1, 720,
+                ECKeyPair.create(privateKey));
         logger.info("Select sponsor result:" + JSON.toJSONString(transferResult));
 
     }
@@ -130,19 +127,16 @@ public class PrototypeClientTest extends BaseTest {
 
     @Test
     public void testUnSponsor() throws IOException {
-        TransferResult transferResult = ProtoTypeContractClient.sponsor(
-                new Address[]{Address.fromHexString(fromAddress)},
-                Boolean.FALSE,
-                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(sponsorKey));
+        TransferResult transferResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, Boolean.FALSE, TransactionClient.ContractGasLimit,
+                (byte) 0x1, 720, ECKeyPair.create(sponsorKey));
         logger.info("un-sponsor the address result:" + JSON.toJSONString(transferResult));
 
     }
 
-
     private void checkReceipt(String id, long start, long expiration) {
         if (!StringUtils.isBlank(id)) {
-            long    startBlockNumber = 0;
-            Receipt receipt          = ProtoTypeContractClient.getTransactionReceipt(id, null);
+            long startBlockNumber = 0;
+            Receipt receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
             if (receipt != null) {
                 BlockContext blockContext = receipt.getBlock();
                 if (blockContext != null) {
@@ -152,25 +146,24 @@ public class PrototypeClientTest extends BaseTest {
             while (true) {
                 try {
                     Thread.sleep(10 * 1000);
-                    break;
                 } catch (InterruptedException e) {
                     throw new ThorException(e);
                 }
-//                long current = System.currentTimeMillis();
-//                if (current - start > expiration) {
-//                    throw new ThorException("找不到有效的交易Receipt~");
-//                }
-//                receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
-//                if (receipt != null) {
-//                    BlockContext blockContext = receipt.getBlock();
-//                    if (blockContext != null) {
-//                        long number = blockContext.getNumber();
-//                        if (number - startBlockNumber > 12) {
-//                            break;
-//                        }
-//                    }
-//                }
+                final long current = System.currentTimeMillis();
 
+                if (current - start > expiration) {
+                    throw new ThorException("找不到有效的交易Receipt~");
+                }
+                receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
+                if (receipt != null) {
+                    BlockContext blockContext = receipt.getBlock();
+                    if (blockContext != null) {
+                        long number = blockContext.getNumber();
+                        if (number - startBlockNumber > 12) {
+                            break;
+                        }
+                    }
+                }
             }
         } else {
             throw new TransactionException("invalid tx id.");
@@ -181,11 +174,11 @@ public class PrototypeClientTest extends BaseTest {
     public void testNormalAddressWithSponsor() {
 
         int expirationBlock = 720;
-        int expiration      = 10 * expirationBlock * 1000;
+        int expiration = 10 * expirationBlock * 1000;
 
         long start = System.currentTimeMillis();
-        TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[]{Address.fromHexString(fromAddress)}, new Address[]{Address.fromHexString(UserAddress)},
-                                                                        TransactionClient.ContractGasLimit, (byte) 0x1, expiration, ECKeyPair.create(privateKey));
+        TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[] { Address.fromHexString(fromAddress) }, new Address[] { Address.fromHexString(UserAddress) },
+                TransactionClient.ContractGasLimit, (byte) 0x1, expiration, ECKeyPair.create(privateKey));
         if (transferResult != null) {
             logger.info("Add user:" + JSON.toJSONString(transferResult));
             this.checkReceipt(transferResult.getId(), start, expiration);
@@ -198,18 +191,16 @@ public class PrototypeClientTest extends BaseTest {
         credit.setDecimalAmount("100.00");
         Amount recovery = Amount.VTHO();
         recovery.setDecimalAmount("0.00001");
-        TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit}, new Amount[]{recovery},
-                                                                                 TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+        TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+                new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
         if (setUserPlansResult != null) {
             logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
             this.checkReceipt(setUserPlansResult.getId(), start, expiration);
         } else {
             throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
         }
-        TransferResult sponsorResult = ProtoTypeContractClient.sponsor(
-                new Address[]{Address.fromHexString(fromAddress)},
-                Boolean.TRUE,
-                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(sponsorKey));
+        TransferResult sponsorResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, Boolean.TRUE, TransactionClient.ContractGasLimit,
+                (byte) 0x1, 720, ECKeyPair.create(sponsorKey));
         if (sponsorResult != null) {
             logger.info("sponsor the address setUserPlansResult:" + JSON.toJSONString(sponsorResult));
             this.checkReceipt(sponsorResult.getId(), start, expiration);
@@ -218,26 +209,25 @@ public class PrototypeClientTest extends BaseTest {
         }
 
         String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
-        TransferResult selectSponsorResult = ProtoTypeContractClient.selectSponsor(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(addressHex)},
-                TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+        TransferResult selectSponsorResult = ProtoTypeContractClient.selectSponsor(new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(addressHex) }, TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
         if (selectSponsorResult != null) {
             logger.info("selectSponsor:" + JSON.toJSONString(selectSponsorResult));
             this.checkReceipt(selectSponsorResult.getId(), start, expiration);
         } else {
             throw new ThorException("ProtoTypeContractClient.selectSponsor出错了~");
         }
+
     }
 
     @Test
     public void testNormalAddressWithoutSponsor() {
         int expirationBlock = 720;
-        int expiration      = 10 * expirationBlock * 1000;
+        int expiration = 10 * expirationBlock * 1000;
 
         long start = System.currentTimeMillis();
-        TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[]{Address.fromHexString(fromAddress)}, new Address[]{Address.fromHexString(UserAddress)},
-                                                                        TransactionClient.ContractGasLimit, (byte) 0x1, expiration, ECKeyPair.create(privateKey));
+        TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[] { Address.fromHexString(fromAddress) }, new Address[] { Address.fromHexString(UserAddress) },
+                TransactionClient.ContractGasLimit, (byte) 0x1, expiration, ECKeyPair.create(privateKey));
         if (transferResult != null) {
             logger.info("Add user:" + JSON.toJSONString(transferResult));
             this.checkReceipt(transferResult.getId(), start, expiration);
@@ -250,43 +240,8 @@ public class PrototypeClientTest extends BaseTest {
         credit.setDecimalAmount("100.00");
         Amount recovery = Amount.VTHO();
         recovery.setDecimalAmount("0.00001");
-        TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit}, new Amount[]{recovery},
-                                                                                 TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
-        if (setUserPlansResult != null) {
-            logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
-            this.checkReceipt(setUserPlansResult.getId(), start, expiration);
-        } else {
-            throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
-        }
-    }
-
-    @Test
-    public void testContractAddressWithSponsor() {
-
-    }
-
-    @Test
-    public void testContractAddressWithoutSponsor() {
-        int expirationBlock = 720;
-        int expiration      = 10 * expirationBlock * 1000;
-
-        long start = System.currentTimeMillis();
-        TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[]{Address.VTHO_Address}, new Address[]{Address.fromHexString(UserAddress)},
-                                                                        TransactionClient.ContractGasLimit, (byte) 0x1, expiration, ECKeyPair.create(privateKey));
-        if (transferResult != null) {
-            logger.info("Add user:" + JSON.toJSONString(transferResult));
-            this.checkReceipt(transferResult.getId(), start, expiration);
-        } else {
-            throw new ThorException("ProtoTypeContractClient.addUser出错了~");
-        }
-
-        start = System.currentTimeMillis();
-        Amount credit = Amount.VTHO();
-        credit.setDecimalAmount("100.00");
-        Amount recovery = Amount.VTHO();
-        recovery.setDecimalAmount("0.00001");
-        TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit}, new Amount[]{recovery},
-                                                                                 TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+        TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+                new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
         if (setUserPlansResult != null) {
             logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
             this.checkReceipt(setUserPlansResult.getId(), start, expiration);
