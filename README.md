@@ -279,10 +279,13 @@ logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
 
-- Multiple Party Payment: without Sponsor
+- Multiple Party Payment:
 
 
 ```
+String targetAddress = "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A";
+String userAddress = "0xba5f00a28f732f23ba946c594716496ebdc9aef5";
+String privateKey = "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f";
 // set expiration block
 int expirationBlock = 720;
 // transaction expiration time
@@ -290,8 +293,13 @@ int expiration = 10 * expirationBlock * 1000;
 
 long start = System.currentTimeMillis();
 //add user(UserAddress) to owner (fromAddress)
-TransferResult transferResult = ProtoTypeContractClient.addUser(new Address[] { Address.fromHexString(fromAddress) }, new Address[] { Address.fromHexString(UserAddress) },
-        TransactionClient.ContractGasLimit, (byte) 0x1, expiration, ECKeyPair.create(privateKey));
+TransferResult transferResult = ProtoTypeContractClient.addUser(
+	new Address[] { Address.fromHexString(targetAddress) },   //target address to add user
+	new Address[] { Address.fromHexString(userAddress) },     //user address to be added
+        TransactionClient.ContractGasLimit,                       //TransactionClient.ContractGasLimit = 70000 gas
+	(byte) 0x1,                                               //gasCoef
+	expirationBlock,                                          //720 block
+	ECKeyPair.create(privateKey));
 if (transferResult != null) {
     logger.info("Add user:" + JSON.toJSONString(transferResult));
     this.checkReceipt(transferResult.getId(), start, expiration);
@@ -305,13 +313,61 @@ credit.setDecimalAmount("100.00");
 Amount recovery = Amount.VTHO();
 recovery.setDecimalAmount("0.00001");
 //set user plan 
-TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
-        new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x1, 720, ECKeyPair.create(privateKey));
+TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(
+	new Address[] { Address.fromHexString(targetAddress) }, 
+	new Amount[] { credit },
+        new Amount[] { recovery }, 
+	TransactionClient.ContractGasLimit, 
+	(byte) 0x1, 720, 
+	ECKeyPair.create(privateKey));
 if (setUserPlansResult != null) {
     logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
     this.checkReceipt(setUserPlansResult.getId(), start, expiration);
 } else {
     throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
+}
+
+//check receipt
+private void checkReceipt(String id, long start, long expiration) {
+	if (!StringUtils.isBlank(id)) {
+	    try {
+		Thread.sleep(10 * 1000);
+	    } catch (InterruptedException e) {
+		throw new ThorException(e);
+	    }
+	    long startBlockNumber = 0;
+	    Receipt receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
+	    if (receipt != null) {
+		BlockContext blockContext = receipt.getBlock();
+		if (blockContext != null) {
+		    startBlockNumber = blockContext.getNumber();
+		}
+	    }
+	    while (true) {
+		try {
+		    Thread.sleep(10 * 1000);
+		} catch (InterruptedException e) {
+		    throw new ThorException(e);
+		}
+		final long current = System.currentTimeMillis();
+
+		if (current - start > expiration) {
+		    throw new ThorException("找不到有效的交易Receipt~");
+		}
+		receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
+		if (receipt != null) {
+		    BlockContext blockContext = receipt.getBlock();
+		    if (blockContext != null) {
+			long number = blockContext.getNumber();
+			if (number - startBlockNumber > 12) {
+			    break;
+			}
+		    }
+		}
+	    }
+	} else {
+	    throw new TransactionException("invalid tx id.");
+	}
 }
 
 ```
