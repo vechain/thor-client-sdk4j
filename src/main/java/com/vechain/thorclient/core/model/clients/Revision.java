@@ -23,11 +23,15 @@ public class Revision {
     }
 
     /**
-     * Create from blockId.
-     * @param blockId block id hex string. start with prefix "0x"
-     * @return
+     * Create from blockId or best block.
+     * @param blockId block id hex string start with prefix "0x" or "best" string ignored case.
+     * @return {@link Revision}
      */
     public static Revision create(String blockId){
+        if(blockId.equalsIgnoreCase( "best" )){
+            return BEST;
+        }
+
         if(!BlockchainUtils.isId(blockId)){
             throw ClientArgumentException.exception( "create revision from blockId invalid" );
         }
