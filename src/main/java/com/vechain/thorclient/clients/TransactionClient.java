@@ -152,7 +152,7 @@ public class TransactionClient extends AbstractClient {
         if(gas < ContractGasLimit){
             throw ClientArgumentException.exception( "gas is too small." );
         }
-        if(gasCoef <= 0){
+        if(gasCoef < 0){
             throw ClientArgumentException.exception( "gas coef is too small." );
         }
 

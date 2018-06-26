@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
-    static String hexId = "0xa82d1dd26bae27a04fe1567658963b870232d2c9c73222b70f3227c7b086ae8a";
+    static String hexId = "0xb7a36e2e2ea92aad8aa90dfa7850eee743d9fc9855f364adf45c145e74d2995f";
     static String addUserTxId = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
     static String removeUserTxId = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
     static String setUserPlanTxId = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
@@ -51,7 +51,7 @@ public class TransactionClientTest extends BaseTest {
 
     @Test
     public void testGetTransactionReceipt() throws ClientIOException {
-        Receipt receipt = TransactionClient.getTransactionReceipt(unsponsorTxId, null);
+        Receipt receipt = TransactionClient.getTransactionReceipt(hexId, null);
         logger.info("Receipt:" + JSON.toJSONString(receipt));
         Assert.assertNotNull(receipt);
     }
@@ -82,7 +82,7 @@ public class TransactionClientTest extends BaseTest {
                 Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),
                 amount,
                 ToData.ZERO );
-        RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
+        RawTransaction rawTransaction =RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x0, CryptoUtils.generateTxNonce(), clause);
         TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
         logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
         Assert.assertNotNull( result );
