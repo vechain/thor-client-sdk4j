@@ -96,7 +96,7 @@ public class PrototypeClientTest extends BaseTest {
     @Test
     public void testSponsor() throws IOException {
 
-        TransferResult transferResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, Boolean.TRUE, TransactionClient.ContractGasLimit,
+        TransferResult transferResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit,
                 (byte) 0x0, 720, ECKeyPair.create(sponsorKey));
         logger.info("sponsor the address result:" + JSON.toJSONString(transferResult));
 
@@ -128,7 +128,7 @@ public class PrototypeClientTest extends BaseTest {
 
     @Test
     public void testUnSponsor() throws IOException {
-        TransferResult transferResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, Boolean.FALSE, TransactionClient.ContractGasLimit,
+        TransferResult transferResult = ProtoTypeContractClient.unsponsor(new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit,
                 (byte) 0x0, 720, ECKeyPair.create(sponsorKey));
         logger.info("un-sponsor the address result:" + JSON.toJSONString(transferResult));
 
@@ -198,7 +198,7 @@ public class PrototypeClientTest extends BaseTest {
         } else {
             throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
         }
-        TransferResult sponsorResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, Boolean.TRUE, TransactionClient.ContractGasLimit,
+        TransferResult sponsorResult = ProtoTypeContractClient.sponsor(new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit,
                 (byte) 0x0, 720, ECKeyPair.create(sponsorKey));
         if (sponsorResult != null) {
             logger.info("sponsor the address setUserPlansResult:" + JSON.toJSONString(sponsorResult));
