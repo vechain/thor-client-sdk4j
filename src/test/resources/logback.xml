@@ -40,7 +40,6 @@
 	</appender>
 
 	<logger name="ch.qos.logback.classic.joran.action" level="ERROR" />
-
 	<logger name="ch.qos.logback.core.joran.action" level="ERROR" />
 	<logger name="ch.qos.logback.core.rolling" level="ERROR" />
 	<logger name="ch.qos.logback.classic" level="ERROR" />
