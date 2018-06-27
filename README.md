@@ -706,7 +706,6 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar signAndSendVET http://localhost:8669 0
 ```
 
 
-
 #### Send VET raw transactions:
 
 ```
