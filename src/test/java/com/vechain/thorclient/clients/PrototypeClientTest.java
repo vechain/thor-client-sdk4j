@@ -8,6 +8,7 @@ import org.junit.runners.JUnit4;
 
 import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.Block;
 import com.vechain.thorclient.core.model.blockchain.BlockContext;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.Receipt;
@@ -134,32 +135,20 @@ public class PrototypeClientTest extends BaseTest {
     }
 
     private void checkReceipt(String id, long start, long expiration) {
+        Block block = BlockClient.getBlock(Revision.BEST);
+        long startBlockNumber = Integer.parseInt(block.getNumber());
         if (!StringUtils.isBlank(id)) {
             try {
-                Thread.sleep(10 * 1000);
+                Thread.sleep(12 * 10 * 1000);
             } catch (InterruptedException e) {
                 throw new ThorException(e);
             }
-            long startBlockNumber = 0;
-            Receipt receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
-            if (receipt != null) {
-                BlockContext blockContext = receipt.getBlock();
-                if (blockContext != null) {
-                    startBlockNumber = blockContext.getNumber();
-                }
-            }
             while (true) {
-                try {
-                    Thread.sleep(10 * 1000);
-                } catch (InterruptedException e) {
-                    throw new ThorException(e);
-                }
                 final long current = System.currentTimeMillis();
-
                 if (current - start > expiration) {
                     throw new ThorException("找不到有效的交易Receipt~");
                 }
-                receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
+                Receipt receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
                 if (receipt != null) {
                     BlockContext blockContext = receipt.getBlock();
                     if (blockContext != null) {
@@ -168,6 +157,11 @@ public class PrototypeClientTest extends BaseTest {
                             break;
                         }
                     }
+                }
+                try {
+                    Thread.sleep(10 * 1000);
+                } catch (InterruptedException e) {
+                    throw new ThorException(e);
                 }
             }
         } else {
