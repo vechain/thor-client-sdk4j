@@ -39,7 +39,7 @@
 		</filter>
 	</appender>
 	
-	<root level="INFO">
+	<root level="ERROR">
 		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 	</root>

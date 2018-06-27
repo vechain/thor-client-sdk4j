@@ -22,11 +22,11 @@ import com.vechain.thorclient.utils.WalletUtils;
 
 public class Main {
 
-    private static final String SIGN                    = "signVET";
+    private static final String SIGN                    = "sign";
 
     private static final String CREATE_WALLET           = "createWallet";
 
-    private static final String SEND                    = "signAndSendVET";
+    private static final String SEND                    = "signAndSend";
 
     private static final String CHAIN_TAG               = "getChainTag";
 
@@ -38,7 +38,7 @@ public class Main {
 
     private static final String GET_TRANSACTION_RECEIPT = "getTransactionReceipt";
 
-    private static final String SEND_VET_RAW            = "sendVETRaw";
+    private static final String SEND_VET_RAW            = "sendRaw";
 
     public static void main(String[] args) throws Exception {
 
