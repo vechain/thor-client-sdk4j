@@ -516,6 +516,8 @@ java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
 
 eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet my@wallet@pass
 
+The keystore.json file will generate in current folder.
+
 The wallet created successfully and the key store is: 
   
 {
