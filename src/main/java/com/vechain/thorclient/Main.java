@@ -1,18 +1,20 @@
 package com.vechain.thorclient;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
-import com.vechain.thorclient.clients.TransactionClient;
-import com.vechain.thorclient.core.model.blockchain.Block;
-import com.vechain.thorclient.core.model.blockchain.Receipt;
-import com.vechain.thorclient.core.model.blockchain.Transaction;
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.clients.BlockClient;
 import com.vechain.thorclient.clients.BlockchainClient;
+import com.vechain.thorclient.clients.TransactionClient;
+import com.vechain.thorclient.core.model.blockchain.Block;
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
+import com.vechain.thorclient.core.model.blockchain.Receipt;
+import com.vechain.thorclient.core.model.blockchain.Transaction;
 import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.wallet.WalletInfo;
 import com.vechain.thorclient.utils.BytesUtils;
@@ -22,11 +24,11 @@ import com.vechain.thorclient.utils.WalletUtils;
 
 public class Main {
 
-    private static final String SIGN                    = "signVET";
+    private static final String SIGN                    = "sign";
 
     private static final String CREATE_WALLET           = "createWallet";
 
-    private static final String SEND                    = "signAndSendVET";
+    private static final String SEND                    = "signAndSend";
 
     private static final String CHAIN_TAG               = "getChainTag";
 
@@ -38,7 +40,7 @@ public class Main {
 
     private static final String GET_TRANSACTION_RECEIPT = "getTransactionReceipt";
 
-    private static final String SEND_VET_RAW            = "sendVETRaw";
+    private static final String SEND_VET_RAW            = "sendRaw";
 
     public static void main(String[] args) throws Exception {
 
@@ -156,6 +158,13 @@ public class Main {
             byte[] rawPrivateKey = walletInfo.getKeyPair().getRawPrivateKey();
             String newPrivateKey = BytesUtils.toHexString(rawPrivateKey, Prefix.ZeroLowerX);
             String keyStoreStr = walletInfo.toKeystoreString();
+            File file = new File("." + File.separator + "keystore.json");
+            if(!file.getParentFile().exists()){
+                file.getParentFile().mkdirs();
+            }
+            Writer out = new FileWriter(file);
+            out.write(keyStoreStr);
+            out.close();
             System.out.println("The wallet created successfully and the key store is:");
             System.out.println(keyStoreStr);
             System.out.println("The wallet created successfully and the privateKey is:");

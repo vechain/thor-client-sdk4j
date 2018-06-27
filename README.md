@@ -483,7 +483,7 @@ The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.2.j
 
 Run the following command:
 
-There is a example transaction file in src/main/resources/exchange_example.xlsx
+There is a example transaction file in src/main/resources/exchange_example.xlsx, you need to replace the blockRef in this file.
 
 #### Get chainTag: 
 
@@ -491,7 +491,7 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx
  
 java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
+eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag http://localhost:8669
   ChainTag:
   0x9a
 ```
@@ -502,7 +502,7 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
 ```
   java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef "http://localhost:8669"
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef http://localhost:8669
   
   BlockRef:
   0x000245e360d4cd1b
@@ -514,37 +514,36 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
 ```
 java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
 
-The keystore.json file will be generated in current folder.
+eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet my@wallet@pass
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
+The keystore.json file will generate in current folder.
 
-  
 The wallet created successfully and the key store is: 
   
-  {
-    "address": "0xc283b29b9e46ec62b1cc78d95ad2598e58f8af17",
-    "crypto": {
-      "cipher": "aes-128-ctr",
-      "cipherparams": {
-        "iv": "8bd06ab3901ec874c35c396736624800"
-      },
-      "ciphertext": "f69d08d62cdadae76da47e76e6d59b7c60e8e2bb8919c785bac0f6f8621ddfed",
-      "kdf": "scrypt",
-      "kdfparams": {
-        "dklen": 32,
-        "n": 262144,
-        "p": 1,
-        "r": 8,
-        "salt": "b4e5b39cadcb66f4682f7863dde854b4a87b3810864d1ab6fafd1cdc923a2a1c"
-      },
-      "mac": "a2ee21d526a1d0113fde864bf67c55ff2b2cd85fc6a8f232e21d3b59da9790b3"
+{
+  "address": "0x4cd1c03c39637cc5c4b6e8c02d06bb4eef76c5ea",
+  "crypto": {
+    "cipher": "aes-128-ctr",
+    "cipherparams": {
+      "iv": "125246d1644716acd3399a5ddac832f0"
     },
-    "id": "656a8193-a670-48fc-bbf7-eedbdb2dd5e7",
-    "version": 3
-  }
+    "ciphertext": "6aef2fdb3b1ca7015774f273caec2c45f5ab76b70105f7f432413fa8ce189505",
+    "kdf": "scrypt",
+    "kdfparams": {
+      "dklen": 32,
+      "n": 262144,
+      "p": 1,
+      "r": 8,
+      "salt": "c08e550d586af29b5cdc830b8ec7241c29b3dbcd5121e463e44e10026ea04453"
+    },
+    "mac": "42d855c653bb8560b3c87007475ef459746fe6bcafdfa3fcf5c906d698849320"
+  },
+  "id": "626aff56-19ff-42d1-b6fe-7da96f51d2b0",
+  "version": 3
+}
   
   The wallet created successfully and the privateKey is:
-  0x5eabfe97a3854a16b2194ff18baf14471809896c73627414c7fbd35bd7431014
+  0x83d0d6c41e402e1cdb49076f7b8003a289482ed3e406413c721783224c7dcb72
   
 ```
 
@@ -555,26 +554,26 @@ The wallet created successfully and the key store is:
 ```
  java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock "http://localhost:8669"
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock http://localhost:8669
   
   Block:
-  { 
-    number: 148847,
-    id: '0x0002456fe81e6df0548a327faa3c1764eff7c3b7ce5cf1d1d27264818e78ea8c',
-    size: 467,
-    parentID: '0x0002456e56ae5827d90b760cf531fc98791621f548ee08dcedc6e5cbb97d5b3c',
-    timestamp: 1529917460,
-    gasLimit: 10448965,
-    beneficiary: '0x97a79df349e06b472fba84aba852659f1bdbd90b',
-    gasUsed: 51462,
-    totalScore: 946359,
-    txsRoot: '0xb914c99935d881b113a116c9a603ff670e27cc74703bade677735e13b7b53970',
-    stateRoot: '0x3b391f04e9e9c61543b902e2fd6b1d7a617be2c3cf3ff90f43be05ff637a96b3',
-    receiptsRoot: '0x262e43962d139e3dd6904c451c39dc5d14384343d41f60d70168f920bc7858c4',
-    signer: '0x97a79df349e06b472fba84aba852659f1bdbd90b',
-    isTrunk: true,
-    transactions: [ '0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710' ] 
-  }
+  {
+  "beneficiary": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+  "gasLimit": 10448965,
+  "gasUsed": 0,
+  "id": "0x000281ce7f291d3dea4d26c7eaf9104bdf0542e96df7fff3ff6df0b625412994",
+  "isTrunk": true,
+  "number": "164302",
+  "parentID": "0x000281cddb31b82e111b3d6e5a5896ff32216a91868da249723bf17fbdd3b596",
+  "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
+  "signer": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+  "size": 239,
+  "stateRoot": "0xc7cef51188e95ab25721cd700b097f5fb47c5865046761c3fc60f83f025b3e2d",
+  "timestamp": 1530072030,
+  "totalScore": 1078802,
+  "transactions": [],
+  "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
+}
   
 ```
 
@@ -584,38 +583,21 @@ The wallet created successfully and the key store is:
   
 java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669"
-  
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
+  Transaction:
   {
-      "id": "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710",
-      "size": 224,
-      "chainTag": "0x9a",
-      "blockRef": "0x0002456e56ae5827",
-      "expiration": 720,
-      "clauses": [
-          {
-              "to": "0xB2ef3293Bb6c886d9e57ba205c46450B6d48A0A1",
-              "value": "1234560000000000000",
-              "data": "0x"
-          },
-          {
-              "to": "0x0000000000000000000000000000456E65726779",
-              "value": "0",
-              "data": "0xa9059cbb000000000000000000000000b2ef3293bb6c886d9e57ba205c46450b6d48a0a100000000000000000000000000000000000000000000000000000000000003ff"
-          }
-      ],
-      "gasPriceCoef": 0,
-      "gas": 100000,
-      "dependsOn": null,
-      "nonce": "0x164362fbdd0",
-      "origin": "0x267Dc1dF3e82E6BdAD45156C7c31Aad36DF2B5Fa",
-      "block": {
-          "id": "0x0002456fe81e6df0548a327faa3c1764eff7c3b7ce5cf1d1d27264818e78ea8c",
-          "number": 148847,
-          "timestamp": 1529917460
-      },
-      "blockNumber": 148847
-  }
+  "block": {
+    "id": "0x000281a71b862025b02427f3998303b04b897f02057e97184b8638d306d0c99b",
+    "number": 164263,
+    "timestamp": 1530071640
+  },
+  "chainTag": 0,
+  "expiration": 0,
+  "gas": 0,
+  "gasPriceCoef": 0,
+  "raw":   "0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001",
+  "size": 0
+}
   
 ```
 
@@ -625,97 +607,87 @@ java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchai
   
  java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
   
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669" 
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
   
-  Return transaction receipt：this transaction contain two clauses，VET transfer and VTHO transfer。
-  
+  Receipt:
   {
-      "gasUsed": 51462,
-      "gasPayer": "0x267Dc1dF3e82E6BdAD45156C7c31Aad36DF2B5Fa",
-      "paid": "0x2ca2dc057b7270000",
-      "reward": "0xd640ece71d588000",
-      "reverted": false,
-      "block": {
-          "id": "0x0002456fe81e6df0548a327faa3c1764eff7c3b7ce5cf1d1d27264818e78ea8c",
-          "number": 148847,
-          "timestamp": 1529917460
-      },
-      "tx": {
-          "id": "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710",
-          "origin": "0x267Dc1dF3e82E6BdAD45156C7c31Aad36DF2B5Fa"
-      },
-      "outputs": [
-          {
-              "contractAddress": null,
-              "events": [],
-              "transfers": [                                //VET transfer
-                  { 
-                      "sender": "0x267dc1df3e82e6bdad45156c7c31aad36df2b5fa",
-                      "recipient": "0xb2ef3293bb6c886d9e57ba205c46450b6d48a0a1",
-                      "amount": "0x112209c76de80000"
-                  }
-              ]
-          },
-          {
-              "contractAddress": null,
-              "events": [                                   //VTHO transfer
-                  {
-                      "address": "0x0000000000000000000000000000456E65726779",
-                      "topics": [
-                          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
-                          "0x000000000000000000000000267dc1df3e82e6bdad45156c7c31aad36df2b5fa",
-                          "0x000000000000000000000000b2ef3293bb6c886d9e57ba205c46450b6d48a0a1"
-                      ],
-                      "data": "0x00000000000000000000000000000000000000000000000000000000000003ff"
-                  }
-              ],
-              "transfers": []
-          }
-      ],
-      "blockNumber": 148847,
-      "blockHash": "0x0002456fe81e6df0548a327faa3c1764eff7c3b7ce5cf1d1d27264818e78ea8c",
-      "transactionHash": "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710",
-      "status": "0x1"
+  "block": {
+    "id": "0x000281a71b862025b02427f3998303b04b897f02057e97184b8638d306d0c99b",
+    "number": 164263,
+    "timestamp": 1530071640
+  },
+  "gasPayer": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed",
+  "gasUsed": 37000,
+  "outputs": [
+    {
+      "events": [],
+      "transfers": [
+        {
+          "amount": "0x364200111c48f80000",
+          "recipient": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
+          "sender": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
+        }
+      ]
+    },
+    {
+      "events": [],
+      "transfers": [
+        {
+          "amount": "0x364200111c48f80000",
+          "recipient": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
+          "sender": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
+        }
+      ]
+    }
+  ],
+  "paid": "0x2017a67f731740000",
+  "reverted": false,
+  "reward": "0x9a0b1f308ed60000",
+  "tx": {
+    "id": "0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9",
+    "origin": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
   }
+}
   
 ```
 
-#### Sign VET transactions: 
+#### Sign transactions: 
 
 ```
-java -jar thor-client-sdk4j-0.0.2.jar signVET {your-file-path} {privateKey}
+java -jar thor-client-sdk4j-0.0.2.jar sign {your-file-path} {privateKey}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar signVET src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
+eg. java -jar thor-client-sdk4j-0.0.2.jar sign src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
   
   Raw Transaction:
-  0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
+  0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
   
 ```
 
-#### Send ans Sign VET transactions:
+#### Send and Sign transactions:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.2.jar signAndSendVET {blockchain-server-url} {privateKey} {your-file-path}
+java -jar thor-client-sdk4j-0.0.2.jar signAndSend {blockchain-server-url} {privateKey} {your-file-path}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar signAndSendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
+eg. java -jar thor-client-sdk4j-0.0.2.jar signAndSend http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
   Send Result:
-  {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
+ {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
 
 ```
 
 
-#### Send VET raw transactions:
+
+#### Send raw transactions:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.2.jar sendVETRaw {blockchain-server-url} {raw}
+java -jar thor-client-sdk4j-0.0.2.jar sendRaw {blockchain-server-url} {raw}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar sendVET "http://localhost:8669"  “0xf83d819a87027fdeb459bd708202d0e0df94d3ef28df6b553ed2fc47259e8134319cb1121a2a880f8b0a10e470000080808252088088a5366487948cf3edc0”
+eg. java -jar thor-client-sdk4j-0.0.2.jar sendRaw http://localhost:8669 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
   
   Send Result:
-  {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
+ {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
 
 ```
 

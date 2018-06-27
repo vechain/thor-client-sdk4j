@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="60 seconds" debug="false">
+<configuration debug="true">
 	<property name="APP_NAME" value="thor" />
 	<property name="LOG_HOME" value="${log.dir:-logs}/${APP_NAME}" />
 	<property name="ENCODER_PATTERN"
@@ -38,14 +38,9 @@
 			<level>WARN</level>
 		</filter>
 	</appender>
-
-	<logger name="ch.qos.logback.classic.joran.action" level="ERROR" />
-
-	<logger name="ch.qos.logback.core.joran.action" level="ERROR" />
-	<logger name="ch.qos.logback.core.rolling" level="ERROR" />
-	<logger name="ch.qos.logback.classic" level="ERROR" />
-
-	<root level="INFO">
+	
+	<root level="ERROR">
+		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
