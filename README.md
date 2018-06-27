@@ -692,13 +692,13 @@ eg. java -jar thor-client-sdk4j-0.0.2.jar signVET src/main/resources/exchange_ex
   
 ```
 
-#### Send VET transactions:
+#### Send ans Sign VET transactions:
 
 ```
   
 java -jar thor-client-sdk4j-0.0.2.jar signAndSendVET {blockchain-server-url} {privateKey} {your-file-path}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar sendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
+eg. java -jar thor-client-sdk4j-0.0.2.jar signAndSendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
   Send Result:
   {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
