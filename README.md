@@ -37,7 +37,7 @@ logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
 		
 ```
 
-Load keystore:
+#### Load keystore:
 
 ```
 
@@ -50,26 +50,124 @@ Get address: walletInfo.getKeyPair().getHexAddress());
 ```
 
 ### AccountClient
+
 User can use this client :
-- Get Account information: VET balance and VTHO balance
+
+#### Get Account information: VET balance and VTHO balance
 
 ```
 Address address = Address.fromHexString(fromAddress);
 Account account = AccountClient.getAccountInfo(address, null);
 logger.info("account info:" + JSON.toJSONString(account));
-logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
 Assert.assertNotNull(account);
 
 eg. 
 Address address = Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A");
-Account account = AccountClient.getAccountInfo(address, null);
+Account account = AccountClient.getAccountInfo(
+	address,  // account address
+	null      // null = Revision.BEST
+	);
 logger.info("account info:" + JSON.toJSONString(account));
-logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
 account info:
 {"balance":"0x42aeda6af58002f600000","energy":"0x14234c71f08e4db8e504","hasCode":false}
 
 ```
-- Call Contract view method.
+
+
+#### Get code on a address：
+
+```
+Address tokenAddr = Address.VTHO_Address;
+AccountCode code = AccountClient.getAccountCode(tokenAddr, null);
+logger.info("code:" + JSON.toJSONString(code));
+
+```
+
+### TransactionClient
+
+
+#### Sign VET transaction:
+
+
+```
+byte chainTag = BlockchainClient.getChainTag();
+byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
+Amount amount = Amount.createFromToken(AbstractToken.VET);
+amount.setDecimalAmount("1.12");
+ToClause clause = TransactionClient.buildVETToClause(Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A"), amount, ToData.ZERO);
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 21000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
+	
+
+String raw = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
+
+logger.info("raw=" + raw);
+
+raw=0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
+	
+```
+
+#### Sign VTHO transaction:
+
+```
+
+byte chainTag = BlockchainClient.getChainTag();
+byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
+Amount amount = Amount.createFromToken(ERC20Token.VTHO);
+amount.setDecimalAmount("11.12");
+ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO, Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"), amount);
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 80000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
+
+String raw = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
+
+logger.info("raw=" + raw);
+
+raw=0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
+
+```
+
+#### Send VET to account：
+
+```
+byte chainTag = BlockchainClient.getChainTag();
+byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST).toByteArray();
+Amount amount = Amount.createFromToken( AbstractToken.VET);
+amount.setDecimalAmount( "21.12" );
+ToClause clause = TransactionClient.buildVETToClause(
+        Address.fromHexString( "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),  // reveiver address
+        amount,                                                                 // transfer amount
+        ToData.ZERO );                                                          // The default value ToData.ZERO
+//construct RawTransaction
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x0, CryptoUtils.generateTxNonce(), clause);
+
+String raw = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
+
+logger.info("raw=" + raw);
+
+raw=0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
+
+```
+
+#### Send VTHO to account:
+
+```
+byte chainTag = BlockchainClient.getChainTag();
+// null means the best block
+byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
+Amount amount = Amount.createFromToken( ERC20Token.VTHO);
+amount.setDecimalAmount( "11.12" );
+// construct transaction clause
+ToClause clause = ERC20Contract.buildTranferToClause( 
+        ERC20Token.VTHO,                                                        // the default ERC20Token.VTHO
+        Address.fromHexString("0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),    // receiver address
+        amount);                                                                // transfer amount
+RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x0, CryptoUtils.generateTxNonce(), clause);
+
+TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
+logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
+
+```
+
+#### Call Contract view method:
 
 ```
 
@@ -83,95 +181,126 @@ ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString(
 ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
 
 ```
-- Get code on a address.
+#### Query transaction:
 
 ```
-Address tokenAddr = Address.VTHO_Address;
-AccountCode code = AccountClient.getAccountCode(tokenAddr, null);
-logger.info("code:" + JSON.toJSONString(code));
+Transaction transaction = TransactionClient.getTransaction(txId, isRaw, Revision);
 
-```
-
-- - - -
-### TransactionClient
-- Send VET to account
-
-```
-byte chainTag = BlockchainClient.getChainTag();
-byte[] blockRef = BlockchainClient.getBlockRef( Revision.BEST).toByteArray();
-Amount amount = Amount.createFromToken( AbstractToken.VET);
-amount.setDecimalAmount( "21.12" );
-ToClause clause = TransactionClient.buildVETToClause(
-        Address.fromHexString( "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),  // reveiver address
-        amount,                                                                 // transfer amount
-        ToData.ZERO );                                                          // The default value ToData.ZERO
-//construct RawTransaction
-RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
-//sign and transfer
-TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
-logger.info( "transfer vet result:" + JSON.toJSONString( result ) );
-
-```
-
-- Send VTHO to account
-
-```
-byte chainTag = BlockchainClient.getChainTag();
-// null means the best block
-byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
-Amount amount = Amount.createFromToken( ERC20Token.VTHO);
-amount.setDecimalAmount( "11.12" );
-// construct transaction clause
-ToClause clause = ERC20Contract.buildTranferToClause( 
-        ERC20Token.VTHO,                                                        // the default ERC20Token.VTHO
-        Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),    // receiver address
-        amount);                                                                // transfer amount
-RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 80000, (byte)0x01, CryptoUtils.generateTxNonce(), clause);
-
-TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
-logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
-
-```
-
-- Query transaction receipt
-
-```
-//query receipt info
-Receipt receipt = TransactionClient.getTransactionReceipt("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", null);
-logger.info("Receipt:" + JSON.toJSONString(receipt));
-
-```
-
-- Query transaction
-
-```
+eg.
 Transaction transaction = TransactionClient.getTransaction("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", true, null);
 logger.info("Transaction:" + JSON.toJSONString(transaction));
 
 ```
 
-- - - -
-### BlockClient
-You can get block by specified the block revision.
+#### Query transaction receipt
 
 ```
+Receipt receipt = TransactionClient.getTransactionReceipt(txid, Revision);
+
+eg. 
+//query receipt info
+Receipt receipt = TransactionClient.getTransactionReceipt("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", null);
+logger.info("Receipt:" + JSON.toJSONString(receipt));
+Receipt:
+{
+  "block": {
+    "id": "0x00026b141a583c5d728f99ab305948c6299935af740465fc89a8f3c9ae825bfd",
+    "number": 158484,
+    "timestamp": 1530013840
+  },
+  "gasPayer": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
+  "gasUsed": 21000,
+  "outputs": [
+    {
+      "events": [],
+      "transfers": [
+        {
+          "amount": "0x125195019f8400000",
+          "recipient": "0xc71adc46c5891a8963ea5a5eeaf578e0a2959779",
+          "sender": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a"
+        }
+      ]
+    }
+  ],
+  "paid": "0x1236efcbcbb340000",
+  "reverted": false,
+  "reward": "0x576e189f04f60000",
+  "tx": {
+    "id": "0xb7a36e2e2ea92aad8aa90dfa7850eee743d9fc9855f364adf45c145e74d2995f",
+    "origin": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a"
+  }
+}
+
+```
+
+
+- - - -
+### BlockClient
+
+#### Get block:
+
+```
+Get specified block:
 Revision revision = Revision.create(0);
 Block block = BlockClient.getBlock(revision);
 logger.info("block:" + JSON.toJSONString(block));
+block:
+{
+  "beneficiary": "0x0000000000000000000000000000000000000000",
+  "gasLimit": 10000000,
+  "gasUsed": 0,
+  "id": "0x00000000ef3b214ad627b051f42add3b93b2f913f2594b94a64b2377b0f9159a",
+  "isTrunk": true,
+  "number": "0",
+  "parentID": "0xffffffff00000000000000000000000000000000000000000000000000000000",
+  "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
+  "signer": "0x0000000000000000000000000000000000000000",
+  "size": 170,
+  "stateRoot": "0x120df3368f409525ed30fd98c999af8d66bfa553cae14005fc3b7f00bcc60de1",
+  "timestamp": 1528387200,
+  "totalScore": 0,
+  "transactions": [],
+  "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
+}
+
+or
+
+Get best block:
+Block block = BlockClient.getBlock(Revision.BEST);
+logger.info("block:" + JSON.toJSONString(block));
+block:
+{
+  "beneficiary": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+  "gasLimit": 10448965,
+  "gasUsed": 0,
+  "id": "0x00026bfa7cbbd7c8cf643e45eadff1ddce1395cc47a5c08c521498f693381840",
+  "isTrunk": true,
+  "number": "158714",
+  "parentID": "0x00026bf9c0828062b25d0b23df0c99f6571af389d273961b82c90906a0a96b1b",
+  "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
+  "signer": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+  "size": 239,
+  "stateRoot": "0xa8dd31b95e227b92e800d65c824d2fb124a36e924b398252ec995d3611a69d43",
+  "timestamp": 1530016140,
+  "totalScore": 1034108,
+  "transactions": [],
+  "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
+}
 
 ```
 
 - - - -
 ### LogsClient
 You can get events logs and transfer logs, the api is also supporting pagination query.
-- Query events logs.
+
+#### Query events logs
 
 ```
 EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
 ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.DESC, null);
 
 ```
-- Query transfer logs.
+#### Query transfer logs
 
 ```
 TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
@@ -180,16 +309,17 @@ ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
 
 - - - -
 ### BlockchainClient
+
 You can get the chain tag and block reference.
 
-- Get chain tag
+#### Get chain tag:
 
 ```
 byte chainTag = BlockchainClient.getChainTag();
 int chainTagInt = chainTag & 0xff;
 logger.info( "chainTag: " + chainTagInt);
 ```
-- Get block reference
+#### Get block reference:
 
 ```
 Revision revision = Revision.create(0);
@@ -202,7 +332,7 @@ logger.info("blockRef;" + BytesUtils.toHexString(block.blockRef().toByteArray(),
 ### ProtoTypeClient
 The detail information you can refer to the page[ProtoType Wiki](https://github.com/vechain/thor/wiki/Prototype(CN))
 
-- Get master address 
+#### Get master address:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
@@ -210,43 +340,48 @@ logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
 
 ```
 
-- Set master address
+#### Set master address:
 
 ```
-TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create(privateKey ) );
+TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create(privateKey ) );
 logger.info( "result: " + JSON.toJSONString( result ) );
 
 ```
 
-- Add user
+#### Add user:
 
 ```
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
         new Address[]{Address.fromHexString(UserAddress)},
-        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
+        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
+
 
 ```
 
-- Check if it is user
+#### Check if it is user:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) ,Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ),
         Revision.BEST);
 logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 ```
-- Remove user
+
+#### Remove user:
 
 ```
+String targetAddress = "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A";
+String userAddress = "0xba5f00a28f732f23ba946c594716496ebdc9aef5";
+String privateKey = "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f";
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
-      new Address[]{Address.fromHexString( fromAddress )},
-      new Address[]{Address.fromHexString( UserAddress)},
-        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( privateKey ) );
+      new Address[]{Address.fromHexString( targetAddress )},
+      new Address[]{Address.fromHexString( userAddress)},
+        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( privateKey ) );
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 
 ```
-- Set User plan
+#### Set User plan:
 
 ```
 Amount credit = Amount.VTHO();
@@ -258,18 +393,19 @@ TransferResult result = ProtoTypeContractClient.setUserPlans(
         new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A")},
         new Amount[]{credit},
         new Amount[]{recovery},
-        ContractClient.GasLimit, (byte)0x1, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
+        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
 logger.info( "set user plans:" + JSON.toJSONString( result ) );
 
 ```
-- Get User plan
+#### Get User plan:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
 logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
-- Get User credits
+
+#### Get User credits:
 
 ```
 ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
@@ -280,13 +416,56 @@ logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
 
 ```
 
+#### Multiple Party Payment:
+
+
+```
+String targetAddress = "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A";
+String userAddress = "0xba5f00a28f732f23ba946c594716496ebdc9aef5";
+String privateKey = "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f";
+// set expiration block
+int expirationBlock = 720;
+
+long start = System.currentTimeMillis();
+//add user(UserAddress) to owner (fromAddress)
+TransferResult transferResult = ProtoTypeContractClient.addUser(
+	new Address[] { Address.fromHexString(targetAddress) },   //target address to add user
+	new Address[] { Address.fromHexString(userAddress) },     //user address to be added
+        TransactionClient.ContractGasLimit,                       //TransactionClient.ContractGasLimit = 70000 gas
+	(byte) 0x0,                                               //gasCoef
+	expirationBlock,                                          //720 block
+	ECKeyPair.create(privateKey));
+if (transferResult != null) {
+    logger.info("Add user:" + JSON.toJSONString(transferResult));
+}
+
+start = System.currentTimeMillis();
+Amount credit = Amount.VTHO();
+credit.setDecimalAmount("100.00");
+Amount recovery = Amount.VTHO();
+recovery.setDecimalAmount("0.00001");
+//set user plan 
+TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(
+	new Address[] { Address.fromHexString(targetAddress) }, 
+	new Amount[] { credit },
+        new Amount[] { recovery }, 
+	TransactionClient.ContractGasLimit, 
+	(byte) 0x0, 720, 
+	ECKeyPair.create(privateKey));
+if (setUserPlansResult != null) {
+    logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
+} 
+
+```
+
 
 - - - -
-### Run the test.
+### Run the test
+
 Some case may be failed because of the account or block is not existed on your blockchain env.
 
 ```
-mvn clean install  -Dmaven.test.skip=true
+mvn clean install
 
 ```
 
@@ -306,15 +485,75 @@ Run the following command:
 
 There is a example transaction file in src/main/resources/exchange_example.xlsx
 
+#### Get chainTag: 
+
 ```
  
-Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
+eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag "http://localhost:8669"
   ChainTag:
   0x9a
+```
+
+
+#### Get blockRef: 
+
+```
+  java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
+
+  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef "http://localhost:8669"
   
-- Get block: java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
+  BlockRef:
+  0x000245e360d4cd1b
+  
+```
+
+#### Create wallet: 
+
+```
+java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
+
+The keystore.json file will be generated in current folder.
+
+eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
+
+  
+The wallet created successfully and the key store is: 
+  
+  {
+    "address": "0xc283b29b9e46ec62b1cc78d95ad2598e58f8af17",
+    "crypto": {
+      "cipher": "aes-128-ctr",
+      "cipherparams": {
+        "iv": "8bd06ab3901ec874c35c396736624800"
+      },
+      "ciphertext": "f69d08d62cdadae76da47e76e6d59b7c60e8e2bb8919c785bac0f6f8621ddfed",
+      "kdf": "scrypt",
+      "kdfparams": {
+        "dklen": 32,
+        "n": 262144,
+        "p": 1,
+        "r": 8,
+        "salt": "b4e5b39cadcb66f4682f7863dde854b4a87b3810864d1ab6fafd1cdc923a2a1c"
+      },
+      "mac": "a2ee21d526a1d0113fde864bf67c55ff2b2cd85fc6a8f232e21d3b59da9790b3"
+    },
+    "id": "656a8193-a670-48fc-bbf7-eedbdb2dd5e7",
+    "version": 3
+  }
+  
+  The wallet created successfully and the privateKey is:
+  0x5eabfe97a3854a16b2194ff18baf14471809896c73627414c7fbd35bd7431014
+  
+```
+
+
+
+#### Get block: 
+
+```
+ java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
 
   eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock "http://localhost:8669"
   
@@ -337,7 +576,13 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
     transactions: [ '0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710' ] 
   }
   
-- Get transaction: java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
+```
+
+#### Get transaction: 
+
+```
+  
+java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
 
   eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669"
   
@@ -372,9 +617,13 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
       "blockNumber": 148847
   }
   
+```
+
+#### Get transaction receipt: 
+
+```
   
-  
-  - Get transaction receipt: java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
+ java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
   
   eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt "0x255576013fd61fa52f69d5d89af8751731d5e9e17215b0dd6c33af51bfe28710"  "http://localhost:8669" 
   
@@ -429,55 +678,27 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
       "status": "0x1"
   }
   
+```
 
-  
-- Get blockRef: java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
+#### Sign VET transactions: 
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef "http://localhost:8669"
-  
-  BlockRef:
-  0x000245e360d4cd1b
-  
-- Create wallet: java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
+```
+java -jar thor-client-sdk4j-0.0.2.jar signVET {your-file-path} {privateKey}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet "my@wallet@pass"
-  
-  The wallet created successfully and the key store is:
-  
-  {
-    "address": "0xc283b29b9e46ec62b1cc78d95ad2598e58f8af17",
-    "crypto": {
-      "cipher": "aes-128-ctr",
-      "cipherparams": {
-        "iv": "8bd06ab3901ec874c35c396736624800"
-      },
-      "ciphertext": "f69d08d62cdadae76da47e76e6d59b7c60e8e2bb8919c785bac0f6f8621ddfed",
-      "kdf": "scrypt",
-      "kdfparams": {
-        "dklen": 32,
-        "n": 262144,
-        "p": 1,
-        "r": 8,
-        "salt": "b4e5b39cadcb66f4682f7863dde854b4a87b3810864d1ab6fafd1cdc923a2a1c"
-      },
-      "mac": "a2ee21d526a1d0113fde864bf67c55ff2b2cd85fc6a8f232e21d3b59da9790b3"
-    },
-    "id": "656a8193-a670-48fc-bbf7-eedbdb2dd5e7",
-    "version": 3
-  }
-  
-  The wallet created successfully and the privateKey is:
-  0x5eabfe97a3854a16b2194ff18baf14471809896c73627414c7fbd35bd7431014
-  
-- Sign transactions: java -jar thor-client-sdk4j-0.0.2.jar signVET {your-file-path} {privateKey}
-  java -jar thor-client-sdk4j-0.0.2.jar signVET src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
+eg. java -jar thor-client-sdk4j-0.0.2.jar signVET src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
   
   Raw Transaction:
   0xf902d6819a8702288058b9af928202d0f90273e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f800008001830616988088ff9198c817655decc0b841bd61e198f126adddb169eebf5cd3da25ae3a3f07102e574bcd1368440d1e307c4c47884364e2abc66ef6940c4953758dd1c57f8255025639702104ce83e9a3b501
   
-- Send transactions: java -jar thor-client-sdk4j-0.0.2.jar sendVET {blockchain-server-url} {privateKey} {your-file-path}
+```
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar sendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
+#### Send VET transactions:
+
+```
+  
+java -jar thor-client-sdk4j-0.0.2.jar signAndSendVET {blockchain-server-url} {privateKey} {your-file-path}
+
+eg. java -jar thor-client-sdk4j-0.0.2.jar sendVET http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
   Send Result:
   {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
@@ -486,7 +707,18 @@ Get chainTag: java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-serv
 
 
 
+#### Send VET raw transactions:
 
+```
+  
+java -jar thor-client-sdk4j-0.0.2.jar sendVETRaw {blockchain-server-url} {raw}
+
+eg. java -jar thor-client-sdk4j-0.0.2.jar sendVET "http://localhost:8669"  “0xf83d819a87027fdeb459bd708202d0e0df94d3ef28df6b553ed2fc47259e8134319cb1121a2a880f8b0a10e470000080808252088088a5366487948cf3edc0”
+  
+  Send Result:
+  {"id":"0x4d5326eef692cb53d5cfb66e33571aba305848163318da85a334704143ae9c22"}
+
+```
 
 
 

@@ -20,7 +20,9 @@ import com.vechain.thorclient.core.model.clients.ToClause;
 import com.vechain.thorclient.core.model.clients.ToData;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
+import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.CryptoUtils;
+import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
@@ -66,7 +68,7 @@ public class TransactionClientTest extends BaseTest {
         amount.setDecimalAmount("11.12");
         ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO, Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"), amount);
         RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 80000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
-
+        logger.info("Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
         TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
         logger.info("transfer vethor result:" + JSON.toJSONString(result));
         Assert.assertNotNull(result);
@@ -80,6 +82,7 @@ public class TransactionClientTest extends BaseTest {
         amount.setDecimalAmount("1.12");
         ToClause clause = TransactionClient.buildVETToClause(Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A"), amount, ToData.ZERO);
         RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 21000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
+        logger.info("Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
         TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
         logger.info("transfer vet result:" + JSON.toJSONString(result));
         Assert.assertNotNull(result);
