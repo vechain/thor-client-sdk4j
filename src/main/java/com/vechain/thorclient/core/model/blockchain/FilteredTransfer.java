@@ -7,7 +7,7 @@ public class FilteredTransfer implements Serializable {
     private String recipient;
     private String value;
     private BlockContext block;
-    private TxContext tx;
+    private LogMeta meta;
 
     public String getSender() {
         return sender;
@@ -41,11 +41,12 @@ public class FilteredTransfer implements Serializable {
         this.block = block;
     }
 
-    public TxContext getTx() {
-        return tx;
+
+    public LogMeta getMeta() {
+        return meta;
     }
 
-    public void setTx(TxContext tx) {
-        this.tx = tx;
+    public void setMeta(LogMeta meta) {
+        this.meta = meta;
     }
 }
