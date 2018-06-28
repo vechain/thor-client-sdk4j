@@ -462,17 +462,25 @@ if (setUserPlansResult != null) {
 - - - -
 ### Run the test
 
-Some case may be failed because of the account or block is not existed on your blockchain env.
+Use maven to run full test case, which many need about 15 minutes to wait for the test case run, some case may be failed because of the account or block is not existed on your blockchain env.
 
 ```
 mvn clean install
 
 ```
 
+or you can skip test with
+
+```
+mvn clean install -Dmaven.test.skip=true
+
+```
 
 ### 4. Java console approach
 
-The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction; Run with maven：
+The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction, send transaction, get transaction, query transaction receipt; 
+
+Package the jar with maven
 
 ```
 mvn clean package -Dmaven.test.skip=true
@@ -481,7 +489,7 @@ The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.2.j
 
 ```
 
-Run the following command:
+Run the following command with jar
 
 There is a example transaction file in src/main/resources/exchange_example.xlsx, you need to replace the blockRef in this file.
 
@@ -492,20 +500,22 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx,
 java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
 
 eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag http://localhost:8669
-  ChainTag:
-  0x9a
+
+ChainTag:
+0x9a
+
 ```
 
 
 #### Get blockRef: 
 
 ```
-  java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef http://localhost:8669
-  
-  BlockRef:
-  0x000245e360d4cd1b
+eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef http://localhost:8669
+
+BlockRef:
+0x000245e360d4cd1b
   
 ```
 
@@ -554,25 +564,25 @@ The wallet created successfully and the key store is:
 ```
  java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock http://localhost:8669
-  
-  Block:
-  {
-  "beneficiary": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
-  "gasLimit": 10448965,
-  "gasUsed": 0,
-  "id": "0x000281ce7f291d3dea4d26c7eaf9104bdf0542e96df7fff3ff6df0b625412994",
-  "isTrunk": true,
-  "number": "164302",
-  "parentID": "0x000281cddb31b82e111b3d6e5a5896ff32216a91868da249723bf17fbdd3b596",
-  "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
-  "signer": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
-  "size": 239,
-  "stateRoot": "0xc7cef51188e95ab25721cd700b097f5fb47c5865046761c3fc60f83f025b3e2d",
-  "timestamp": 1530072030,
-  "totalScore": 1078802,
-  "transactions": [],
-  "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
+eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock http://localhost:8669
+
+Block:
+{
+"beneficiary": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+"gasLimit": 10448965,
+"gasUsed": 0,
+"id": "0x000281ce7f291d3dea4d26c7eaf9104bdf0542e96df7fff3ff6df0b625412994",
+"isTrunk": true,
+"number": "164302",
+"parentID": "0x000281cddb31b82e111b3d6e5a5896ff32216a91868da249723bf17fbdd3b596",
+"receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
+"signer": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
+"size": 239,
+"stateRoot": "0xc7cef51188e95ab25721cd700b097f5fb47c5865046761c3fc60f83f025b3e2d",
+"timestamp": 1530072030,
+"totalScore": 1078802,
+"transactions": [],
+"txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
 }
   
 ```
@@ -583,9 +593,10 @@ The wallet created successfully and the key store is:
   
 java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
 
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
-  Transaction:
-  {
+eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
+
+Transaction:
+{
   "block": {
     "id": "0x000281a71b862025b02427f3998303b04b897f02057e97184b8638d306d0c99b",
     "number": 164263,
@@ -605,12 +616,12 @@ java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchai
 
 ```
   
- java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
   
-  eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
   
-  Receipt:
-  {
+Receipt:
+{
   "block": {
     "id": "0x000281a71b862025b02427f3998303b04b897f02057e97184b8638d306d0c99b",
     "number": 164263,
@@ -658,8 +669,8 @@ java -jar thor-client-sdk4j-0.0.2.jar sign {your-file-path} {privateKey}
 
 eg. java -jar thor-client-sdk4j-0.0.2.jar sign src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
   
-  Raw Transaction:
-  0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
+Raw Transaction:
+0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
   
 ```
 
@@ -671,8 +682,8 @@ java -jar thor-client-sdk4j-0.0.2.jar signAndSend {blockchain-server-url} {priva
 
 eg. java -jar thor-client-sdk4j-0.0.2.jar signAndSend http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
-  Send Result:
- {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
+Send Result:
+{"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
 
 ```
 
@@ -686,8 +697,8 @@ java -jar thor-client-sdk4j-0.0.2.jar sendRaw {blockchain-server-url} {raw}
 
 eg. java -jar thor-client-sdk4j-0.0.2.jar sendRaw http://localhost:8669 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
   
-  Send Result:
- {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
+Send Result:
+{"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
 
 ```
 

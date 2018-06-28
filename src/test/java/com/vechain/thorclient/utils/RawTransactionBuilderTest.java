@@ -65,37 +65,4 @@ public class RawTransactionBuilderTest extends BaseTest {
 
     }
 
-    @Test
-    public void test() {
-
-
-//        HttpResponse<JsonNode> response = null;
-//        try {
-//            response = Unirest.get("https://vethor-node-test.vechaindev.com/accounts/0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A").header("content-type", "application/json; charset=utf-8").asJson();
-//        } catch (UnirestException e) {
-//            e.printStackTrace();
-//        }
-//        JSONObject res     = response.getBody().getObject();
-//        Object     balance = res.get("balance");
-//        System.out.print(balance);
-
-//        Map<String, String> map = new HashMap<String, String>();
-//        map.put("content-type", "application/json; charset=utf-8");
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("raw", "0xf90137819a870246ed960606d88202d0f8d8e394d418898c20f76aa1790082539bd7dac341e078db8c06765c7931c049c6289c000080e394929c34f1e5eff3f21a106362bc7ba12d0e6b07838c06765c7931c049c6289c000080e39477cbc87e41995931f64b89bab757d5aac7cae4288c06765c7931c049c6289c000080e394cf3166f0003838516aff6c4165d1e55aefbc1afd8c06765c7931c049c6289c000080e394b7c37d077690059dbbf74433069d4397de4568218c04d8c55ae1d809a7b49c000080e394bddc442a4bd68b4054782a1710943d358f4eda688c019d971e4207896acc9c000080808301b9688085b2f3ff256ec0b8418ccaf764c91f0afde16c70c7a1162480fa7a1ad7fb75a9ad5e2447f2e50667586ecf3f51a45a07477e9177e2d8fd169ba94f1fe22081c2c1055c8a79d929430a01");
-//        HttpUtils.post("https://vethor-node-test.vechaindev.com/transactions", map, jsonObject);
-
-
-        RequestBodyEntity RequestBodyEntity = Unirest.post("https://vethor-node-test.vechaindev.com/transactions")
-                .header("accept", "application/json")
-                .body(jsonObject);
-        try {
-            RequestBodyEntity.asJson();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
 }
