@@ -61,7 +61,7 @@ public  class Amount {
             throw ClientArgumentException.exception( "setHexValue argument hex value." );
         }
         String noPrefixAmount = StringUtils.sanitizeHex( hexAmount );
-        amount = BlockchainUtils.amount( noPrefixAmount, abstractToken.getPrecision().intValue(), abstractToken.getPrecision().intValue() );
+        amount = BlockchainUtils.amount( noPrefixAmount, abstractToken.getPrecision().intValue(), abstractToken.getScale().intValue() );
     }
 
     /**
