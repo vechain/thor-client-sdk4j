@@ -9,7 +9,6 @@ public class Receipt implements Serializable {
     private String paid; //hex form of defaultDecimalStringToByteArray of paid energy
     private String reward; //hex form of defaultDecimalStringToByteArray of reward
     private boolean reverted; //if it is true, then the transaction was reverted by blockchain network
-    private TxContext tx;
     private LogMeta meta;
 
     private ArrayList<ReceiptOutput> outputs;
@@ -60,14 +59,6 @@ public class Receipt implements Serializable {
 
     public void setReverted(boolean reverted) {
         this.reverted = reverted;
-    }
-
-    public TxContext getTx() {
-        return tx;
-    }
-
-    public void setTx(TxContext tx) {
-        this.tx = tx;
     }
 
     public  ArrayList<ReceiptOutput> getOutputs() {

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class FilteredEvent implements Serializable {
     private ArrayList<String> topics;
     private String data;
-    private BlockContext block;
-    private TxContext tx;
+    private LogMeta meta;
+
 
     public ArrayList<String> getTopics() {
         return topics;
@@ -25,19 +25,11 @@ public class FilteredEvent implements Serializable {
         this.data = data;
     }
 
-    public BlockContext getBlock() {
-        return block;
+    public LogMeta getMeta() {
+        return meta;
     }
 
-    public void setBlock(BlockContext block) {
-        this.block = block;
-    }
-
-    public TxContext getTx() {
-        return tx;
-    }
-
-    public void setTx(TxContext tx) {
-        this.tx = tx;
+    public void setMeta(LogMeta meta) {
+        this.meta = meta;
     }
 }
