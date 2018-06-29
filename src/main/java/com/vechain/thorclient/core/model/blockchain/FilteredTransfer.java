@@ -6,8 +6,7 @@ public class FilteredTransfer implements Serializable {
     private String sender;
     private String recipient;
     private String value;
-    private BlockContext block;
-    private TxContext tx;
+    private LogMeta meta;
 
     public String getSender() {
         return sender;
@@ -33,19 +32,14 @@ public class FilteredTransfer implements Serializable {
         this.value = value;
     }
 
-    public BlockContext getBlock() {
-        return block;
+
+
+
+    public LogMeta getMeta() {
+        return meta;
     }
 
-    public void setBlock(BlockContext block) {
-        this.block = block;
-    }
-
-    public TxContext getTx() {
-        return tx;
-    }
-
-    public void setTx(TxContext tx) {
-        this.tx = tx;
+    public void setMeta(LogMeta meta) {
+        this.meta = meta;
     }
 }

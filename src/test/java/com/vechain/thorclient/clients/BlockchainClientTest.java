@@ -1,6 +1,7 @@
 package com.vechain.thorclient.clients;
 
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class BlockchainClientTest extends BaseTest {
 
     @Test
-    public void testGetChainTag() throws IOException {
+    public void testGetChainTag() throws ClientArgumentException {
         byte chainTag = BlockchainClient.getChainTag();
         int chainTagInt = chainTag & 0xff;
         logger.info( "chainTag: " + chainTagInt);
@@ -21,7 +22,7 @@ public class BlockchainClientTest extends BaseTest {
     }
 
     @Test
-    public void testGetNodeStats() throws IOException{
+    public void testGetNodeStats() throws ClientArgumentException{
         ArrayList list = BlockchainClient.getPeerStatusList();
         logger.info( "nodes list:" + list );
         Assert.assertNotNull(list);

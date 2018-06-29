@@ -29,7 +29,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
-    static String hexId             = "0xb7a36e2e2ea92aad8aa90dfa7850eee743d9fc9855f364adf45c145e74d2995f";
+    static String hexId             = "0x19dd77d28ef70be8c924319a6c08b996dd456fa36f29f2427dbda90087a8a897";
     static String addUserTxId       = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
     static String removeUserTxId    = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
     static String setUserPlanTxId   = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
@@ -65,8 +65,8 @@ public class TransactionClientTest extends BaseTest {
         byte chainTag = BlockchainClient.getChainTag();
         byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
         Amount amount = Amount.createFromToken(ERC20Token.VTHO);
-        amount.setDecimalAmount("11.12");
-        ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO, Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"), amount);
+        amount.setDecimalAmount("60000");
+        ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO, Address.fromHexString("0x5034aa590125b64023a0262112b98d72e3c8e40e"), amount);
         RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 80000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
         logger.info("Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
         TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
@@ -79,8 +79,8 @@ public class TransactionClientTest extends BaseTest {
         byte chainTag = BlockchainClient.getChainTag();
         byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
         Amount amount = Amount.createFromToken(AbstractToken.VET);
-        amount.setDecimalAmount("1.12");
-        ToClause clause = TransactionClient.buildVETToClause(Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A"), amount, ToData.ZERO);
+        amount.setDecimalAmount("1998990000");
+        ToClause clause = TransactionClient.buildVETToClause(Address.fromHexString("0x5034aa590125b64023a0262112b98d72e3c8e40e"), amount, ToData.ZERO);
         RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 21000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
         logger.info("Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
         TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));

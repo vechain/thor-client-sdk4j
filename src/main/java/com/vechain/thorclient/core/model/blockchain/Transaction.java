@@ -22,10 +22,9 @@ public class Transaction implements Serializable {
 
     private String origin;
 
-    private BlockContext block;
-
     private String raw;
 
+    private  TxMeta meta;
 
     public String getId() {
         return id;
@@ -115,12 +114,12 @@ public class Transaction implements Serializable {
         this.origin = origin;
     }
 
-    public BlockContext getBlock() {
-        return block;
+    public TxMeta getMeta() {
+        return meta;
     }
 
-    public void setBlock(BlockContext block) {
-        this.block = block;
+    public void setMeta(TxMeta meta) {
+        this.meta = meta;
     }
 
     public String getRaw() {

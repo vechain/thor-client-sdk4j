@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,16 @@ public class RLPTest extends BaseTest {
         logger.info("RLP empty array:" + BytesUtils.toHexString(empty, Prefix.ZeroLowerX));
 
     }
+    @Test
+    public void testZero(){
+        List<RlpType> result = new ArrayList<>();
+        RlpList rlpList = new RlpList(result);
+        result.add( RlpString.create( BigInteger.ZERO));
+        byte[] empty =  RlpEncoder.encode(rlpList);
+
+        logger.info("RLP zero array:" + BytesUtils.toHexString(empty, Prefix.ZeroLowerX));
+    }
+
     @Test
     public void testBytesZero(){
         List<RlpType> result = new ArrayList<>();

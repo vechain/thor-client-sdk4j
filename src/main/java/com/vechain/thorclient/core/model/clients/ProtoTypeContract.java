@@ -16,19 +16,16 @@ public class ProtoTypeContract extends AbstractContract{
     }
 
 
-
-
-
     private  final static String ProtoTypeABI = "[\n" +
             "    {\n" +
             "        \"constant\": false,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"newMaster\",\n" +
+            "                \"name\": \"_newMaster\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -43,11 +40,11 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"user\",\n" +
+            "                \"name\": \"_user\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -66,11 +63,11 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"key\",\n" +
+            "                \"name\": \"_key\",\n" +
             "                \"type\": \"bytes32\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -89,11 +86,11 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"blockNumber\",\n" +
+            "                \"name\": \"_blockNumber\",\n" +
             "                \"type\": \"uint256\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -112,11 +109,11 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": false,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"user\",\n" +
+            "                \"name\": \"_user\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -131,7 +128,7 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -150,11 +147,34 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": false,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"sponsorAddress\",\n" +
+            "                \"name\": \"_credit\",\n" +
+            "                \"type\": \"uint256\"\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"name\": \"_recoveryRate\",\n" +
+            "                \"type\": \"uint256\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"name\": \"setCreditPlan\",\n" +
+            "        \"outputs\": [\n" +
+            "        ],\n" +
+            "        \"payable\": false,\n" +
+            "        \"stateMutability\": \"nonpayable\",\n" +
+            "        \"type\": \"function\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "        \"constant\": false,\n" +
+            "        \"inputs\": [\n" +
+            "            {\n" +
+            "                \"name\": \"_self\",\n" +
+            "                \"type\": \"address\"\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"name\": \"_sponsor\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -169,34 +189,11 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
-            "                \"type\": \"address\"\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"name\": \"userPlan\",\n" +
-            "        \"outputs\": [\n" +
-            "            {\n" +
-            "                \"name\": \"credit\",\n" +
-            "                \"type\": \"uint256\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"name\": \"recoveryRate\",\n" +
-            "                \"type\": \"uint256\"\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"payable\": false,\n" +
-            "        \"stateMutability\": \"view\",\n" +
-            "        \"type\": \"function\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "        \"constant\": true,\n" +
-            "        \"inputs\": [\n" +
-            "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"blockNumber\",\n" +
+            "                \"name\": \"_blockNumber\",\n" +
             "                \"type\": \"uint256\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -215,38 +212,11 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": false,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
-            "                \"type\": \"address\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"name\": \"user\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
-            "        \"name\": \"addUser\",\n" +
-            "        \"outputs\": [\n" +
-            "        ],\n" +
-            "        \"payable\": false,\n" +
-            "        \"stateMutability\": \"nonpayable\",\n" +
-            "        \"type\": \"function\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "        \"constant\": false,\n" +
-            "        \"inputs\": [\n" +
-            "            {\n" +
-            "                \"name\": \"self\",\n" +
-            "                \"type\": \"address\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"name\": \"credit\",\n" +
-            "                \"type\": \"uint256\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"name\": \"recoveryRate\",\n" +
-            "                \"type\": \"uint256\"\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"name\": \"setUserPlan\",\n" +
+            "        \"name\": \"sponsor\",\n" +
             "        \"outputs\": [\n" +
             "        ],\n" +
             "        \"payable\": false,\n" +
@@ -257,7 +227,49 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
+            "                \"type\": \"address\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"name\": \"creditPlan\",\n" +
+            "        \"outputs\": [\n" +
+            "            {\n" +
+            "                \"name\": \"credit\",\n" +
+            "                \"type\": \"uint256\"\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"name\": \"recoveryRate\",\n" +
+            "                \"type\": \"uint256\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"payable\": false,\n" +
+            "        \"stateMutability\": \"view\",\n" +
+            "        \"type\": \"function\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "        \"constant\": false,\n" +
+            "        \"inputs\": [\n" +
+            "            {\n" +
+            "                \"name\": \"_self\",\n" +
+            "                \"type\": \"address\"\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"name\": \"_user\",\n" +
+            "                \"type\": \"address\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"name\": \"addUsers\",\n" +
+            "        \"outputs\": [\n" +
+            "        ],\n" +
+            "        \"payable\": false,\n" +
+            "        \"stateMutability\": \"nonpayable\",\n" +
+            "        \"type\": \"function\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "        \"constant\": true,\n" +
+            "        \"inputs\": [\n" +
+            "            {\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -276,7 +288,7 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -292,33 +304,14 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"type\": \"function\"\n" +
             "    },\n" +
             "    {\n" +
-            "        \"constant\": false,\n" +
-            "        \"inputs\": [\n" +
-            "            {\n" +
-            "                \"name\": \"self\",\n" +
-            "                \"type\": \"address\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"name\": \"yesOrNo\",\n" +
-            "                \"type\": \"bool\"\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"name\": \"sponsor\",\n" +
-            "        \"outputs\": [\n" +
-            "        ],\n" +
-            "        \"payable\": false,\n" +
-            "        \"stateMutability\": \"nonpayable\",\n" +
-            "        \"type\": \"function\"\n" +
-            "    },\n" +
-            "    {\n" +
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"user\",\n" +
+            "                \"name\": \"_user\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
@@ -334,14 +327,29 @@ public class ProtoTypeContract extends AbstractContract{
             "        \"type\": \"function\"\n" +
             "    },\n" +
             "    {\n" +
+            "        \"constant\": false,\n" +
+            "        \"inputs\": [\n" +
+            "            {\n" +
+            "                \"name\": \"_self\",\n" +
+            "                \"type\": \"address\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"name\": \"unsponsor\",\n" +
+            "        \"outputs\": [\n" +
+            "        ],\n" +
+            "        \"payable\": false,\n" +
+            "        \"stateMutability\": \"nonpayable\",\n" +
+            "        \"type\": \"function\"\n" +
+            "    },\n" +
+            "    {\n" +
             "        \"constant\": true,\n" +
             "        \"inputs\": [\n" +
             "            {\n" +
-            "                \"name\": \"self\",\n" +
+            "                \"name\": \"_self\",\n" +
             "                \"type\": \"address\"\n" +
             "            },\n" +
             "            {\n" +
-            "                \"name\": \"sponsorAddress\",\n" +
+            "                \"name\": \"_sponsor\",\n" +
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +

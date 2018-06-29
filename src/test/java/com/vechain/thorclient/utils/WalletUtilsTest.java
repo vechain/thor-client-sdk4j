@@ -2,6 +2,7 @@ package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.wallet.WalletInfo;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -20,25 +21,22 @@ public class WalletUtilsTest extends BaseTest {
 		logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
 		/**
 		 *
-		 * 2018-06-19 15:12:50.351 INFO 23601 --- [ main] thorclient :
-		 * KeyStore:{"address":"0xf56a23f7b9c3b1fd68d812e3d2357bbe68bfd087","crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"f390a8c9328ea46779cb17d02d7ef2a5"},"ciphertext":"622375a3ae80035f99b19d17639b1c4da12153d60b6735a3009065aa38766f64","kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"c2d13d5476d7b807c8630cf931f4e0e474bbeae590fa43f90197214aa607d426"},"mac":"10cdadfdb6ecdeec40fe3330480a2978dff4d10c02e5d7231a88cafe7af711af"},"id":"6417d351-1cb9-421b-b446-1bd7f887dfbe","version":3}
-		 * 2018-06-19 15:12:50.352 INFO 23601 --- [ main] thorclient :
-		 * privKey:0x493241296c17302e66e5da072673bd2161f6f2d3b7a72c87562685e107b28e7f
-		 * 2018-06-19 15:12:50.353 INFO 23601 --- [ main] thorclient :
-		 * pubKey:0xbdb4aa66b6df60fca14a7b3874d6ad95597fd92711e483259509546156f16d6c237a82619dade08ea4db14488495cb5066245d585e975ce0aa7a4d8ae3445570
-		 * 2018-06-19 15:12:50.354 INFO 23601 --- [ main] thorclient :
-		 * address:0xf56a23f7b9c3b1fd68d812e3d2357bbe68bfd087
+		 * 2018-06-29  12:41:43.862 [main] INFO  com.vechain.thorclient.utils.WalletUtilsTest - KeyStore:{"address":"0xdc4e3ba38f2ed4d270885dd7d0f95e3d09fbd902","crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"47f69a61721e6c9aa0453301db38b6dd"},"ciphertext":"c7a3da20adcc15b11a1cd979a717e84756ac24205345ad5a9c96a90a81d6fb4d","kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"14220482313d30f4ff7978908a87366827d9185a104632e46cf008dcf7b9fcf7"},"mac":"4f3d60c781849557159aa81d1d34292bf133d8e87d441169aed643e7264a4cda"},"id":"6870071a-d9d3-4e2c-9148-6b52886a5129","version":3}
+         2018-06-29  12:41:43.864 [main] INFO  com.vechain.thorclient.utils.WalletUtilsTest - privKey:0x21cff7040a640d856a8e6ea201baf33afdbdba47f03ed603e32d025d236cc4df
+         2018-06-29  12:41:43.865 [main] INFO  com.vechain.thorclient.utils.WalletUtilsTest - pubKey:0xc0af301ba423508103c231e0b0e320fa6cddfee7154a411c0deca5937365b933817864c9839bcbbd45aec1b3aa3e6658639709ea34c0acfef41746f79614ccaa
+         2018-06-29  12:41:43.866 [main] INFO  com.vechain.thorclient.utils.WalletUtilsTest - address:0xdc4e3ba38f2ed4d270885dd7d0f95e3d09fbd902
 		 */
 	}
 
 	@Test
 	public void testloadWallet() {
-		String keyStore = "{\"address\":\"0xf56a23f7b9c3b1fd68d812e3d2357bbe68bfd087\",\"crypto\":{\"cipher\":\"aes-128-ctr\",\"cipherparams\":{\"iv\":\"f390a8c9328ea46779cb17d02d7ef2a5\"},\"ciphertext\":\"622375a3ae80035f99b19d17639b1c4da12153d60b6735a3009065aa38766f64\",\"kdf\":\"scrypt\",\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8,\"salt\":\"c2d13d5476d7b807c8630cf931f4e0e474bbeae590fa43f90197214aa607d426\"},\"mac\":\"10cdadfdb6ecdeec40fe3330480a2978dff4d10c02e5d7231a88cafe7af711af\"},\"id\":\"6417d351-1cb9-421b-b446-1bd7f887dfbe\",\"version\":3}";
-		WalletInfo walletInfo = WalletUtils.loadKeystore(keyStore, "123456");
+		String keyStore = "{\"version\":3,\"id\":\"F282FCC0-8A7F-4A1A-A8E1-14BA6A374489\",\"crypto\":{\"ciphertext\":\"3f1ed845d6a7bcc830a6dfdd494b114bfa42376c87da168421efe129a04cf9a8\",\"cipherparams\":{\"iv\":\"a9d5d891c61d254b0697d1b0a3fa0c0c\"},\"kdf\":\"scrypt\",\"kdfparams\":{\"r\":8,\"p\":1,\"n\":262144,\"dklen\":32,\"salt\":\"fe4ee1e137097135937ea43e826ed12d224348a1d1291c3c88d3c99f2753cc39\"},\"mac\":\"cb953016a95dd67dcc259068986efa852c3e8eab9fa73d5ec7f53c2405321f62\",\"cipher\":\"aes-128-ctr\"},\"address\":\"866a849122133888214ac9fc59550077adf14975\"}\n";
+		WalletInfo walletInfo = WalletUtils.loadKeystore(keyStore, "Vechain1234");
 
 		logger.info("privKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
 		logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
 		logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
+        Assert.assertEquals("0x866a849122133888214ac9fc59550077adf14975", walletInfo.getKeyPair().getHexAddress());
 	}
 
 
