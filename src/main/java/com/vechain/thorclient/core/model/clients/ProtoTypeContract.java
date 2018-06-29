@@ -258,7 +258,7 @@ public class ProtoTypeContract extends AbstractContract{
             "                \"type\": \"address\"\n" +
             "            }\n" +
             "        ],\n" +
-            "        \"name\": \"addUser\",\n" +
+            "        \"name\": \"addUsers\",\n" +
             "        \"outputs\": [\n" +
             "        ],\n" +
             "        \"payable\": false,\n" +
