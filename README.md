@@ -2,6 +2,8 @@
 - - - -
 A SDK for client toolkit to call Restful API.
 
+Requires JDK8.
+
 ## License
 Thor Java Client SDK is licensed under the GNU Lesser General Public License v3.0, also included in LICENSE file in repository.
 - - - -
@@ -34,15 +36,41 @@ logger.info("KeyStore:" + keyStoreString);
 logger.info("privKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
 logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
 logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
-		
+
+KeyStore:
+{
+  "address": "0x2a200dd7a805db17e9cecbb8e33067306dca143b",
+  "crypto": {
+    "cipher": "aes-128-ctr",
+    "cipherparams": {
+      "iv": "f8ab97c61fa736a5cb040b1912f9075c"
+    },
+    "ciphertext": "0def4f8fad25b5169178f02c93b53c1a7fcbcdbe6b7e960b2e8badcf8098d878",
+    "kdf": "scrypt",
+    "kdfparams": {
+      "dklen": 32,
+      "n": 262144,
+      "p": 1,
+      "r": 8,
+      "salt": "e7c337c143029a8ce4ea41153747fc3b103e7c416040a907c36c32f9ca34dbb6"
+    },
+    "mac": "af1fc6fed812610ce13daaae8bb5dd1e83eba3d100675a9ae07de9357952fc8e"
+  },
+  "id": "8df9173d-4c05-4a7e-b847-69ccf490db06",
+  "version": 3
+}
+privKey:0xe5a7eec8266f6b5ed3c9578944e22d396228d9cd9ef36d26497edc89237104f0
+pubKey:0x60c40e63d06929b338812757462f3f7b54ddb888f9acc1d4b269c553d423169e8efd06e914d180def23150dbdca76eceee18ea19ec7c7ab11b2747e17a8a960f
+address:0x2a200dd7a805db17e9cecbb8e33067306dca143b
+
 ```
 
 #### Load keystore:
 
 ```
 
-String keyStore = "{\"address\":\"0xf56a23f7b9c3b1fd68d812e3d2357bbe68bfd087\",\"crypto\":{\"cipher\":\"aes-128-ctr\",\"cipherparams\":{\"iv\":\"f390a8c9328ea46779cb17d02d7ef2a5\"},\"ciphertext\":\"622375a3ae80035f99b19d17639b1c4da12153d60b6735a3009065aa38766f64\",\"kdf\":\"scrypt\",\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8,\"salt\":\"c2d13d5476d7b807c8630cf931f4e0e474bbeae590fa43f90197214aa607d426\"},\"mac\":\"10cdadfdb6ecdeec40fe3330480a2978dff4d10c02e5d7231a88cafe7af711af\"},\"id\":\"6417d351-1cb9-421b-b446-1bd7f887dfbe\",\"version\":3}";
-		WalletInfo walletInfo = WalletUtils.loadKeystore(keyStore, "123456");
+String keyStore = "{\"address\":\"0x2a200dd7a805db17e9cecbb8e33067306dca143b\",\"crypto\":{\"cipher\":\"aes-128-ctr\",\"cipherparams\":{\"iv\":\"f8ab97c61fa736a5cb040b1912f9075c\"},\"ciphertext\":\"0def4f8fad25b5169178f02c93b53c1a7fcbcdbe6b7e960b2e8badcf8098d878\",\"kdf\":\"scrypt\",\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8,\"salt\":\"e7c337c143029a8ce4ea41153747fc3b103e7c416040a907c36c32f9ca34dbb6\"},\"mac\":\"af1fc6fed812610ce13daaae8bb5dd1e83eba3d100675a9ae07de9357952fc8e\"},\"id\":\"8df9173d-4c05-4a7e-b847-69ccf490db06\",\"version\":3}";
+WalletInfo walletInfo = WalletUtils.loadKeystore(keyStore, "123456");
 
 privateKey: BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
 publicKey: BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
@@ -80,7 +108,10 @@ account info:
 Address tokenAddr = Address.VTHO_Address;
 AccountCode code = AccountClient.getAccountCode(tokenAddr, null);
 logger.info("code:" + JSON.toJSONString(code));
-
+code:
+{
+  "code": "0x6080604052600436106100af576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806306fdde03146100b4578063095ea7b31461014457806318160ddd146101a957806323b872dd146101d4578063313ce5671461025957806370a082311461028a57806395d89b41146102e1578063a9059cbb14610371578063bb35783b146103d6578063d89135cd1461045b578063dd62ed3e14610486575b600080fd5b3480156100c057600080fd5b506100c96104fd565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156101095780820151818401526020810190506100ee565b50505050905090810190601f1680156101365780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561015057600080fd5b5061018f600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061053a565b604051808215151515815260200191505060405180910390f35b3480156101b557600080fd5b506101be61062b565b6040518082815260200191505060405180910390f35b3480156101e057600080fd5b5061023f600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506106d1565b604051808215151515815260200191505060405180910390f35b34801561026557600080fd5b5061026e610865565b604051808260ff1660ff16815260200191505060405180910390f35b34801561029657600080fd5b506102cb600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061086e565b6040518082815260200191505060405180910390f35b3480156102ed57600080fd5b506102f661094d565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561033657808201518184015260208101905061031b565b50505050905090810190601f1680156103635780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561037d57600080fd5b506103bc600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061098a565b604051808215151515815260200191505060405180910390f35b3480156103e257600080fd5b50610441600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506109a1565b604051808215151515815260200191505060405180910390f35b34801561046757600080fd5b50610470610b67565b6040518082815260200191505060405180910390f35b34801561049257600080fd5b506104e7600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610c0d565b6040518082815260200191505060405180910390f35b60606040805190810160405280600681526020017f566554686f720000000000000000000000000000000000000000000000000000815250905090565b6000816000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819055508273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925846040518082815260200191505060405180910390a36001905092915050565b60003073ffffffffffffffffffffffffffffffffffffffff1663592b389c6040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b15801561069157600080fd5b505af11580156106a5573d6000803e3d6000fd5b505050506040513d60208110156106bb57600080fd5b8101908080519060200190929190505050905090565b6000816000808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054101515156107c6576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601f8152602001807f6275696c74696e3a20696e73756666696369656e7420616c6c6f77616e63650081525060200191505060405180910390fd5b816000808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254039250508190555061085a848484610c93565b600190509392505050565b60006012905090565b60003073ffffffffffffffffffffffffffffffffffffffff1663ee660480836040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b15801561090b57600080fd5b505af115801561091f573d6000803e3d6000fd5b505050506040513d602081101561093557600080fd5b81019080805190602001909291905050509050919050565b60606040805190810160405280600481526020017f5654484f00000000000000000000000000000000000000000000000000000000815250905090565b6000610997338484610c93565b6001905092915050565b60003373ffffffffffffffffffffffffffffffffffffffff168473ffffffffffffffffffffffffffffffffffffffff161480610add57503373ffffffffffffffffffffffffffffffffffffffff163073ffffffffffffffffffffffffffffffffffffffff1663059950e9866040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b158015610a8a57600080fd5b505af1158015610a9e573d6000803e3d6000fd5b505050506040513d6020811015610ab457600080fd5b810190808051906020019092919050505073ffffffffffffffffffffffffffffffffffffffff16145b1515610b51576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f6275696c74696e3a2073656c66206f72206d617374657220726571756972656481525060200191505060405180910390fd5b610b5c848484610c93565b600190509392505050565b60003073ffffffffffffffffffffffffffffffffffffffff1663138d4d0c6040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b158015610bcd57600080fd5b505af1158015610be1573d6000803e3d6000fd5b505050506040513d6020811015610bf757600080fd5b8101908080519060200190929190505050905090565b60008060008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054905092915050565b6000811115610eaa573073ffffffffffffffffffffffffffffffffffffffff166339ed08d584836040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b158015610d3f57600080fd5b505af1158015610d53573d6000803e3d6000fd5b505050506040513d6020811015610d6957600080fd5b81019080805190602001909291905050501515610dee576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601d8152602001807f6275696c74696e3a20696e73756666696369656e742062616c616e636500000081525060200191505060405180910390fd5b3073ffffffffffffffffffffffffffffffffffffffff16631cedfac183836040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050600060405180830381600087803b158015610e9157600080fd5b505af1158015610ea5573d6000803e3d6000fd5b505050505b8173ffffffffffffffffffffffffffffffffffffffff168373ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef836040518082815260200191505060405180910390a35050505600a165627a7a72305820bd55cb9aff347dc60fe8280ae6b08a6f6deacc85a4e1c89ba0a8ef31fbcaecc60029"
+}
 ```
 
 ### TransactionClient
@@ -164,6 +195,7 @@ RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTra
 
 TransferResult result = TransactionClient.signThenTransfer( rawTransaction, ECKeyPair.create( privateKey ) );
 logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
+result:{"id":"0xbae8e1cf5d61e6d8a9765dd21cdf35abe919fefc8335d9f9ead13aa3e7f12c83"}
 
 ```
 
@@ -171,14 +203,26 @@ logger.info( "transfer vethor result:" + JSON.toJSONString( result ) );
 
 ```
 
-Address contractAddr = token.getContractAddress();
-Revision currRevision = revision;
-if(currRevision == null){
-    currRevision = Revision.BEST;
-}
+Address contractAddr = ERC20Token.VTHO.getContractAddress();
+Address address = Address.fromHexString(fromAddress);
+Revision currRevision = Revision.BEST;
 AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition("balanceOf");
-ContractCall call = ERC20Contract.buildCall( abiDefinition, address.toHexString( null ) );
-ContractCallResult contractCallResult = callContract(call, contractAddr,  currRevision );
+ContractCall call = ERC20Contract.buildCall(abiDefinition, address.toHexString(null));
+ContractCallResult contractCallResult = ERC20ContractClient.callContract(call, contractAddr, currRevision);
+
+contractCallResult:
+{
+  "data": "0x00000000000000000000000000000000000000000000001e0c2fcee984ee5c00",
+  "events": [
+    
+  ],
+  "gasUsed": 870,
+  "reverted": false,
+  "transfers": [
+    
+  ],
+  "vmError": ""
+}
 
 ```
 #### Query transaction:
@@ -187,8 +231,22 @@ ContractCallResult contractCallResult = callContract(call, contractAddr,  currRe
 Transaction transaction = TransactionClient.getTransaction(txId, isRaw, Revision);
 
 eg.
-Transaction transaction = TransactionClient.getTransaction("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", true, null);
+Transaction transaction = TransactionClient.getTransaction("0x2c405851ca789f48c51c8ede5fadf682fc6636a9aa7ca366328332a3472326ae", true, null);
 logger.info("Transaction:" + JSON.toJSONString(transaction));
+transaction:
+{
+  "chainTag": 0,
+  "expiration": 0,
+  "gas": 0,
+  "gasPriceCoef": 0,
+  "meta": {
+    "blockID": "0x000068536517b9017f2e39fd3b6811c60aa30ffbb4f7da102a76d9285133ba91",
+    "blockNumber": 26707,
+    "blockTimestamp": 1530281470
+  },
+  "raw": "0xf87e2786685288d071cd8202d0e0df94d3ef28df6b553ed2fc47259e8134319cb1121a2a880de0b6b3a764000080808252088088c5ca5b42e2071935c0b841d05e70cb0e59416db4e59d7d5f5db3908596c4140fa2d47ef082ab2405125726345ef4d58fdc895828feebba7295335aee60818425ed37ee7140e892dc21c1b001",
+  "size": 0
+}
 
 ```
 
@@ -199,36 +257,36 @@ Receipt receipt = TransactionClient.getTransactionReceipt(txid, Revision);
 
 eg. 
 //query receipt info
-Receipt receipt = TransactionClient.getTransactionReceipt("0xb7aaef583a70184cbd3cebc275c246ee91d05e04fb4b829f2a4a1cb0b1b1e829", null);
+Receipt receipt = TransactionClient.getTransactionReceipt("0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5", null);
 logger.info("Receipt:" + JSON.toJSONString(receipt));
 Receipt:
 {
-  "block": {
-    "id": "0x00026b141a583c5d728f99ab305948c6299935af740465fc89a8f3c9ae825bfd",
-    "number": 158484,
-    "timestamp": 1530013840
-  },
-  "gasPayer": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
+  "gasPayer": "0x866a849122133888214ac9fc59550077adf14975",
   "gasUsed": 21000,
+  "meta": {
+    "blockID": "0x000066e58079163edacb0bfe06b52a4d16cc646ce8039a2b7cf5136cbc9fb186",
+    "blockNumber": 26341,
+    "blockTimestamp": 1530277810,
+    "txID": "0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5",
+    "txOrigin": "0x866a849122133888214ac9fc59550077adf14975"
+  },
   "outputs": [
     {
-      "events": [],
+      "events": [
+        
+      ],
       "transfers": [
         {
-          "amount": "0x125195019f8400000",
-          "recipient": "0xc71adc46c5891a8963ea5a5eeaf578e0a2959779",
-          "sender": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a"
+          "amount": "0xde0b6b3a7640000",
+          "recipient": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
+          "sender": "0x866a849122133888214ac9fc59550077adf14975"
         }
       ]
     }
   ],
   "paid": "0x1236efcbcbb340000",
   "reverted": false,
-  "reward": "0x576e189f04f60000",
-  "tx": {
-    "id": "0xb7a36e2e2ea92aad8aa90dfa7850eee743d9fc9855f364adf45c145e74d2995f",
-    "origin": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a"
-  }
+  "reward": "0x576e189f04f60000"
 }
 
 ```
@@ -298,13 +356,191 @@ You can get events logs and transfer logs, the api is also supporting pagination
 ```
 EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
 ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.DESC, null);
-
+filteredEvents:
+[
+  {
+    "data": "0x00000000000000000000000000000000000000000000d3c21bcecceda1000000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000e59d475abe695c7f67a8a2321f33a856b0b4c71d",
+      "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed"
+    ],
+    "meta": {
+      "blockID": "0x00003ac13ec041f0ea2f879ccfcbb615133cfdfcbe5b43a74a6bf324c3bed3f2",
+      "txOrigin": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+      "blockNumber": 15041,
+      "txID": "0x316072e16a794a8f385e9f261a102c49947aa82a0355006289707b667e841cdc",
+      "blockTimestamp": 1530164810
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003acaccb7bb1f1a2e076d93962a51d85406ec99bf779a597b9bf0dd097cff",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15050,
+      "txID": "0xb4a52a0f29b6d3d8167bec9beb59b00a900f50fdd5dce9fa7f8617cf9f34a5d7",
+      "blockTimestamp": 1530164900
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003afe2e2c47397c53d131f8b3b5e74a4f836a27534157f8167a9f6ebcbf1e",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15102,
+      "txID": "0x92e3a650bd22b44bbb466b9fedce5fd2df0e5d16980ec6d2b24b58aaef4a7bed",
+      "blockTimestamp": 1530165420
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003b3f430768e28d5d1f385a016d9175ce0988284161dddea218d8461e745e",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15167,
+      "txID": "0x26d7652a1387ef533c09fce520d1741369df0b93ab75da3699be8e3c9eb2c695",
+      "blockTimestamp": 1530166070
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003b7342a5a3dc243416951126064cd5dae970843af551d90b16ccb322a730",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15219,
+      "txID": "0x8a816b4bffdf28f8a6ca0dad665272a648ab9c228c72474e04c72d34786a906d",
+      "blockTimestamp": 1530166590
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003be1f4aee587e1fe0f46dbb7df3398eb7ff8e8a008e8e70ef5376c012ca5",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15329,
+      "txID": "0xf9f57cbdd9b19cfcff8995c559cf5e24027fee9de52967ad9537c1170c9ee89e",
+      "blockTimestamp": 1530167690
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003bed75fc45259814edf7ba15eef2ef66b05af4484653ef9905ebddfcf203",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15341,
+      "txID": "0x1bd29b1968fa9d5b1cbe37d127e8ff5f82b68938f818268c11fdf21b94b11d2b",
+      "blockTimestamp": 1530167810
+    }
+  },
+  {
+    "data": "0x00000000000000000000000000000000000000000000001b1ae4d6e2ef500000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000e59d475abe695c7f67a8a2321f33a856b0b4c71d",
+      "0x0000000000000000000000008bb846743c94539f2f98f8a6b2cb5cd940eca6fa"
+    ],
+    "meta": {
+      "blockID": "0x00003c328e05084492de14e2c88b1662cb42ebba9d802b94365ad400cf3e5e0e",
+      "txOrigin": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+      "blockNumber": 15410,
+      "txID": "0x109023f8e6ca56082cf762871ed7367989f32330bf66895c680b993595591803",
+      "blockTimestamp": 1530168500
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003c52f23f8535b256e7008559cb990f180ada9e5bfc2b4932e2bc025fa489",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15442,
+      "txID": "0xc7d40c831629cb99015d59a2e9ae31a8ae9683d4141a211fc693f5709fdd6db7",
+      "blockTimestamp": 1530168820
+    }
+  },
+  {
+    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "topics": [
+      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+    ],
+    "meta": {
+      "blockID": "0x00003c6e767f8fe58b62c46541ada494b1c473d86237d24274502efd5cff266a",
+      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
+      "blockNumber": 15470,
+      "txID": "0x2455006b69a93b763696a00ee4af6be5bcd468148eae6133323299a093659318",
+      "blockTimestamp": 1530169100
+    }
+  }
+]
 ```
 #### Query transfer logs
 
 ```
 TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
+// filter condition: sender = 0xe59d475abe695c7f67a8a2321f33a856b0b4c71d or recipient = 0xe59d475abe695c7f67a8a2321f33a856b0b4c71d
+filter.addAddressSet(null, Address.fromHexString("0xe59d475abe695c7f67a8a2321f33a856b0b4c71d"), null);
+filter.addAddressSet(null, null, Address.fromHexString("0xe59d475abe695c7f67a8a2321f33a856b0b4c71d"));
 ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
+transferLogs:
+[
+  {
+    "amount": "0x152d02c7e14af6800000",
+    "sender": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+    "meta": {
+      "blockID": "0x00003abbf8435573e0c50fed42647160eabbe140a87efbe0ffab8ef895b7686e",
+      "txOrigin": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+      "blockNumber": 15035,
+      "txID": "0x9daa5b584a98976dfca3d70348b44ba5332f966e187ba84510efb810a0f9f851",
+      "blockTimestamp": 1530164750
+    },
+    "recipient": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed"
+  },
+  {
+    "amount": "0x204fb9313b5d211619800000",
+    "sender": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+    "meta": {
+      "blockID": "0x00003acbdaa137ddf8e2ebee923caebe8f82dece89b67b4f1cae85c097274f3b",
+      "txOrigin": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+      "blockNumber": 15051,
+      "txID": "0xf01eb38ccbe4111c8b80a34cf864ba3e23a1ba4ab0707415b9efe74d3ab54859",
+      "blockTimestamp": 1530164910
+    },
+    "recipient": "0x4f6fc409e152d33843cf4982d414c1dd0879277e"
+  },
+  {
+    "amount": "0x10f0cf064dd59200000",
+    "sender": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+    "meta": {
+      "blockID": "0x00003dd7d7820959bee931778065e33d418a88ceed23e5b13a59514ae4a9598d",
+      "txOrigin": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
+      "blockNumber": 15831,
+      "txID": "0x5a907f0912656d7bf76a7635c1420454da497e6beec4f025500c1778dd043906",
+      "blockTimestamp": 1530172710
+    },
+    "recipient": "0x50262b2622a5e75d57c5c26770bf4aebf076a9a9"
+  }
+]
 ```
 
 - - - -
@@ -318,13 +554,18 @@ You can get the chain tag and block reference.
 byte chainTag = BlockchainClient.getChainTag();
 int chainTagInt = chainTag & 0xff;
 logger.info( "chainTag: " + chainTagInt);
+chainTag: 39
+
 ```
 #### Get block reference:
 
 ```
+
 Revision revision = Revision.create(0);
 Block block = BlockClient.getBlock(revision);
 logger.info("blockRef;" + BytesUtils.toHexString(block.blockRef().toByteArray(), Prefix.ZeroLowerX));
+blockRef:0x000000000b2bce3c
+
 ```
 
 
@@ -335,84 +576,142 @@ The detail information you can refer to the page[ProtoType Wiki](https://github.
 #### Get master address:
 
 ```
-ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
+
+ContractCallResult callResult = ProtoTypeContractClient.getMasterAddress( Address.fromHexString( "0x866a849122133888214ac9fc59550077adf14975" ) , Revision.BEST);
 logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
+{
+  "data": "0x000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed",
+  "events": [
+    
+  ],
+  "gasUsed": 1058,
+  "reverted": false,
+  "transfers": [
+    
+  ],
+  "vmError": ""
+}
 
 ```
 
 #### Set master address:
 
 ```
-TransferResult result = ProtoTypeContractClient.setMasterAddress( new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) }, new Address[]{Address.fromHexString( fromAddress )},ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create(privateKey ) );
-logger.info( "result: " + JSON.toJSONString( result ) );
+String fromAddress = "0x866a849122133888214ac9fc59550077adf14975";
+String privateKey = "0x4aa49af0d1c105e70eb71d31e066d8d0f06e46927194e561ea302d57ad0c9ad1";
+ECKeyPair aECKeyPair = ECKeyPair.create(privateKey);
+TransferResult result = ProtoTypeContractClient.setMasterAddress(
+		new Address[] { Address.fromHexString(fromAddress) },
+		new Address[] { Address.fromHexString(masterAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
+		720, aECKeyPair);
+result: {"id":"0xbd4d94595b500bc9217839cc5b1987f4a277a277b6ede317a740480a28978ae2"}
 
 ```
 
 #### Add user:
 
 ```
+String fromAddress = "0x866a849122133888214ac9fc59550077adf14975";
+String privateKey = "0x4aa49af0d1c105e70eb71d31e066d8d0f06e46927194e561ea302d57ad0c9ad1";
+ECKeyPair aECKeyPair = ECKeyPair.create(privateKey);
+String userAddress = "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
-        new Address[]{Address.fromHexString(UserAddress)},
-        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
+        new Address[]{Address.fromHexString( userAddress )},
+        ContractClient.GasLimit, (byte)0x0, 720, aECKeyPair );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
-
+transferResult:{"id":"0x1eb2927e48d497d70f4530471abe62aa5700086e54af75ad8523d08005eab45f"}
 
 ```
 
 #### Check if it is user:
 
 ```
-ContractCallResult callResult = ProtoTypeContractClient.isUser( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) ,Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ),
-        Revision.BEST);
+ContractCallResult isUserResult = ProtoTypeContractClient.isUser(Address.fromHexString(fromAddress),
+				Address.fromHexString(userAddress), Revision.BEST);
 logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
+{
+  "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
+  "events": [
+    
+  ],
+  "gasUsed": 664,
+  "reverted": false,
+  "transfers": [
+    
+  ],
+  "vmError": ""
+}
+
 ```
 
 #### Remove user:
 
 ```
-String targetAddress = "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A";
-String userAddress = "0xba5f00a28f732f23ba946c594716496ebdc9aef5";
-String privateKey = "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f";
+
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
-      new Address[]{Address.fromHexString( targetAddress )},
+      new Address[]{Address.fromHexString( fromAddress )},
       new Address[]{Address.fromHexString( userAddress)},
         ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( privateKey ) );
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
+transferResult:{"id":"0x1eb2927e48d497d70f4530471abe62aa5700086e54af75ad8523d08005eab45f"}
 
 ```
-#### Set User plan:
+#### Set Credit Plan:
 
 ```
 Amount credit = Amount.VTHO();
-credit.setDecimalAmount( "12.00" );
+credit.setDecimalAmount("10.00");
 Amount recovery = Amount.VTHO();
-recovery.setDecimalAmount( "0.00001" );
+recovery.setDecimalAmount("0.00001");
 
-TransferResult result = ProtoTypeContractClient.setUserPlans(
-        new Address[]{Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A")},
-        new Amount[]{credit},
-        new Amount[]{recovery},
-        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( "0xeb78d6405ba1a28ccd938a72195e0802dfbe1de463bc6e5dd491b2c7562b5e3f" ) );
-logger.info( "set user plans:" + JSON.toJSONString( result ) );
-
-```
-#### Get User plan:
+TransferResult setCreditPlansResult = ProtoTypeContractClient.setCreditPlans(
+		new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+		new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x0, 720, aECKeyPair);
+logger.info("set user plans:" + JSON.toJSONString(setCreditPlansResult));
+{"id":"0xafe89d896b993efc98cda84add6ded39ea264a19b8a886fcc3f769e54964e990"}
 
 ```
-ContractCallResult callResult = ProtoTypeContractClient.getUserPlan( Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ) , Revision.BEST);
-logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
+#### Get Credit plan:
+
+```
+ContractCallResult callResult = ProtoTypeContractClient.getCreditPlan(Address.fromHexString(fromAddress),
+				Revision.BEST);
+logger.info("Get user plan result:" + JSON.toJSONString(callResult));
+getUserCreditCallResult:
+{
+  "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000009184e72a000",
+  "events": [
+    
+  ],
+  "gasUsed": 832,
+  "reverted": false,
+  "transfers": [
+    
+  ],
+  "vmError": ""
+}
 
 ```
 
-#### Get User credits:
+#### Get User Credit:
 
 ```
-ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(
-        Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A" ),
-        Address.fromHexString( "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A"),
-        Revision.BEST);
-logger.info( "Get user plan result:" + JSON.toJSONString( callResult ) );
+ContractCallResult getUserCreditCallResult = ProtoTypeContractClient
+				.getUserCredit(Address.fromHexString(fromAddress), Address.fromHexString(userAddress), Revision.BEST);
+logger.info("Get user plan result:" + JSON.toJSONString(getUserCreditCallResult));
+{
+  "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+  "events": [
+    
+  ],
+  "gasUsed": 1138,
+  "reverted": false,
+  "transfers": [
+    
+  ],
+  "vmError": ""
+}
 
 ```
 
@@ -485,7 +784,7 @@ Package the jar with maven
 ```
 mvn clean package -Dmaven.test.skip=true
 
-The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.2.jar
+The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.3.jar
 
 ```
 
@@ -497,12 +796,12 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx,
 
 ```
  
-java -jar thor-client-sdk4j-0.0.2.jar getChainTag {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.3.jar getChainTag {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar getChainTag http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.3.jar getChainTag http://localhost:8669
 
 ChainTag:
-0x9a
+0x27
 
 ```
 
@@ -510,50 +809,50 @@ ChainTag:
 #### Get blockRef: 
 
 ```
-java -jar thor-client-sdk4j-0.0.2.jar getBlockRef {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.3.jar getBlockRef {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar getBlockRef http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.3.jar getBlockRef http://localhost:8669
 
 BlockRef:
-0x000245e360d4cd1b
+0x0000695540f491a5
   
 ```
 
 #### Create wallet: 
 
 ```
-java -jar thor-client-sdk4j-0.0.2.jar createWallet {wallet-password}
+java -jar thor-client-sdk4j-0.0.3.jar createWallet {wallet-password}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar createWallet my@wallet@pass
+eg. java -jar thor-client-sdk4j-0.0.3.jar createWallet <your password>
 
 The keystore.json file will generate in current folder.
 
 The wallet created successfully and the key store is: 
   
 {
-  "address": "0x4cd1c03c39637cc5c4b6e8c02d06bb4eef76c5ea",
+  "address": "0x2a200dd7a805db17e9cecbb8e33067306dca143b",
   "crypto": {
     "cipher": "aes-128-ctr",
     "cipherparams": {
-      "iv": "125246d1644716acd3399a5ddac832f0"
+      "iv": "f8ab97c61fa736a5cb040b1912f9075c"
     },
-    "ciphertext": "6aef2fdb3b1ca7015774f273caec2c45f5ab76b70105f7f432413fa8ce189505",
+    "ciphertext": "0def4f8fad25b5169178f02c93b53c1a7fcbcdbe6b7e960b2e8badcf8098d878",
     "kdf": "scrypt",
     "kdfparams": {
       "dklen": 32,
       "n": 262144,
       "p": 1,
       "r": 8,
-      "salt": "c08e550d586af29b5cdc830b8ec7241c29b3dbcd5121e463e44e10026ea04453"
+      "salt": "e7c337c143029a8ce4ea41153747fc3b103e7c416040a907c36c32f9ca34dbb6"
     },
-    "mac": "42d855c653bb8560b3c87007475ef459746fe6bcafdfa3fcf5c906d698849320"
+    "mac": "af1fc6fed812610ce13daaae8bb5dd1e83eba3d100675a9ae07de9357952fc8e"
   },
-  "id": "626aff56-19ff-42d1-b6fe-7da96f51d2b0",
+  "id": "8df9173d-4c05-4a7e-b847-69ccf490db06",
   "version": 3
 }
   
   The wallet created successfully and the privateKey is:
-  0x83d0d6c41e402e1cdb49076f7b8003a289482ed3e406413c721783224c7dcb72
+  0xe5a7eec8266f6b5ed3c9578944e22d396228d9cd9ef36d26497edc89237104f0
   
 ```
 
@@ -562,27 +861,29 @@ The wallet created successfully and the key store is:
 #### Get block: 
 
 ```
- java -jar thor-client-sdk4j-0.0.2.jar getBlock {blockchain-server-url}
+ java -jar thor-client-sdk4j-0.0.3.jar getBlock {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar getBlock http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.3.jar getBlock http://localhost:8669
 
 Block:
 {
-"beneficiary": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
-"gasLimit": 10448965,
-"gasUsed": 0,
-"id": "0x000281ce7f291d3dea4d26c7eaf9104bdf0542e96df7fff3ff6df0b625412994",
-"isTrunk": true,
-"number": "164302",
-"parentID": "0x000281cddb31b82e111b3d6e5a5896ff32216a91868da249723bf17fbdd3b596",
-"receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
-"signer": "0xafbd76f9cdd19015c2d322a35bbea0480f5d70e1",
-"size": 239,
-"stateRoot": "0xc7cef51188e95ab25721cd700b097f5fb47c5865046761c3fc60f83f025b3e2d",
-"timestamp": 1530072030,
-"totalScore": 1078802,
-"transactions": [],
-"txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
+  "beneficiary": "0xb4094c25f86d628fdd571afc4077f0d0196afb48",
+  "gasLimit": 10000000,
+  "gasUsed": 0,
+  "id": "0x00006971f2f8306fbc37d9b797c083d3966c494520edba1dd77a57eae03be50d",
+  "isTrunk": true,
+  "number": "26993",
+  "parentID": "0x0000697038c5f563c8a7f68ae064424580cae01342e4d432321f875d18c779a0",
+  "receiptsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0",
+  "signer": "0x25ae0ef84da4a76d5a1dfe80d3789c2c46fee30a",
+  "size": 238,
+  "stateRoot": "0x282794403cfe505528360a98e9bc6cab151b8ccf9e2812b7c316493a8504afa3",
+  "timestamp": 1530284330,
+  "totalScore": 27016,
+  "transactions": [
+    
+  ],
+  "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
 }
   
 ```
@@ -591,22 +892,22 @@ Block:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.2.jar getTransaction {transaction-id} {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.3.jar getTransaction {transaction-id} {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar getTransaction 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.3.jar getTransaction 0x19dd77d28ef70be8c924319a6c08b996dd456fa36f29f2427dbda90087a8a897 http://localhost:8669
 
 Transaction:
 {
-  "block": {
-    "id": "0x000281a71b862025b02427f3998303b04b897f02057e97184b8638d306d0c99b",
-    "number": 164263,
-    "timestamp": 1530071640
-  },
   "chainTag": 0,
   "expiration": 0,
   "gas": 0,
   "gasPriceCoef": 0,
-  "raw":   "0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001",
+  "meta": {
+    "blockID": "0x00005c31bcdf0f3de6dd10ad776bc4313b98b5d90e81428345a87c04e5ab2924",
+    "blockNumber": 23601,
+    "blockTimestamp": 1530250410
+  },
+  "raw": "0xf88227865c309a71f9d28202d0e4e3945034aa590125b64023a0262112b98d72e3c8e40e8c0675869909f169d17cc00000808082520880888cd02f9cd3a2af07c0b8412097cdeebb3219df52345c5cdc251bd07f359435164019ada5041416014f7f046ccbb615d24a0d342c5001578aa788cb11ace0891f540bdb0bc7b110f2b6d7d900",
   "size": 0
 }
   
@@ -616,48 +917,38 @@ Transaction:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.3.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
   
-eg. java -jar thor-client-sdk4j-0.0.2.jar getTransactionReceipt 0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9 http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.3.jar getTransactionReceipt 0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5 http://localhost:8669
   
 Receipt:
 {
-  "block": {
-    "id": "0x000281a71b862025b02427f3998303b04b897f02057e97184b8638d306d0c99b",
-    "number": 164263,
-    "timestamp": 1530071640
+  "gasPayer": "0x866a849122133888214ac9fc59550077adf14975",
+  "gasUsed": 21000,
+  "meta": {
+    "blockID": "0x000066e58079163edacb0bfe06b52a4d16cc646ce8039a2b7cf5136cbc9fb186",
+    "blockNumber": 26341,
+    "blockTimestamp": 1530277810,
+    "txID": "0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5",
+    "txOrigin": "0x866a849122133888214ac9fc59550077adf14975"
   },
-  "gasPayer": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed",
-  "gasUsed": 37000,
   "outputs": [
     {
-      "events": [],
+      "events": [
+        
+      ],
       "transfers": [
         {
-          "amount": "0x364200111c48f80000",
+          "amount": "0xde0b6b3a7640000",
           "recipient": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
-          "sender": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
-        }
-      ]
-    },
-    {
-      "events": [],
-      "transfers": [
-        {
-          "amount": "0x364200111c48f80000",
-          "recipient": "0xd3ef28df6b553ed2fc47259e8134319cb1121a2a",
-          "sender": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
+          "sender": "0x866a849122133888214ac9fc59550077adf14975"
         }
       ]
     }
   ],
-  "paid": "0x2017a67f731740000",
+  "paid": "0x1236efcbcbb340000",
   "reverted": false,
-  "reward": "0x9a0b1f308ed60000",
-  "tx": {
-    "id": "0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9",
-    "origin": "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
-  }
+  "reward": "0x576e189f04f60000"
 }
   
 ```
@@ -665,9 +956,9 @@ Receipt:
 #### Sign transactions: 
 
 ```
-java -jar thor-client-sdk4j-0.0.2.jar sign {your-file-path} {privateKey}
+java -jar thor-client-sdk4j-0.0.3.jar sign {your-file-path} {privateKey}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar sign src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
+eg. java -jar thor-client-sdk4j-0.0.3.jar sign src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
   
 Raw Transaction:
 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
@@ -678,9 +969,9 @@ Raw Transaction:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.2.jar signAndSend {blockchain-server-url} {privateKey} {your-file-path}
+java -jar thor-client-sdk4j-0.0.3.jar signAndSend {blockchain-server-url} {privateKey} {your-file-path}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar signAndSend http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
+eg. java -jar thor-client-sdk4j-0.0.3.jar signAndSend http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
 Send Result:
 {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
@@ -693,9 +984,9 @@ Send Result:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.2.jar sendRaw {blockchain-server-url} {raw}
+java -jar thor-client-sdk4j-0.0.3.jar sendRaw {blockchain-server-url} {raw}
 
-eg. java -jar thor-client-sdk4j-0.0.2.jar sendRaw http://localhost:8669 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
+eg. java -jar thor-client-sdk4j-0.0.3.jar sendRaw http://localhost:8669 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
   
 Send Result:
 {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}

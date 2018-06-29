@@ -3,7 +3,7 @@
 	<property name="APP_NAME" value="thor" />
 	<property name="LOG_HOME" value="${log.dir:-logs}/${APP_NAME}" />
 	<property name="ENCODER_PATTERN"
-		value="%d{yyyy-MM-dd  HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n" />
+		value="%logger{10} - %msg%n" />
 	<contextName>${APP_NAME}</contextName>
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
