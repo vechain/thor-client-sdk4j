@@ -6,7 +6,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class EventFilter implements Serializable {
-    private Range range;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7199186276009582052L;
+	private Range range;
     private Options options;
     private ArrayList<TopicSet> topicSets;
 
@@ -65,5 +69,13 @@ public class EventFilter implements Serializable {
     public void setOptions(Options options) {
         this.options = options;
     }
+
+	public ArrayList<TopicSet> getTopicSets() {
+		return topicSets;
+	}
+
+	public void setTopicSets(ArrayList<TopicSet> topicSets) {
+		this.topicSets = topicSets;
+	}
 
 }

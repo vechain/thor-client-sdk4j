@@ -116,7 +116,7 @@ public class ProtoTypeContractClient extends TransactionClient {
         if(targets.length != users.length){
             throw ClientArgumentException.exception( "targets size must equal to users size. " );
         }
-        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "addUsers" );
+        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "addUser" );
         if(abi == null){
             throw new IllegalArgumentException( "Can not find abi master method" );
         }
@@ -246,7 +246,7 @@ public class ProtoTypeContractClient extends TransactionClient {
         if(target == null){
             throw ClientArgumentException.exception( "target is null" );
         }
-        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "userPlan" );
+        AbiDefinition abi = ProtoTypeContract.defaultContract.findAbiDefinition( "creditPlan" );
         ContractCall call = ProtoTypeContract.buildCall(abi,
                 target.toHexString( Prefix.ZeroLowerX ));
 
