@@ -21,7 +21,7 @@ public class AccountClientTest extends BaseTest {
 
     @Test
     public void testGetAccountInfo() throws IOException {
-        Address address = Address.fromHexString(fromAddress);
+        Address address = Address.fromHexString("0x866a849122133888214ac9fc59550077adf14975");
         Account account = AccountClient.getAccountInfo(address, null);
         logger.info("account info:" + JSON.toJSONString(account));
         logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());

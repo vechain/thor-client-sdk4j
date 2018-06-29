@@ -66,8 +66,10 @@ public class ECKeyPair {
     }
 
     public byte[] getRawAddress() {
-        byte[] hash = CryptoUtils.keccak256(this.publicKey.toByteArray());
-        return Arrays.copyOfRange(hash, hash.length - 20, hash.length);  // right most 160 bits
+        byte[] hash = CryptoUtils.keccak256(this.getRawPublicKey());
+        byte[] address = new byte[20];
+        System.arraycopy(hash, 12, address, 0, address.length);
+        return address;  // right most 160 bits
     }
 
     public String getHexAddress(){
