@@ -47,9 +47,9 @@ public class EventFilter implements Serializable {
         TopicSet topicSet = new TopicSet();
         topicSet.setTopic0(topic0);
         topicSet.setTopic1(topic1);
-        topicSet.setTopic1(topic2);
-        topicSet.setTopic1(topic3);
-        topicSet.setTopic1(topic4);
+        topicSet.setTopic2(topic2);
+        topicSet.setTopic3(topic3);
+        topicSet.setTopic4(topic4);
         topicSets.add(topicSet);
 
     }

@@ -1,7 +1,12 @@
 package com.vechain.thorclient.clients;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.vechain.thorclient.core.model.clients.ERC20Contract;
+import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
+import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.Prefix;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,8 +29,17 @@ public class LogsClientTest extends BaseTest {
 
 	@Test
 	public void testFilterEvents() throws ClientArgumentException {
-		EventFilter filter = EventFilter.createFilter(Range.createBlockRange(24125, 27125), Options.create(0, 10));
-		ArrayList<?> filteredEvents = LogsClient.filterEvents(filter, Order.DESC, null);
+		List<String > eventsTransferInputs = new ArrayList<String>(  );
+		eventsTransferInputs.add( "address" );
+		eventsTransferInputs.add( "address" );
+		eventsTransferInputs.add( "uint256" );
+		AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition( "Transfer", "event" , eventsTransferInputs);
+		String abiMethodHexString = BytesUtils.toHexString( abiDefinition.getBytesMethodHashed(), Prefix.ZeroLowerX);
+		logger.info( "abi Transfer:" + abiMethodHexString );
+		EventFilter filter = EventFilter.createFilter(Range.createBlockRange(0, 27125), Options.create(0, 10));
+		filter.addTopicSet( abiMethodHexString, "0x000000000000000000000000" + fromAddress.substring( 2 ), null, null, null );
+		filter.addTopicSet( abiMethodHexString, null,  "0x000000000000000000000000" + fromAddress.substring( 2 ), null, null );
+		ArrayList<?> filteredEvents = LogsClient.filterEvents(filter, Order.DESC, Address.VTHO_Address);
 		Assert.assertNotEquals(0, filteredEvents.size());
 		logger.info("filteredEvents:" + filteredEvents.toString());
 		for (Object object : filteredEvents) {
