@@ -43,21 +43,59 @@ public class AbstractContract {
     }
 
     /**
-     * Find AbiDefinition from ABI
+     * Find function AbiDefinition from ABI
      * @param name method name.
      * @return {@link AbiDefinition} abi definition.
      */
     public AbiDefinition findAbiDefinition(String name){
-        if(StringUtils.isBlank( name )){
-            throw new IllegalArgumentException( name );
+        return findAbiDefinition( name, "function", null );
+    }
+
+    /**
+     * Find function AbiDefinition from ABI by inpu
+     * @param name
+     * @param type
+     * @param inputTypes
+     * @return
+     */
+    public AbiDefinition findAbiDefinition(String name, String type, List<String> inputTypes){
+        if(StringUtils.isBlank( name ) || StringUtils.isBlank( type )){
+            throw new IllegalArgumentException( "name or type is blank." );
         }
         for(AbiDefinition abiDefinition : abiDefinitionList){
-            if(abiDefinition.getName().equalsIgnoreCase( name )){
-                return abiDefinition;
+            if(abiDefinition.getName().equals( name )
+                    && abiDefinition.getType().equals( type )){
+                if (inputTypes != null ) {
+                    if(checkInputsType( inputTypes, abiDefinition )) {
+                        return abiDefinition;
+                    }
+                } else { // find abi by name ignore the arguments.
+                    return abiDefinition;
+                }
             }
         }
         return null;
     }
+
+
+    private boolean checkInputsType(List<String> inputTypes,  AbiDefinition abiDefinition){
+        if(inputTypes == null){
+            return false;
+        }
+        if(abiDefinition == null){
+            return false;
+        }
+        if(inputTypes.size() != abiDefinition.getInputs().size()){
+            return false;
+        }
+        for(int index = 0; index < inputTypes.size(); index ++){
+            if(!inputTypes.get( index ).equals(abiDefinition.getInputs().get( index ).getType())){
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * build transaction clause
      * @param toAddress {@link Address}

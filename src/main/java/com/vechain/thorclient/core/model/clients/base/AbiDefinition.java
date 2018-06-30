@@ -252,7 +252,7 @@ public class AbiDefinition {
      * Get method hash.
      * @return byte array.
      */
-    private byte[] getBytesMethodHashed(){
+    public byte[] getBytesMethodHashed(){
         String name = this.getName();
         String methodSignature = buildMethodSignature(name);
         return CryptoUtils.keccak256( methodSignature.getBytes());
