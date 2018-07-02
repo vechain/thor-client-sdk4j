@@ -1,5 +1,8 @@
 package com.vechain.thorclient.utils;
 
+import com.vechain.thorclient.core.model.clients.Address;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.regex.Pattern;
@@ -202,4 +205,39 @@ public class BlockchainUtils {
 		BigInteger bigInt = bigDecimal.toBigInteger();
 		return BytesUtils.trimLeadingZeroes(bigInt.toByteArray());
 	}
+
+    /**
+     * Generate transaction id.
+     * @param rawTransaction {@link RawTransaction}
+     * @param address {@link Address}
+     * @return a hex string id with "0x"
+     */
+	public static String generateTransactionId(RawTransaction rawTransaction, Address signer){
+	    if(rawTransaction == null || signer == null){
+	        return null;
+        }
+        RawTransaction copyRawTransaction = rawTransaction.copy();
+	    copyRawTransaction.setSignature( null );
+        byte[] rlp = RLPUtils.encodeRawTransaction( copyRawTransaction );
+	    byte[] signHash = CryptoUtils.blake2b( rlp );
+        return generateTransactionId( signHash, signer );
+    }
+
+    /**
+     * Generate txId
+     * @param signingHash byte array
+     * @param signer
+     * @return a hex string id with "0x"
+     */
+    public static String generateTransactionId(byte[] signingHash, Address signer){
+	    if(signingHash == null || signer == null){
+	        return null;
+        }
+        byte[] data = new byte[52];
+        System.arraycopy( signingHash, 0, data, 0, signingHash.length );
+        System.arraycopy( signer.toByteArray(), 0 , data, 32, signer.toByteArray().length );
+        byte[] txIdBytes = CryptoUtils.blake2b( data );
+        return BytesUtils.toHexString( txIdBytes, Prefix.ZeroLowerX );
+    }
+
 }

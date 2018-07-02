@@ -109,4 +109,19 @@ public class RawTransaction {
     }
 
 
+    public RawTransaction copy(){
+        RawTransaction transaction = new RawTransaction();
+        transaction.setSignature( this.signature );
+        transaction.setClauses( this.clauses );
+        transaction.setBlockRef( this.blockRef );
+        transaction.setDependsOn( this.dependsOn );
+        transaction.setChainTag( this.chainTag );
+        transaction.setExpiration( this.expiration );
+        transaction.setGasPriceCoef( this.gasPriceCoef );
+        transaction.setNonce( this.nonce );
+        transaction.setGas( this.gas );
+
+        return transaction;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.vechain.thorclient.clients;
 
+import com.vechain.thorclient.utils.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +23,6 @@ import com.vechain.thorclient.core.model.clients.ToData;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.core.wallet.WalletInfo;
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.CryptoUtils;
-import com.vechain.thorclient.utils.Prefix;
-import com.vechain.thorclient.utils.RawTransactionFactory;
-import com.vechain.thorclient.utils.WalletUtils;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 @RunWith(JUnit4.class)
@@ -102,7 +98,11 @@ public class TransactionClientTest extends BaseTest {
 				720, 21000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
 		logger.info("SendVET Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
 		TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
+		String hexAddress =  ECKeyPair.create(privateKey).getHexAddress();
+		String txIdHex = BlockchainUtils.generateTransactionId( rawTransaction,  Address.fromHexString( hexAddress ));
+		logger.info( "Calculate transaction txid:" + txIdHex );
 		logger.info("SendVET result:" + JSON.toJSONString(result));
+		Assert.assertEquals( txIdHex, result.getId() );
 		Assert.assertNotNull(result);
 	}
 }
