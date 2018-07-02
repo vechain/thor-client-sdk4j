@@ -112,7 +112,7 @@ public class TransactionClient extends AbstractClient {
      */
     public static TransferResult transfer(final String rawTransactionHexString) throws ClientIOException {
 
-        if (StringUtils.isHex(rawTransactionHexString)) {
+        if (!StringUtils.isHex(rawTransactionHexString)) {
             throw ClientArgumentException.exception("Raw transaction is encode error");
         }
         TransferRequest request = new TransferRequest();

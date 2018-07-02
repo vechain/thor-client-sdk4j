@@ -77,12 +77,6 @@ public class AbstractContract {
         return null;
     }
 
-    //todo
-    private AbiDefinition getAbiDefinition(){
-        return null;
-    }
-
-
     private boolean checkInputsType(List<String> inputTypes,  AbiDefinition abiDefinition){
         if(inputTypes == null){
             return false;
