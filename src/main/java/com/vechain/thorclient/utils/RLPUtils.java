@@ -21,10 +21,7 @@ public class RLPUtils {
         return RlpEncoder.encode(rlpList);
     }
 
-
     private static List<RlpType> asRlpValues(RawTransaction rawTransaction){
-
-
         List<RlpType> result = new ArrayList<>();
         if(rawTransaction.getChainTag() == 0){
             throw new IllegalArgumentException("getChainTag is null");
@@ -41,28 +38,7 @@ public class RLPUtils {
         }
         result.add(RlpString.create(rawTransaction.getExpiration()));
 
-        List<RlpType> clauses = new ArrayList<>();
-
-        for (RawClause clause: rawTransaction.getClauses()){
-
-            List<RlpType> rlpClause = new ArrayList<>();
-            if(clause.getTo() == null){
-                throw new IllegalArgumentException("getTo is null");
-            }
-            rlpClause.add(RlpString.create(clause.getTo()));
-
-            if(clause.getValue() == null){
-                throw new IllegalArgumentException("getValue is null");
-            }
-            rlpClause.add(RlpString.create(clause.getValue()));
-
-            if(clause.getData() == null){
-                throw new IllegalArgumentException("getData is null");
-            }
-            rlpClause.add(RlpString.create(clause.getData()));
-            RlpList clauseRLP = new RlpList(rlpClause);
-            clauses.add(clauseRLP);
-        }
+        List<RlpType> clauses = buildRlpClausesLIst( rawTransaction );
         RlpList rlpList = new RlpList(clauses);
         result.add(rlpList);
 
@@ -71,8 +47,6 @@ public class RLPUtils {
         }else{
             result.add( RlpString.create( rawTransaction.getGasPriceCoef() ) );
         }
-
-
 
         if(rawTransaction.getGas() == null){
             throw new IllegalArgumentException("getGas is null");
@@ -97,11 +71,37 @@ public class RLPUtils {
             throw new IllegalArgumentException("reservedList is not supported");
         }
 
-
         if(rawTransaction.getSignature() != null) {
             result.add(RlpString.create(rawTransaction.getSignature()));
         }
         return result;
 
     }
+
+    private static List<RlpType> buildRlpClausesLIst(RawTransaction rawTransaction) {
+        List<RlpType> clauses = new ArrayList<>();
+
+        for (RawClause clause: rawTransaction.getClauses()){
+
+            List<RlpType> rlpClause = new ArrayList<>();
+            if(clause.getTo() == null){
+                throw new IllegalArgumentException("getTo is null");
+            }
+            rlpClause.add( RlpString.create(clause.getTo()));
+
+            if(clause.getValue() == null){
+                throw new IllegalArgumentException("getValue is null");
+            }
+            rlpClause.add(RlpString.create(clause.getValue()));
+
+            if(clause.getData() == null){
+                throw new IllegalArgumentException("getData is null");
+            }
+            rlpClause.add(RlpString.create(clause.getData()));
+            RlpList clauseRLP = new RlpList(rlpClause);
+            clauses.add(clauseRLP);
+        }
+        return clauses;
+    }
+
 }

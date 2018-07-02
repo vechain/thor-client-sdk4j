@@ -32,7 +32,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
-	static String hexId = "0xa55f0f90c7e905ed5e49d22323e14492402e6954c9f333c1224b6be9fc05e1d4";
+	static String hexId = "0x6b6856dd66cd6926e612d67f3395ee4c9b4e4c59a60876da1189dbf4a6497813";
 	static String addUserTxId = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
 	static String removeUserTxId = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
 	static String setUserPlanTxId = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
@@ -79,9 +79,9 @@ public class TransactionClientTest extends BaseTest {
 		byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
 		Amount amount = Amount.createFromToken(ERC20Token.VTHO);
 		amount.setDecimalAmount("10000");
-		String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();// "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
+
 		ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO,
-				Address.fromHexString("0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"), amount);
+				Address.fromHexString("0x000000002beadb038203be21ed5ce7c9b1bff602"), amount);
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
 				720, 80000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
 		logger.info("SendVTHO Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
@@ -95,10 +95,9 @@ public class TransactionClientTest extends BaseTest {
 		byte chainTag = BlockchainClient.getChainTag();
 		byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
 		Amount amount = Amount.createFromToken(AbstractToken.VET);
-		amount.setDecimalAmount("1");
-		String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();// "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed"
+		amount.setDecimalAmount("100");
 		ToClause clause = TransactionClient.buildVETToClause(
-				Address.fromHexString("0xd3ae78222beadb038203be21ed5ce7c9b1bff602"), amount, ToData.ZERO);
+				Address.fromHexString("0x000000002beadb038203be21ed5ce7c9b1bff602"), amount, ToData.ZERO);
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
 				720, 21000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
 		logger.info("SendVET Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));

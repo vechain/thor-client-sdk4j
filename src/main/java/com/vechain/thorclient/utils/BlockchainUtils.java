@@ -98,7 +98,7 @@ public class BlockchainUtils {
 	 */
 	public static boolean checkSumAddress(final String address, boolean isCheck) {
 		boolean rtn = false;
-		if (address != null && address.length() == 42 && address.toLowerCase().matches("vx[A-Fa-f0-9]{40}")) {
+		if (address != null && address.length() == 42 && address.toLowerCase().matches("0x[A-Fa-f0-9]{40}")) {
 			if (isCheck) {
 				String realAddress = address.substring(2);
 				rtn = checkSumAddress(realAddress);
@@ -141,7 +141,7 @@ public class BlockchainUtils {
 			}
 		}
 
-		return buffer.toString();
+		return "0x" + buffer.toString();
 	}
 
 	public static String fillZeroBefore(String s, int length) {
