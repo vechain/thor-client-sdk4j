@@ -209,7 +209,7 @@ public class BlockchainUtils {
     /**
      * Generate transaction id.
      * @param rawTransaction {@link RawTransaction}
-     * @param address {@link Address}
+     * @param signer {@link Address}
      * @return a hex string id with "0x"
      */
 	public static String generateTransactionId(RawTransaction rawTransaction, Address signer){
@@ -233,10 +233,10 @@ public class BlockchainUtils {
 	    if(signingHash == null || signer == null){
 	        return null;
         }
-        byte[] data = new byte[52];
-        System.arraycopy( signingHash, 0, data, 0, signingHash.length );
-        System.arraycopy( signer.toByteArray(), 0 , data, 32, signer.toByteArray().length );
-        byte[] txIdBytes = CryptoUtils.blake2b( data );
+        byte[] concatenatedBytes = new byte[52];
+        System.arraycopy( signingHash, 0, concatenatedBytes, 0, signingHash.length );
+        System.arraycopy( signer.toByteArray(), 0 , concatenatedBytes, signingHash.length, signer.toByteArray().length );
+        byte[] txIdBytes = CryptoUtils.blake2b( concatenatedBytes );
         return BytesUtils.toHexString( txIdBytes, Prefix.ZeroLowerX );
     }
 
