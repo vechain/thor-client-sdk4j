@@ -355,7 +355,18 @@ You can get events logs and transfer logs, the api is also supporting pagination
 
 ```
 EventFilter filter = EventFilter.createFilter( Range.createBlockRange(1000, 20000), Options.create( 0, 10 ) );
-ArrayList filteredEvents =  LogsClient.filterEvents( filter, Order.DESC, null);
+// you also can filter even logs by topics
+// get abiMethodHexString
+List<String > eventsTransferInputs = new ArrayList<String>(  );
+eventsTransferInputs.add( "address" );
+eventsTransferInputs.add( "address" );
+eventsTransferInputs.add( "uint256" );
+AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition( "Transfer", "event" , eventsTransferInputs);
+String abiMethodHexString = BytesUtils.toHexString( abiDefinition.getBytesMethodHashed(), Prefix.ZeroLowerX);
+// filter even logs by topics
+filter.addTopicSet( abiMethodHexString, "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975", null, null, null );
+filter.addTopicSet( abiMethodHexString, null, "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975", null, null );
+ArrayList<?> filteredEvents = LogsClient.filterEvents(filter, Order.DESC, Address.VTHO_Address);
 filteredEvents:
 [
   {
@@ -363,133 +374,149 @@ filteredEvents:
     "topics": [
       "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
       "0x000000000000000000000000e59d475abe695c7f67a8a2321f33a856b0b4c71d",
-      "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed"
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975"
     ],
     "meta": {
-      "blockID": "0x00003ac13ec041f0ea2f879ccfcbb615133cfdfcbe5b43a74a6bf324c3bed3f2",
+      "blockID": "0x000059bfeded8c115511608311f8c9574f197712cc934564979fe6a0abeb46e2",
       "txOrigin": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
-      "blockNumber": 15041,
-      "txID": "0x316072e16a794a8f385e9f261a102c49947aa82a0355006289707b667e841cdc",
-      "blockTimestamp": 1530164810
+      "blockNumber": 22975,
+      "txID": "0x56bbf4d86dfaebcf37fa6d2a56532b3cff4dcaeab9590606eb37d1d9d175b58a",
+      "blockTimestamp": 1530244150
     }
   },
   {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
-    "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
-    ],
-    "meta": {
-      "blockID": "0x00003acaccb7bb1f1a2e076d93962a51d85406ec99bf779a597b9bf0dd097cff",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15050,
-      "txID": "0xb4a52a0f29b6d3d8167bec9beb59b00a900f50fdd5dce9fa7f8617cf9f34a5d7",
-      "blockTimestamp": 1530164900
-    }
-  },
-  {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
-    "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
-    ],
-    "meta": {
-      "blockID": "0x00003afe2e2c47397c53d131f8b3b5e74a4f836a27534157f8167a9f6ebcbf1e",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15102,
-      "txID": "0x92e3a650bd22b44bbb466b9fedce5fd2df0e5d16980ec6d2b24b58aaef4a7bed",
-      "blockTimestamp": 1530165420
-    }
-  },
-  {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
-    "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
-    ],
-    "meta": {
-      "blockID": "0x00003b3f430768e28d5d1f385a016d9175ce0988284161dddea218d8461e745e",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15167,
-      "txID": "0x26d7652a1387ef533c09fce520d1741369df0b93ab75da3699be8e3c9eb2c695",
-      "blockTimestamp": 1530166070
-    }
-  },
-  {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
-    "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
-    ],
-    "meta": {
-      "blockID": "0x00003b7342a5a3dc243416951126064cd5dae970843af551d90b16ccb322a730",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15219,
-      "txID": "0x8a816b4bffdf28f8a6ca0dad665272a648ab9c228c72474e04c72d34786a906d",
-      "blockTimestamp": 1530166590
-    }
-  },
-  {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
-    "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
-    ],
-    "meta": {
-      "blockID": "0x00003be1f4aee587e1fe0f46dbb7df3398eb7ff8e8a008e8e70ef5376c012ca5",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15329,
-      "txID": "0xf9f57cbdd9b19cfcff8995c559cf5e24027fee9de52967ad9537c1170c9ee89e",
-      "blockTimestamp": 1530167690
-    }
-  },
-  {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
-    "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
-    ],
-    "meta": {
-      "blockID": "0x00003bed75fc45259814edf7ba15eef2ef66b05af4484653ef9905ebddfcf203",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15341,
-      "txID": "0x1bd29b1968fa9d5b1cbe37d127e8ff5f82b68938f818268c11fdf21b94b11d2b",
-      "blockTimestamp": 1530167810
-    }
-  },
-  {
-    "data": "0x00000000000000000000000000000000000000000000001b1ae4d6e2ef500000",
+    "data": "0x00000000000000000000000000000000000000000000d3c21bcecceda1000000",
     "topics": [
       "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
-      "0x000000000000000000000000e59d475abe695c7f67a8a2321f33a856b0b4c71d",
-      "0x0000000000000000000000008bb846743c94539f2f98f8a6b2cb5cd940eca6fa"
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000e2c3b55d8aa9920058030f73bacece582f2123ff"
     ],
     "meta": {
-      "blockID": "0x00003c328e05084492de14e2c88b1662cb42ebba9d802b94365ad400cf3e5e0e",
-      "txOrigin": "0xe59d475abe695c7f67a8a2321f33a856b0b4c71d",
-      "blockNumber": 15410,
-      "txID": "0x109023f8e6ca56082cf762871ed7367989f32330bf66895c680b993595591803",
-      "blockTimestamp": 1530168500
+      "blockID": "0x00005bca771336117946a24fd52cfb4d8d94ca4409762a04187a18440527d3c0",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 23498,
+      "txID": "0xe290b4f86a57ba859277117613046fb7159e7ac35bf708c213ef38ac2b7faafd",
+      "blockTimestamp": 1530249380
     }
   },
   {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "data": "0x000000000000000000000000000000000000000000000cb49b44ba602d800000",
     "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x0000000000000000000000005034aa590125b64023a0262112b98d72e3c8e40e"
     ],
     "meta": {
-      "blockID": "0x00003c52f23f8535b256e7008559cb990f180ada9e5bfc2b4932e2bc025fa489",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15442,
-      "txID": "0xc7d40c831629cb99015d59a2e9ae31a8ae9683d4141a211fc693f5709fdd6db7",
-      "blockTimestamp": 1530168820
+      "blockID": "0x00005d8d601ee2af2566f41eeab03003e6c1f2bcc9c80628dce02d2445d21df8",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 23949,
+      "txID": "0xe2c8df790a210093ca271f40335930593b8fc40e8978b9ec5bbf1865b64ab765",
+      "blockTimestamp": 1530253890
     }
   },
   {
-    "data": "0x0000000000000000000000007567d83b7b8d80addcb281a71d54fc7b3364ffed",
+    "data": "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000",
     "topics": [
-      "0xb35bf4274d4295009f1ec66ed3f579db287889444366c03d3a695539372e8951"
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed"
     ],
     "meta": {
-      "blockID": "0x00003c6e767f8fe58b62c46541ada494b1c473d86237d24274502efd5cff266a",
-      "txOrigin": "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed",
-      "blockNumber": 15470,
-      "txID": "0x2455006b69a93b763696a00ee4af6be5bcd468148eae6133323299a093659318",
-      "blockTimestamp": 1530169100
+      "blockID": "0x00006263e8cda3d2f89479e652e24acac0f032cae59d78b3fb8125634e4cf85c",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 25187,
+      "txID": "0xc502170ce2516bbb52428714fa2ee9f4a157ca3f2ce779dbba2bb9fb639d82ad",
+      "blockTimestamp": 1530266270
+    }
+  },
+  {
+    "data": "0x00000000000000000000000000000000000000000000003635c9adc5dea00000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed"
+    ],
+    "meta": {
+      "blockID": "0x000062724a2e8939846a99bf300a76c3ccba11f1b3dcc49e7469e5d4540748e6",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 25202,
+      "txID": "0x63aa0c84478536f43353df520e70aa91490530ee9ef3d462a514bd3006b0b8e7",
+      "blockTimestamp": 1530266420
+    }
+  },
+  {
+    "data": "0x00000000000000000000000000000000000000000000003635c9adc5dea00000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed"
+    ],
+    "meta": {
+      "blockID": "0x0000627c7d117bd770083d8525f392feeba052a9c85301402f6ed526255444ba",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 25212,
+      "txID": "0x1f2b669a965e656ba853830f21a4200a96c96b572436d9e0a9a924f2e6084f43",
+      "blockTimestamp": 1530266520
+    }
+  },
+  {
+    "data": "0x00000000000000000000000000000000000000000000003635c9adc5dea00000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000d3ef28df6b553ed2fc47259e8134319cb1121a2a"
+    ],
+    "meta": {
+      "blockID": "0x000066427e0728c29e3945408e9f25671873feb8b9743be8d454a6fcbab265eb",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 26178,
+      "txID": "0x5dee9e3db6a9f53992314dfbf41197a5f6405cf0fd421a5427c274ae6d2479a4",
+      "blockTimestamp": 1530276180
+    }
+  },
+  {
+    "data": "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000d3ef28df6b553ed2fc47259e8134319cb1121a2a"
+    ],
+    "meta": {
+      "blockID": "0x000066d0b71d88edfacfdb2ec33654dc98fd771cf349667e8225f167135a4bac",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 26320,
+      "txID": "0x396d4940947ea65283da2c20f6e655e8f95abaa26075cea33520d867c89d9afa",
+      "blockTimestamp": 1530277600
+    }
+  },
+  {
+    "data": "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000d3ef28df6b553ed2fc47259e8134319cb1121a2a"
+    ],
+    "meta": {
+      "blockID": "0x000066e58079163edacb0bfe06b52a4d16cc646ce8039a2b7cf5136cbc9fb186",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 26341,
+      "txID": "0xb978482708ca35556a3d2872e11849b9aa60a81bc6c7e1d97dfec54db3470d2f",
+      "blockTimestamp": 1530277810
+    }
+  },
+  {
+    "data": "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x000000000000000000000000866a849122133888214ac9fc59550077adf14975",
+      "0x000000000000000000000000d3ef28df6b553ed2fc47259e8134319cb1121a2a"
+    ],
+    "meta": {
+      "blockID": "0x000066eb51b4e2955a9bb4ea287890c34489eeade60840ecfb7959a3352b433f",
+      "txOrigin": "0x866a849122133888214ac9fc59550077adf14975",
+      "blockNumber": 26347,
+      "txID": "0x1a9e9106174e8e54debd2552cf0665a2ffefb62f13d3c1d3e3d01faf88920fbc",
+      "blockTimestamp": 1530277870
     }
   }
 ]
@@ -498,7 +525,7 @@ filteredEvents:
 
 ```
 TransferFilter filter = TransferFilter.createFilter(Range.createBlockRange( 1000, 20000 ) ,Options.create( 0, 10 ) );
-// filter condition: sender = 0xe59d475abe695c7f67a8a2321f33a856b0b4c71d or recipient = 0xe59d475abe695c7f67a8a2321f33a856b0b4c71d
+// you can filter condition by sender address or recipient address
 filter.addAddressSet(null, Address.fromHexString("0xe59d475abe695c7f67a8a2321f33a856b0b4c71d"), null);
 filter.addAddressSet(null, null, Address.fromHexString("0xe59d475abe695c7f67a8a2321f33a856b0b4c71d"));
 ArrayList transferLogs = LogsClient.filterTransferLogs( filter, Order.DESC);
