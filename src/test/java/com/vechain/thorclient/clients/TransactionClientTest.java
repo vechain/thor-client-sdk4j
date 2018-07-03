@@ -28,7 +28,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
-	static String hexId = "0x6b6856dd66cd6926e612d67f3395ee4c9b4e4c59a60876da1189dbf4a6497813";
+	static String hexId = "0xc59b9114eea49a224350b012062c5b2cd3316ac87917ea5a83e8c1ca90491bde";
 	static String addUserTxId = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
 	static String removeUserTxId = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
 	static String setUserPlanTxId = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
