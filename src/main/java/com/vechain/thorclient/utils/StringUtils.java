@@ -23,7 +23,7 @@ public class StringUtils {
 		if(StringUtils.isBlank(value)) {
 			return value;
 		}
-		if(value.toLowerCase().indexOf(Prefix.ZeroLowerX.getPrefixString()) == 0 || value.toLowerCase().indexOf(Prefix.VeChainX.getPrefixString().toLowerCase()) == 0) {
+		if(value.toLowerCase().indexOf(Prefix.ZeroLowerX.getPrefixString()) == 0 ) {
 			return value.substring(2);
 		}
 		return value;
@@ -35,6 +35,16 @@ public class StringUtils {
 	 * @return true or false.
 	 */
 	public static boolean isHex(String value) {
-		return value != null && value.matches( "^(-0x|0x|VX|vx)?[0-9a-fA-F]+$" );
+		return value != null && value.matches( "^(0x|0X)?[0-9a-fA-F]+$" );
 	}
+
+	/**
+	 * Check if the string is critical hex string or not, must start with 0x or OX
+	 * @param value hex string.
+	 * @return return or
+	 */
+	public static boolean isCriticalHex(String value){
+		return value != null && value.matches( "^(0x|0X)[0-9a-fA-F]+$" );
+	}
+
 }

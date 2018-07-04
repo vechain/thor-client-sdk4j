@@ -2,6 +2,9 @@ package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
+import com.vechain.thorclient.utils.crypto.ECDSASign;
+import com.vechain.thorclient.utils.crypto.ECDSASignature;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -45,27 +48,9 @@ public class BlockchainUtils {
 	 * @return boolean value.
 	 */
 	public static boolean isAddress(final String address) {
-		String addressStr = address;
-		if (!StringUtils.isBlank(addressStr) && (addressStr.startsWith(Prefix.ZeroLowerX.getPrefixString())
-				|| addressStr.startsWith(Prefix.VeChainX.getPrefixString())) && addressStr.length() == 42) {
-			addressStr = addressStr.substring(2);
-
-		}
-		return StringUtils.isHex(addressStr);
+		return (StringUtils.isCriticalHex(address) && address.length() == 42);
 	}
 
-	public static String convertToHexAddress(String address) {
-
-		if (!StringUtils.isBlank(address) && (address.startsWith(Prefix.ZeroLowerX.getPrefixString())
-				|| address.startsWith(Prefix.VeChainX.getPrefixString())) && address.length() == 42) {
-			String currentAddr = address.substring(2);
-			currentAddr = Prefix.ZeroLowerX.getPrefixString() + currentAddr;
-			return currentAddr.toLowerCase();
-		} else {
-			return null;
-		}
-
-	}
 
 	/**
 	 * Check if hexId string is valid.
@@ -205,6 +190,37 @@ public class BlockchainUtils {
 		BigInteger bigInt = bigDecimal.toBigInteger();
 		return BytesUtils.trimLeadingZeroes(bigInt.toByteArray());
 	}
+
+    /**
+     * Recover public key
+     */
+    public static ECKeyPair recoverPublicKey(String rawTransactionHex){
+        if(StringUtils.isBlank( rawTransactionHex )){
+            return null;
+        }
+        RawTransaction rawTransaction = RLPUtils.decode( rawTransactionHex );
+        if(rawTransaction == null){
+            return null;
+        }
+        RawTransaction newRawTransaction = rawTransaction.copy();
+        newRawTransaction.setSignature( null );
+        byte[] signature = rawTransaction.getSignature();
+        if(signature == null || signature.length != 65){
+            return null;
+        }
+        byte[] rlpTxRaw = RLPUtils.encodeRawTransaction( newRawTransaction );
+        byte[] rBytes = new byte[32];
+        byte[] sBytes = new byte[32];
+        System.arraycopy( signature, 0, rBytes, 0, rBytes.length );
+        System.arraycopy( signature, 32, sBytes, 0, sBytes.length );
+        byte recovery = signature[64];
+        byte[] signingHash = CryptoUtils.blake2b( rlpTxRaw );
+        ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
+        BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, signingHash);
+        return new ECKeyPair( null, publicKey );
+
+    }
+
 
     /**
      * Generate transaction id.

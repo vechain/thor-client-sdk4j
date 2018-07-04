@@ -13,8 +13,6 @@ import java.security.SecureRandom;
  */
 public class CryptoUtils {
 
-
-
     /**
      * Blake2b hash with 32 bytes result return
      * @param message {@link byte[]} a input message need to be hashed.
@@ -24,7 +22,6 @@ public class CryptoUtils {
         /**
          * Thor public blockchain is using 256 bits digest
          */
-
         Blake2b blake2b = new Blake2b(256);
         blake2b.update(message, 0, message.length);
         byte[] digest = new byte[32];

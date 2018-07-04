@@ -20,9 +20,6 @@ public class RawTransaction {
     private byte[][] reserved;
 
     public RawTransaction(){
-        gasPriceCoef = 0;
-        dependsOn = new byte[]{};
-
     }
 
 

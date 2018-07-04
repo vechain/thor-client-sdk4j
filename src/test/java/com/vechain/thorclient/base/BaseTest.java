@@ -1,19 +1,16 @@
 package com.vechain.thorclient.base;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
+import com.vechain.thorclient.core.model.blockchain.NodeProvider;
+import com.vechain.thorclient.utils.StringUtils;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vechain.thorclient.core.model.blockchain.NodeProvider;
-import com.vechain.thorclient.core.model.clients.Address;
-import com.vechain.thorclient.utils.Prefix;
-import com.vechain.thorclient.utils.StringUtils;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public abstract class BaseTest implements SlatKeys {
 
@@ -66,7 +63,6 @@ public abstract class BaseTest implements SlatKeys {
         if (StringUtils.isBlank(this.nodeProviderUrl) || !this.nodeProviderUrl.startsWith("http")) {
             throw new RuntimeException("Can not find valid nodeProviderUrl~");
         }
-        environment.put(VTHO_TOKEN_ADDRESS, Address.VTHO_Address.toHexString(Prefix.VeChainX));
 
         NodeProvider nodeProvider = NodeProvider.getNodeProvider();
         nodeProvider.setProvider(this.nodeProviderUrl);
