@@ -2,7 +2,6 @@ package com.vechain.thorclient.clients;
 
 import java.util.HashMap;
 
-import com.sun.tools.javac.comp.Todo;
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.Receipt;
 import com.vechain.thorclient.core.model.blockchain.Transaction;
