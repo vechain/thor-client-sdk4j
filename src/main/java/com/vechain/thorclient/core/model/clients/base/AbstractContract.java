@@ -77,7 +77,6 @@ public class AbstractContract {
         return null;
     }
 
-
     private boolean checkInputsType(List<String> inputTypes,  AbiDefinition abiDefinition){
         if(inputTypes == null){
             return false;

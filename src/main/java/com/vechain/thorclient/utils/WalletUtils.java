@@ -1,6 +1,5 @@
 package com.vechain.thorclient.utils;
 
-import java.io.File;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,27 +71,6 @@ public class WalletUtils {
         return new WalletInfo(walletFile, keyPair);
     }
 
-    /**
-     * Create wallet from password.
-     * 
-     * @param passphases
-     *            passsword to encrypt the private key.
-     * @return {@link WalletInfo}
-     */
-    public static WalletInfo createWallet(String passphases, File filePath) {
-        if (StringUtils.isBlank(passphases)) {
-            return null;
-        }
-        ECKeyPair keyPair = ECKeyPair.create();
-        WalletFile walletFile = null;
-        try {
-            walletFile = Wallet.createStandard(passphases, keyPair);
-            
-        } catch (CipherException e) {
-            e.printStackTrace();
-        }
 
-        return new WalletInfo(walletFile, keyPair);
-    }
 
 }

@@ -30,4 +30,5 @@ public class BytesUtilsTest {
         logger.info("Blake2b:" + hexString);
         Assert.assertEquals("0xa21cf4b3604cf4b2bc53e6f88f6a4d75ef5ff4ab415f3e99aea6b61c8249c4d0", hexString);
     }
+
 }

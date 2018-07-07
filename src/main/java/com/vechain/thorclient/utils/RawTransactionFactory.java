@@ -51,10 +51,9 @@ public class RawTransactionFactory {
         //gas
         byte[] gas = BytesUtils.longToBytes( gasInt );
         builder.update(gas, "gas");
-
         builder.update(Byte.valueOf( gasPriceCoef ), "gasPriceCoef");
-        //clause
 
+        //clause
         int size = toClauses.length;
         RawClause[] rawClauses = new RawClause[size];
         int index = 0;
@@ -70,7 +69,6 @@ public class RawTransactionFactory {
         RawTransaction rawTxn = builder.build();
         return rawTxn;
     }
-
 
 	public static RawTransactionFactory getInstance() {
 		return INSTANCE;

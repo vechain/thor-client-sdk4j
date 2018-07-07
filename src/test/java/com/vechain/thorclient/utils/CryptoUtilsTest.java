@@ -17,4 +17,16 @@ public class CryptoUtilsTest extends BaseTest {
         logger.info( "hash:" + BytesUtils.toHexString( hash, Prefix.ZeroLowerX ) );
     }
 
+    @Test
+    public void testDestroyAddress(){
+        byte[] address1Bytes = BytesUtils.toByteArray( "0x0031231231231231231231231231231231231231" );
+        byte[] address2Bytes = BytesUtils.toByteArray( "0x0231231231231231231231231231231231231231" );
+        byte[]  content = new byte[40];
+        System.arraycopy( address1Bytes, 0, content, 0, 20 );
+        System.arraycopy( address2Bytes, 0, content, 20, 20 );
+        byte[] address = CryptoUtils.sha256( content );
+
+        logger.info( "hashed content:" + BytesUtils.toHexString( address, Prefix.ZeroLowerX ) );
+    }
+
 }

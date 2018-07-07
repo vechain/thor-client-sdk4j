@@ -103,24 +103,34 @@ public class TransactionClient extends AbstractClient {
         return sendPostRequest(Path.PostTransaction, null, null, request, TransferResult.class);
     }
 
-    public static TransferResult transfer(final String rawTransaction) throws ClientIOException {
+    /**
+     * Send the transaction hex string.
+     * @param rawTransactionHexString hex string of raw transaction.
+     * @return {@link TransferResult}
+     * @throws ClientIOException
+     */
+    public static TransferResult transfer(final String rawTransactionHexString) throws ClientIOException {
 
-        if (StringUtils.isBlank(rawTransaction)) {
+        if (!StringUtils.isHex(rawTransactionHexString)) {
             throw ClientArgumentException.exception("Raw transaction is encode error");
         }
         TransferRequest request = new TransferRequest();
-        request.setRaw(rawTransaction);
+        request.setRaw(rawTransactionHexString);
         return sendPostRequest(Path.PostTransaction, null, null, request, TransferResult.class);
     }
 
-    public static TransferResult transfer(final byte[] rawTransaction) throws ClientIOException {
-        if (rawTransaction == null) {
-            throw ClientArgumentException.exception("Raw transaction is encode error");
+    /**
+     * Send transaction bytes.
+     * @param rawTransactionBytes byte array.
+     * @return {@link TransferResult}
+     * @throws ClientIOException
+     */
+    public static TransferResult transfer(final byte[] rawTransactionBytes) throws ClientIOException {
+        if(rawTransactionBytes == null){
+            throw ClientArgumentException.exception( "rawTransaction byte array is null." );
         }
-        String hexRaw = BytesUtils.toHexString(rawTransaction, Prefix.ZeroLowerX);
-        TransferRequest request = new TransferRequest();
-        request.setRaw(hexRaw);
-        return sendPostRequest(Path.PostTransaction, null, null, request, TransferResult.class);
+        String hexString = BytesUtils.toHexString( rawTransactionBytes, Prefix.ZeroLowerX );
+        return transfer( hexString );
     }
 
     /**
@@ -180,9 +190,42 @@ public class TransactionClient extends AbstractClient {
     }
 
     /**
-     * invokeContractMethod send transaction to contract.
-     * 
-     * @param toClauses
+     * Build deploying the contract codes.
+     * @param contractHex byte array
+     * @return
+     */
+    public static ToClause buildDeployClause(String  contractHex) {
+        if(!StringUtils.isHex( contractHex )){
+            return null;
+        }
+        ToData toData = new ToData();
+        toData.setData(contractHex);
+        return new ToClause( Address.NULL_ADDRESS, Amount.ZERO, toData );
+    }
+
+
+    /**
+     * Deploy a contract to the block chain.
+     * @param contractHex the contract hex string with
+     * @param gas  the gas
+     * @param gasCoef  the gas coefficient
+     * @param expiration the expiration
+     * @param keyPair  private keypair
+     */
+    public static TransferResult deployContract(String contractHex, int gas, byte gasCoef, int expiration, ECKeyPair keyPair){
+        ToClause toClause =  buildDeployClause( contractHex );
+        if(toClause == null){
+            throw ClientArgumentException.exception( "The contract hex string is null" );
+        }
+        ToClause[] toClauses = new ToClause[1];
+        toClauses[0] = toClause;
+        return invokeContractMethod( toClauses, gas, gasCoef, expiration, keyPair );
+    }
+
+
+    /**
+     * InvokeContractMethod send transaction to contract.
+     * @param toClauses to-clauses array.
      * @param gas
      * @param gasCoef
      * @param expiration

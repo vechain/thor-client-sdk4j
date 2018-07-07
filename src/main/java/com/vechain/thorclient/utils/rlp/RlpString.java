@@ -10,7 +10,7 @@ import com.vechain.thorclient.utils.Prefix;
  * RLP string type.
  */
 public class RlpString implements RlpType {
-    private static final byte[] EMPTY = new byte[]{ };
+    public static final byte[] EMPTY = new byte[]{ };
 
     private final byte[] value;
 

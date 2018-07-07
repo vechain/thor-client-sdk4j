@@ -28,13 +28,16 @@ public class ClientIOException extends ThorException {
     }
 
     /**
-     * Get http status from exception. http status 400 means bad request. Likes out
+     * Get http status from exception.
+     * <p>
+     * http status 400 means bad request. Likes out
      * of gas, address can not be recovered, any request parameters parsing error
      * and etc.
+     * </p>
      * <p>
      * http status 403 means request forbidden, like transaction pool is full,
      * transaction is expired etc.
-     * <p>
+     * </p>
      * http status 404 means api path is not existed.
      *
      * @return response http code, while it -1, then it is not http error happening.

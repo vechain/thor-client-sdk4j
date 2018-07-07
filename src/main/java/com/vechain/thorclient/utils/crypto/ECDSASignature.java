@@ -1,14 +1,22 @@
 package com.vechain.thorclient.utils.crypto;
 
+import com.vechain.thorclient.utils.BytesUtils;
+
 import java.math.BigInteger;
 
 /**
  * A ECDSA signature  class.
  */
-class ECDSASignature {
+public class ECDSASignature {
 
     public final BigInteger r;
     public final BigInteger s;
+
+    public ECDSASignature(byte[] rBytes, byte[] sBytes){
+        this.r = BytesUtils.bytesToBigInt( rBytes );
+        this.s = BytesUtils.bytesToBigInt( sBytes );
+    }
+
 
     public ECDSASignature(BigInteger r, BigInteger s) {
         this.r = r;
