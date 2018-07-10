@@ -24,12 +24,10 @@ public class Main {
 
     private static final String SEND_RAW                = "sendRaw";
 
-    private static final String SEND_TRANSACTION        = "sendTxn";
+
 
 
     public static void main(String[] args) throws Exception {
-
-//        CommandLine commandLine = new CommandLine.Builder().addArg( args ).parse();
 
         if (args.length == 0) {
             System.out.println("找不到有效的参数~");
@@ -59,8 +57,6 @@ public class Main {
         }else if (args[0].equals( SEND_RAW )) {
             // args=sendVETRaw {providerUrl} {rawTransaction}
             TransactionConsole.sendRawTransaction( args );
-        }else if (args[0].equals( SEND_TRANSACTION )) {
-
         }
     }
 

@@ -101,10 +101,4 @@ public class TransactionConsole {
         }
     }
 
-
-    public static void sendTransaction(String[] args){
-        System.out.println( "Input chainTag:" );
-
-
-    }
 }
