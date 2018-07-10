@@ -1,4 +1,4 @@
-package com.vechain.thorclient;
+package com.vechain.thorclient.console;
 
 import java.io.File;
 import java.io.IOException;

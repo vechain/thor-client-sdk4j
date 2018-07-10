@@ -140,7 +140,7 @@ public class TransactionClient extends AbstractClient {
      *            {@link RawTransaction}
      * @return {@link RawTransaction} with signature.
      */
-    public static RawTransaction sign(RawTransaction rawTransaction, ECKeyPair keyPair) {
+    public static RawTransaction sign(RawTransaction rawTransaction, ECKeyPair keyPair){
         if (rawTransaction == null) {
             throw ClientArgumentException.exception("raw transaction object is invalid");
         }
