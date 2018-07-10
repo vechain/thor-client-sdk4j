@@ -2,7 +2,6 @@ package com.vechain.thorclient.console;
 
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
 import com.vechain.thorclient.utils.StringUtils;
-import org.apache.commons.cli.CommandLine;
 
 public class Main {
 
