@@ -2,4 +2,7 @@ language: java
 jdk:
   - oraclejdk8
 
-install:  mvn clean package -Dmaven.test.skip=true
+install:
+  -
+script:
+  - "mvn clean package -Dmaven.test.skip=true"
