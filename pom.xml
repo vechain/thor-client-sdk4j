@@ -123,7 +123,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>com.vechain.thorclient.Main</mainClass>
+							<mainClass>com.vechain.thorclient.console.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

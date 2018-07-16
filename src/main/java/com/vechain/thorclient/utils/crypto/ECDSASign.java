@@ -20,7 +20,7 @@ import static com.vechain.thorclient.utils.Assertions.verifyPrecondition;
 public class ECDSASign {
 
 
-    public static ECDSASign.SignatureData signMessage(byte[] message, ECKeyPair keyPair) {
+    public static ECDSASign.SignatureData signMessage(byte[] message, ECKeyPair keyPair) throws Exception{
         return signMessage(message, keyPair, true);
     }
 
@@ -32,7 +32,7 @@ public class ECDSASign {
      * @param needToHash set if the message to be hashed before signing. If it is true, hashed first,then sign. If it is false, signed directly.
      * @return signature data which contains 32 bytes r, 32 bytes s, 1 byte v.
      */
-    public static ECDSASign.SignatureData signMessage(byte[] message, ECKeyPair keyPair, boolean needToHash) {
+    public static ECDSASign.SignatureData signMessage(byte[] message, ECKeyPair keyPair, boolean needToHash) throws SignException {
 
         BigInteger publicKey = keyPair.getPublicKey();
         byte[] messageHash;
@@ -42,20 +42,25 @@ public class ECDSASign {
             messageHash = message;
         }
         int recId = -1;
-        ECDSASignature sig = null;
-        while(recId == -1){
-            sig = keyPair.sign(messageHash);
-            // Now we have to work backwards to figure out the recId needed to recover the signature.
-            for (int i = 0; i < 2; i++) {
-                BigInteger k = recoverFromSignature(i, sig, messageHash);
-                if (k != null && k.equals(publicKey)) {
-                    recId = i;
-                    break;
-                }
+        ECDSASignature sig;
+
+        sig = keyPair.sign(messageHash);
+        for (int i = 0; i < 4; i++) {
+            BigInteger k = recoverFromSignature(i, sig, messageHash);
+            if (k != null && k.equals(publicKey)) {
+                recId = i;
+                break;
             }
         }
 
-        //This is different from ethereum
+        if (recId == -1){
+            throw new SignException( "Sign the data failed." );
+        }
+
+        if(recId == 2 || recId == 3){
+            throw new SignException( "Recovery is not valid for VeChain MainNet." );
+        }
+
         byte v = (byte) recId;
         byte[] r = BytesUtils.toBytesPadded(sig.r, 32);
         byte[] s = BytesUtils.toBytesPadded(sig.s, 32);
@@ -213,6 +218,11 @@ public class ECDSASign {
         }
     }
 
+   public static class SignException extends RuntimeException{
+        public SignException(String exceptionMessage){
+            super(exceptionMessage);
+        }
+   }
 }
 
 
