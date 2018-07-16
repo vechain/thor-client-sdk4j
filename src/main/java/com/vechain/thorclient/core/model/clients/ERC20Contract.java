@@ -209,7 +209,7 @@ public class ERC20Contract extends AbstractContract {
         if(abiDefinition == null){
             throw new RuntimeException( "can not find transfer abi method" );
         }
-        String data = buildData( abiDefinition, toAddress.toHexString( null ), BytesUtils.toHexString( amount.toByteArray(), null ) );
+		String data = buildData( abiDefinition, toAddress.toHexString( null ), amount.toBigInteger() );
 
         ToData toData = new ToData();
         toData.setData( data );
