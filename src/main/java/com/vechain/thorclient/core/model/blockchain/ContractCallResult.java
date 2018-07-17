@@ -1,73 +1,78 @@
 package com.vechain.thorclient.core.model.blockchain;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.ArrayList;
+
 import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 public class ContractCallResult implements Serializable {
 
-    private String data;
-    private ArrayList<Event> events;
-    private ArrayList<Transfer> transfers;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2695526756954990834L;
+	private String data;
+	private ArrayList<Event> events;
+	private ArrayList<Transfer> transfers;
 
-    private long gasUsed;
-    private boolean reverted;
-    private String vmError;
+	private BigInteger gasUsed;
+	private boolean reverted;
+	private String vmError;
 
-    public String getData() {
-        return data;
-    }
+	public String getData() {
+		return data;
+	}
 
-    public void setData(String data) {
-        this.data = data;
-    }
+	public void setData(String data) {
+		this.data = data;
+	}
 
-    public ArrayList<Event> getEvents() {
-        return events;
-    }
+	public ArrayList<Event> getEvents() {
+		return events;
+	}
 
-    public void setEvents(ArrayList<Event> events) {
-        this.events = events;
-    }
+	public void setEvents(ArrayList<Event> events) {
+		this.events = events;
+	}
 
-    public ArrayList<Transfer> getTransfers() {
-        return transfers;
-    }
+	public ArrayList<Transfer> getTransfers() {
+		return transfers;
+	}
 
-    public void setTransfers(ArrayList<Transfer> transfers) {
-        this.transfers = transfers;
-    }
+	public void setTransfers(ArrayList<Transfer> transfers) {
+		this.transfers = transfers;
+	}
 
-    public long getGasUsed() {
-        return gasUsed;
-    }
+	public boolean isReverted() {
+		return reverted;
+	}
 
-    public void setGasUsed(long gasUsed) {
-        this.gasUsed = gasUsed;
-    }
+	public void setReverted(boolean reverted) {
+		this.reverted = reverted;
+	}
 
-    public boolean isReverted() {
-        return reverted;
-    }
+	public String getVmError() {
+		return vmError;
+	}
 
-    public void setReverted(boolean reverted) {
-        this.reverted = reverted;
-    }
+	public void setVmError(String vmError) {
+		this.vmError = vmError;
+	}
 
-    public String getVmError() {
-        return vmError;
-    }
+	public Amount getBalance(AbstractToken token) {
+		Amount balance = Amount.createFromToken(token);
+		balance.setHexAmount(data);
+		return balance;
+	}
 
-    public void setVmError(String vmError) {
-        this.vmError = vmError;
-    }
+	public BigInteger getGasUsed() {
+		return gasUsed;
+	}
 
-    public Amount getBalance(AbstractToken token){
-        Amount balance = Amount.createFromToken( token );
-        balance.setHexAmount( data );
-        return balance;
-    }
+	public void setGasUsed(BigInteger gasUsed) {
+		this.gasUsed = gasUsed;
+	}
 
 }

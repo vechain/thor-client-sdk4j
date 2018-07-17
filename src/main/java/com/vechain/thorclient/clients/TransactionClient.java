@@ -27,7 +27,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 public class TransactionClient extends AbstractClient {
 
-    public final static int ContractGasLimit = 70000;
+    public final static int ContractGasLimit = 9000000;
 
     /**
      * Get transaction by transaction Id.
@@ -140,7 +140,7 @@ public class TransactionClient extends AbstractClient {
      *            {@link RawTransaction}
      * @return {@link RawTransaction} with signature.
      */
-    public static RawTransaction sign(RawTransaction rawTransaction, ECKeyPair keyPair) {
+    public static RawTransaction sign(RawTransaction rawTransaction, ECKeyPair keyPair){
         if (rawTransaction == null) {
             throw ClientArgumentException.exception("raw transaction object is invalid");
         }

@@ -205,8 +205,8 @@ public class ProtoTypeContractClient extends TransactionClient {
                     ProtoTypeContract.ContractAddress,
                     abi,
                     targets[index].toHexString( Prefix.ZeroLowerX ),
-                    credits[index].toHexString(),
-                    recoveryRates[index].toHexString());
+                    credits[index].toBigInteger(),
+                    recoveryRates[index].toBigInteger());
 
         }
         return invokeContractMethod( clauses,gas,gasCoef,expiration, keyPair );

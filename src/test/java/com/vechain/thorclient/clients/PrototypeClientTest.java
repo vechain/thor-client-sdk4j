@@ -25,7 +25,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 @RunWith(JUnit4.class)
 public class PrototypeClientTest extends BaseTest {
 
-	static final String UserAddress = "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
+	static final String UserAddress = "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
 	static final String MasterAddress2 = "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed";
 	static final String Master2PrivateKey = "0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0";
 
