@@ -36,6 +36,10 @@ public class AbstractContract {
 	 * @return {@link ContractCall}
 	 */
 	public static ContractCall buildCall(AbiDefinition definition, Object... hexParameters) {
+		return buildCall(null, definition, hexParameters);
+	}
+
+	public static ContractCall buildCall(String caller, AbiDefinition definition, Object... hexParameters) {
 		if (definition == null) {
 			throw new IllegalArgumentException("definition is null");
 		}
@@ -43,6 +47,7 @@ public class AbstractContract {
 		ContractCall contractCall = new ContractCall();
 		contractCall.setData(data);
 		contractCall.setValue("0x0");
+		contractCall.setCaller(caller);
 		return contractCall;
 	}
 

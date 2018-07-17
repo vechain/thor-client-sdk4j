@@ -1,8 +1,6 @@
 package com.vechain.thorclient.utils;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,16 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Bool;
-import org.web3j.abi.datatypes.DynamicArray;
-import org.web3j.abi.datatypes.DynamicBytes;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.StaticArray;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Uint;
-import org.web3j.abi.datatypes.Utf8String;
 
 import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
@@ -28,7 +16,6 @@ import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
-import com.vechain.thorclient.core.model.clients.base.AbiDefinition.NamedType;
 
 @RunWith(JUnit4.class)
 public class ContractParameterTest extends BaseTest {
@@ -53,57 +40,66 @@ public class ContractParameterTest extends BaseTest {
 		Assert.assertEquals(4, length);
 	}
 
-	@SuppressWarnings("rawtypes")
-	@Test
-	public void testFunctionMDynamicArrayEncode1() {
-		String p1 = "davedavedavedavedavedavedavedavedavedavedavedavedavedavedavedave";
-		List<Type> list = new ArrayList<Type>();
-		list.add(new DynamicBytes(p1.getBytes()));
-		list.add(new Bool(true));
-		list.add(new StaticArray<Uint>(new Uint(BigInteger.ONE), new Uint(BigInteger.valueOf(2)),
-				new Uint(BigInteger.valueOf(3)), new Uint(BigInteger.valueOf(4)), new Uint(BigInteger.valueOf(5)),
-				new Uint(BigInteger.valueOf(6))));
-		Function function = new Function(fname, list, Collections.<TypeReference<?>>emptyList());
-		String s1 = FunctionEncoder.encode(function);
-
-		List<NamedType> inputs = new ArrayList<NamedType>();
-		inputs.add(new NamedType("a", "bytes"));
-		inputs.add(new NamedType("b", "bool"));
-		inputs.add(new NamedType("c", "uint[6]"));
-		AbiDefinition abiDefinition = new AbiDefinition(true, inputs, fname, null, "", false);
-
-		List<BigInteger> plist = new ArrayList<BigInteger>();
-		plist.add(BigInteger.ONE);
-		plist.add(BigInteger.valueOf(2));
-		plist.add(BigInteger.valueOf(3));
-		plist.add(BigInteger.valueOf(4));
-		plist.add(BigInteger.valueOf(5));
-		plist.add(BigInteger.valueOf(6));
-		ContractCall call = FakeContract.buildCall(abiDefinition, p1.getBytes(), true, plist);
-		Assert.assertEquals(s1.substring(10), call.getData().substring(10));
-	}
-
-	@Test
-	public void testFunctionMDynamicArrayEncode2() {
-		List<Type> list = new ArrayList<Type>();
-		list.add(new DynamicBytes(stringParam.getBytes()));
-		list.add(new Utf8String(bytesParam));
-		list.add(new DynamicArray<Uint>(new Uint(BigInteger.ONE), new Uint(BigInteger.valueOf(2)),
-				new Uint(BigInteger.valueOf(3)), new Uint(BigInteger.valueOf(4)), new Uint(BigInteger.valueOf(5))));
-		list.add(new org.web3j.abi.datatypes.Address(fromAddress));
-		Function function = new Function(fname, list, Collections.<TypeReference<?>>emptyList());
-		String s1 = FunctionEncoder.encode(function);
-		logger.info(s1);
-
-		FakeContract aFakeContract = new FakeContract();
-		AbiDefinition abiDefinition = aFakeContract.findAbiDefinition(fname);
-		ContractCall call = FakeContract.buildCall(abiDefinition, stringParam.getBytes(), bytesParam, intarray,
-				BytesUtils.toByteArray(fromAddress));
-
-		logger.info(call.getData());
-		// Assert.assertEquals(s1.substring(10), call.getData().substring(10));
-
-	}
+	// @SuppressWarnings("rawtypes")
+	// @Test
+	// public void testFunctionMDynamicArrayEncode1() {
+	// String p1 =
+	// "davedavedavedavedavedavedavedavedavedavedavedavedavedavedavedave";
+	// List<Type> list = new ArrayList<Type>();
+	// list.add(new DynamicBytes(p1.getBytes()));
+	// list.add(new Bool(true));
+	// list.add(new StaticArray<Uint>(new Uint(BigInteger.ONE), new
+	// Uint(BigInteger.valueOf(2)),
+	// new Uint(BigInteger.valueOf(3)), new Uint(BigInteger.valueOf(4)), new
+	// Uint(BigInteger.valueOf(5)),
+	// new Uint(BigInteger.valueOf(6))));
+	// Function function = new Function(fname, list,
+	// Collections.<TypeReference<?>>emptyList());
+	// String s1 = FunctionEncoder.encode(function);
+	//
+	// List<NamedType> inputs = new ArrayList<NamedType>();
+	// inputs.add(new NamedType("a", "bytes"));
+	// inputs.add(new NamedType("b", "bool"));
+	// inputs.add(new NamedType("c", "uint[6]"));
+	// AbiDefinition abiDefinition = new AbiDefinition(true, inputs, fname, null,
+	// "", false);
+	//
+	// List<BigInteger> plist = new ArrayList<BigInteger>();
+	// plist.add(BigInteger.ONE);
+	// plist.add(BigInteger.valueOf(2));
+	// plist.add(BigInteger.valueOf(3));
+	// plist.add(BigInteger.valueOf(4));
+	// plist.add(BigInteger.valueOf(5));
+	// plist.add(BigInteger.valueOf(6));
+	// ContractCall call = FakeContract.buildCall(abiDefinition, p1.getBytes(),
+	// true, plist);
+	// Assert.assertEquals(s1.substring(10), call.getData().substring(10));
+	// }
+	//
+	// @Test
+	// public void testFunctionMDynamicArrayEncode2() {
+	// List<Type> list = new ArrayList<Type>();
+	// list.add(new DynamicBytes(stringParam.getBytes()));
+	// list.add(new Utf8String(bytesParam));
+	// list.add(new DynamicArray<Uint>(new Uint(BigInteger.ONE), new
+	// Uint(BigInteger.valueOf(2)),
+	// new Uint(BigInteger.valueOf(3)), new Uint(BigInteger.valueOf(4)), new
+	// Uint(BigInteger.valueOf(5))));
+	// list.add(new org.web3j.abi.datatypes.Address(fromAddress));
+	// Function function = new Function(fname, list,
+	// Collections.<TypeReference<?>>emptyList());
+	// String s1 = FunctionEncoder.encode(function);
+	// logger.info(s1);
+	//
+	// FakeContract aFakeContract = new FakeContract();
+	// AbiDefinition abiDefinition = aFakeContract.findAbiDefinition(fname);
+	// ContractCall call = FakeContract.buildCall(abiDefinition,
+	// stringParam.getBytes(), bytesParam, intarray,
+	// BytesUtils.toByteArray(fromAddress));
+	//
+	// logger.info(call.getData());
+	// Assert.assertEquals(s1.substring(10), call.getData().substring(10));
+	// }
 
 	@Test
 	public void testConstractParam() {

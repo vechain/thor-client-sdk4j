@@ -46,7 +46,7 @@ public class TransactionClientTest extends BaseTest {
 
 	@Test
 	public void testDeployContract() throws ClientIOException {
-		TransferResult result = TransactionClient.deployContract(contractHexString, 15000000, (byte) 0, 720,
+		TransferResult result = TransactionClient.deployContract(contractHexString, 9000000, (byte) 0, 720,
 				ECKeyPair.create(privateKey));
 		logger.info("Deploy contract result:" + JSON.toJSONString(result));
 		try {
