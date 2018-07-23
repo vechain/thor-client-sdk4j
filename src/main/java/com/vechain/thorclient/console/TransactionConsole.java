@@ -101,4 +101,22 @@ public class TransactionConsole {
         }
     }
 
+    
+    public static void signVTHOTxn(String[] args) throws Exception {
+        String privateKey;// args=sign filePath privateKey
+        if (args.length < 3 || StringUtils.isBlank(args[2])) {
+            System.out.println("You have input invalid parameters.");
+            System.exit(0);
+        }
+        privateKey = args[2];
+        File file = new File(args[1]);
+        if (file.isFile()) {
+            List<String[]> transactionList = ConsoleUtils.readExcelFile(args[1]);
+            String rawTransaction = ConsoleUtils.doSignVTHOTx(transactionList, privateKey, false);
+            System.out.println("Raw Transaction:");
+            System.out.println(rawTransaction);
+        } else {
+            System.out.println("You have input invalid parameters.");
+        }
+    }
 }
