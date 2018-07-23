@@ -155,7 +155,7 @@ byte chainTag = BlockchainClient.getChainTag();
 byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
 Amount amount = Amount.createFromToken(ERC20Token.VTHO);
 amount.setDecimalAmount("11.12");
-ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO, Address.fromHexString("VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"), amount);
+ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO, Address.fromHexString("0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"), amount);
 RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 80000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
 
 String raw = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
@@ -668,7 +668,7 @@ result: {"id":"0xbd4d94595b500bc9217839cc5b1987f4a277a277b6ede317a740480a28978ae
 String fromAddress = "0x866a849122133888214ac9fc59550077adf14975";
 String privateKey = "0x4aa49af0d1c105e70eb71d31e066d8d0f06e46927194e561ea302d57ad0c9ad1";
 ECKeyPair aECKeyPair = ECKeyPair.create(privateKey);
-String userAddress = "VXc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
+String userAddress = "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
         new Address[]{Address.fromHexString( userAddress )},
@@ -1016,6 +1016,17 @@ eg. java -jar thor-client-sdk4j-0.0.4.jar sign src/main/resources/exchange_examp
   
 Raw Transaction:
 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
+  
+```
+#### Sign VTHO transactions: 
+
+```
+java -jar thor-client-sdk4j-0.0.4.jar signVTHO {your-file-path} {privateKey}
+
+eg. java -jar thor-client-sdk4j-0.0.4.jar signVTHO src/main/resources/exchange_example.xlsx 0xdce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65
+  
+Raw Transaction:
+0xf9011d81c787015e41be43bb958202d0f8bcf85c940000000000000000000000000000456e6572677980b844a9059cbb000000000000000000000000d3ef28df6b553ed2fc47259e8134319cb1121a2a0000000000000000000000000000000000000000000027cf801b9d4f7d800000f85c940000000000000000000000000000456e6572677980b844a9059cbb000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed0000000000000000000000000000000000000000000027cf801b9d4f7d8000008082a41080887650b326b78e0c57c0b841fe27b8866d8a658a66a2d8241a310d1ef72e2954d397fc52aa5b4295f9686d0f6705301acc9a0aac6e9e0f93e3aa6fe0a07ff48e4e3287d0db45905d8a0756eb01
   
 ```
 
