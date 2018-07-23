@@ -70,7 +70,7 @@ public class ConsoleUtils {
 		DataFormatter dataFormatter = new DataFormatter();
 		sheet.forEach(row -> {
 			int rowNum = row.getRowNum();
-			if (rowNum > 2) {
+			if (rowNum > 1) {
 				int length = row.getLastCellNum();
 				List<String> rowData = new ArrayList<String>(length);
 				row.forEach(cell -> {
