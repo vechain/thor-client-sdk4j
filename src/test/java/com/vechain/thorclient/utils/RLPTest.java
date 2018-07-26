@@ -2,18 +2,17 @@ package com.vechain.thorclient.utils;
 
 
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.RawClause;
+import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.utils.rlp.RlpEncoder;
 import com.vechain.thorclient.utils.rlp.RlpList;
 import com.vechain.thorclient.utils.rlp.RlpString;
 import com.vechain.thorclient.utils.rlp.RlpType;
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.Prefix;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -66,4 +65,23 @@ public class RLPTest extends BaseTest {
         Assert.assertEquals(hexRaw, hexEncoded);
     }
 
+    @Test
+    public void testDecodeRawTxn(){
+        String hexRawTxn ="0xf83d81c7860881eec535498202d0e1e094000000002beadb038203be21ed5ce7c9b1bff60289056bc75e2d63100000808082520880884773cc184328eb3ec0";
+        RawTransaction rawTransaction =  RLPUtils.decode(hexRawTxn );
+        RawClause[] rawClauses = rawTransaction.getClauses();
+        int index = 1;
+        for(RawClause rawClause : rawClauses){
+            byte[] addressBytes = rawClause.getTo();
+            byte[] valueBytes = rawClause.getValue();
+            Amount amount = Amount.VET();
+            amount.setHexAmount( BytesUtils.toHexString( valueBytes, Prefix.ZeroLowerX ) );
+            logger.info( index +".-----------------start------------------------------------" );
+            logger.info( "Address:" + BytesUtils.toHexString( addressBytes, Prefix.ZeroLowerX ) );
+            logger.info( "Value:" + amount.getAmount().toPlainString());
+            logger.info( "-----------------end------------------------------------" );
+            index++;
+        }
+
+    }
 }
