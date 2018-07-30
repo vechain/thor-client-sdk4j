@@ -25,6 +25,8 @@ public class Main {
 
 	private static final String SIGN_VTHO = "signVTHO";
 
+	private static final String PARSE = "parse";
+
 	public static void main(String[] args) throws Exception {
 
 		try {
@@ -58,6 +60,10 @@ public class Main {
 			} else if (args[0].equals(SEND_RAW)) {
 				// args=sendVETRaw {providerUrl} {rawTransaction}
 				TransactionConsole.sendRawTransaction(args);
+			} else if (args[0].equals( PARSE )) {
+				ParserConsole.parse( args );
+			} else {
+				System.out.println( "不支持的操作命令" );
 			}
 		} catch (Exception e) {
 			System.out.println("操作失败 " + e.getMessage());
