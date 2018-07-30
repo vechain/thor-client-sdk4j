@@ -53,8 +53,21 @@ public abstract class AbstractClient {
 
 	}
 
+	static {
+		setTimeout(5000);
+	}
+
 	private static String rawUrl(Path path) {
 		return NodeProvider.getNodeProvider().getProvider() + path.getPath();
+	}
+
+	public static void setTimeout(int timeout) {
+		try {
+			Unirest.shutdown();
+		} catch (IOException e) {
+
+		}
+		Unirest.setTimeouts(timeout, timeout);
 	}
 
 	/**
@@ -78,8 +91,6 @@ public abstract class AbstractClient {
 			HashMap<String, String> queryParams, Class<T> tClass) throws ClientIOException {
 		String rawURL = rawUrl(path);
 		String getURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
-		Unirest.setTimeouts(NodeProvider.getNodeProvider().getConnectTimeout(),
-				NodeProvider.getNodeProvider().getSocketTimeout());
 		HttpResponse<String> jsonNode = null;
 		try {
 			jsonNode = Unirest.get(getURL).asString();
@@ -128,8 +139,6 @@ public abstract class AbstractClient {
 	 */
 	public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams,
 			HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException {
-		Unirest.setTimeouts(NodeProvider.getNodeProvider().getConnectTimeout(),
-				NodeProvider.getNodeProvider().getSocketTimeout());
 		String rawURL = rawUrl(path);
 		String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
 
