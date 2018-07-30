@@ -18,7 +18,7 @@ import com.vechain.thorclient.core.model.clients.ERC20Token;
 
 @RunWith(JUnit4.class)
 public class ERC20ContractClientTest extends BaseTest {
-//	@Test
+	@Test
 	public void testERC20GetBalance() throws IOException {
 		Address address = Address.fromHexString(fromAddress);
 		Amount balance = ERC20ContractClient.getERC20Balance(address, ERC20Token.VTHO, null);
@@ -31,8 +31,8 @@ public class ERC20ContractClientTest extends BaseTest {
 
 	@Test
 	public void sendERC20Token() {
-		String toAmount = "100000";
-		String toAddress = "0x40a31d5ef45e70b7ebba71806430e93f5c0c69c0";
+		String toAmount = "122.33";
+		String toAddress = "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
 		Address address = Address.fromHexString(toAddress);
 		Amount balance = ERC20ContractClient.getERC20Balance(address, ERC20Token.VTHO, null);
 		if (balance != null) {
