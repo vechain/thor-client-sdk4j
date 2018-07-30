@@ -1,5 +1,6 @@
 package com.vechain.thorclient.core.model.blockchain;
 
+import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.utils.StringUtils;
 
 /**
@@ -60,8 +61,7 @@ public class NodeProvider {
      * @param timeout milliseconds
      */
     public  void setTimeout(int timeout){
-        this.setSocketTimeout( timeout );
-        this.setConnectTimeout( timeout);
+        AbstractClient.setTimeout(timeout);
     }
 
 
