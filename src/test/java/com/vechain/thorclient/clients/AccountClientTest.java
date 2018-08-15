@@ -2,6 +2,7 @@ package com.vechain.thorclient.clients;
 
 import java.io.IOException;
 
+import com.vechain.thorclient.core.model.clients.Revision;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,8 +22,8 @@ public class AccountClientTest extends BaseTest {
 
     @Test
     public void testGetAccountInfo() throws IOException {
-        Address address = Address.fromHexString("0x7567d83b7b8d80addcb281a71d54fc7b3364ffed");
-        Account account = AccountClient.getAccountInfo(address, null);
+        Address address = Address.fromHexString("0x3831Fc6ecF6C88D171e6eF3E2F291fE100925617");
+        Account account = AccountClient.getAccountInfo(address, Revision.create( 296759 ));
         logger.info("account info:" + JSON.toJSONString(account));
         logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
         Assert.assertNotNull(account);

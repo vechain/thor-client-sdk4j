@@ -1,7 +1,12 @@
 package com.vechain.thorclient.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.wallet.CipherException;
+import com.vechain.thorclient.core.wallet.Wallet;
+import com.vechain.thorclient.core.wallet.WalletFile;
 import com.vechain.thorclient.core.wallet.WalletInfo;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,5 +44,11 @@ public class WalletUtilsTest extends BaseTest {
         Assert.assertEquals("0x866a849122133888214ac9fc59550077adf14975", walletInfo.getKeyPair().getHexAddress());
 	}
 
-
+	@Test
+	public void testloadWalletFromPrivateKey() throws CipherException {
+		String privateKey = this.getEnvironment().get(PRIVATE_KEY);
+		ECKeyPair keyPair = ECKeyPair.create(privateKey);
+		WalletFile walletFile = Wallet.createStandard("123456", keyPair);
+		logger.info(JSON.toJSONString(walletFile));
+	}
 }

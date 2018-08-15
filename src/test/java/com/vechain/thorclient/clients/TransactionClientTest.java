@@ -10,6 +10,7 @@ import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.*;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import org.apache.commons.codec.digest.Crypt;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -94,10 +95,11 @@ public class TransactionClientTest extends BaseTest {
 		Amount amount = Amount.createFromToken(AbstractToken.VET);
 		amount.setDecimalAmount("100");
 		ToClause clause = TransactionClient.buildVETToClause(
-				Address.fromHexString("0x000000002beadb038203be21ed5ce7c9b1bff602"), amount, ToData.ZERO);
+				Address.fromHexString("0x391ba4c2d5212871130f8e05bf9459064d6ccf5b"), amount, ToData.ZERO);
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
 				720, 21000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
 		logger.info("SendVET Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
+		logger.info( "SignHash raw:" +  BytesUtils.toHexString( CryptoUtils.blake2b( rawTransaction.encode()) , Prefix.ZeroLowerX));
 		TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
 		logger.info("SendVET result:" + JSON.toJSONString(result));
 		Assert.assertNotNull(result);
