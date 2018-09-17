@@ -134,7 +134,7 @@ public class ECDSASign {
     /**
      * Returns public key point from the given private key.
      */
-    private static ECPoint publicPointFromPrivate(BigInteger privKey) {
+    public static ECPoint publicPointFromPrivate(BigInteger privKey) {
         /*
          * TODO: FixedPointCombMultiplier currently doesn't support scalars longer than the group
          * order, but that could change in future versions.

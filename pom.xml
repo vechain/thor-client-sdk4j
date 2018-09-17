@@ -181,4 +181,12 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<distributionManagement>
+		<repository>
+			<id>vechainRepo</id>
+			<name>Vechain Repository</name>
+			<url>https://nexus.vechaindev.com/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
+
 </project>
