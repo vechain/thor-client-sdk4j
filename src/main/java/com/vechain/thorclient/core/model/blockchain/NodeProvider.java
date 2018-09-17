@@ -74,7 +74,21 @@ public class NodeProvider {
     }
 
 
+    public String getWsProvider() {
+        if (StringUtils.isBlank(this.wsProvider) || !this.wsProvider.startsWith("ws")) {
+            throw new RuntimeException("The blockchain provider url must be set.");
+        }
+        return wsProvider;
+    }
+
+    public void setWsProvider(String wsProvider) {
+        this.wsProvider = wsProvider;
+    }
+
     private String provider;
+
+
+    private String wsProvider;
     private int    socketTimeout;
     private int connectTimeout;
 

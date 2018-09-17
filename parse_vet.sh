@@ -1,0 +1,1 @@
+java -jar target/thor-client-sdk4j-0.0.5.jar parse vet $1

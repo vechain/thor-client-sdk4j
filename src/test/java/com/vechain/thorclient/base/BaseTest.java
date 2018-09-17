@@ -19,6 +19,7 @@ public abstract class BaseTest implements SlatKeys {
     protected String            privateKey;
     protected String            sponsorKey;
     protected String            nodeProviderUrl;
+    protected String            nodeWSProviderUrl;
     protected String            fromAddress;
     private Map<String, String> environment = new HashMap<String, String>();
 
@@ -27,6 +28,7 @@ public abstract class BaseTest implements SlatKeys {
         privateKey = System.getenv(PRIVATE_KEY);
         sponsorKey = System.getenv(SPONSOR_KEY);
         nodeProviderUrl = System.getenv(NODE_PROVIDER_URL);
+        nodeWSProviderUrl = System.getenv( NODE_WSPROVIDER_URL );
         String nodeTimeout = System.getenv(NODE_TIMEOUT);
 
         Properties properties = new Properties();
@@ -59,6 +61,11 @@ public abstract class BaseTest implements SlatKeys {
                 nodeProviderUrl = properties.getProperty(NODE_PROVIDER_URL);
             }
             environment.put(NODE_PROVIDER_URL, nodeProviderUrl);
+
+            if (StringUtils.isBlank(nodeWSProviderUrl)) {
+                nodeWSProviderUrl = properties.getProperty(NODE_WSPROVIDER_URL);
+            }
+            environment.put(NODE_WSPROVIDER_URL, nodeWSProviderUrl);
         }
         if (StringUtils.isBlank(this.nodeProviderUrl) || !this.nodeProviderUrl.startsWith("http")) {
             throw new RuntimeException("Can not find valid nodeProviderUrl~");
@@ -66,6 +73,7 @@ public abstract class BaseTest implements SlatKeys {
 
         NodeProvider nodeProvider = NodeProvider.getNodeProvider();
         nodeProvider.setProvider(this.nodeProviderUrl);
+        nodeProvider.setWsProvider( this.nodeWSProviderUrl );
         nodeProvider.setTimeout(timeout);
 
         this.recoverAddress();
