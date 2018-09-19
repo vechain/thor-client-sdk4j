@@ -1,23 +1,35 @@
 package com.vechain.thorclient.clients;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
-import com.alibaba.fastjson.JSON;
-import com.vechain.thorclient.core.model.blockchain.Receipt;
-import com.vechain.thorclient.core.model.blockchain.TransferResult;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.Receipt;
+import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
+import com.vechain.thorclient.core.model.clients.ToClause;
+import com.vechain.thorclient.utils.DatasetManagerContract;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 @RunWith(JUnit4.class)
 public class ERC20ContractClientTest extends BaseTest {
+
+	public void testTransferContract() {
+		DatasetManagerContract aDatasetManagerContract = new DatasetManagerContract();
+		ToClause[] toClause = new ToClause[1];
+		toClause[0] = DatasetManagerContract.buildToClause(Address.fromHexString(""),
+				aDatasetManagerContract.findAbiDefinition(DatasetManagerContract.TRANSFER_OWNERSHIP),
+				Address.fromHexString(""));
+	}
+
 	@Test
 	public void testERC20GetBalance() throws IOException {
 		Address address = Address.fromHexString(fromAddress);
@@ -42,8 +54,8 @@ public class ERC20ContractClientTest extends BaseTest {
 		Amount amount = Amount.VTHO();
 		amount.setDecimalAmount(toAmount);
 		TransferResult result = ERC20ContractClient.transferERC20Token(
-				new Address[] { Address.fromHexString(toAddress) }, new Amount[] { amount },
-				50000, (byte) 0x0, 720, ECKeyPair.create(privateKey));
+				new Address[] { Address.fromHexString(toAddress) }, new Amount[] { amount }, 50000, (byte) 0x0, 720,
+				ECKeyPair.create(privateKey));
 		logger.info("sendERC20Token: " + JSON.toJSONString(result));
 
 		try {
