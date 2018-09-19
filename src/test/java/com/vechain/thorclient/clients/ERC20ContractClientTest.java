@@ -1,7 +1,6 @@
 package com.vechain.thorclient.clients;
 
 import java.io.IOException;
-import java.math.BigInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,20 +14,10 @@ import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
-import com.vechain.thorclient.core.model.clients.ToClause;
-import com.vechain.thorclient.utils.DatasetManagerContract;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 @RunWith(JUnit4.class)
 public class ERC20ContractClientTest extends BaseTest {
-
-	public void testTransferContract() {
-		DatasetManagerContract aDatasetManagerContract = new DatasetManagerContract();
-		ToClause[] toClause = new ToClause[1];
-		toClause[0] = DatasetManagerContract.buildToClause(Address.fromHexString(""),
-				aDatasetManagerContract.findAbiDefinition(DatasetManagerContract.TRANSFER_OWNERSHIP),
-				Address.fromHexString(""));
-	}
 
 	@Test
 	public void testERC20GetBalance() throws IOException {
