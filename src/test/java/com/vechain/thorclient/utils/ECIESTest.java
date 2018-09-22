@@ -36,9 +36,12 @@ public class ECIESTest {
 		System.out.println(ByteUtils.toHexString(bobKey.getRawPublicKey()));
 		System.out.println(bobKey.getHexAddress());
 
+		ECPoint bobPoint1 = ECIESUtils.createECPointFromPublicKey(ByteUtils.toHexString(bobKey.getRawPublicKey()));
+		System.out.println(bobPoint.equals(bobPoint1));
+
 		System.out.println("S1 S2===================");
 		String S1 = "1c6ce96caacedd14f7f9ee25bdb4b75fbd2db4df";// bob的地址？
-		String S2 = "7292c34b9a9fda166781144ecde28df279ca52a1";
+		String S2 = "1c6ce96caacedd14f7f9ee25bdb4b75fbd2db4df";// 7292c34b9a9fda166781144ecde28df279ca52a1
 		byte[] s2bytes = BytesUtils.toByteArray(S2);
 		System.out.println(S1);
 		System.out.println(S2);
@@ -48,6 +51,7 @@ public class ECIESTest {
 
 		ECPoint R = ECDSASign.publicPointFromPrivate(BytesUtils.bytesToBigInt(BytesUtils.toByteArray(r)));
 		byte[] Rencoded = R.getEncoded(false);
+		System.out.println("R:" + ByteUtils.toHexString(Rencoded));
 		// remove prefix
 		byte[] Rencoded2 = BytesUtils.toBytesPadded(new BigInteger(1, Arrays.copyOfRange(Rencoded, 1, Rencoded.length)),
 				64);
@@ -75,6 +79,9 @@ public class ECIESTest {
 		System.arraycopy(K, 32, kmBytes, 0, kmBytes.length);
 		System.out.println("Ke:" + ByteUtils.toHexString(keBytes));
 		System.out.println("Km:" + ByteUtils.toHexString(kmBytes));
+
+		System.out.println("Ke:" + ByteUtils.toHexString(Arrays.copyOfRange(K, 0, 32)));
+		System.out.println("Km:" + ByteUtils.toHexString(Arrays.copyOfRange(K, 32, K.length)));
 
 		System.out.println("4. 对消息进⾏行行加密，c=E(KE,m)");
 		byte[] ivBytes = new byte[16];
@@ -138,7 +145,7 @@ public class ECIESTest {
 		System.arraycopy(cBytes, 0, blake_client, km_client_bytes.length, cBytes.length);
 		System.arraycopy(s2bytes, 0, blake_client, km_client_bytes.length + cBytes.length, s2bytes.length);
 		byte[] mac_bytes = CryptoUtils.blake2b(blake_client);
-		System.out.println("d:" + ByteUtils.toHexString(mac_bytes));
+		System.out.println("calc d:" + ByteUtils.toHexString(mac_bytes));
 
 		System.out.println("4. 解码原始加密⽂文件，解码密码为Ke，c为收到的加密⽂文件");
 		byte[] iv_client_bytes = new byte[16];
@@ -151,6 +158,22 @@ public class ECIESTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	@Test
+	public void testUtil() throws Exception {
+		String msg = "{\n" + "\"sites\": [\n" + "{ \"name\":\"百度\" , \"url\":\"www.baidu.com\" }, \n"
+				+ "{ \"name\":\"google\" , \"url\":\"www.google.com\" }, \n"
+				+ "{ \"name\":\"微博\" , \"url\":\"www.weibo.com\" }\n" + "]\n" + "}";
+		String receiverPublicKey = "048e8c9a162dec4a76dbbdd89391353ad399e7a6c8c2332ed04ca22f77f51f45f0af867b4e06a82cdfd819019ca335b33ac369ac3ccd3920a6befad2c7903f50d4";
+		String receiverPrivateKey = "cab2002ddebea021ef9da251ea92198cf6bbeb6de34d834078783fbd86446334";
+		String shareSecretKey = "1c6ce96caacedd14f7f9ee25bdb4b75fbd2db4df";
+		String enString = ECIESUtils.encrypt(receiverPublicKey, shareSecretKey, msg);
+
+		String receiverMsg = ECIESUtils.decrypt(receiverPrivateKey, shareSecretKey, enString);
+
+		Assert.assertEquals(msg, receiverMsg);
 
 	}
 

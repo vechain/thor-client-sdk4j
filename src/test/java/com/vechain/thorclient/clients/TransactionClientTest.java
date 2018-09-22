@@ -149,6 +149,8 @@ public class TransactionClientTest extends BaseTest {
 
 		ECKeyPair publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
 		Assert.assertNotNull(publicKey);
+		
+		logger.info("publicKey:{}, {}", BytesUtils.toHexString(publicKey.getRawPublicKey(),null), publicKey.getHexAddress());
 		String hexAddress = publicKey.getHexAddress();
 
 		RawTransaction newRawTransaction = RLPUtils.decode(rawTxHex);

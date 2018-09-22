@@ -44,7 +44,7 @@
 	<logger name="ch.qos.logback.core.rolling" level="ERROR" />
 	<logger name="ch.qos.logback.classic" level="ERROR" />
 
-	<root level="INFO">
+	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
