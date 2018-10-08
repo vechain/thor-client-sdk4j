@@ -5,7 +5,7 @@
 
 	<groupId>com.vechain.client</groupId>
 	<artifactId>thor-client-sdk4j</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<packaging>jar</packaging>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -90,6 +90,11 @@
 			<version>3.17</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-client</artifactId>
+			<version>9.4.12.v20180830</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -180,5 +185,13 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>vechainRepo</id>
+			<name>Vechain Repository</name>
+			<url>https://nexus.vechaindev.com/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
 
 </project>

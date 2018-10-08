@@ -2,22 +2,23 @@ package com.vechain.thorclient.clients;
 
 import java.io.IOException;
 
-import com.alibaba.fastjson.JSON;
-import com.vechain.thorclient.core.model.blockchain.Receipt;
-import com.vechain.thorclient.core.model.blockchain.TransferResult;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.Receipt;
+import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 @RunWith(JUnit4.class)
 public class ERC20ContractClientTest extends BaseTest {
+
 	@Test
 	public void testERC20GetBalance() throws IOException {
 		Address address = Address.fromHexString(fromAddress);
@@ -31,8 +32,8 @@ public class ERC20ContractClientTest extends BaseTest {
 
 	@Test
 	public void sendERC20Token() {
-		String toAmount = "10000";
-		String toAddress = "0x9618d5e44d93717439184b4b8e854d3779faab8b";
+		String toAmount = "10000000";
+		String toAddress = "0x83bbaeb544a85ec7f35393e2ab246c4a89dca6f1";
 		Address address = Address.fromHexString(toAddress);
 		Amount balance = ERC20ContractClient.getERC20Balance(address, ERC20Token.VTHO, null);
 		if (balance != null) {
@@ -42,8 +43,8 @@ public class ERC20ContractClientTest extends BaseTest {
 		Amount amount = Amount.VTHO();
 		amount.setDecimalAmount(toAmount);
 		TransferResult result = ERC20ContractClient.transferERC20Token(
-				new Address[] { Address.fromHexString(toAddress) }, new Amount[] { amount },
-				50000, (byte) 0x0, 720, ECKeyPair.create(privateKey));
+				new Address[] { Address.fromHexString(toAddress) }, new Amount[] { amount }, 1000000, (byte) 0x0, 720,
+				ECKeyPair.create(privateKey));
 		logger.info("sendERC20Token: " + JSON.toJSONString(result));
 
 		try {

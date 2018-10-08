@@ -1,7 +1,13 @@
 package com.vechain.thorclient.clients.base;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
+
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.mashape.unirest.http.HttpResponse;
@@ -15,9 +21,12 @@ import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
+import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.URLUtils;
 
 public abstract class AbstractClient {
+
+	private static Logger logger = LoggerFactory.getLogger(AbstractClient.class);
 
 	public enum Path {
 
@@ -40,7 +49,11 @@ public abstract class AbstractClient {
 		PostFilterTransferLogPath("/transfers"),
 
 		// Nodes
-		GetNodeInfoPath("/node/network/peers"),;
+		GetNodeInfoPath("/node/network/peers"),
+
+		// SubscribeSocket
+		GetSubBlockPath("/subscriptions/block"), GetSubEventPath("/subscriptions/event"), GetSubTransferPath(
+				"/subscriptions/transfer"),;
 		private final String value;
 
 		Path(String value) {
@@ -53,6 +66,8 @@ public abstract class AbstractClient {
 
 	}
 
+	protected WebSocketClient client = new WebSocketClient();
+
 	static {
 		setTimeout(5000);
 	}
@@ -63,9 +78,10 @@ public abstract class AbstractClient {
 
 	public static void setTimeout(int timeout) {
 		try {
+			logger.warn("setTimeout:{}", timeout);
 			Unirest.shutdown();
 		} catch (IOException e) {
-
+			logger.error("Unirest shutdown error", e);
 		}
 		Unirest.setTimeouts(timeout, timeout);
 	}
@@ -150,6 +166,26 @@ public abstract class AbstractClient {
 			throw new ClientIOException(e);
 		}
 		return parseResult(tClass, jsonNode);
+	}
+
+	/**
+	 *
+	 * @param url
+	 * @param callback
+	 * @return
+	 * @throws Exception
+	 */
+	public static SubscribeSocket subscribeSocketConnect(String url, SubscribingCallback<?> callback) throws Exception {
+		if (StringUtils.isBlank(url) || callback == null) {
+			throw new ClientIOException("Invalid arguments ");
+		}
+		WebSocketClient client = new WebSocketClient();
+		SubscribeSocket subscribeSocket = new SubscribeSocket(callback);
+		client.start();
+		URI subUri = new URI(url);
+		ClientUpgradeRequest request = new ClientUpgradeRequest();
+		client.connect(subscribeSocket, subUri, request);
+		return subscribeSocket;
 	}
 
 	protected static HashMap<String, String> parameters(String[] keys, String[] values) {

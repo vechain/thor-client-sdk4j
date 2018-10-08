@@ -28,7 +28,6 @@ public class BlockClientTest extends BaseTest {
 		Assert.assertNotNull(block);
 	}
 
-	@Test
 	public void testUnirest() {
 		NodeProvider nodeProvider = NodeProvider.getNodeProvider();
 		nodeProvider.setProvider(nodeProviderUrl);

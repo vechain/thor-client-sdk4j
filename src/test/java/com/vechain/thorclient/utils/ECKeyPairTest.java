@@ -17,4 +17,12 @@ public class ECKeyPairTest extends BaseTest {
         String address = keyPair.getHexAddress();
         logger.info("Address is : " + address);
     }
+
+    @Test
+    public void testSign(){
+        String privateKey = this.getEnvironment().get(PRIVATE_KEY);
+        ECKeyPair keyPair = ECKeyPair.create(privateKey);
+    }
+
+
 }

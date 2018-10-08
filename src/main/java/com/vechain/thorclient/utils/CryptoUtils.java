@@ -1,9 +1,13 @@
 package com.vechain.thorclient.utils;
 
 import com.rfksystems.blake2b.Blake2b;
+import com.vechain.thorclient.utils.crypto.ECDSASign;
+import com.vechain.thorclient.utils.crypto.ECDSASignature;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -91,6 +95,22 @@ public class CryptoUtils {
         return randomBytes;
     }
 
+    public static ECKeyPair recoverPublicKey(byte[] message, byte[] sig){
+        if (message == null || message.length != 32){
+            throw new RuntimeException("The recover message is not correct");
+        }
+        if (sig == null || sig.length != 65){
+            throw new RuntimeException("The recover signature is not correct");
+        }
+        byte[] rBytes = new byte[32];
+        byte[] sBytes = new byte[32];
+        System.arraycopy( sig, 0, rBytes, 0, rBytes.length );
+        System.arraycopy( sig, 32, sBytes, 0, sBytes.length );
+        byte recovery = sig[64];
+        ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
+        BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, message);
+        return new ECKeyPair( null, publicKey );
+    }
 
     public static byte[] sha256(byte[] bytes) {
         return sha256(bytes, 0, bytes.length);

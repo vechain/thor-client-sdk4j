@@ -61,7 +61,7 @@ public class PrototypeClientTest extends BaseTest {
 
 		TransferResult transferResult = ProtoTypeContractClient.addUsers(
 				new Address[] { Address.fromHexString(fromAddress) },
-				new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
+				new Address[] { Address.fromHexString(UserAddress) }, 500000, (byte) 0x0,
 				720, ECKeyPair.create(Master2PrivateKey));
 		logger.info("Add user:" + JSON.toJSONString(transferResult));
 
