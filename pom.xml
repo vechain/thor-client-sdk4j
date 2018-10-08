@@ -5,7 +5,7 @@
 
 	<groupId>com.vechain.client</groupId>
 	<artifactId>thor-client-sdk4j</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<packaging>jar</packaging>
 
 	<modelVersion>4.0.0</modelVersion>
