@@ -672,7 +672,7 @@ String userAddress = "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
 TransferResult transferResult = ProtoTypeContractClient.addUser(
         new Address[]{Address.fromHexString( fromAddress )},
         new Address[]{Address.fromHexString( userAddress )},
-        ContractClient.GasLimit, (byte)0x0, 720, aECKeyPair );
+        70000, (byte)0x0, 720, aECKeyPair );
 logger.info("Add user:" + JSON.toJSONString( transferResult ));
 transferResult:{"id":"0x1eb2927e48d497d70f4530471abe62aa5700086e54af75ad8523d08005eab45f"}
 
@@ -706,7 +706,7 @@ logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 TransferResult transferResult = ProtoTypeContractClient.removeUsers(
       new Address[]{Address.fromHexString( fromAddress )},
       new Address[]{Address.fromHexString( userAddress)},
-        ContractClient.GasLimit, (byte)0x0, 720, ECKeyPair.create( privateKey ) );
+        70000, (byte)0x0, 720, ECKeyPair.create( privateKey ) );
 logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 transferResult:{"id":"0x1eb2927e48d497d70f4530471abe62aa5700086e54af75ad8523d08005eab45f"}
 
@@ -838,7 +838,7 @@ Package the jar with maven
 ```
 mvn clean package -Dmaven.test.skip=true
 
-The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.5.jar
+The maven will generate the jar file in folder target: thor-client-sdk4j-0.0.6.jar
 
 ```
 
@@ -850,9 +850,9 @@ There is a example transaction file in src/main/resources/exchange_example.xlsx,
 
 ```
  
-java -jar thor-client-sdk4j-0.0.5.jar getChainTag {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.6.jar getChainTag {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar getChainTag http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.6.jar getChainTag http://localhost:8669
 
 ChainTag:
 0x27
@@ -863,9 +863,9 @@ ChainTag:
 #### Get blockRef: 
 
 ```
-java -jar thor-client-sdk4j-0.0.5.jar getBlockRef {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.6.jar getBlockRef {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar getBlockRef http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.6.jar getBlockRef http://localhost:8669
 
 BlockRef:
 0x0000695540f491a5
@@ -875,9 +875,9 @@ BlockRef:
 #### Create wallet: 
 
 ```
-java -jar thor-client-sdk4j-0.0.5.jar createWallet {wallet-password}
+java -jar thor-client-sdk4j-0.0.6.jar createWallet {wallet-password}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar createWallet <your password>
+eg. java -jar thor-client-sdk4j-0.0.6.jar createWallet <your password>
 
 The keystore.json file will generate in current folder.
 
@@ -915,9 +915,9 @@ The wallet created successfully and the key store is:
 #### Get block: 
 
 ```
- java -jar thor-client-sdk4j-0.0.5.jar getBlock {blockchain-server-url}
+ java -jar thor-client-sdk4j-0.0.6.jar getBlock {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar getBlock http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.6.jar getBlock http://localhost:8669
 
 Block:
 {
@@ -946,9 +946,9 @@ Block:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.5.jar getTransaction {transaction-id} {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.6.jar getTransaction {transaction-id} {blockchain-server-url}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar getTransaction 0x19dd77d28ef70be8c924319a6c08b996dd456fa36f29f2427dbda90087a8a897 http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.6.jar getTransaction 0x19dd77d28ef70be8c924319a6c08b996dd456fa36f29f2427dbda90087a8a897 http://localhost:8669
 
 Transaction:
 {
@@ -971,9 +971,9 @@ Transaction:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.5.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
+java -jar thor-client-sdk4j-0.0.6.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
   
-eg. java -jar thor-client-sdk4j-0.0.5.jar getTransactionReceipt 0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5 http://localhost:8669
+eg. java -jar thor-client-sdk4j-0.0.6.jar getTransactionReceipt 0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5 http://localhost:8669
   
 Receipt:
 {
@@ -1010,9 +1010,9 @@ Receipt:
 #### Sign transactions: 
 
 ```
-java -jar thor-client-sdk4j-0.0.5.jar sign {your-file-path} {privateKey}
+java -jar thor-client-sdk4j-0.0.6.jar sign {your-file-path} {privateKey}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar sign src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
+eg. java -jar thor-client-sdk4j-0.0.6.jar sign src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
   
 Raw Transaction:
 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
@@ -1021,9 +1021,9 @@ Raw Transaction:
 #### Sign VTHO transactions: 
 
 ```
-java -jar thor-client-sdk4j-0.0.5.jar signVTHO {your-file-path} {privateKey}
+java -jar thor-client-sdk4j-0.0.6.jar signVTHO {your-file-path} {privateKey}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar signVTHO src/main/resources/exchange_example.xlsx 0xdce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65
+eg. java -jar thor-client-sdk4j-0.0.6.jar signVTHO src/main/resources/exchange_example.xlsx 0xdce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65
   
 Raw Transaction:
 0xf9011d81c787015e41be43bb958202d0f8bcf85c940000000000000000000000000000456e6572677980b844a9059cbb000000000000000000000000d3ef28df6b553ed2fc47259e8134319cb1121a2a0000000000000000000000000000000000000000000027cf801b9d4f7d800000f85c940000000000000000000000000000456e6572677980b844a9059cbb000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed0000000000000000000000000000000000000000000027cf801b9d4f7d8000008082a41080887650b326b78e0c57c0b841fe27b8866d8a658a66a2d8241a310d1ef72e2954d397fc52aa5b4295f9686d0f6705301acc9a0aac6e9e0f93e3aa6fe0a07ff48e4e3287d0db45905d8a0756eb01
@@ -1034,9 +1034,9 @@ Raw Transaction:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.5.jar signAndSend {blockchain-server-url} {privateKey} {your-file-path}
+java -jar thor-client-sdk4j-0.0.6.jar signAndSend {blockchain-server-url} {privateKey} {your-file-path}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar signAndSend http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
+eg. java -jar thor-client-sdk4j-0.0.6.jar signAndSend http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
   
 Send Result:
 {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
@@ -1049,9 +1049,9 @@ Send Result:
 
 ```
   
-java -jar thor-client-sdk4j-0.0.5.jar sendRaw {blockchain-server-url} {raw}
+java -jar thor-client-sdk4j-0.0.6.jar sendRaw {blockchain-server-url} {raw}
 
-eg. java -jar thor-client-sdk4j-0.0.5.jar sendRaw http://localhost:8669 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
+eg. java -jar thor-client-sdk4j-0.0.6.jar sendRaw http://localhost:8669 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
   
 Send Result:
 {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
