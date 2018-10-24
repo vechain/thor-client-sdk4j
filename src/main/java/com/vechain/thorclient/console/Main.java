@@ -89,7 +89,7 @@ public class Main {
 		String privateKey = null;
 		String nodeProviderUrl = null;
 		if (args[0].equals(CHAIN_TAG) || args[0].equals(BLOCK_REF) || args[0].equals(GET_BLOCK) || args[0].equals(SEND)
-				|| args[0].equals(SEND_RAW)) {
+				|| args[0].equals(SEND_RAW) || args[0].equals(TRANSFER_VET) || args[0].equals(TRANSFER_VTHO)) {
 
 			if (args.length > 1 && !StringUtils.isBlank(args[1]) && args[1].startsWith("http")) {
 				nodeProviderUrl = args[1];

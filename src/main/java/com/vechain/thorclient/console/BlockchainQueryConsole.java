@@ -19,8 +19,8 @@ public class BlockchainQueryConsole {
 
 	public static void getBestBlock(String[] args) {
 		Block block = null;
-		if (args != null && args.length > 1) {
-			Revision revision = Revision.create(args[0]);
+		if (args != null && args.length > 3) {
+			Revision revision = Revision.create(Long.parseLong(args[3]));
 			block = BlockClient.getBlock(revision);
 		} else {
 			block = BlockClient.getBlock(Revision.BEST);

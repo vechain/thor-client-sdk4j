@@ -127,21 +127,19 @@ public class TransactionConsole {
 	 */
 	public static void transferVet(String[] args) throws Exception {
 		String privateKey;
-		if (args.length < 5) {
+		if (args.length < 6) {
 			System.out.println("You have input invalid parameters.");
 			System.exit(0);
 		}
-		privateKey = args[4];
+		privateKey = args[5];
 
 		List<String[]> transactionList = new ArrayList<String[]>();
 		String[] tranfs = new String[4];
-		tranfs[0] = args[1];
-		tranfs[1] = args[2];
-		tranfs[2] = args[3];
+		tranfs[0] = args[2];
+		tranfs[1] = args[3];
+		tranfs[2] = args[4];
 		tranfs[3] = null;
 
-		NodeProvider nodeProvider = NodeProvider.getNodeProvider();
-		nodeProvider.setProvider(args[0]);
 		String result = ConsoleUtils.doSignVETTx(transactionList, privateKey, true);
 		System.out.println(result);
 
@@ -156,21 +154,19 @@ public class TransactionConsole {
 	 */
 	public static void transferVtho(String[] args) throws Exception {
 		String privateKey;
-		if (args.length < 5) {
+		if (args.length < 6) {
 			System.out.println("You have input invalid parameters.");
 			System.exit(0);
 		}
-		privateKey = args[4];
+		privateKey = args[5];
 
 		List<String[]> transactionList = new ArrayList<String[]>();
 		String[] tranfs = new String[4];
-		tranfs[0] = args[1];
-		tranfs[1] = args[2];
-		tranfs[2] = args[3];
+		tranfs[0] = args[2];
+		tranfs[1] = args[3];
+		tranfs[2] = args[4];
 		tranfs[3] = null;
 
-		NodeProvider nodeProvider = NodeProvider.getNodeProvider();
-		nodeProvider.setProvider(args[0]);
 		String result = ConsoleUtils.doSignVTHOTx(transactionList, privateKey, true);
 		System.out.println(result);
 	}
