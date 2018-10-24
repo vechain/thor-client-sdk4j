@@ -1,10 +1,14 @@
 package com.vechain.thorclient.console;
 
 import com.alibaba.fastjson.JSON;
+import com.vechain.thorclient.clients.AccountClient;
 import com.vechain.thorclient.clients.TransactionClient;
+import com.vechain.thorclient.core.model.blockchain.Account;
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
 import com.vechain.thorclient.core.model.blockchain.Receipt;
 import com.vechain.thorclient.core.model.blockchain.Transaction;
+import com.vechain.thorclient.core.model.clients.Address;
+import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.utils.StringUtils;
 
 import java.io.File;
@@ -139,7 +143,7 @@ public class TransactionConsole {
 		tranfs[1] = args[3];
 		tranfs[2] = args[4];
 		tranfs[3] = null;
-
+		transactionList.add(tranfs);
 		String result = ConsoleUtils.doSignVETTx(transactionList, privateKey, true);
 		System.out.println(result);
 
@@ -166,8 +170,18 @@ public class TransactionConsole {
 		tranfs[1] = args[3];
 		tranfs[2] = args[4];
 		tranfs[3] = null;
-
+		transactionList.add(tranfs);
 		String result = ConsoleUtils.doSignVTHOTx(transactionList, privateKey, true);
 		System.out.println(result);
+	}
+
+	public static void getBalance(String[] args) throws Exception {
+		if (args.length < 3) {
+			System.out.println("You have input invalid parameters.");
+			System.exit(0);
+		}
+		Address address = Address.fromHexString(args[2]);
+		Account account = AccountClient.getAccountInfo(address, Revision.BEST);
+		System.out.println(JSON.toJSONString(account));
 	}
 }
