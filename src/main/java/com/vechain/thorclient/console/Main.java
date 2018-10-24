@@ -11,6 +11,10 @@ public class Main {
 
 	private static final String SEND = "signAndSend";
 
+	private static final String TRANSFER_VET = "transferVet";
+
+	private static final String TRANSFER_VTHO = "transferVtho";
+
 	private static final String CHAIN_TAG = "getChainTag";
 
 	private static final String BLOCK_REF = "getBlockRef";
@@ -46,10 +50,14 @@ public class Main {
 				TransactionConsole.signVETTxn(args);
 			} else if (args[0].equals(SIGN_VTHO)) {
 				TransactionConsole.signVTHOTxn(args);
+			} else if (args[0].equals(TRANSFER_VET)) {
+				TransactionConsole.transferVet(args);
+			} else if (args[0].equals(TRANSFER_VTHO)) {
+				TransactionConsole.transferVtho(args);
 			} else if (args[0].equals(CHAIN_TAG)) {
 				BlockchainQueryConsole.getChainTag();
 			} else if (args[0].equals(GET_BLOCK)) {
-				BlockchainQueryConsole.getBestBlock();
+				BlockchainQueryConsole.getBestBlock(args);
 			} else if (args[0].equals(BLOCK_REF)) {
 				BlockchainQueryConsole.getBestBlockRef();
 			} else if (args[0].equals(CREATE_WALLET)) {
@@ -60,10 +68,10 @@ public class Main {
 			} else if (args[0].equals(SEND_RAW)) {
 				// args=sendVETRaw {providerUrl} {rawTransaction}
 				TransactionConsole.sendRawTransaction(args);
-			} else if (args[0].equals( PARSE )) {
-				ParserConsole.parse( args );
+			} else if (args[0].equals(PARSE)) {
+				ParserConsole.parse(args);
 			} else {
-				System.out.println( "不支持的操作命令" );
+				System.out.println("不支持的操作命令");
 			}
 		} catch (Exception e) {
 			System.out.println("操作失败 " + e.getMessage());
