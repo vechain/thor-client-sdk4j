@@ -113,7 +113,7 @@ public class ConsoleUtils {
 				blockRef = BytesUtils.toByteArray(transaction[3]);
 			}
 		}
-		int gas = clauses.size() * 21000;
+		int gas = clauses.size() * 80000;
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
 				720, gas, (byte) 0x0, CryptoUtils.generateTxNonce(), clauses.toArray(new ToClause[0]));
 		if (isSend) {
