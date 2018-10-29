@@ -96,6 +96,11 @@ public class ConsoleUtils {
 
 	public static String doSignVTHOTx(List<String[]> transactions, String privateKey, boolean isSend)
 			throws IOException {
+		return doSignVTHOTx(transactions, privateKey, isSend, null);
+	}
+
+	public static String doSignVTHOTx(List<String[]> transactions, String privateKey, boolean isSend, Integer gasLimit)
+			throws IOException {
 
 		byte chainTag = 0;
 		byte[] blockRef = null;
@@ -113,7 +118,10 @@ public class ConsoleUtils {
 				blockRef = BytesUtils.toByteArray(transaction[3]);
 			}
 		}
-		int gas = clauses.size() * 80000;
+		if (gasLimit == null) {
+			gasLimit = 80000;
+		}
+		int gas = clauses.size() * gasLimit;
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
 				720, gas, (byte) 0x0, CryptoUtils.generateTxNonce(), clauses.toArray(new ToClause[0]));
 		if (isSend) {

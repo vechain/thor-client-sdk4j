@@ -153,7 +153,7 @@ public class TransactionConsole {
 	 * transferVet
 	 * 
 	 * @param args
-	 *            server-url to amount chainTag privateKey
+	 *            server-url to amount chainTag privateKey gaslimit(options)
 	 * @throws Exception
 	 */
 	public static void transferVtho(String[] args) throws Exception {
@@ -171,7 +171,8 @@ public class TransactionConsole {
 		tranfs[2] = args[4];
 		tranfs[3] = null;
 		transactionList.add(tranfs);
-		String result = ConsoleUtils.doSignVTHOTx(transactionList, privateKey, true);
+		String result = ConsoleUtils.doSignVTHOTx(transactionList, privateKey, true,
+				tranfs.length > 6 ? Integer.parseInt(tranfs[6]) : null);
 		System.out.println(result);
 	}
 

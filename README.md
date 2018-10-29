@@ -875,9 +875,9 @@ BlockRef:
 #### Create wallet: 
 
 ```
-java -jar thor-client-sdk4j-0.0.7.jar createWallet {wallet-password}
+java -jar thor-client-sdk4j-0.0.7.jar createWallet {wallet-password} {keystore-file-path}(optional, defalut: ./keystore.json)
 
-eg. java -jar thor-client-sdk4j-0.0.7.jar createWallet <your password>
+eg. java -jar thor-client-sdk4j-0.0.7.jar createWallet <your password> <keystore-file-path>
 
 The keystore.json file will generate in current folder.
 
