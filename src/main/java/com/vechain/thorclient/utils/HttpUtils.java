@@ -23,6 +23,7 @@ public class HttpUtils {
     public static JSONObject post(final String url, final Map<String, String> headers, JSONObject json) {
         try {
             HttpResponse<JsonNode> postResponse = Unirest.post(url)
+            		.headers(headers)
                     .header("accept", "application/json")
                     .header("Content-Type", "application/json")
                     .body(json)

@@ -2,7 +2,9 @@ package com.vechain.thorclient.clients;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
+import com.alibaba.fastjson.JSONObject;
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.EventFilter;
 import com.vechain.thorclient.core.model.blockchain.FilteredEvent;
@@ -19,55 +21,74 @@ import com.vechain.thorclient.utils.Prefix;
  */
 public class LogsClient extends AbstractClient {
 
-    /**
-     * Get events log from a address.
-     * 
-     * @param filter
-     *            required {@link EventFilter} a filter for the events log.
-     * @param order
-     *            optional ,{@link Order} a time order for the events list.
-     * @param address
-     *            optional, {@link Address} a address which has events log.
-     * @return array of {@link FilteredEvent}, could be null. throws
-     *         ClientIOException network error or request invalid.
-     */
-    public static ArrayList<?> filterEvents(EventFilter filter, Order order, Address address) throws ClientIOException {
-        if (filter == null) {
-            throw ClientArgumentException.exception("filter is null");
-        }
-        HashMap<String, String> queryParams = new HashMap<>();
-        if (order != null) {
-            queryParams.put("order", order.getValue());
-        }
-        if (address != null) {
-            queryParams.put("address", address.toHexString(Prefix.ZeroLowerX));
-        }
-        return sendPostRequest(Path.PostFilterEventsLogPath, null, queryParams, filter, (new ArrayList<FilteredEvent>()).getClass());
+	/**
+	 * Get events log from a address.
+	 * 
+	 * @param filter
+	 *            required {@link EventFilter} a filter for the events log.
+	 * @param order
+	 *            optional ,{@link Order} a time order for the events list.
+	 * @param address
+	 *            optional, {@link Address} a address which has events log.
+	 * @return array of {@link FilteredEvent}, could be null. throws ClientIOException network error or request invalid.
+	 */
+	public static ArrayList<?> filterEvents(EventFilter filter, Order order, Address address) throws ClientIOException {
+		if (filter == null) {
+			throw ClientArgumentException.exception("filter is null");
+		}
+		HashMap<String, String> queryParams = new HashMap<>();
+		if (order != null) {
+			queryParams.put("order", order.getValue());
+		}
+		if (address != null) {
+			queryParams.put("address", address.toHexString(Prefix.ZeroLowerX));
+		}
+		ArrayList<?> filteredEvents = sendPostRequest(Path.PostFilterEventsLogPath, null, queryParams, filter,
+				ArrayList.class);
+		Iterator<?> it = filteredEvents.iterator();
+		while (it.hasNext()) {
+			Object object = (Object) it.next();
+			FilteredEvent aFilteredEvent = JSONObject.parseObject(object.toString(), FilteredEvent.class);
+			if (aFilteredEvent.getMeta().getBlockNumber() < filter.getRange().getFrom()) {
+				it.remove();
+			}
+		}
+		return filteredEvents;
 
-    }
+	}
 
-    /**
-     * Get transfer logs by order and
-     * 
-     * @param filter
-     *            required {@link TransferFilter} filter.
-     * @param order
-     *            optional {@link Order} the result order.
-     * @return array of {@link FilteredTransfer} could be null.
-     * @throws ClientIOException
-     *             network error
-     */
-    public static ArrayList<?> filterTransferLogs(TransferFilter filter, Order order) throws ClientIOException {
-        if (filter == null) {
-            throw ClientArgumentException.exception("filter is null");
-        }
-        HashMap<String, String> queryParams = new HashMap<>();
-        if (order != null) {
-            queryParams.put("order", order.getValue());
-        }
+	/**
+	 * Get transfer logs by order and
+	 * 
+	 * @param filter
+	 *            required {@link TransferFilter} filter.
+	 * @param order
+	 *            optional {@link Order} the result order.
+	 * @return array of {@link FilteredTransfer} could be null.
+	 * @throws ClientIOException
+	 *             network error
+	 */
+	public static ArrayList<?> filterTransferLogs(TransferFilter filter, Order order) throws ClientIOException {
+		if (filter == null) {
+			throw ClientArgumentException.exception("filter is null");
+		}
+		HashMap<String, String> queryParams = new HashMap<>();
+		if (order != null) {
+			queryParams.put("order", order.getValue());
+		}
 
-        return sendPostRequest(Path.PostFilterTransferLogPath, null, queryParams, filter, (new ArrayList<FilteredTransfer>()).getClass());
+		ArrayList<?> filteredEvents = sendPostRequest(Path.PostFilterTransferLogPath, null, queryParams, filter,
+				ArrayList.class);
+		Iterator<?> it = filteredEvents.iterator();
+		while (it.hasNext()) {
+			Object object = (Object) it.next();
+			FilteredEvent aFilteredEvent = JSONObject.parseObject(object.toString(), FilteredEvent.class);
+			if (aFilteredEvent.getMeta().getBlockNumber() < filter.getRange().getFrom()) {
+				it.remove();
+			}
+		}
+		return filteredEvents;
 
-    }
+	}
 
 }
