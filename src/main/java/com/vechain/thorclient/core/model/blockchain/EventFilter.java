@@ -12,7 +12,7 @@ public class EventFilter implements Serializable {
 	private static final long serialVersionUID = -7199186276009582052L;
 	private Range range;
 	private Options options;
-	private ArrayList<TopicSet> topicSets;
+	private ArrayList<TopicSet> criteriaSet;
 
 	public static EventFilter createFilter(Range range, Options options) {
 		EventFilter eventFilter = new EventFilter();
@@ -22,7 +22,7 @@ public class EventFilter implements Serializable {
 	}
 
 	private EventFilter() {
-		this.topicSets = new ArrayList<>();
+		this.criteriaSet = new ArrayList<>();
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class EventFilter implements Serializable {
 		topicSet.setTopic2(topic2);
 		topicSet.setTopic3(topic3);
 		topicSet.setTopic4(topic4);
-		topicSets.add(topicSet);
+		criteriaSet.add(topicSet);
 
 	}
 
@@ -82,12 +82,12 @@ public class EventFilter implements Serializable {
 		this.options = options;
 	}
 
-	public ArrayList<TopicSet> getTopicSets() {
-		return topicSets;
+	public ArrayList<TopicSet> getCriteriaSet() {
+		return criteriaSet;
 	}
 
-	public void setTopicSets(ArrayList<TopicSet> topicSets) {
-		this.topicSets = topicSets;
+	public void setCriteriaSet(ArrayList<TopicSet> criteriaSet) {
+		this.criteriaSet = criteriaSet;
 	}
 
 }

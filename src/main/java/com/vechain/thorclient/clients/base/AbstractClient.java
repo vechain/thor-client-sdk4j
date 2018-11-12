@@ -43,10 +43,10 @@ public abstract class AbstractClient {
 		GetBlockPath("/blocks/{revision}"),
 
 		// Events
-		PostFilterEventsLogPath("/events"),
+		PostFilterEventsLogPath("/logs/event"),
 
 		// Transfers
-		PostFilterTransferLogPath("/transfers"),
+		PostFilterTransferLogPath("/logs/transfer"),
 
 		// Nodes
 		GetNodeInfoPath("/node/network/peers"),
