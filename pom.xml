@@ -103,31 +103,21 @@
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
-					<compilerArguments>
-						<extdirs>src\main\webapp\lib</extdirs>
-					</compilerArguments>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
-						<id>copy-dependencies</id>
-						<phase>test</phase>
+						<phase>compile</phase>
 						<goals>
-							<goal>copy-dependencies</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
-						<configuration>
-							<outputDirectory>
-								target/release
-							</outputDirectory>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
 	<repositories>
@@ -200,6 +190,24 @@
 								<goals>
 									<goal>assembly</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>test</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>
+										target/release
+									</outputDirectory>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
