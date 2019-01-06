@@ -13,20 +13,20 @@ import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.signers.ECDSASigner;
 import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
-
+import org.bouncycastle.math.ec.ECPoint;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Arrays;
+
 
 /**
  * ECDSA Keypair contains private key and public key.
  */
-public class ECKeyPair {
+public class ECKeyPair extends ECKey{
 
     public static final int PRIVATE_KEY_SIZE = 32;
     private static final int PUBLIC_KEY_SIZE = 64;
-    private static final X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName("secp256k1");
+    private static final X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName(SECP256K1);
     public static final BigInteger HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
     public static final ECDomainParameters CURVE = new ECDomainParameters(
             CURVE_PARAMS.getCurve(), CURVE_PARAMS.getG(), CURVE_PARAMS.getN(), CURVE_PARAMS.getH());
@@ -36,20 +36,32 @@ public class ECKeyPair {
             CURVE.getG(), CURVE.getN(), CURVE.getH());
 
     private final BigInteger privateKey;
-    private final BigInteger publicKey;
+
 
     /**
      * Constructor of ECKeyPair
-     * @param privateKey private key.
-     * @param publicKey  public key.
+     * @param priv
+     * @param compressed
      */
-    public ECKeyPair(BigInteger privateKey, BigInteger publicKey) {
-        this.privateKey = privateKey;
-        this.publicKey = publicKey;
+    public ECKeyPair(BigInteger priv) {
+        this.privateKey = priv;
+
     }
 
     public BigInteger getPrivateKey() {
         return privateKey;
+    }
+
+    @Override
+    public String getAddress() {
+        byte[] addressBytes = getRawAddress();
+        return BytesUtils.toHexString( addressBytes, Prefix.ZeroLowerX );
+    }
+
+    @Override
+    public byte[] getRawPublicKey(boolean isCompressed) {
+        ECPoint point = publicPointFromPrivate(this.privateKey);
+        return point.getEncoded(isCompressed);
     }
 
     public byte[] getRawPrivateKey(){
@@ -57,49 +69,68 @@ public class ECKeyPair {
     }
 
 
+    /**
+     * Get decompressed public key in {@link BigInteger} format.
+     * @return
+     */
     public BigInteger getPublicKey() {
-        return publicKey;
+        return publicKeyFromPrivate( this.privateKey, false);
     }
 
-    public byte[] getRawPublicKey(){
-        return BytesUtils.toBytesPadded( publicKey, PUBLIC_KEY_SIZE );
+    private byte[] getPublicKeyPointBytes(){
+        return BytesUtils.toBytesPadded( this.getPublicKey(), PUBLIC_KEY_SIZE );
     }
+
 
     public byte[] getRawAddress() {
-        byte[] hash = CryptoUtils.keccak256(this.getRawPublicKey());
+        byte[] hash = CryptoUtils.keccak256(this.getPublicKeyPointBytes());
         byte[] address = new byte[20];
         System.arraycopy(hash, 12, address, 0, address.length);
         return address;  // right most 160 bits
     }
 
+    /**
+     * Get hex address string.
+     * @return
+     */
+    @Deprecated
     public String getHexAddress(){
-        byte[] addressBytes = getRawAddress();
-        return BytesUtils.toHexString( addressBytes, Prefix.ZeroLowerX );
+        return this.getAddress();
     }
 
     /**
      * Sign a hash with the private key of this key pair.
-     * @param message   the hash to sign
+     * @param messageHash   the hash to sign
      * @return  An {@link ECDSASignature} of the hash
      */
-    public ECDSASignature sign(byte[] message) {
+    @Override
+    public ECDSASignature sign(byte[] messageHash) {
         ECDSASigner signer = new ECDSASigner(new HMacDSAKCalculator(new SHA256Digest()));
-
         ECPrivateKeyParameters privKey = new ECPrivateKeyParameters(privateKey, CURVE);
         signer.init(true, privKey);
-        BigInteger[] components = signer.generateSignature(message);
-
+        BigInteger[] components = signer.generateSignature(messageHash);
         return new ECDSASignature(components[0], components[1]).toCanonicalised();
     }
 
+    /**
+     *  Create {@link ECKeyPair} from big integer private key.
+     * @param privateKey
+     * @return
+     */
     public static ECKeyPair create(BigInteger privateKey) {
-        return new ECKeyPair(privateKey, ECDSASign.publicKeyFromPrivate(privateKey));
+        return new ECKeyPair( privateKey );
     }
 
+    /**
+     * Create {@link ECKeyPair} from private key hex string.
+     * @param privateKeyHex
+     * @return
+     */
     public static ECKeyPair create(String privateKeyHex) {
         byte[] privKey = BytesUtils.toByteArray(privateKeyHex);
         return create(privKey);
     }
+
 
     public static ECKeyPair create(byte[] privateKey) {
         if(privateKey.length == PRIVATE_KEY_SIZE) {
@@ -136,14 +167,14 @@ public class ECKeyPair {
             return false;
         }
 
-        return publicKey != null
-                ? publicKey.equals(ecKeyPair.publicKey) : ecKeyPair.publicKey == null;
+        return this.getPublicKey() != null
+                ? this.getPublicKey().equals(ecKeyPair.getPublicKey()) : ecKeyPair.getPublicKey() == null;
     }
 
     @Override
     public int hashCode() {
         int result = privateKey != null ? privateKey.hashCode() : 0;
-        result = 31 * result + (publicKey != null ? publicKey.hashCode() : 0);
+        result = 31 * result + (this.getPublicKey() != null ? this.getPublicKey().hashCode() : 0);
         return result;
     }
 
