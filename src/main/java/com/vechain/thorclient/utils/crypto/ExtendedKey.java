@@ -3,8 +3,10 @@ package com.vechain.thorclient.utils.crypto;
 
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.Arrays;
+
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -35,8 +37,8 @@ public class ExtendedKey {
        return  this.master;
     }
 
-    public Key derived(int sequence) throws ValidationException {
-        return derivedFrom(sequence).getMaster();
+    public ExtendedKey derived(int sequence) throws ValidationException {
+        return derivedFrom(sequence);
     }
 
     private ExtendedKey derivedFrom(int sequence) throws  ValidationException{
@@ -44,7 +46,8 @@ public class ExtendedKey {
             if ((sequence & 0x80000000) != 0 && master.getRawPrivateKey() == null) {
                 throw new ValidationException("need private key for private generation");
             }
-            Mac mac = Mac.getInstance("HmacSHA512", "BC");
+
+            Mac mac = Mac.getInstance("HmacSHA512", new BouncyCastleProvider());
             SecretKey key = new SecretKeySpec(chainCode, "HmacSHA512");
             mac.init(key);
 
@@ -91,7 +94,7 @@ public class ExtendedKey {
                 pub = new ECPoint.Fp(curve.getCurve(), q.getX(), q.getY(), true).getEncoded();
                 return new ExtendedKey(new ECPublicKey(pub, true), r, depth, parent, sequence);
             }
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             throw new ValidationException(e);
         }
     }

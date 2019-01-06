@@ -26,7 +26,7 @@ public class ECPublicKey extends ECKey {
 
     @Override
     public byte[] getRawPrivateKey(){
-        throw new UnsupportedOperationException( "Can not get private key from ECPublicKey class." );
+       return null;
     }
 
     @Override

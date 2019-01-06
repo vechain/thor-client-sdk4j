@@ -1,5 +1,7 @@
 package com.vechain.thorclient.utils;
 
+import com.vechain.thorclient.utils.crypto.ECDSASign;
+import com.vechain.thorclient.utils.crypto.ECDSASignature;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +26,11 @@ public class ECKeyPairTest extends BaseTest {
     public void testSign(){
         String privateKey = this.getEnvironment().get(PRIVATE_KEY);
         ECKeyPair keyPair = ECKeyPair.create(privateKey);
-        byte[] pointsBytes = BytesUtils.toBytesPadded( keyPair.getPublicKey(), 64 );
-        logger.info("PublicKey is : " + BytesUtils.toHexString( pointsBytes, Prefix.ZeroLowerX ) );
-        Assert.assertEquals( "0x65e790f6065164e2f610297b5358b6c474f999fb5b4d2574fcaffccb59342c1f6f28f0b684ec97946da65cd08a1b9fc276f79d90caed80e56456cebbc165938e", BytesUtils.toHexString( pointsBytes, Prefix.ZeroLowerX ) );
+        String helloWorld = "HelloWorld";
+        byte[] messageHash = CryptoUtils.blake2b(helloWorld.getBytes());
+        ECDSASign.SignatureData data = ECDSASign.signMessage( messageHash, keyPair, false );
+        logger.info( "Signature:" + BytesUtils.toHexString( data.toByteArray(), Prefix.ZeroLowerX ) );
+
     }
 
 
