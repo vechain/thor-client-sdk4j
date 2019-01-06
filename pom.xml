@@ -5,7 +5,7 @@
 
 	<groupId>com.vechain.client</groupId>
 	<artifactId>thor-client-sdk4j</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.7</version>
 	<packaging>jar</packaging>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,6 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<dependencies>
 
@@ -104,57 +103,21 @@
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
-					<compilerArguments>
-						<extdirs>src\main\webapp\lib</extdirs>
-					</compilerArguments>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>com.vechain.thorclient.console.Main</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
+						<phase>compile</phase>
 						<goals>
-							<goal>assembly</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>test</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>
-								target/release
-							</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 	<repositories>
@@ -185,5 +148,72 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>vechainRepo</id>
+			<name>Vechain Repository</name>
+			<url>https://nexus.vechaindev.com/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
+
+	<profiles>
+		<profile>
+			<id>jar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>all</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.3</version>
+						<configuration>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>com.vechain.thorclient.console.Main</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+						<executions>
+							<execution>
+								<id>make-assembly</id>
+								<phase>package</phase>
+								<goals>
+									<goal>assembly</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>test</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>
+										target/release
+									</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

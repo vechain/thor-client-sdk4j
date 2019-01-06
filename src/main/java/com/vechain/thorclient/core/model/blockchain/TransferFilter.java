@@ -15,7 +15,7 @@ public class TransferFilter implements Serializable {
 	private static final long serialVersionUID = 2715720246287162258L;
 	private Range range;
 	private Options options;
-	private ArrayList<AddressSet> addressSets;
+	private ArrayList<AddressSet> criteriaSet;
 
 	/**
 	 * Create TransferFilter
@@ -40,7 +40,7 @@ public class TransferFilter implements Serializable {
 	}
 
 	private TransferFilter() {
-		this.addressSets = new ArrayList<AddressSet>();
+		this.criteriaSet = new ArrayList<AddressSet>();
 
 	}
 
@@ -55,7 +55,7 @@ public class TransferFilter implements Serializable {
 		if (recipient != null) {
 			addressSet.setRecipient(recipient.toHexString(Prefix.ZeroLowerX));
 		}
-		addressSets.add(addressSet);
+		criteriaSet.add(addressSet);
 
 	}
 
@@ -75,12 +75,11 @@ public class TransferFilter implements Serializable {
 		this.options = options;
 	}
 
-	public ArrayList<AddressSet> getAddressSets() {
-		return addressSets;
+	public ArrayList<AddressSet> getCriteriaSet() {
+		return criteriaSet;
 	}
 
-	public void setAddressSets(ArrayList<AddressSet> addressSets) {
-		this.addressSets = addressSets;
+	public void setCriteriaSet(ArrayList<AddressSet> criteriaSet) {
+		this.criteriaSet = criteriaSet;
 	}
-
 }

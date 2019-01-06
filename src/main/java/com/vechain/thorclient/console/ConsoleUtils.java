@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.alibaba.fastjson.JSON;
+import com.vechain.thorclient.clients.BlockchainClient;
 import com.vechain.thorclient.clients.TransactionClient;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
 import com.vechain.thorclient.core.model.clients.Address;
@@ -18,6 +19,7 @@ import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.ERC20Contract;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
+import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.model.clients.ToClause;
 import com.vechain.thorclient.core.model.clients.ToData;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
@@ -42,7 +44,11 @@ public class ConsoleUtils {
 			amount.setDecimalAmount(transaction[1]);
 			clauses.add(TransactionClient.buildVETToClause(Address.fromHexString(transaction[0]), amount, ToData.ZERO));
 			chainTag = BytesUtils.toByteArray(transaction[2])[0];
-			blockRef = BytesUtils.toByteArray(transaction[3]);
+			if (transaction[3] == null) {
+				blockRef = BlockchainClient.getBlockRef(null).toByteArray();
+			} else {
+				blockRef = BytesUtils.toByteArray(transaction[3]);
+			}
 		}
 		int gas = clauses.size() * 21000;
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
@@ -90,6 +96,11 @@ public class ConsoleUtils {
 
 	public static String doSignVTHOTx(List<String[]> transactions, String privateKey, boolean isSend)
 			throws IOException {
+		return doSignVTHOTx(transactions, privateKey, isSend, null);
+	}
+
+	public static String doSignVTHOTx(List<String[]> transactions, String privateKey, boolean isSend, Integer gasLimit)
+			throws IOException {
 
 		byte chainTag = 0;
 		byte[] blockRef = null;
@@ -101,9 +112,16 @@ public class ConsoleUtils {
 			clauses.add(
 					ERC20Contract.buildTranferToClause(ERC20Token.VTHO, Address.fromHexString(transaction[0]), amount));
 			chainTag = BytesUtils.toByteArray(transaction[2])[0];
-			blockRef = BytesUtils.toByteArray(transaction[3]);
+			if (transaction[3] == null) {
+				blockRef = BlockchainClient.getBlockRef(null).toByteArray();
+			} else {
+				blockRef = BytesUtils.toByteArray(transaction[3]);
+			}
 		}
-		int gas = clauses.size() * 21000;
+		if (gasLimit == null) {
+			gasLimit = 80000;
+		}
+		int gas = clauses.size() * gasLimit;
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
 				720, gas, (byte) 0x0, CryptoUtils.generateTxNonce(), clauses.toArray(new ToClause[0]));
 		if (isSend) {

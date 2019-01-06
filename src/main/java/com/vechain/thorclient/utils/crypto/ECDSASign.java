@@ -118,7 +118,6 @@ public class ECDSASign {
         return ECKeyPair.CURVE.getCurve().decodePoint(compEnc);
     }
 
-
     /**
      * A signature data
      */

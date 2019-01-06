@@ -7,40 +7,46 @@ import java.math.BigDecimal;
  */
 public class AbstractToken {
 
-    public static final AbstractToken VET = new AbstractToken( "VET" );
+	public static final AbstractToken VET = new AbstractToken("VET", 18);
 
-    protected String name;
-    protected BigDecimal precision;
-    protected BigDecimal scale;
+	protected String name;
+	protected BigDecimal precision;
+	protected BigDecimal scale;
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public BigDecimal getPrecision() {
-        return precision;
-    }
+	public BigDecimal getPrecision() {
+		return precision;
+	}
 
-    public void setPrecision(BigDecimal precision) {
-        this.precision = precision;
-    }
+	public void setPrecision(BigDecimal precision) {
+		this.precision = precision;
+	}
 
-    public BigDecimal getScale() {
-        return scale;
-    }
+	public BigDecimal getScale() {
+		return scale;
+	}
 
-    public void setScale(BigDecimal scale) {
-        this.scale = scale;
-    }
+	public void setScale(BigDecimal scale) {
+		this.scale = scale;
+	}
 
-    protected AbstractToken(String name){
-        this.name = name;
-        this.precision = BigDecimal.valueOf( 18 );
-        this.scale = BigDecimal.valueOf( 8 );
-    }
+	// protected AbstractToken(String name) {
+	// this.name = name;
+	// this.precision = BigDecimal.valueOf(18);
+	// this.scale = BigDecimal.valueOf(8);
+	// }
+
+	protected AbstractToken(String name, int unit) {
+		this.name = name;
+		this.precision = BigDecimal.valueOf(unit);
+		this.scale = BigDecimal.valueOf(unit);
+	}
 
 }

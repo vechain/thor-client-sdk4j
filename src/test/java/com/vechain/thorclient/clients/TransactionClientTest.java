@@ -178,7 +178,6 @@ public class TransactionClientTest extends BaseTest {
 		Key publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
 		Assert.assertNotNull(publicKey);
 		String hexAddress = publicKey.getAddress();
-
 		RawTransaction newRawTransaction = RLPUtils.decode(rawTxHex);
 		newRawTransaction.setSignature(null);
 		String txIdHex = BlockchainUtils.generateTransactionId(newRawTransaction, Address.fromHexString(hexAddress));

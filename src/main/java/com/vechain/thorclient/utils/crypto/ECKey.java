@@ -53,7 +53,7 @@ public abstract class ECKey implements Key{
     /**
      * Returns public key point from the given private key.
      */
-    static ECPoint publicPointFromPrivate(BigInteger privKey) {
+    public static ECPoint publicPointFromPrivate(BigInteger privKey) {
         /*
          * TODO: FixedPointCombMultiplier currently doesn't support scalars longer than the group
          * order, but that could change in future versions.
