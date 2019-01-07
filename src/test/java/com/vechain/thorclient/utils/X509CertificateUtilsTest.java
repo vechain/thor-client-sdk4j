@@ -78,16 +78,12 @@ public class X509CertificateUtilsTest extends BaseTest {
     @Test
     public void testVerifyCertificateFromRootPublicKey() {
         String certStr = "-----BEGIN CERTIFICATE-----\n" +
-                "MIIBxzCCAW4CCH6qzOY1lA0KMAoGCCqGSM49BAMCMFoxCzAJBgNVBAYTAkNOMQsw\n" +
-                "CQYDVQQIDAJTSDELMAkGA1UEBwwCU0gxEDAOBgNVBAoMB1ZlY2hhaW4xEDAOBgNV\n" +
-                "BAsMB1ZlY2hhaW4xDTALBgNVBAMMBENhcnkwHhcNMTgwODE2MDQ1MjQ5WhcNMTkw\n" +
-                "ODE2MDQ1MjQ5WjCBgTELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAlNIMQswCQYDVQQH\n" +
-                "DAJTSDEQMA4GA1UECgwHVmVjaGFpbjEQMA4GA1UECwwHVmVjaGFpbjEQMA4GA1UE\n" +
-                "AwwHdmVjaGFpbjEiMCAGCSqGSIb3DQEJARYTdmVjaGFpbkB2ZWNoYWluLmNvbTBW\n" +
-                "MBAGByqGSM49AgEGBSuBBAAKA0IABIl3SuEfwOsgGcoiHFU5AnAcpbG9aaKHbaON\n" +
-                "ncavFElsNEaUzAWEWN+b8cEQ3P9fPazzh5hw0YRx5zc3gcbvwIcwCgYIKoZIzj0E\n" +
-                "AwIDRwAwRAIgLYg9Fnh0CdU4N5V1UWMXVBrSi4Ry95DqwOC+ORpok2wCIBC33Llh\n" +
-                "MnCnPOGiAACYuN5/bvxheCUL1+JhKQ47MNXy\n" +
+                "MIIBCjCBsgIKfqrMwEEzDQoAATAKBggqhkjOPQQDAjAMMQowCAYDVQQKDAFhMB4X\n" +
+                "DTE5MDEwNzA5MzAxOFoXDTIwMDEwNzA5MzAxOFowEjEQMA4GA1UECgwHVmVjaGFp\n" +
+                "bjBWMBAGByqGSM49AgEGBSuBBAAKA0IABGBHftqaq2EzjFz4bmtjsrjK7kY2jmAH\n" +
+                "oSSHFaO5LiZRFahTKGn1pMzBdZemVrSHW78So25UGD+N9nTb08Ya6v8wCgYIKoZI\n" +
+                "zj0EAwIDRwAwRAIgBLXyKnnHT28F5YnPlH3e/8O5cuvEsk0aVTqOMXt46AECIDhc\n" +
+                "e4+eFWHNWUXZlqLGBU3Zbs2yafBEvEUyH4SMo2ek\n" +
                 "-----END CERTIFICATE-----";
 
         X509Certificate certificate = X509CertificateUtils.loadCertificate( certStr );
