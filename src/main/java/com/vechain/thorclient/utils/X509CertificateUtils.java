@@ -179,19 +179,23 @@ public class X509CertificateUtils {
      * @return
      */
     private static int index(X509Certificate certificate){
-        if (certificate.getVersion() == 1){
-            BigInteger integer = certificate.getSerialNumber();
-            byte[] serialNumBytes = integer.toByteArray();
-            String serialHex = BytesUtils.toHexString( serialNumBytes, Prefix.ZeroLowerX );
-            serialHex = serialHex.replace( "0x7eaacc", "" );
-            serialHex = serialHex.replace( "0d0a", "" );
-            return Integer.parseInt( serialHex , 16);
-        }else{
-            throw new IllegalArgumentException("Wrong certificate version");
-        }
+        BigInteger integer = certificate.getSerialNumber();
+        byte[] serialNumBytes = integer.toByteArray();
+        String serialHex = BytesUtils.toHexString( serialNumBytes, Prefix.ZeroLowerX );
+        serialHex = serialHex.replace( "0x7eaacc", "" );
+        serialHex = serialHex.replace( "0d0a", "" );
+        return Integer.parseInt( serialHex , 16);
+
     }
 
 
+    /**
+     * Verify
+     * @param hexTxStr
+     * @param hexSignature
+     * @param certificate
+     * @return
+     */
     public static boolean verifyTxSignature(String hexTxStr, String hexSignature, X509Certificate certificate){
         byte[] signature = BytesUtils.toByteArray( hexSignature );
         byte[] txHash = BytesUtils.toByteArray( hexTxStr );
