@@ -2,9 +2,7 @@ package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
-import com.vechain.thorclient.utils.crypto.ECDSASign;
-import com.vechain.thorclient.utils.crypto.ECDSASignature;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -194,7 +192,7 @@ public class BlockchainUtils {
     /**
      * Recover public key
      */
-    public static ECKeyPair recoverPublicKey(String rawTransactionHex){
+    public static Key recoverPublicKey(String rawTransactionHex){
         if(StringUtils.isBlank( rawTransactionHex )){
             return null;
         }
@@ -217,7 +215,7 @@ public class BlockchainUtils {
         byte[] signingHash = CryptoUtils.blake2b( rlpTxRaw );
         ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
         BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, signingHash);
-        return new ECKeyPair( null, publicKey );
+        return new ECPublicKey( publicKey, false );
 
     }
 

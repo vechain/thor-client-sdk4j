@@ -3,6 +3,7 @@ package com.vechain.thorclient.utils;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+import com.vechain.thorclient.utils.crypto.ECKey;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
@@ -25,18 +26,17 @@ public class ECIESTest {
 		System.out.println("Alice Key===================");
 		String AlicePrivateKey = "a8e1664e42fa6014c8a97fb64f943a114660de14dc8889f1024487ebcc9aa67a";
 		ECKeyPair aliceKey = ECKeyPair.create(BytesUtils.toByteArray(AlicePrivateKey));
-		System.out.println(ByteUtils.toHexString(aliceKey.getRawPublicKey()));
-		System.out.println(aliceKey.getHexAddress());
+		System.out.println(ByteUtils.toHexString(aliceKey.getRawPublicKey(false)));
+		System.out.println(aliceKey.getAddress());
 
 		System.out.println("Bob Key===================");
 		String BobPrivateKey = "cab2002ddebea021ef9da251ea92198cf6bbeb6de34d834078783fbd86446334";
 		ECKeyPair bobKey = ECKeyPair.create(BytesUtils.toByteArray(BobPrivateKey));
-		ECPoint bobPoint = ECDSASign
-				.publicPointFromPrivate(BytesUtils.bytesToBigInt(BytesUtils.toByteArray(BobPrivateKey)));
-		System.out.println(ByteUtils.toHexString(bobKey.getRawPublicKey()));
+		ECPoint bobPoint = ECKey.publicPointFromPrivate(BytesUtils.bytesToBigInt(BytesUtils.toByteArray(BobPrivateKey)));
+		System.out.println(ByteUtils.toHexString(bobKey.getRawPublicKey(false)));
 		System.out.println(bobKey.getHexAddress());
 
-		ECPoint bobPoint1 = ECIESUtils.createECPointFromPublicKey(ByteUtils.toHexString(bobKey.getRawPublicKey()));
+		ECPoint bobPoint1 = ECIESUtils.createECPointFromPublicKey(ByteUtils.toHexString(bobKey.getRawPublicKey(false)));
 		System.out.println(bobPoint.equals(bobPoint1));
 
 		System.out.println("S1 S2===================");
@@ -49,7 +49,7 @@ public class ECIESTest {
 		System.out.println("1. 产⽣生随机数r，并计算R=r*G");
 		String r = "640330c7610ee80b8fac93b079810d1712d9eca83e9f39f6aa75b3923e9b734b";
 
-		ECPoint R = ECDSASign.publicPointFromPrivate(BytesUtils.bytesToBigInt(BytesUtils.toByteArray(r)));
+		ECPoint R = ECKey.publicPointFromPrivate(BytesUtils.bytesToBigInt(BytesUtils.toByteArray(r)));
 		byte[] Rencoded = R.getEncoded(false);
 		System.out.println("R:" + ByteUtils.toHexString(Rencoded));
 		// remove prefix

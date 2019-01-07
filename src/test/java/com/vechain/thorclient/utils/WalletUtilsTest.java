@@ -22,7 +22,8 @@ public class WalletUtilsTest extends BaseTest {
 
 		logger.info("KeyStore:" + keyStoreString);
 		logger.info("privKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
-		logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
+		logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(false), Prefix
+				.ZeroLowerX));
 		logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
 		/**
 		 *
@@ -39,14 +40,14 @@ public class WalletUtilsTest extends BaseTest {
 		WalletInfo walletInfo = WalletUtils.loadKeystore(keyStore, "Vechain1234");
 
 		logger.info("privKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPrivateKey(), Prefix.ZeroLowerX));
-		logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(), Prefix.ZeroLowerX));
+		logger.info("pubKey:" + BytesUtils.toHexString(walletInfo.getKeyPair().getRawPublicKey(false), Prefix.ZeroLowerX));
 		logger.info("address:" + walletInfo.getKeyPair().getHexAddress());
         Assert.assertEquals("0x866a849122133888214ac9fc59550077adf14975", walletInfo.getKeyPair().getHexAddress());
 	}
 
 	@Test
 	public void testloadWalletFromPrivateKey() throws CipherException {
-		String privateKey = this.getEnvironment().get(PRIVATE_KEY);
+		String privateKey = "0xdce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65";
 		ECKeyPair keyPair = ECKeyPair.create(privateKey);
 		WalletFile walletFile = Wallet.createStandard("123456", keyPair);
 		logger.info(JSON.toJSONString(walletFile));

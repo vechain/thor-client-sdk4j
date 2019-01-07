@@ -5,6 +5,7 @@ import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.Key;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,7 +37,7 @@ public class CryptoUtilsTest extends BaseTest {
     public void testRecover(){
         byte[] signData = BytesUtils.toByteArray( "0x2084e6a798c87edab61f6f726475f94e4265a654c77c5c4e43047203ba9b01f20057df1f8dd0c5a1ecdc08e97a9aa87befe22fa93fe7ca94a65bc39e0b686ddc00" );
         byte[] message = BytesUtils.toByteArray( "0x1073a4d83294c771d16af16fe287fb734f3521f01575557ddcac7e3e62019ba8" );
-        ECKeyPair keyPair = CryptoUtils.recoverPublicKey( message, signData );
-        logger.info( "Address:" + keyPair.getHexAddress());
+        Key keyPair = CryptoUtils.recoverPublicKey( message, signData );
+        logger.info( "Address:" + keyPair.getAddress());
     }
 }
