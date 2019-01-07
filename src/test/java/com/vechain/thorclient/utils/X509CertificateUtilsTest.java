@@ -1,7 +1,11 @@
 package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.base.BaseTest;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.x509.Certificate;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.crypto.signers.ECDSASigner;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +33,12 @@ public class X509CertificateUtilsTest extends BaseTest {
                 "+Px0VrRo0AxaTGHog71W6ohrq7Nn3ajZz/uWmnGzyCgCIBeoHzoK+z7SfWybpYlH" +
                 "OrjrNiN9nldORqoFwXib3743";
 
+        System.out.println(certStr);
         X509Certificate certificate = X509CertificateUtils.loadCertificate( certStr );
+        System.out.println("SN: "+BytesUtils.toHexString(certificate.getSerialNumber().toByteArray(),Prefix.ZeroLowerX));
+        System.out.println("Sig: "+BytesUtils.toHexString(certificate.getSignature(),Prefix.ZeroLowerX));
+
+        System.out.println("PUB: "+BytesUtils.toHexString(certificate.getPublicKey().getEncoded(),Prefix.ZeroLowerX));
 
         byte[] serialBytes  = certificate.getSerialNumber().toByteArray();
 
@@ -56,6 +65,8 @@ public class X509CertificateUtilsTest extends BaseTest {
                         "+Px0VrRo0AxaTGHog71W6ohrq7Nn3ajZz/uWmnGzyCgCIBeoHzoK+z7SfWybpYlH" +
                         "OrjrNiN9nldORqoFwXib3743" +
                 "-----END CERTIFICATE-----";
+
+        System.out.println(certStr);
 
         X509Certificate certificate = X509CertificateUtils.loadCertificate( certStr );
         String publicKeyHex = "0x040e8fe61092bbbbb468f17ccfa39548c7a161318ed4c6cb5b2bbd45f9562ba9133f2ce244fccd7e00cb0ab80b5790d678ca769fc629cfabed2a2dea3328f420e8";
@@ -91,4 +102,8 @@ public class X509CertificateUtilsTest extends BaseTest {
         boolean isVerified = X509CertificateUtils.verifyCertificateSignature( certificate, rootPubKey, chaincode );
         Assert.assertTrue( isVerified );
     }
+
+
+
+
 }

@@ -47,4 +47,46 @@ public class StringUtils {
 		return value != null && value.matches( "^(0x|0X)[0-9a-fA-F]+$" );
 	}
 
+
+	public static byte[] toHexBytes(String strs) {
+		String strsCopy = strs.toLowerCase();
+		if (strsCopy.startsWith("0x")){
+			strsCopy=strsCopy.substring(2);
+		}
+
+		if (strsCopy.length()%2==1){
+			strsCopy = "0" + strsCopy;
+		}
+
+		byte[] retBytes = new byte[strsCopy.length()/2];
+		int i = 0;
+
+		for(byte a: strsCopy.getBytes()) {
+			retBytes[i/2] = (byte) (((int)retBytes[i/2])*16 + asciiToHexByte(a));
+			i++;
+		}
+
+		return retBytes;
+	}
+
+	public static byte[] toUTFBytes(String strs) {
+		return strs.getBytes();
+	}
+
+	static byte asciiToHexByte(int i){
+		if(i >= '0' && i <= '9') {
+			return (byte)(i - '0');
+		}
+
+		if(i >= 'a' && i <= 'f') {
+			return (byte)(i - 'a' + 10);
+		}
+
+		if(i >= 'A' && i <= 'F') {
+			return (byte)(i - 'A' + 10);
+		}
+
+		return 0;
+	}
+
 }
