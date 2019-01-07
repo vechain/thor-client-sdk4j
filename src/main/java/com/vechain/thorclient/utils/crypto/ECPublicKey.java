@@ -43,8 +43,7 @@ public class ECPublicKey extends ECKey {
         return pointBytesToPublicKey(this.pub, isCompressed );
 
     }
-
-
+    
     @Override
     public BigInteger getPrivateKey() {
         throw new RuntimeException("Please use private key to sign signature");

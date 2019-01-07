@@ -1,15 +1,35 @@
 package com.vechain.thorclient.utils.crypto;
 
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.DERInteger;
+import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.crypto.ec.CustomNamedCurves;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.crypto.signers.ECDSASigner;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Arrays;
 
 public abstract class ECKey implements Key{
     static final String SECP256K1 = "secp256k1";
+    public static final int PRIVATE_KEY_SIZE = 32;
+    protected static final int PUBLIC_KEY_SIZE = 64;
+    protected static final X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName(SECP256K1);
+    public static final BigInteger HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
+    public static final ECDomainParameters CURVE = new ECDomainParameters(
+            CURVE_PARAMS.getCurve(), CURVE_PARAMS.getG(), CURVE_PARAMS.getN(), CURVE_PARAMS.getH());
+
+    protected static final SecureRandom secureRandom = new SecureRandom();
+    protected static final ECDomainParameters domain = new ECDomainParameters( CURVE.getCurve(),
+            CURVE.getG(), CURVE.getN(), CURVE.getH());
 
     /**
      * Byte array of public key(decompressed or compressed) transformed.
@@ -62,6 +82,28 @@ public abstract class ECKey implements Key{
             privKey = privKey.mod( ECKeyPair.CURVE.getN());
         }
         return new FixedPointCombMultiplier().multiply( ECKeyPair.CURVE.getG(), privKey);
+    }
+
+    public static boolean verify(byte[] hash, byte[] signature, byte[] pub) {
+        ASN1InputStream asn1 = new ASN1InputStream(signature);
+        try {
+            ECDSASigner signer = new ECDSASigner();
+            signer.init(false, new ECPublicKeyParameters(CURVE.getCurve().decodePoint(pub),
+                    domain));
+
+            DLSequence seq = (DLSequence) asn1.readObject();
+            BigInteger r = ((DERInteger) seq.getObjectAt(0)).getPositiveValue();
+            BigInteger s = ((DERInteger) seq.getObjectAt(1)).getPositiveValue();
+            return signer.verifySignature(hash, r, s);
+        } catch (Exception e) {
+            // threat format errors as invalid signatures
+            return false;
+        } finally {
+            try {
+                asn1.close();
+            } catch (IOException e) {
+            }
+        }
     }
 
 }

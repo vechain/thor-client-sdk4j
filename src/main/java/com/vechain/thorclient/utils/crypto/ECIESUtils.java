@@ -47,44 +47,44 @@ public class ECIESUtils {
 	public static String encrypt(String receiverPublicKey, String shareSecretKey, String msgtoEncrypt)
 			throws UnsupportedEncodingException {
 		StringBuffer rtnStr = new StringBuffer();
-		logger.info("1. 产⽣生随机数r，并计算R=r*G");
+		logger.debug("1. 产⽣生随机数r，并计算R=r*G");
 		byte[] r = CryptoUtils.randomBytes(32);
 
 		ECPoint R = ECKey.publicPointFromPrivate(BytesUtils.bytesToBigInt(r));
 		rtnStr.append(ByteUtils.toHexString(R.getEncoded(false)));
-		logger.info("R:{}", rtnStr.toString());
+		logger.debug("R:{}", rtnStr.toString());
 
-		logger.info("2. 计算共享密钥，S=Px，P=(Px,Py)=r*KB,这⾥里里KB为Bob的公钥");
+		logger.debug("2. 计算共享密钥，S=Px，P=(Px,Py)=r*KB,这⾥里里KB为Bob的公钥");
 		ECPoint receiverPublicKeyPoint = ECIESUtils.createECPointFromPublicKey(receiverPublicKey);
 		PublicKeyECPoint P = ECIESUtils.multiply(receiverPublicKeyPoint, r);
-		logger.info("P:" + P.toString());
+		logger.debug("P:" + P.toString());
 
-		logger.info("3. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
+		logger.debug("3. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
 		byte[] shareKeyBytes = BytesUtils.toByteArray(shareSecretKey);
 
 		byte[] K = ECIESUtils.pbkdf2withsha512(P.getX(), shareKeyBytes);
 		byte[] keBytes = Arrays.copyOfRange(K, 0, 32);
 		byte[] kmBytes = Arrays.copyOfRange(K, 32, K.length);
-		logger.info("Ke:" + ByteUtils.toHexString(keBytes));
-		logger.info("Km:" + ByteUtils.toHexString(kmBytes));
+		logger.debug("Ke:" + ByteUtils.toHexString(keBytes));
+		logger.debug("Km:" + ByteUtils.toHexString(kmBytes));
 
-		logger.info("4. 对消息进⾏行行加密，c=E(KE,m)");
+		logger.debug("4. 对消息进⾏行行加密，c=E(KE,m)");
 		byte[] cBytes = null;
 		try {
 			cBytes = ECIESUtils.encodeAesCtr128(keBytes, msgtoEncrypt.getBytes(), Arrays.copyOfRange(P.getY(), 0, 16));
 		} catch (Exception e) {
 			logger.error("encodeAesCtr128 error", e);
 		}
-		logger.info("c:" + ByteUtils.toHexString(cBytes));
+		logger.debug("c:" + ByteUtils.toHexString(cBytes));
 		rtnStr.append(ByteUtils.toHexString(cBytes));
 
-		logger.info("5. 计算加密信息的tag d，d=MAC(KM,c||S2)");
+		logger.debug("5. 计算加密信息的tag d，d=MAC(KM,c||S2)");
 		byte[] dBytes = calcSignature(shareKeyBytes, kmBytes, cBytes);
-		logger.info("d:" + ByteUtils.toHexString(dBytes));
+		logger.debug("d:" + ByteUtils.toHexString(dBytes));
 		rtnStr.append(ByteUtils.toHexString(dBytes));
 
-		logger.info("6. 返回结果 R||c||d");
-		logger.info(rtnStr.toString());
+		logger.debug("6. 返回结果 R||c||d");
+		logger.debug(rtnStr.toString());
 		return rtnStr.toString();
 	}
 
@@ -102,35 +102,35 @@ public class ECIESUtils {
 		byte[] Rbytes = Arrays.copyOfRange(cryptMsgBytes, 0, 65);
 		byte[] msgBytes = Arrays.copyOfRange(cryptMsgBytes, 65, cryptMsgBytes.length - 32);
 		byte[] dBytes = Arrays.copyOfRange(cryptMsgBytes, cryptMsgBytes.length - 32, cryptMsgBytes.length);
-		logger.info(cryptMsg);
-		logger.info("receiver R:{} msg:{} d:{}", ByteUtils.toHexString(Rbytes), ByteUtils.toHexString(msgBytes),
+		logger.debug(cryptMsg);
+		logger.debug("receiver R:{} msg:{} d:{}", ByteUtils.toHexString(Rbytes), ByteUtils.toHexString(msgBytes),
 				ByteUtils.toHexString(dBytes));
 
-		logger.info("1. 计算共享密钥，S=Px。 P=(Px,Py)=kb*R=kb*r*G=r*kb*G=r*KB");
+		logger.debug("1. 计算共享密钥，S=Px。 P=(Px,Py)=kb*R=kb*r*G=r*kb*G=r*KB");
 		ECPoint R = ECIESUtils.createECPointFromPublicKey(ByteUtils.toHexString(Rbytes));
 		PublicKeyECPoint P = ECIESUtils.multiply(R, BytesUtils.toByteArray(receiverPrivateKey));
-		logger.info("P:" + P.toString());
+		logger.debug("P:" + P.toString());
 
 		byte[] shareKeyBytes = BytesUtils.toByteArray(shareSecretKey);
-		logger.info("2. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
+		logger.debug("2. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
 		byte[] K = ECIESUtils.pbkdf2withsha512(P.getX(), shareKeyBytes);
 		byte[] keBytes = Arrays.copyOfRange(K, 0, 32);
 		byte[] kmBytes = Arrays.copyOfRange(K, 32, K.length);
-		logger.info("Ke:" + ByteUtils.toHexString(keBytes));
-		logger.info("Km:" + ByteUtils.toHexString(kmBytes));
+		logger.debug("Ke:" + ByteUtils.toHexString(keBytes));
+		logger.debug("Km:" + ByteUtils.toHexString(kmBytes));
 
-		logger.info("3. 使⽤用Mac计算Mac是否正确:MAC(KM||c||S2)");
+		logger.debug("3. 使⽤用Mac计算Mac是否正确:MAC(KM||c||S2)");
 		byte[] calcD = calcSignature(shareKeyBytes, kmBytes, msgBytes);
-		logger.info("calc d:" + ByteUtils.toHexString(calcD));
+		logger.debug("calc d:" + ByteUtils.toHexString(calcD));
 		if (!ByteUtils.toHexString(calcD).equals(ByteUtils.toHexString(dBytes))) {
 			logger.error("different d:{} calc:{}", ByteUtils.toHexString(dBytes), ByteUtils.toHexString(calcD));
 			throw new RuntimeIOException("decrypt error : 加密信息的tag验证失败");
 		}
 
-		logger.info("4. 解码原始加密⽂文件，解码密码为Ke，c为收到的加密⽂文件");
+		logger.debug("4. 解码原始加密⽂文件，解码密码为Ke，c为收到的加密⽂文件");
 		try {
 			byte[] plain = ECIESUtils.decodeAesCtr128(keBytes, msgBytes, Arrays.copyOfRange(P.getY(), 0, 16));
-			logger.info("plain:" + new String(plain));
+			logger.debug("plain:" + new String(plain));
 
 			return new String(plain, "UTF-8");
 		} catch (Exception e) {
