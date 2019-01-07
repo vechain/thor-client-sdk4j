@@ -182,15 +182,33 @@ public class X509CertificateUtils {
         BigInteger integer = certificate.getSerialNumber();
         byte[] serialNumBytes = integer.toByteArray();
         String serialHex = BytesUtils.toHexString( serialNumBytes, Prefix.ZeroLowerX );
+        if (!serialHex.startsWith( "0x7eaacc" )){
+            throw new IllegalArgumentException("wrong certificate serials number.");
+        }
         serialHex = serialHex.replace( "0x7eaacc", "" );
-        serialHex = serialHex.replace( "0d0a", "" );
-        return Integer.parseInt( serialHex , 16);
+        int foundIndex = serialHex.indexOf( "0d0a" );
+        if ( foundIndex < 0){
+            throw new IllegalArgumentException("wrong certificate serials number.");
+        }
+        String pathHex = serialHex.substring( 0, foundIndex );
+        pathHex = pathHex.replace( "0d0a", "" );
+        if (pathHex.length() != 6){
+            throw new IllegalArgumentException( "wrong certificate path." );
+        }
+        if (serialHex.length() < foundIndex + 4){
+            throw new IllegalArgumentException( "version format error." );
+        }
+        String versionHex = serialHex.substring( foundIndex + 4 );
+        if (!versionHex.equalsIgnoreCase("0001")){
+            throw new IllegalArgumentException( "version bytes is illegal." );
+        }
+        return Integer.parseInt( pathHex , 16);
 
     }
 
 
     /**
-     * Verify
+     * Verify transaction signature.
      * @param hexTxStr
      * @param hexSignature
      * @param certificate
