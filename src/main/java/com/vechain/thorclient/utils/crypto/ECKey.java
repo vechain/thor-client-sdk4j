@@ -1,8 +1,6 @@
 package com.vechain.thorclient.utils.crypto;
 
 import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.DERInteger;
-import org.bouncycastle.asn1.DLSequence;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.crypto.params.ECDomainParameters;
@@ -84,24 +82,33 @@ public abstract class ECKey implements Key{
         return new FixedPointCombMultiplier().multiply( ECKeyPair.CURVE.getG(), privKey);
     }
 
+    /**
+     * Verify the signature7
+     * @param hash
+     * @param signature
+     * @param pub
+     * @return
+     */
     public static boolean verify(byte[] hash, byte[] signature, byte[] pub) {
         ASN1InputStream asn1 = new ASN1InputStream(signature);
         try {
             ECDSASigner signer = new ECDSASigner();
             signer.init(false, new ECPublicKeyParameters(CURVE.getCurve().decodePoint(pub),
                     domain));
-
-            DLSequence seq = (DLSequence) asn1.readObject();
-            BigInteger r = ((DERInteger) seq.getObjectAt(0)).getPositiveValue();
-            BigInteger s = ((DERInteger) seq.getObjectAt(1)).getPositiveValue();
+            byte[] rBytes = Arrays.copyOfRange(signature, 0,32  );
+            byte[] sBytes = Arrays.copyOfRange( signature,32,64 );
+            BigInteger r = new BigInteger( rBytes );
+            BigInteger s = new BigInteger( sBytes );
             return signer.verifySignature(hash, r, s);
         } catch (Exception e) {
             // threat format errors as invalid signatures
+            e.printStackTrace();
             return false;
         } finally {
             try {
                 asn1.close();
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
