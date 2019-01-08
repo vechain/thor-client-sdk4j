@@ -67,22 +67,22 @@ public class X509CertificateUtilsTest extends BaseTest {
     @Test
     public void testVerifyCertificateFromRootPublicKey() {
         String certStr = "-----BEGIN CERTIFICATE-----\n" +
-                "MIIBCjCBsgIKfqrMwEEzDQoAATAKBggqhkjOPQQDAjAMMQowCAYDVQQKDAFhMB4X\n" +
+                "MIIBCzCBsgIKfqrMwEEzDQoAATAKBggqhkjOPQQDAjAMMQowCAYDVQQKDAFhMB4X\n" +
                 "DTE5MDEwNzA5MzAxOFoXDTIwMDEwNzA5MzAxOFowEjEQMA4GA1UECgwHVmVjaGFp\n" +
                 "bjBWMBAGByqGSM49AgEGBSuBBAAKA0IABGBHftqaq2EzjFz4bmtjsrjK7kY2jmAH\n" +
                 "oSSHFaO5LiZRFahTKGn1pMzBdZemVrSHW78So25UGD+N9nTb08Ya6v8wCgYIKoZI\n" +
-                "zj0EAwIDRwAwRAIgBLXyKnnHT28F5YnPlH3e/8O5cuvEsk0aVTqOMXt46AECIDhc\n" +
-                "e4+eFWHNWUXZlqLGBU3Zbs2yafBEvEUyH4SMo2ek\n" +
-                "-----END CERTIFICATE-----";
+                "zj0EAwIDSAAwRQIhAPcZnmzIQ/whXYMN4inqwxVBY7z/oOj1CQFrHgEfuFxOAiAm\n" +
+                "jx8AdXNGYvhhQR2e9KGsNc6femrqC+gSqdl8SVX6Ug==\n" +
+                "-----END CERTIFICATE-----\n";
 
         X509Certificate certificate = X509CertificateUtils.loadCertificate( certStr );
         logger.info("version:" + certificate.getVersion());
         byte[] certSerialNumBytes = certificate.getSerialNumber().toByteArray();
         logger.info( "Certificate serial number: " + BytesUtils.toHexString( certSerialNumBytes, Prefix.ZeroLowerX ) );
         byte[] rootPubKey = BytesUtils.toByteArray(
-                "0x0231D0D71862ED74A9A4F8850A79FB5338ED71400001170460E616D7A3AD38207F" );
+                "0x036311FBABB1216467D7D823CBB2D3B9DBFB843A7D91AD16B1ED71596E094E4BBF" );
         byte[] chaincode = BytesUtils.toByteArray(
-                "0x301358799E03303D7D16B45DB1BC42357660A75C4FC9706DDCB729C682EE5CA5" );
+                "0xD39E4AACAB973117A4E64E636E067DA715337508F4DDDEF14C0BD2AD6E598760" );
         logger.info( "Certificate signature: " + BytesUtils.toHexString( certificate.getSignature(), Prefix.ZeroLowerX ) );
         boolean isVerified = X509CertificateUtils.verifyCertificateSignature( certificate, rootPubKey, chaincode );
         Assert.assertTrue( isVerified );
