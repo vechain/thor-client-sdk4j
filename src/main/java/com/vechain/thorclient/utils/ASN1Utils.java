@@ -2,10 +2,19 @@ package com.vechain.thorclient.utils;
 
 import org.bouncycastle.asn1.*;
 
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Date;
 
 public class ASN1Utils {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    DEROutputStream derOutputStream = new DEROutputStream(outputStream);
+
+    public ASN1Utils() {
+    }
+
 
 
     public static void decodeASN1(byte[] cert){
@@ -44,37 +53,104 @@ public class ASN1Utils {
         }
     }
 
+    public static String decodeASN1Date(byte[] i){
+        ASN1InputStream asn1InputStream = new ASN1InputStream(i);
 
-    public static void encodeASN1(){
-        try{
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            //创建ByteArrayOutputStream，用于放置输出的byte流
-            DEROutputStream derOutputStream = new DEROutputStream(outputStream);
-            //创建DEROutputStream
-            derOutputStream.writeObject(new DERInteger(10));
-            //写入DERInteger数据，10对应的hex为0a。
-            derOutputStream.writeObject(new DERBoolean(false));
-            //写入DERBoolean数据，false对应asn1中的hex为00
-
-            ASN1EncodableVector encodableVector = new ASN1EncodableVector();
-            //创建ASN1EncodableVector，用于放Sequence的数据
-            encodableVector.add(new DERPrintableString("PP"));
-            //encodableVector中写入各种对象
-            encodableVector.add(new DERUTCTime(new Date()));
-            encodableVector.add(new DERNull());
-            DERSequence derSequence = new DERSequence(encodableVector);
-            //ASN1EncodableVector封装为DERSequence
-
-            derOutputStream.writeObject(derSequence);
-            //写入DERSequence数据。
-
-            derOutputStream.flush();
-            System.out.println(BytesUtils.toHexString(outputStream.toByteArray(),Prefix.ZeroLowerX));
-
-        } catch (Exception e) {
+        try {
+            ASN1Primitive asn1Primitive = asn1InputStream.readObject();
+            if (asn1Primitive instanceof DERUTCTime){
+                DERUTCTime derutcTime = (DERUTCTime) asn1Primitive;
+                return derutcTime.getTime();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return "";
     }
+
+    public static BigInteger decodeASN1Interger(byte[] i){
+        ASN1InputStream asn1InputStream = new ASN1InputStream(i);
+
+        try {
+            ASN1Primitive asn1Primitive = asn1InputStream.readObject();
+            if (asn1Primitive instanceof ASN1Integer){
+                ASN1Integer asn1Integer = (ASN1Integer) asn1Primitive;
+                return asn1Integer.getValue();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BigInteger.ZERO;
+    }
+
+    public static boolean decodeASN1Boolean(byte[] i){
+        ASN1InputStream asn1InputStream = new ASN1InputStream(i);
+
+        try {
+            ASN1Primitive asn1Primitive = asn1InputStream.readObject();
+            if (asn1Primitive instanceof ASN1Boolean){
+                ASN1Boolean asn1Boolean = (ASN1Boolean) asn1Primitive;
+                return asn1Boolean.isTrue();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String getOutputStreamString(){
+        return BytesUtils.toHexString(outputStream.toByteArray(),Prefix.NoPrefix);
+    }
+
+    public void encodeASN1Interger(BigInteger i){
+        try {
+            derOutputStream.writeObject(new ASN1Integer(i));
+            derOutputStream.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void encodeASN1Boolean(boolean b){
+        try {
+            derOutputStream.writeObject(ASN1Boolean.getInstance(b));
+            derOutputStream.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void encodeASN1UTCTime(Date t){
+        try {
+            derOutputStream.writeObject(new DERUTCTime(t));
+            derOutputStream.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void encodeASN1BitString(String s){
+        try {
+            derOutputStream.writeObject(new DERBitString(StringUtils.toHexBytes(s),0));
+            derOutputStream.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void encodeASN1Sequence(DERSequence seq){
+        try {
+            derOutputStream.writeObject(seq);
+            derOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

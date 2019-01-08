@@ -5,7 +5,6 @@ import com.vechain.thorclient.utils.crypto.ExtendedKey;
 import com.vechain.thorclient.utils.crypto.Key;
 import com.vechain.thorclient.utils.crypto.ValidationException;
 import org.bouncycastle.asn1.*;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 
 
 import java.io.ByteArrayInputStream;

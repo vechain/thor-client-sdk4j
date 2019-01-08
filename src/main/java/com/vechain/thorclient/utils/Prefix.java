@@ -6,6 +6,11 @@ package com.vechain.thorclient.utils;
 public enum Prefix {
 
     /**
+     * no prefix string
+     */
+    NoPrefix(""),
+
+    /**
      * "VX" prefix string
      */
     VeChainX("VX"),
@@ -14,6 +19,8 @@ public enum Prefix {
      * "0x" prefix string
      */
     ZeroLowerX("0x");
+
+
 
     private final String prefixString;
 
