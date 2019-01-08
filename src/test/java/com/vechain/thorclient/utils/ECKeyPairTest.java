@@ -1,14 +1,12 @@
 package com.vechain.thorclient.utils;
 
+import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.utils.crypto.ECDSASign;
-import com.vechain.thorclient.utils.crypto.ECDSASignature;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import com.vechain.thorclient.base.BaseTest;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 @RunWith(JUnit4.class)
 public class ECKeyPairTest extends BaseTest {

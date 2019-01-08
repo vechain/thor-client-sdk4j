@@ -1,20 +1,11 @@
 package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.base.BaseTest;
-import org.bouncycastle.asn1.*;
-import org.bouncycastle.asn1.x509.Certificate;
-import org.bouncycastle.crypto.params.ECPublicKeyParameters;
-import org.bouncycastle.crypto.signers.ECDSASigner;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.PublicKey;
-import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
 @RunWith(JUnit4.class)

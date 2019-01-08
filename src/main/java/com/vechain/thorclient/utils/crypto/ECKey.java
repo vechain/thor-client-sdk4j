@@ -1,6 +1,5 @@
 package com.vechain.thorclient.utils.crypto;
 
-import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.crypto.params.ECDomainParameters;
@@ -11,7 +10,6 @@ import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -83,14 +81,14 @@ public abstract class ECKey implements Key{
     }
 
     /**
-     * Verify the signature7
+     * Verify the signature
      * @param hash
      * @param signature
      * @param pub
      * @return
      */
     public static boolean verify(byte[] hash, byte[] signature, byte[] pub) {
-        ASN1InputStream asn1 = new ASN1InputStream(signature);
+
         try {
             ECDSASigner signer = new ECDSASigner();
             signer.init(false, new ECPublicKeyParameters(CURVE.getCurve().decodePoint(pub),
@@ -104,12 +102,6 @@ public abstract class ECKey implements Key{
             // threat format errors as invalid signatures
             e.printStackTrace();
             return false;
-        } finally {
-            try {
-                asn1.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
