@@ -10,6 +10,7 @@ import org.junit.runners.JUnit4;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
 @RunWith(JUnit4.class)
@@ -87,4 +88,25 @@ public class X509CertificateUtilsTest extends BaseTest {
         boolean isVerified = X509CertificateUtils.verifyCertificateSignature( certificate, rootPubKey, chaincode );
         Assert.assertTrue( isVerified );
     }
+
+    @Test
+    public void testVerifyTxSignature(){
+        String certStr = "-----BEGIN CERTIFICATE-----\n" +
+                "MIIBCzCBsgIKfqrMwEEzDQoAATAKBggqhkjOPQQDAjAMMQowCAYDVQQKDAFhMB4X\n" +
+                "DTE5MDEwNzA5MzAxOFoXDTIwMDEwNzA5MzAxOFowEjEQMA4GA1UECgwHVmVjaGFp\n" +
+                "bjBWMBAGByqGSM49AgEGBSuBBAAKA0IABGBHftqaq2EzjFz4bmtjsrjK7kY2jmAH\n" +
+                "oSSHFaO5LiZRFahTKGn1pMzBdZemVrSHW78So25UGD+N9nTb08Ya6v8wCgYIKoZI\n" +
+                "zj0EAwIDSAAwRQIhAPcZnmzIQ/whXYMN4inqwxVBY7z/oOj1CQFrHgEfuFxOAiAm\n" +
+                "jx8AdXNGYvhhQR2e9KGsNc6femrqC+gSqdl8SVX6Ug==\n" +
+                "-----END CERTIFICATE-----\n";
+
+        X509Certificate certificate = X509CertificateUtils.loadCertificate( certStr );
+        byte[] pub = X509CertificateUtils.extractPublicKey( certificate );
+        logger.info( "Certificate public key: " + BytesUtils.toHexString( pub, Prefix.ZeroLowerX ) );
+        boolean isVerified = X509CertificateUtils.verifyTxSignature( "0x6DA528CFCFD9575BD432614D65A7BDA7B3D8129B54B74631D5DFCD9879387860", "0x7D0966B15136E7F4A4E3C12C376AC170341A6879FD2943D93BFA242DA080388A26162C0283F7922277A8DC1CAFFD624BB3C6A7EF94F61ACBE5B31BFEF233C215", certificate);
+        Assert.assertTrue( isVerified );
+
+
+    }
+
 }

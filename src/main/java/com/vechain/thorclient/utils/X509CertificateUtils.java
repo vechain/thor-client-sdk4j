@@ -99,6 +99,7 @@ public class X509CertificateUtils {
         cert = cert.replace( "-----BEGIN CERTIFICATE-----", "" );
         cert = cert.replace( "-----END CERTIFICATE-----", "" );
         cert = cert.replaceAll( "\n", "" );
+        cert = cert.replaceAll( "\r", "" );
         byte[] certBytes = Base64.getDecoder().decode( cert );
         return parseCertificate( certBytes );
     }
@@ -209,14 +210,14 @@ public class X509CertificateUtils {
 
     /**
      * Verify transaction signature.
-     * @param hexTxStr
-     * @param hexSignature
+     * @param hexTxHash
+     * @param hexSignature R|S
      * @param certificate
      * @return
      */
-    public static boolean verifyTxSignature(String hexTxStr, String hexSignature, X509Certificate certificate){
+    public static boolean verifyTxSignature(String hexTxHash, String hexSignature, X509Certificate certificate){
         byte[] signature = BytesUtils.toByteArray( hexSignature );
-        byte[] txHash = BytesUtils.toByteArray( hexTxStr );
+        byte[] txHash = BytesUtils.toByteArray( hexTxHash );
         byte[] pub = X509CertificateUtils.extractPublicKey( certificate );
         if(signature == null || txHash == null || pub == null){
             throw new IllegalArgumentException("signature, tx hash or certificate is illegal.");
