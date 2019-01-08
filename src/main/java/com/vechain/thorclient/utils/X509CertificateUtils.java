@@ -5,6 +5,10 @@ import com.vechain.thorclient.utils.crypto.ExtendedKey;
 import com.vechain.thorclient.utils.crypto.Key;
 import com.vechain.thorclient.utils.crypto.ValidationException;
 import org.bouncycastle.asn1.*;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import sun.security.ec.ECPublicKeyImpl;
+import sun.security.ec.SunEC;
+import sun.security.x509.X509Key;
 
 
 import java.io.ByteArrayInputStream;
@@ -81,20 +85,10 @@ public class X509CertificateUtils {
      * @return 65 bytes uncompressed publickey
      */
     public static byte[] extractPublicKey(X509Certificate certificate){
-        ASN1InputStream asn1 = new ASN1InputStream(certificate.getPublicKey().getEncoded());
-        try {
-            ASN1Primitive asn1Primitive = asn1.readObject();
-            if(asn1Primitive instanceof ASN1Sequence){
-                ASN1Sequence seq = (ASN1Sequence) asn1Primitive;
-                ASN1Encodable asn1Encodable = seq.getObjectAt(1);
-                asn1Primitive = asn1Encodable.toASN1Primitive();
-                if (asn1Primitive instanceof ASN1BitString) {
-                    ASN1BitString string = (ASN1BitString) asn1Primitive;
-                    return string.getBytes();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        PublicKey publicKey = certificate.getPublicKey();
+        if (publicKey instanceof ECPublicKeyImpl){
+            ECPublicKeyImpl ecPub = (ECPublicKeyImpl)publicKey;
+            return ecPub.getEncodedPublicValue();
         }
         return null;
     }
@@ -170,8 +164,8 @@ public class X509CertificateUtils {
         ECPublicKeySpec pubSpec = new ECPublicKeySpec(pubPoint, ecParameters);
         KeyFactory kf = null;
         try {
-            kf = KeyFactory.getInstance("EC");
-        } catch (NoSuchAlgorithmException e) {
+            kf = KeyFactory.getInstance("EC", "SunEC");
+        } catch (NoSuchAlgorithmException|NoSuchProviderException e) {
             e.printStackTrace();
             return null;
         }
