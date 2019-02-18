@@ -3,6 +3,7 @@ package com.vechain.thorclient.core.model.blockchain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@Deprecated
 public class FilteredEvent implements Serializable {
 	private static final long serialVersionUID = 8427904650485554238L;
 
