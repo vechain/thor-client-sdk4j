@@ -82,10 +82,10 @@ public abstract class ECKey implements Key{
 
     /**
      * Verify the signature
-     * @param hash
-     * @param signature
-     * @param pub
-     * @return
+     * @param hash  message hash
+     * @param signature  the signature bytes array |32 bytes r value| 32 bytes s value|
+     * @param pub the public key bytes.
+     * @return if ok return true, else return false.
      */
     public static boolean verify(byte[] hash, byte[] signature, byte[] pub) {
 

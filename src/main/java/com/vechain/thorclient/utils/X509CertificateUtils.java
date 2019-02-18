@@ -209,9 +209,9 @@ public class X509CertificateUtils {
 
     /**
      * Verify transaction signature.
-     * @param hexTxHash
-     * @param hexSignature R|S
-     * @param certificate
+     * @param hexTxHash hex string format for message hash.
+     * @param hexSignature 32 bytes r| 32 bytes v
+     * @param certificate {@link X509Certificate}
      * @return
      */
     public static boolean verifyTxSignature(String hexTxHash, String hexSignature, X509Certificate certificate){

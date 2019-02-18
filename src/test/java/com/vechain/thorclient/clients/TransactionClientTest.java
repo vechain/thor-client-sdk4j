@@ -12,10 +12,12 @@ import com.vechain.thorclient.utils.*;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.utils.crypto.Key;
 import org.apache.commons.codec.digest.Crypt;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import sun.awt.image.ByteArrayImageSource;
 
 import java.lang.reflect.Array;
 
@@ -98,11 +100,17 @@ public class TransactionClientTest extends BaseTest {
 		byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
 
 		ToData toData = new ToData();
-		toData.setData( "0x391ba4c2d5212871130f8e05bf9459064d6ccf5b424324314321432143214323ad54325435436436432fefe4" );
+		final int size = 47*1000;
+		byte[] k64= new byte[size];
+
+		for(int i = 0; i < size; i++){
+			k64[i]=(byte)0xff;
+		}
+		toData.setData( BytesUtils.toHexString( k64, Prefix.ZeroLowerX ) );
 		ToClause clause = TransactionClient.buildVETToClause(
 				Address.fromHexString("0x391ba4c2d5212871130f8e05bf9459064d6ccf5b"), Amount.ZERO, toData);
 		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
-				720, 80000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
+				720, 4000000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
 		logger.info("SendVET Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
 		logger.info( "SignHash raw:" +  BytesUtils.toHexString( CryptoUtils.blake2b( rawTransaction.encode()) , Prefix.ZeroLowerX));
 		TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
