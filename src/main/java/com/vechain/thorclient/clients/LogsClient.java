@@ -43,22 +43,14 @@ public class LogsClient extends AbstractClient {
 		if (address != null) {
 			queryParams.put("address", address.toHexString(Prefix.ZeroLowerX));
 		}
-		ArrayList<?> filteredEvents = sendPostRequest(Path.PostFilterEventsLogPath, null, queryParams, filter,
+
+		return sendPostRequest(Path.PostFilterEventsLogPath, null, queryParams, filter,
 				ArrayList.class);
-		Iterator<?> it = filteredEvents.iterator();
-		while (it.hasNext()) {
-			Object object = (Object) it.next();
-			FilteredEvent aFilteredEvent = JSONObject.parseObject(object.toString(), FilteredEvent.class);
-			if (aFilteredEvent.getMeta().getBlockNumber() < filter.getRange().getFrom()) {
-				it.remove();
-			}
-		}
-		return filteredEvents;
 
 	}
 
 	/**
-	 * Get transfer logs by order and
+	 * Get transfer logs by order
 	 * 
 	 * @param filter
 	 *            required {@link TransferFilter} filter.
@@ -77,17 +69,8 @@ public class LogsClient extends AbstractClient {
 			queryParams.put("order", order.getValue());
 		}
 
-		ArrayList<?> filteredEvents = sendPostRequest(Path.PostFilterTransferLogPath, null, queryParams, filter,
+		return sendPostRequest(Path.PostFilterTransferLogPath, null, queryParams, filter,
 				ArrayList.class);
-		Iterator<?> it = filteredEvents.iterator();
-		while (it.hasNext()) {
-			Object object = (Object) it.next();
-			FilteredEvent aFilteredEvent = JSONObject.parseObject(object.toString(), FilteredEvent.class);
-			if (aFilteredEvent.getMeta().getBlockNumber() < filter.getRange().getFrom()) {
-				it.remove();
-			}
-		}
-		return filteredEvents;
 
 	}
 
