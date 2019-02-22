@@ -24,8 +24,7 @@ public abstract class ECKey implements Key{
             CURVE_PARAMS.getCurve(), CURVE_PARAMS.getG(), CURVE_PARAMS.getN(), CURVE_PARAMS.getH());
 
     protected static final SecureRandom secureRandom = new SecureRandom();
-    protected static final ECDomainParameters domain = new ECDomainParameters( CURVE.getCurve(),
-            CURVE.getG(), CURVE.getN(), CURVE.getH());
+
 
     /**
      * Byte array of public key(decompressed or compressed) transformed.
@@ -92,7 +91,7 @@ public abstract class ECKey implements Key{
         try {
             ECDSASigner signer = new ECDSASigner();
             signer.init(false, new ECPublicKeyParameters(CURVE.getCurve().decodePoint(pub),
-                    domain));
+                    CURVE));
             byte[] rBytes = Arrays.copyOfRange(signature, 0,32  );
             byte[] sBytes = Arrays.copyOfRange( signature,32,64 );
             BigInteger r = new BigInteger( rBytes );

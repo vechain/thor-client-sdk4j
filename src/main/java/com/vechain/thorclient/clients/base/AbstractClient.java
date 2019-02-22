@@ -169,10 +169,10 @@ public abstract class AbstractClient {
 	}
 
 	/**
-	 *
-	 * @param url
-	 * @param callback
-	 * @return
+	 * Make connection for subscription.
+	 * @param url long live connection url.
+	 * @param callback {@link SubscribeSocket}
+	 * @return {@link SubscribeSocket}
 	 * @throws Exception
 	 */
 	public static SubscribeSocket subscribeSocketConnect(String url, SubscribingCallback<?> callback) throws Exception {
@@ -201,8 +201,7 @@ public abstract class AbstractClient {
 	}
 
 	/**
-	 * Call the contract view function.
-	 *
+	 * Call the contract view function or try to run the transaction to see the gas-used.
 	 * @param call
 	 *            {@link ContractCall}
 	 * @param contractAddress

@@ -10,17 +10,11 @@ public enum Prefix {
      */
     NoPrefix(""),
 
-    /**
-     * "VX" prefix string
-     */
-    VeChainX("VX"),
 
     /**
      * "0x" prefix string
      */
     ZeroLowerX("0x");
-
-
 
     private final String prefixString;
 

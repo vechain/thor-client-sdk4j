@@ -26,7 +26,6 @@ public class ECKeyPair extends ECKey{
     /**
      * Constructor of ECKeyPair
      * @param priv
-     * @param compressed
      */
     public ECKeyPair(BigInteger priv) {
         this.privateKey = priv;
@@ -127,7 +126,7 @@ public class ECKeyPair extends ECKey{
 
     public static ECKeyPair create() {
         ECKeyPairGenerator generator = new ECKeyPairGenerator();
-        ECKeyGenerationParameters keygenParams = new ECKeyGenerationParameters(domain,
+        ECKeyGenerationParameters keygenParams = new ECKeyGenerationParameters(CURVE,
                 secureRandom);
         generator.init(keygenParams);
         AsymmetricCipherKeyPair keypair = generator.generateKeyPair();
