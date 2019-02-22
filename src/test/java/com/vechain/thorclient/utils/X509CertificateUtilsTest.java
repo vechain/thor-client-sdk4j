@@ -134,8 +134,8 @@ public class X509CertificateUtilsTest extends BaseTest {
 				+ "MNciVOwZRkv9ibyQFtZQEqCEuO7dWCUUxw==" + "-----END CERTIFICATE-----";
 		logger.info("pem:");
 		logger.info(pem);
-		NodeProvider.getNodeProvider().setProvider("http://127.0.0.1:8669/");
-		byte chainTag = BlockchainClient.getChainTag();
+
+		byte chainTag = 0x01;
 //		byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
 		byte[] blockRef = BytesUtils.toByteArray("000007715a8c08a4");
 		logger.info(BytesUtils.toHexString(blockRef, null));
@@ -165,6 +165,7 @@ public class X509CertificateUtilsTest extends BaseTest {
 		byte[] certSha256Bytes = CryptoUtils.sha256(BytesUtils.toByteArray(certHexString));
 		logger.info("certShaString {}", BytesUtils.toHexString(certSha256Bytes, null));
 
+
 		String sign = sign(privateKey, certSha256Bytes, txHash);
 
 		logger.info("sign:{}", sign);
@@ -177,13 +178,14 @@ public class X509CertificateUtilsTest extends BaseTest {
 
 		logger.info("PUB: {}", BytesUtils.toHexString(X509CertificateUtils.extractPublicKey(x509Certificate), null));
 
-		boolean verifyTxSignature = X509CertificateUtils
-				.verifyTxSignature(BytesUtils.toHexString(CryptoUtils.sha256(content), null), sign, x509Certificate);
-		logger.info("verifyTxSignature:{}", verifyTxSignature);
+//		boolean verifyTxSignature = X509CertificateUtils
+//				.verifyTxSignature(BytesUtils.toHexString(CryptoUtils.sha256(content), null), sign, x509Certificate);
+//		logger.info("verifyTxSignature:{}", verifyTxSignature);
 
-		logger.info(BytesUtils.toHexString(CryptoUtils.sha256(content), null));
-		logger.info(BytesUtils.toHexString(BytesUtils.toByteArray(sign), null));
-		logger.info(BytesUtils.toHexString(X509CertificateUtils.extractPublicKey(x509Certificate), null));
+		logger.info("verifying message hash: {}", BytesUtils.toHexString(CryptoUtils.sha256(content), null));
+		logger.info("signature: {}",BytesUtils.toHexString(BytesUtils.toByteArray(sign), null));
+		logger.info("public key: {}", BytesUtils.toHexString(X509CertificateUtils.extractPublicKey(x509Certificate),
+				null));
 
 		boolean verify = ECKey.verify(CryptoUtils.sha256(content), BytesUtils.toByteArray(sign),
 				X509CertificateUtils.extractPublicKey(x509Certificate));
@@ -193,9 +195,10 @@ public class X509CertificateUtilsTest extends BaseTest {
 
 	public static String PERFIX_PUBLIC = "04";
 
-	public static String sign(String certPrivateKey, byte[] certSha256Bytes, Object... params) {
+	public  String sign(String certPrivateKey, byte[] certSha256Bytes, Object... params) {
 		byte[] allBytes = buildSignContent(certSha256Bytes, params);
 
+		logger.info( "Signing hash: {}",  BytesUtils.toHexString(CryptoUtils.sha256(allBytes), Prefix.ZeroLowerX));
 		String signatureStr = sign(CryptoUtils.sha256(allBytes), certPrivateKey);
 		return signatureStr;
 	}

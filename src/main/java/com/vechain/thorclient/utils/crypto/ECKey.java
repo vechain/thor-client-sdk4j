@@ -1,5 +1,6 @@
 package com.vechain.thorclient.utils.crypto;
 
+import com.vechain.thorclient.utils.BytesUtils;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.crypto.params.ECDomainParameters;
@@ -94,8 +95,8 @@ public abstract class ECKey implements Key{
                     CURVE));
             byte[] rBytes = Arrays.copyOfRange(signature, 0,32  );
             byte[] sBytes = Arrays.copyOfRange( signature,32,64 );
-            BigInteger r = new BigInteger( rBytes );
-            BigInteger s = new BigInteger( sBytes );
+            BigInteger r = BytesUtils.bytesToBigInt( rBytes );
+            BigInteger s = BytesUtils.bytesToBigInt( sBytes );
             return signer.verifySignature(hash, r, s);
         } catch (Exception e) {
             // threat format errors as invalid signatures
