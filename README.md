@@ -1,8 +1,8 @@
 # Thor Java Client SDK
-[![Build Status](https://travis-ci.org/vapor/clibressl.svg?branch=master)](https://travis-ci.org/vapor/clibressl)
-- - - -
-A SDK for client toolkit to call Restful API.
+[![Build Status](https://travis-ci.org/vechain/thor-client-sdk4j.svg?branch=master)](https://travis-ci.org/vechain/thor-client-sdk4j.svg?branch=master)
 
+A SDK for client toolkit to call Restful API.
+- - - -
 Requires JDK8.
 
 ## License
