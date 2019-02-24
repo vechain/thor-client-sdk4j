@@ -2,41 +2,85 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.util.ArrayList;
 
+import com.vechain.thorclient.core.model.clients.Address;
+import com.vechain.thorclient.utils.Prefix;
+
 public class TransferredFilter {
-    private Range range;
-    private Options options;
-    private ArrayList<TransferCriteria> criteriaSet;
-    private String order;
+	private Range range;
+	private Options options;
+	private ArrayList<TransferCriteria> criteriaSet = new ArrayList<TransferCriteria>();
+	private String order;
 
-    public Range getRange() {
-        return range;
-    }
+	/**
+	 * Create TransferFilter
+	 * 
+	 * @param range   {@link Range} range from and to
+	 * @param options {@link Options} offset and limit.
+	 * @return {@link TransferFilter} filter.
+	 */
+	public static TransferredFilter createFilter(Range range, Options options) {
+		if (range == null) {
+			throw new IllegalArgumentException("Invalid range");
+		}
+		if (options == null) {
+			throw new IllegalArgumentException("Invalid options");
+		}
+		TransferredFilter transferFilter = new TransferredFilter();
+		transferFilter.range = range;
+		transferFilter.options = options;
+		return transferFilter;
+	}
 
-    public void setRange(Range range) {
-        this.range = range;
-    }
+	/**
+	 * add Transfer Criteria
+	 * 
+	 * @param txOrigin
+	 * @param sender
+	 * @param recipient
+	 */
+	public void addTransferCriteria(Address txOrigin, Address sender, Address recipient) {
+		TransferCriteria aTransferCriteria = new TransferCriteria();
+		if (txOrigin != null) {
+			aTransferCriteria.setTxOrigin(txOrigin.toHexString(Prefix.ZeroLowerX));
+		}
+		if (sender != null) {
+			aTransferCriteria.setSender(sender.toHexString(Prefix.ZeroLowerX));
+		}
+		if (recipient != null) {
+			aTransferCriteria.setRecipient(recipient.toHexString(Prefix.ZeroLowerX));
+		}
+		criteriaSet.add(aTransferCriteria);
+	}
 
-    public Options getOptions() {
-        return options;
-    }
+	public Range getRange() {
+		return range;
+	}
 
-    public void setOptions(Options options) {
-        this.options = options;
-    }
+	public void setRange(Range range) {
+		this.range = range;
+	}
 
-    public ArrayList<TransferCriteria> getCriteriaSet() {
-        return criteriaSet;
-    }
+	public Options getOptions() {
+		return options;
+	}
 
-    public void setCriteriaSet(ArrayList<TransferCriteria> criteriaSet) {
-        this.criteriaSet = criteriaSet;
-    }
+	public void setOptions(Options options) {
+		this.options = options;
+	}
 
-    public String getOrder() {
-        return order;
-    }
+	public ArrayList<TransferCriteria> getCriteriaSet() {
+		return criteriaSet;
+	}
 
-    public void setOrder(String order) {
-        this.order = order;
-    }
+	public void setCriteriaSet(ArrayList<TransferCriteria> criteriaSet) {
+		this.criteriaSet = criteriaSet;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
 }

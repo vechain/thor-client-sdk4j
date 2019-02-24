@@ -5,7 +5,7 @@
 
 	<groupId>com.vechain.client</groupId>
 	<artifactId>thor-client-sdk4j</artifactId>
-	<version>0.0.7</version>
+	<version>0.0.8</version>
 	<packaging>jar</packaging>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -13,6 +13,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<snapshot>0.0.1-SNAPSHOT</snapshot>
 	</properties>
 	<dependencies>
 
@@ -155,6 +156,10 @@
 			<name>Vechain Repository</name>
 			<url>https://nexus.vechaindev.com/content/repositories/releases/</url>
 		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>https://nexus.vechaindev.com/content/repositories/snapshots/</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<profiles>

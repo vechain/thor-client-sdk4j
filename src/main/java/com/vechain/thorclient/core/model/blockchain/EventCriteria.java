@@ -7,7 +7,6 @@ public class EventCriteria {
     private String topic2;
     private String topic3;
     private String topic4;
-    private String order;
 
     public String getAddress() {
         return address;
@@ -55,13 +54,5 @@ public class EventCriteria {
 
     public void setTopic4(String topic4) {
         this.topic4 = topic4;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
     }
 }
