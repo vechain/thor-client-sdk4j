@@ -2,12 +2,12 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.io.Serializable;
 
-@Deprecated
-public class FilteredTransfer implements Serializable {
+public class FilteredTransferEvent implements Serializable {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6053746933706373378L;
+	private static final long serialVersionUID = 7058235116526396706L;
 	private String sender;
 	private String recipient;
 	private String amount;
@@ -29,14 +29,6 @@ public class FilteredTransfer implements Serializable {
 		this.recipient = recipient;
 	}
 
-	public LogMeta getMeta() {
-		return meta;
-	}
-
-	public void setMeta(LogMeta meta) {
-		this.meta = meta;
-	}
-
 	public String getAmount() {
 		return amount;
 	}
@@ -45,4 +37,11 @@ public class FilteredTransfer implements Serializable {
 		this.amount = amount;
 	}
 
+	public LogMeta getMeta() {
+		return meta;
+	}
+
+	public void setMeta(LogMeta meta) {
+		this.meta = meta;
+	}
 }

@@ -5,6 +5,7 @@ import com.vechain.thorclient.utils.BlockchainUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@Deprecated
 public class EventFilter implements Serializable {
 	/**
 	 * 

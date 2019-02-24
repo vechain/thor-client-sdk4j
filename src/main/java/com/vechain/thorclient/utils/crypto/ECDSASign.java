@@ -6,7 +6,6 @@ import com.vechain.thorclient.utils.CryptoUtils;
 import org.bouncycastle.asn1.x9.X9IntegerConverter;
 import org.bouncycastle.math.ec.ECAlgorithms;
 import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve;
 
 import java.math.BigInteger;
@@ -117,34 +116,6 @@ public class ECDSASign {
         compEnc[0] = (byte)(yBit ? 0x03 : 0x02);
         return ECKeyPair.CURVE.getCurve().decodePoint(compEnc);
     }
-
-    /**
-     * Returns public key from the given private key.
-     *
-     * @param privKey the private key to derive the public key from
-     * @return BigInteger encoded public key
-     */
-    public static BigInteger publicKeyFromPrivate(BigInteger privKey) {
-        ECPoint point = publicPointFromPrivate(privKey);
-
-        byte[] encoded = point.getEncoded(false);
-        return new BigInteger(1, Arrays.copyOfRange(encoded, 1, encoded.length));  // remove prefix
-    }
-
-    /**
-     * Returns public key point from the given private key.
-     */
-    public static ECPoint publicPointFromPrivate(BigInteger privKey) {
-        /*
-         * TODO: FixedPointCombMultiplier currently doesn't support scalars longer than the group
-         * order, but that could change in future versions.
-         */
-        if (privKey.bitLength() > ECKeyPair.CURVE.getN().bitLength()) {
-            privKey = privKey.mod( ECKeyPair.CURVE.getN());
-        }
-        return new FixedPointCombMultiplier().multiply( ECKeyPair.CURVE.getG(), privKey);
-    }
-
 
     /**
      * A signature data

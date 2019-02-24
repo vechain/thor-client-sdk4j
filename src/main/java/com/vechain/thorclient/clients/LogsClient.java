@@ -1,16 +1,20 @@
 package com.vechain.thorclient.clients;
 
+import static com.vechain.thorclient.clients.base.AbstractClient.Path.PostFilterEventsLogPath;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
-import com.alibaba.fastjson.JSONObject;
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.EventFilter;
 import com.vechain.thorclient.core.model.blockchain.FilteredEvent;
+import com.vechain.thorclient.core.model.blockchain.FilteredLogEvent;
 import com.vechain.thorclient.core.model.blockchain.FilteredTransfer;
+import com.vechain.thorclient.core.model.blockchain.FilteredTransferEvent;
+import com.vechain.thorclient.core.model.blockchain.LogFilter;
 import com.vechain.thorclient.core.model.blockchain.Order;
 import com.vechain.thorclient.core.model.blockchain.TransferFilter;
+import com.vechain.thorclient.core.model.blockchain.TransferredFilter;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
@@ -27,11 +31,12 @@ public class LogsClient extends AbstractClient {
 	 * @param filter
 	 *            required {@link EventFilter} a filter for the events log.
 	 * @param order
-	 *            optional ,{@link Order} a time order for the events list.
+	 *            optional {@link Order} a time order for the events list.
 	 * @param address
-	 *            optional, {@link Address} a address which has events log.
+	 *            optional {@link Address} a address which has events log.
 	 * @return array of {@link FilteredEvent}, could be null. throws ClientIOException network error or request invalid.
 	 */
+	@Deprecated
 	public static ArrayList<?> filterEvents(EventFilter filter, Order order, Address address) throws ClientIOException {
 		if (filter == null) {
 			throw ClientArgumentException.exception("filter is null");
@@ -43,22 +48,14 @@ public class LogsClient extends AbstractClient {
 		if (address != null) {
 			queryParams.put("address", address.toHexString(Prefix.ZeroLowerX));
 		}
-		ArrayList<?> filteredEvents = sendPostRequest(Path.PostFilterEventsLogPath, null, queryParams, filter,
+
+		return sendPostRequest( PostFilterEventsLogPath, null, queryParams, filter,
 				ArrayList.class);
-		Iterator<?> it = filteredEvents.iterator();
-		while (it.hasNext()) {
-			Object object = (Object) it.next();
-			FilteredEvent aFilteredEvent = JSONObject.parseObject(object.toString(), FilteredEvent.class);
-			if (aFilteredEvent.getMeta().getBlockNumber() < filter.getRange().getFrom()) {
-				it.remove();
-			}
-		}
-		return filteredEvents;
 
 	}
 
 	/**
-	 * Get transfer logs by order and
+	 * Get transfer logs by order
 	 * 
 	 * @param filter
 	 *            required {@link TransferFilter} filter.
@@ -68,6 +65,7 @@ public class LogsClient extends AbstractClient {
 	 * @throws ClientIOException
 	 *             network error
 	 */
+	@Deprecated
 	public static ArrayList<?> filterTransferLogs(TransferFilter filter, Order order) throws ClientIOException {
 		if (filter == null) {
 			throw ClientArgumentException.exception("filter is null");
@@ -77,18 +75,39 @@ public class LogsClient extends AbstractClient {
 			queryParams.put("order", order.getValue());
 		}
 
-		ArrayList<?> filteredEvents = sendPostRequest(Path.PostFilterTransferLogPath, null, queryParams, filter,
+		return sendPostRequest(Path.PostFilterTransferLogPath, null, queryParams, filter,
 				ArrayList.class);
-		Iterator<?> it = filteredEvents.iterator();
-		while (it.hasNext()) {
-			Object object = (Object) it.next();
-			FilteredEvent aFilteredEvent = JSONObject.parseObject(object.toString(), FilteredEvent.class);
-			if (aFilteredEvent.getMeta().getBlockNumber() < filter.getRange().getFrom()) {
-				it.remove();
-			}
-		}
-		return filteredEvents;
 
 	}
+
+    /**
+     * Get filtered log events.
+     * @param logFilter {@link LogFilter}
+     * @return ArrayList {@link FilteredLogEvent}
+     * @throws ClientIOException
+     */
+    public static ArrayList<FilteredLogEvent> getFilteredLogEvents(LogFilter logFilter) throws ClientIOException {
+        if (logFilter == null) {
+            throw ClientArgumentException.exception( "logFilter is null" );
+        }
+        return sendPostRequest( Path.PostFilterEventsLogPath, null, null, logFilter,
+                new ArrayList<FilteredLogEvent>().getClass());
+    }
+
+    /**
+     * Get filtered transferred log events.
+     * @param transferredFilter {@link TransferredFilter}
+     * @return ArrayList of {@link FilteredTransferEvent}
+     * @throws ClientIOException
+     */
+    public static ArrayList<FilteredTransferEvent> getFilteredTransferLogs(TransferredFilter transferredFilter) throws
+            ClientIOException{
+        if (transferredFilter == null){
+            throw ClientArgumentException.exception( "transferredFilter is null" );
+        }
+        return sendPostRequest( Path.PostFilterTransferLogPath, null, null, transferredFilter,
+                new ArrayList<FilteredTransferEvent>().getClass());
+    }
+
 
 }

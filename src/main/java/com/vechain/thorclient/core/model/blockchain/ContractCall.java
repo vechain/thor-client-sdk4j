@@ -2,6 +2,9 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.io.Serializable;
 
+/**
+ * ContractCall is a class to wrap the call of contract function.
+ */
 public class ContractCall implements Serializable {
     private String value;
     private String data;

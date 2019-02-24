@@ -10,16 +10,21 @@ import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.*;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import com.vechain.thorclient.utils.crypto.Key;
 import org.apache.commons.codec.digest.Crypt;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import sun.awt.image.ByteArrayImageSource;
+
+import java.lang.reflect.Array;
 
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
-	static String hexId = "0xe51a1d17eb9656615f3431b916ad3c44d730f249e36301b2519c4df9d504af9a";
+	static String hexId = "0x5ae99683e105d9a5b477a228e6ba1666d01950a57c787bb5cddb061c311be3eb";
 	static String addUserTxId = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
 	static String removeUserTxId = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
 	static String setUserPlanTxId = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
@@ -30,6 +35,7 @@ public class TransactionClientTest extends BaseTest {
 
 	@Test
 	public void testGetTransaction() throws ClientIOException {
+
 		Transaction transaction = TransactionClient.getTransaction(hexId, false, null);
 		logger.info("Transaction WithOut Raw :" + JSON.toJSONString(transaction));
 		// Assert.assertNotNull(transaction);
@@ -87,6 +93,36 @@ public class TransactionClientTest extends BaseTest {
 		Assert.assertEquals(txIdHex, result.getId());
 		hexId = result.getId();
 	}
+
+	@Test
+	public void testSendRemarkTx() throws ClientIOException{
+		byte chainTag = BlockchainClient.getChainTag();
+		byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
+
+		ToData toData = new ToData();
+		final int size = 47*1000;
+		byte[] k64= new byte[size];
+
+		for(int i = 0; i < size; i++){
+			k64[i]=(byte)0xff;
+		}
+		toData.setData( BytesUtils.toHexString( k64, Prefix.ZeroLowerX ) );
+		ToClause clause = TransactionClient.buildVETToClause(
+				Address.fromHexString("0x391ba4c2d5212871130f8e05bf9459064d6ccf5b"), Amount.ZERO, toData);
+		RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
+				720, 4000000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
+		logger.info("SendVET Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
+		logger.info( "SignHash raw:" +  BytesUtils.toHexString( CryptoUtils.blake2b( rawTransaction.encode()) , Prefix.ZeroLowerX));
+		TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(privateKey));
+		logger.info("SendVET result:" + JSON.toJSONString(result));
+		Assert.assertNotNull(result);
+		String hexAddress = ECKeyPair.create(privateKey).getHexAddress();
+		String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
+		logger.info("Calculate transaction txid:" + txIdHex);
+		Assert.assertEquals(txIdHex, result.getId());
+		hexId = result.getId();
+	}
+
 
 	@Test
 	public void testSendVETTransaction() throws ClientIOException {
@@ -147,12 +183,9 @@ public class TransactionClientTest extends BaseTest {
 		String rawTxHex = rlpEncodedRawTxHex(signedRawTxn);
 		logger.info("Tx raw hex:" + rawTxHex);
 
-		ECKeyPair publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
+		Key publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
 		Assert.assertNotNull(publicKey);
-		
-		logger.info("publicKey:{}, {}", BytesUtils.toHexString(publicKey.getRawPublicKey(),null), publicKey.getHexAddress());
-		String hexAddress = publicKey.getHexAddress();
-
+		String hexAddress = publicKey.getAddress();
 		RawTransaction newRawTransaction = RLPUtils.decode(rawTxHex);
 		newRawTransaction.setSignature(null);
 		String txIdHex = BlockchainUtils.generateTransactionId(newRawTransaction, Address.fromHexString(hexAddress));
@@ -172,7 +205,7 @@ public class TransactionClientTest extends BaseTest {
 		String rawTxHex = rlpEncodedRawTxHex(signedRawTxn);
 		logger.info("Tx raw hex:" + rawTxHex);
 
-		ECKeyPair publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
+		Key publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
 		Assert.assertNotNull(publicKey);
 		String hexAddress = publicKey.getHexAddress();
 
