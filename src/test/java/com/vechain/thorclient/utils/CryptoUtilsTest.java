@@ -6,6 +6,7 @@ import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.utils.crypto.Key;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -39,5 +40,6 @@ public class CryptoUtilsTest extends BaseTest {
         byte[] message = BytesUtils.toByteArray( "0x1073a4d83294c771d16af16fe287fb734f3521f01575557ddcac7e3e62019ba8" );
         Key keyPair = CryptoUtils.recoverPublicKey( message, signData );
         logger.info( "Address:" + keyPair.getAddress());
+        //Assert.assertEquals(keyPair.getAddress(), );
     }
 }

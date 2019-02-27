@@ -62,7 +62,7 @@ public class ECKeyPair extends ECKey{
     }
 
     private byte[] getPublicKeyPointBytes(){
-        return BytesUtils.toBytesPadded( this.getPublicKey(), PUBLIC_KEY_SIZE );
+        return BytesUtils.toBytesPadded( this.getPublicKey(), PUBLIC_KEY_POINT_SIZE );
     }
 
 
