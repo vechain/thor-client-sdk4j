@@ -4,23 +4,27 @@ package com.vechain.thorclient.utils.crypto;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
+import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.Arrays;
 
 import javax.naming.OperationNotSupportedException;
 import java.math.BigInteger;
 
 public class ECPublicKey extends ECKey {
-    private byte[] pub;
-    private boolean isCompressed;
+    private byte[] decompressedPub;
 
-    public ECPublicKey(byte[] pub, boolean compressed) {
-        this.pub = pub;
-        this.isCompressed = compressed;
+    public ECPublicKey(byte[] pub) {
+        byte[] encoded = pointBytesToPublicKey( pub,  false);
+        this.decompressedPub = encoded;
+
     }
 
-    public ECPublicKey(BigInteger pubKeyInteger, boolean compressed){
-        this.pub = BytesUtils.toBytesPadded(pubKeyInteger, 65 );
-        this.isCompressed = compressed;
+    public ECPublicKey(BigInteger pubKeyInteger){
+        byte[] publicKeyPoints =  BytesUtils.toBytesPadded( pubKeyInteger, PUBLIC_KEY_POINT_SIZE );
+        byte[] publicKeyBytes = new byte[65];
+        publicKeyBytes[0]= 0x04;
+        System.arraycopy(publicKeyPoints, 0, publicKeyBytes, 1, 64);
+        this.decompressedPub = publicKeyBytes;
     }
 
 
@@ -31,8 +35,10 @@ public class ECPublicKey extends ECKey {
 
     @Override
     public byte[] getRawAddress() {
-        byte[] publicPointBytes = BytesUtils.toBytesPadded( this.getPublicKey(), 64 );
-        byte[] hash = CryptoUtils.keccak256(publicPointBytes);
+
+        byte[] pointBytes = new byte[64];
+        System.arraycopy( this.decompressedPub, 1, pointBytes, 0, 64);
+        byte[] hash = CryptoUtils.keccak256(pointBytes);
         byte[] address = new byte[20];
         System.arraycopy(hash, 12, address, 0, address.length);
         return address;
@@ -40,7 +46,8 @@ public class ECPublicKey extends ECKey {
 
     @Override
     public byte[] getRawPublicKey(boolean isCompressed) {
-        return pointBytesToPublicKey(this.pub, isCompressed );
+         ECPoint pubPoint = CURVE.getCurve().decodePoint( this.decompressedPub );
+         return pubPoint.getEncoded( isCompressed );
 
     }
     
@@ -51,8 +58,9 @@ public class ECPublicKey extends ECKey {
 
     @Override
     public BigInteger getPublicKey() {
-        byte[] encoded = pointBytesToPublicKey( this.pub, false );
-        return new BigInteger(1, java.util.Arrays.copyOfRange(encoded, 1, encoded.length));
+        byte[] pointBytes = new byte[64];
+        System.arraycopy( this.decompressedPub, 1, pointBytes, 0, 64);
+        return BytesUtils.bytesToBigInt( pointBytes );
     }
 
     @Override
@@ -69,7 +77,7 @@ public class ECPublicKey extends ECKey {
     @Override
     public ECPublicKey clone() throws CloneNotSupportedException {
         ECPublicKey c = (ECPublicKey) super.clone();
-        c.pub = Arrays.clone(pub);
+        c.decompressedPub = Arrays.clone( decompressedPub );
         return c;
     }
 

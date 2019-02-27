@@ -18,7 +18,7 @@ import java.util.Arrays;
 public abstract class ECKey implements Key{
     static final String SECP256K1 = "secp256k1";
     public static final int PRIVATE_KEY_SIZE = 32;
-    protected static final int PUBLIC_KEY_SIZE = 64;
+    protected static final int PUBLIC_KEY_POINT_SIZE = 64;
     protected static final X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName(SECP256K1);
     public static final BigInteger HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
     public static final ECDomainParameters CURVE = new ECDomainParameters(
@@ -34,12 +34,16 @@ public abstract class ECKey implements Key{
      * @return
      */
     public static byte[] pointBytesToPublicKey(byte[] encodedPublicKeyPoint, boolean toCompressed) {
-        final ECNamedCurveParameterSpec curveParameterSpec = ECNamedCurveTable.getParameterSpec(SECP256K1);
-        final ECPoint decodedPoint = curveParameterSpec.getCurve().decodePoint(encodedPublicKeyPoint);
-        final BigInteger x = decodedPoint.getXCoord().toBigInteger();
-        final BigInteger y = decodedPoint.getYCoord().toBigInteger();
-        final ECPoint decompressedPoint = curveParameterSpec.getCurve().createPoint(x, y);
-        return decompressedPoint.getEncoded(toCompressed);
+        if (encodedPublicKeyPoint.length == 65 || encodedPublicKeyPoint.length == 33) {
+            final ECNamedCurveParameterSpec curveParameterSpec = ECNamedCurveTable.getParameterSpec( SECP256K1 );
+            final ECPoint decodedPoint = curveParameterSpec.getCurve().decodePoint( encodedPublicKeyPoint );
+            final BigInteger x = decodedPoint.getXCoord().toBigInteger();
+            final BigInteger y = decodedPoint.getYCoord().toBigInteger();
+            final ECPoint decompressedPoint = curveParameterSpec.getCurve().createPoint( x, y );
+            return decompressedPoint.getEncoded( toCompressed );
+        }else{
+            throw new RuntimeException( "Invalid public key bytes array." );
+        }
     }
 
     /**

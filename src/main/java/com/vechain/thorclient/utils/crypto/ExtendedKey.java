@@ -92,7 +92,7 @@ public class ExtendedKey {
                             "happen");
                 }
                 pub = new ECPoint.Fp(curve.getCurve(), q.getX(), q.getY(), true).getEncoded();
-                return new ExtendedKey(new ECPublicKey(pub, true), r, depth, parent, sequence);
+                return new ExtendedKey(new ECPublicKey(pub), r, depth, parent, sequence);
             }
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             throw new ValidationException(e);

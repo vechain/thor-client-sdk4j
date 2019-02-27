@@ -215,7 +215,7 @@ public class BlockchainUtils {
         byte[] signingHash = CryptoUtils.blake2b( rlpTxRaw );
         ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
         BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, signingHash);
-        return new ECPublicKey( publicKey, false );
+        return new ECPublicKey( publicKey );
 
     }
 

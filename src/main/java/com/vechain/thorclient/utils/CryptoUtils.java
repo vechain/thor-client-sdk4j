@@ -108,7 +108,7 @@ public class CryptoUtils {
         byte recovery = sig[64];
         ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
         BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, message);
-        return new ECPublicKey( publicKey, false );
+        return new ECPublicKey( publicKey );
     }
 
     public static byte[] sha256(byte[] bytes) {
