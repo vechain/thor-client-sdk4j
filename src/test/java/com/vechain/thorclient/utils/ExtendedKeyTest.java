@@ -24,7 +24,7 @@ public class ExtendedKeyTest extends BaseTest{
     public void testNormalDerivedFromPublicKey(){
         String ecPub = "0x0227128ce999f0f760d1fcecc6d81a94e32f1ef12fd81a21f0d6b26fabb2729412";
         String chainCode = "0xb4d37eb4d87e8e6502d35899ae81056bdc40d5ea7531bef1ff6ace95c86fd0c1";
-        ECPublicKey publicKey = new ECPublicKey( BytesUtils.toByteArray( ecPub ) ,true);
+        ECPublicKey publicKey = new ECPublicKey( BytesUtils.toByteArray( ecPub ));
         byte[] chainCodeBytes = BytesUtils.toByteArray( chainCode );
 
         ExtendedKey key = new ExtendedKey(publicKey, chainCodeBytes, 0,0, 0 );

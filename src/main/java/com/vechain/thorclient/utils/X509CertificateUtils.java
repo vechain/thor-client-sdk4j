@@ -58,7 +58,7 @@ public class X509CertificateUtils {
             throw new IllegalArgumentException("certificate, rootPubKey or chaincode is Illegal.");
         }
         com.vechain.thorclient.utils.crypto.ECPublicKey ecPublicKey = new com.vechain.thorclient.utils.crypto
-                .ECPublicKey(rootPubKey, true);
+                .ECPublicKey(rootPubKey);
         ExtendedKey pubKey = new ExtendedKey(ecPublicKey, chaincode, 0, 0, 0 );
         int index = index( certificate )&0x7FFFFFFF;
         Key derivedKey = null;

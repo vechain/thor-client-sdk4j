@@ -17,7 +17,7 @@ public class ECPublicKeyTest extends BaseTest {
     @Test
     public void testCompressedPublicKey(){
         byte[] decompressPublicKey = BytesUtils.toByteArray( "0x0465e790f6065164e2f610297b5358b6c474f999fb5b4d2574fcaffccb59342c1f6f28f0b684ec97946da65cd08a1b9fc276f79d90caed80e56456cebbc165938e" );
-        ECPublicKey publicKey = new ECPublicKey( decompressPublicKey, false );
+        ECPublicKey publicKey = new ECPublicKey( decompressPublicKey);
         byte[] compressedPubKey = publicKey.getRawPublicKey( true );
         String compressedPubKeyHex = BytesUtils.toHexString( compressedPubKey, Prefix.ZeroLowerX );
         logger.info( "compressed pubKey:" + compressedPubKeyHex );
@@ -27,7 +27,7 @@ public class ECPublicKeyTest extends BaseTest {
     @Test
     public void testUncompressedPublicKey(){
         byte[] compressedPubKey = BytesUtils.toByteArray( "0x0265e790f6065164e2f610297b5358b6c474f999fb5b4d2574fcaffccb59342c1f" );
-        ECPublicKey publicKey = new ECPublicKey( compressedPubKey, true );
+        ECPublicKey publicKey = new ECPublicKey( compressedPubKey);
         byte[] decompressedPub = publicKey.getRawPublicKey( false );
         String decompressedPubKeyHex = BytesUtils.toHexString( decompressedPub, Prefix.ZeroLowerX );
         logger.info( "decompressed pubKey:" + decompressedPubKeyHex );
@@ -39,7 +39,7 @@ public class ECPublicKeyTest extends BaseTest {
         String publicKeyHex = "0x0465e790f6065164e2f610297b5358b6c474f999fb5b4d2574fcaffccb59342c1f6f28f0b684ec97946da65cd08a1b9fc276f79d90caed80e56456cebbc165938e";
         byte[] pubKeyBytes = BytesUtils.toByteArray( publicKeyHex );
 
-        ECPublicKey ecPublicKey = new ECPublicKey(pubKeyBytes, false  );
+        ECPublicKey ecPublicKey = new ECPublicKey(pubKeyBytes);
 
         logger.info( "Address: " + ecPublicKey.getAddress() );
         Assert.assertEquals( "0x7567d83b7b8d80addcb281a71d54fc7b3364ffed" ,  ecPublicKey.getAddress() );
@@ -54,7 +54,7 @@ public class ECPublicKeyTest extends BaseTest {
         logger.info( "Address: {}", address );
         String publicKeyHex = "0x0465e790f6065164e2f610297b5358b6c474f999fb5b4d2574fcaffccb59342c1f6f28f0b684ec97946da65cd08a1b9fc276f79d90caed80e56456cebbc165938e";
         byte[] pubKeyBytes = BytesUtils.toByteArray( publicKeyHex );
-        ECPublicKey ecPublicKey = new ECPublicKey(pubKeyBytes, false  );
+        ECPublicKey ecPublicKey = new ECPublicKey(pubKeyBytes);
         logger.info( "public key:" + ecPublicKey.getPublicKey().toString() );
         Assert.assertTrue( keyPair.getPublicKey().equals( ecPublicKey.getPublicKey() ) );
     }

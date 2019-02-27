@@ -4,7 +4,6 @@ package com.vechain.thorclient.utils.crypto;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
-import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.Arrays;
 
@@ -14,17 +13,9 @@ import java.math.BigInteger;
 public class ECPublicKey extends ECKey {
     private byte[] decompressedPub;
 
-    public ECPublicKey(byte[] pub, boolean compressed) {
-        if(compressed){
-            byte[] encoded = pointBytesToPublicKey( pub, false );
-            this.decompressedPub = encoded;
-        }else{
-            if(pub.length == 65 && pub[0] == 0x04){
-                decompressedPub = pub;
-            }else{
-               throw new IllegalArgumentException( "Illegal public key byte array." );
-            }
-        }
+    public ECPublicKey(byte[] pub) {
+        byte[] encoded = pointBytesToPublicKey( pub,  false);
+        this.decompressedPub = encoded;
 
     }
 
