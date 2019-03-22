@@ -95,6 +95,13 @@
 			<artifactId>websocket-client</artifactId>
 			<version>9.4.12.v20180830</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.6</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
