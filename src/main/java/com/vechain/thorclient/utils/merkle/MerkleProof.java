@@ -1,18 +1,13 @@
 package com.vechain.thorclient.utils.merkle;
 
 public class MerkleProof {
-    private IBinaryTreeNode brotherNode;
-    private MerkleProof parentProvement;
+
+    private MerkleProof parentProof;
     private IBinaryTreeNode selfNode;
 
     public IBinaryTreeNode getBrotherNode() {
-        return brotherNode;
+        return selfNode.getBrother();
     }
-
-    public void setBrotherNode(IBinaryTreeNode brotherNode) {
-        this.brotherNode = brotherNode;
-    }
-
 
     public IBinaryTreeNode getSelfNode() {
         return selfNode;
@@ -23,11 +18,11 @@ public class MerkleProof {
     }
 
     public MerkleProof getParentProof() {
-        return parentProvement;
+        return parentProof;
     }
 
-    public void setParentProvement(MerkleProof parentProvement) {
-        this.parentProvement = parentProvement;
+    public void setParentProof(MerkleProof parentProof) {
+        this.parentProof = parentProof;
     }
 
 }

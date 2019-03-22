@@ -58,6 +58,7 @@ public class MerkleTree extends TreeNode {
         }else {
             this.value = md.digest();
         }
+        md.reset();
     }
 
 

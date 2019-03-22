@@ -192,7 +192,7 @@ amount.setDecimalAmount( "21.12" );
 ToClause clause = TransactionClient.buildVETToClause(
         Address.fromHexString( "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779" ),  // reveiver address
         amount,                                                                 // transfer amount
-        ToData.ZERO );                                                          // The default value ToData.ZERO
+        ToData.ZERO );                                                          // The default brotherValue ToData.ZERO
 //construct RawTransaction
 RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction( chainTag, blockRef, 720, 21000, (byte)0x0, CryptoUtils.generateTxNonce(), clause);
 

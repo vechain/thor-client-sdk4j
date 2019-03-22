@@ -1,7 +1,9 @@
 package com.vechain.thorclient.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.utils.merkle.*;
 import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +21,10 @@ public class MerkleTreeUtilsTest {
 
     MerkleTree tree;
     List<MerkleLeaf> leaves;
+    MessageDigest messageDigest = null;
     @Before
     public void setup(){
-        MessageDigest messageDigest = null;
+
         try {
             messageDigest = MessageDigest.getInstance( "SHA-256" );
         } catch (NoSuchAlgorithmException e) {
@@ -59,17 +62,41 @@ public class MerkleTreeUtilsTest {
 
 
     @Test
-    public void getMerkleProvementTest(){
+    public void getMerkleProofTest(){
         MerkleLeaf leaf = leaves.get( 1 );
         MerkleProof proof = MerkleProver.getProvementNode( leaf );
         int level = 0;
         MerkleProof tempProof = proof;
         while ( tempProof != null){
-            log.info( "level {} - self value:{}, brother value:{}" , level, BytesUtils.toHexString(proof.getSelfNode
-                            ().getValue(), Prefix.ZeroLowerX), BytesUtils.toHexString( proof.getBrotherNode()
-                            .getValue(), Prefix.ZeroLowerX ));
+            log.info( "level {} - self value:{}", level, BytesUtils.toHexString(tempProof.getSelfNode
+                            ().getValue(), Prefix.ZeroLowerX));
+            if (tempProof.getBrotherNode() != null){
+                log.info( "brother node value {}", BytesUtils.toHexString( tempProof.getBrotherNode().getValue(), Prefix.ZeroLowerX
+                ) );
+            }
+
             level = level + 1;
             tempProof = tempProof.getParentProof();
         }
+    }
+
+    @Test
+    public void getMerkleProofValueTest(){
+        MerkleLeaf leaf = leaves.get( 2 );
+        List<ProofValue> values = MerkleTreeUtils.getMerkleProof( leaf );
+        String string = JSON.toJSONString( values );
+        System.out.println( "Proof value: "+ string );
+
+    }
+
+    @Test
+    public void recoverMerkleRootTest(){
+        MerkleLeaf leaf = leaves.get( 2 );
+        List<ProofValue> values = MerkleTreeUtils.getMerkleProof( leaf );
+        byte[] recoverRoot = MerkleTreeUtils.recoverMerkleRoot( BytesUtils.toByteArray("0x99989796"), values,
+                messageDigest );
+
+        log.info( "recover root:{}", BytesUtils.toHexString( recoverRoot, Prefix.ZeroLowerX )  );
+        log.info( "merkle root: {}", BytesUtils.toHexString( tree.getValue(), Prefix.ZeroLowerX ) );
     }
 }

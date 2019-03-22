@@ -1,5 +1,8 @@
 package com.vechain.thorclient.utils.merkle;
 
+import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.Prefix;
+
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,16 +70,67 @@ public class MerkleTreeUtils {
     }
 
 
-    public static MerkleTree recoverMerkleTree(MerkleProof provementNode){
-        return null;
+    /**
+     *
+     * @param hashedMessage
+     * @param proofValues
+     * @param digest
+     * @return
+     */
+    public static byte[] recoverMerkleRoot(byte[] hashedMessage, List<ProofValue> proofValues, MessageDigest digest){
+        int level = 0;
+        byte[] resultMessage = hashedMessage;
+        for(ProofValue proofValue: proofValues){
+            if(level == proofValue.getLevel()){
+                if(proofValue.getType() == NodeType.left.getValue()) {
+                    byte[] brotherValueBytes = BytesUtils.toByteArray(proofValue.getBrotherValue());
+                    if(brotherValueBytes != null){
+                        digest.update( brotherValueBytes);
+                    }
+                    digest.update( resultMessage );
+                }else if(proofValue.getType() == NodeType.right.getValue()){
+                    byte[] brotherValueBytes = BytesUtils.toByteArray(proofValue.getBrotherValue());
+                    digest.update( resultMessage );
+                    if(brotherValueBytes != null){
+                        digest.update( brotherValueBytes);
+                    }
+                }
+                resultMessage = digest.digest();
+                digest.reset();
+                System.out.println( "Digest Message: "+ BytesUtils.toHexString( resultMessage, Prefix.ZeroLowerX ) );
+            }
+            level += 1;
+        }
+
+        return resultMessage;
     }
 
 
-//    public static MerkleProvementNode convertMerkleProvementNode(IBinaryTreeNode node){
-//        MerkleProvementNode provementNode = new MerkleProvementNode();
-//        provementNode.setValue( node.getValue() );
-//        provementNode.setType( node.getType() );
-//        return provementNode;
-//    }
+    /**
+     * Get merkle proof by leaf.
+     * @param leaf
+     * @return
+     */
+    public static ArrayList<ProofValue> getMerkleProof( MerkleLeaf leaf){
+        MerkleProof proof = MerkleProver.getProvementNode( leaf );
+        int level = 0;
+        MerkleProof tempProof = proof;
+        ArrayList<ProofValue> proofValues = new ArrayList<>();
+        while ( tempProof != null){
+            ProofValue value = new ProofValue();
+
+            value.setLevel( level );
+            if (tempProof.getBrotherNode() != null){
+                value.setBrotherValue( BytesUtils.toHexString(tempProof.getBrotherNode().getValue(), Prefix.ZeroLowerX) );
+                value.setType( tempProof.getBrotherNode().getType().getValue() );
+                proofValues.add( value );
+            }
+            level = level + 1;
+            tempProof = tempProof.getParentProof();
+
+        }
+        return proofValues;
+    }
+
 
 }

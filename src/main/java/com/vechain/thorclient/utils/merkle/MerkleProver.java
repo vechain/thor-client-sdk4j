@@ -8,7 +8,6 @@ public class MerkleProver {
     public static MerkleProof getProvementNode(MerkleLeaf leaf){
         MerkleProof proof = new MerkleProof();
         proof.setSelfNode( leaf );
-        proof.setBrotherNode( leaf.getBrother() );
         extractProofNode( leaf.getParent(), proof );
         return proof;
     }
@@ -16,13 +15,10 @@ public class MerkleProver {
     private static void extractProofNode(IBinaryTreeNode merkleNode, MerkleProof childProof){
         MerkleProof proof = new MerkleProof();
         proof.setSelfNode( merkleNode );
-        childProof.setParentProvement( proof );
+        childProof.setParentProof( proof );
         if(merkleNode.getParent() != null){
-            proof.setBrotherNode( merkleNode.getParent().getBrother() );
             extractProofNode( merkleNode.getParent(), proof );
         }
     }
-
-
 
 }

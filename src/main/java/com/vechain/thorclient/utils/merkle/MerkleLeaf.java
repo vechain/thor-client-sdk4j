@@ -18,9 +18,11 @@ public class MerkleLeaf extends TreeNode {
         }
         if (digest != null){
             this.value = digest.digest( value );
+            digest.reset();
         }else{
             this.value = value;
         }
+
     }
 
     public MerkleLeaf(final byte[] value){
@@ -51,18 +53,6 @@ public class MerkleLeaf extends TreeNode {
         return null;
     }
 
-    @Override
-    public IBinaryTreeNode getBrother() {
-        if (this.getParent() != null){
-            if (this.getType().equals( NodeType.left )){
-                return this.getParent().getRightChild();
-            }else{
-                return this.getParent().getLeftChild();
-            }
-        }
-        return null;
-    }
-
 
     @Override
     public void setParent(IBinaryTreeNode parent) {
@@ -70,7 +60,7 @@ public class MerkleLeaf extends TreeNode {
     }
 
     @Override
-    public void addChild(IBinaryTreeNode leftChildTreeTree, IBinaryTreeNode rightChildTree) {
+    public void addChild(IBinaryTreeNode leftChildTree, IBinaryTreeNode rightChildTree) {
         throw new UnsupportedOperationException( "add child is not supported." );
     }
 
