@@ -41,7 +41,7 @@ public class MerkleTreeUtils {
         }else{
             List<MerkleTree> trees = new ArrayList<>( );
             int size = childTrees.size();
-            for(int index = 0; index < size; index += 2){
+            for(int index = 0; index < size; index ++){
                 MerkleTree  leftChild = childTrees.get( index );
                 index ++;
                 MerkleTree rightChild = null;
@@ -97,7 +97,6 @@ public class MerkleTreeUtils {
                 }
                 resultMessage = digest.digest();
                 digest.reset();
-                System.out.println( "Digest Message: "+ BytesUtils.toHexString( resultMessage, Prefix.ZeroLowerX ) );
             }
             level += 1;
         }

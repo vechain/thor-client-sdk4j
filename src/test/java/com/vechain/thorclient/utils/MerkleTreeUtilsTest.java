@@ -31,22 +31,12 @@ public class MerkleTreeUtilsTest {
             e.printStackTrace();
             assert false;
         }
-
-        final byte[] block1 = {(byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04};
-        final byte[] block2 = {(byte)0xae, (byte)0x45, (byte)0x98, (byte)0xff};
-
-        final byte[] block3 = {(byte)0x99, (byte)0x98, (byte)0x97, (byte)0x96};
-        final byte[] block4 = {(byte)0xff, (byte)0xfe, (byte)0xfd, (byte)0xfc};
-        MerkleLeaf leaf1 = new MerkleLeaf(block1);
-        MerkleLeaf leaf2 = new MerkleLeaf(block2);
-        MerkleLeaf leaf3 = new MerkleLeaf(block3);
-        MerkleLeaf leaf4 = new MerkleLeaf(block4);
-
         leaves = new ArrayList<>();
-        leaves.add( leaf1);
-        leaves.add( leaf2);
-        leaves.add( leaf3 );
-        leaves.add( leaf4 );
+        for(int i = 0; i < 1000; i++){
+            byte[] randomBytes = CryptoUtils.randomBytes( 32 );
+            MerkleLeaf leaf = new MerkleLeaf( randomBytes );
+            leaves.add( leaf );
+        }
         tree = MerkleTreeUtils.build(leaves, messageDigest  );
     }
 
@@ -93,10 +83,34 @@ public class MerkleTreeUtilsTest {
     public void recoverMerkleRootTest(){
         MerkleLeaf leaf = leaves.get( 2 );
         List<ProofValue> values = MerkleTreeUtils.getMerkleProof( leaf );
-        byte[] recoverRoot = MerkleTreeUtils.recoverMerkleRoot( BytesUtils.toByteArray("0x99989796"), values,
+        byte[] recoverRoot = MerkleTreeUtils.recoverMerkleRoot(leaf.getValue(), values,
                 messageDigest );
 
         log.info( "recover root:{}", BytesUtils.toHexString( recoverRoot, Prefix.ZeroLowerX )  );
         log.info( "merkle root: {}", BytesUtils.toHexString( tree.getValue(), Prefix.ZeroLowerX ) );
     }
+
+    @Test
+    public void benchmarkMerkleTree(){
+        List<MerkleLeaf> list = new ArrayList<>();
+
+        for(int i = 0; i < 1000; i++){
+            byte[] randomBytes = CryptoUtils.randomBytes( 32 );
+            MerkleLeaf leaf = new MerkleLeaf( randomBytes );
+            list.add( leaf );
+        }
+        log.info( "leaves size: {}", list.size() );
+        long startTime = System.currentTimeMillis();
+        log.info( "Start:{}", startTime );
+        MerkleTree currentTree = MerkleTreeUtils.build(list, messageDigest);
+        long delta = System.currentTimeMillis() - startTime;
+        log.info("elapsed time: {}", delta);
+        ArrayList<byte[]> recursion = new ArrayList();
+        MerkleTreeUtils.recursionPreorderTraversal(currentTree, recursion );
+        for(byte[] value : recursion){
+            log.info( "value:" + BytesUtils.toHexString( value, Prefix.ZeroLowerX ) );
+        }
+        log.info( "Size is: {}", recursion.size() );
+    }
+
 }
