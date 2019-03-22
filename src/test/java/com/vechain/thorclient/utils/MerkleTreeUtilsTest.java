@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.utils.merkle.*;
 import lombok.extern.slf4j.Slf4j;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,6 +89,7 @@ public class MerkleTreeUtilsTest {
 
         log.info( "recover root:{}", BytesUtils.toHexString( recoverRoot, Prefix.ZeroLowerX )  );
         log.info( "merkle root: {}", BytesUtils.toHexString( tree.getValue(), Prefix.ZeroLowerX ) );
+        Assert.assertEquals(BytesUtils.toHexString( tree.getValue(), Prefix.ZeroLowerX ) , BytesUtils.toHexString( recoverRoot, Prefix.ZeroLowerX ));
     }
 
     @Test
