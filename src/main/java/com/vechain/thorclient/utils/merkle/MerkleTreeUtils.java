@@ -16,7 +16,7 @@ public class MerkleTreeUtils {
      */
     public static MerkleTree build(List<MerkleLeaf> leaves, MessageDigest digest){
         if (leaves == null || leaves.size() == 0 || digest == null){
-            return null;
+            throw new IllegalArgumentException( "build MerkleTree argument is null" );
         }
         List<MerkleTree> childTrees = new ArrayList<>();
         int size = leaves.size();
@@ -35,6 +35,12 @@ public class MerkleTreeUtils {
         return buildFromChildTree( childTrees, digest );
     }
 
+    /**
+     * 
+     * @param childTrees
+     * @param digest
+     * @return
+     */
     public static MerkleTree buildFromChildTree(List<MerkleTree> childTrees, MessageDigest digest){
         if(childTrees.size() == 1){
             return childTrees.get( 0 );
@@ -59,26 +65,33 @@ public class MerkleTreeUtils {
     /**
      * Preorder to view the merkle tree node.
      * @param root
-     * @param list
+     * @param list an output parameter list.
      */
     public static void recursionPreorderTraversal(IBinaryTreeNode root, List<byte[]> list) {
-        if (root != null) {
+        if (root != null && list != null) {
             list.add( root.getValue());
             recursionPreorderTraversal(root.getLeftChild(), list);
             recursionPreorderTraversal(root.getRightChild(), list);
+        }else{
+            throw new IllegalArgumentException( "root or list is null." );
         }
     }
 
 
     /**
-     *
+     * Recover the merkle root from the
      * @param hashedMessage
      * @param proofValues
      * @param digest
      * @return
      */
     public static byte[] recoverMerkleRoot(byte[] hashedMessage, List<ProofValue> proofValues, MessageDigest digest){
-
+        if (hashedMessage == null
+                || proofValues == null
+                || proofValues.isEmpty()
+                || digest == null){
+            throw new IllegalArgumentException( "recover merkle hash argument is null." );
+        }
         byte[] resultMessage = hashedMessage;
         ProofValue lastProofValue = proofValues.get( proofValues.size() - 1 );
         int totalLevelCount = lastProofValue.getLevel() + 1;
@@ -123,6 +136,9 @@ public class MerkleTreeUtils {
      * @return
      */
     public static ArrayList<ProofValue> getMerkleProof( MerkleLeaf leaf){
+        if(leaf == null){
+            throw new IllegalArgumentException( "leaf is null" );
+        }
         MerkleProof proof = MerkleProver.getProvementNode( leaf );
         int level = 0;
         MerkleProof tempProof = proof;

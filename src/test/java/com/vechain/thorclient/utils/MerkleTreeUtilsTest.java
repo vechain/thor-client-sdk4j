@@ -106,7 +106,7 @@ public class MerkleTreeUtilsTest {
     public void benchmarkMerkleTree(){
         List<MerkleLeaf> list = new ArrayList<>();
 
-        for(int i = 0; i < 2333; i++){
+        for(int i = 0; i < 100000; i++){
             byte[] randomBytes = CryptoUtils.randomBytes( 32 );
             MerkleLeaf leaf = new MerkleLeaf( randomBytes );
             list.add( leaf );

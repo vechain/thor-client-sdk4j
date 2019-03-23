@@ -3,6 +3,8 @@ package com.vechain.thorclient.utils.merkle;
 import java.io.Serializable;
 
 public class ProofValue implements Serializable {
+
+
     private int type;
     private String brotherValue;
     private int level;
