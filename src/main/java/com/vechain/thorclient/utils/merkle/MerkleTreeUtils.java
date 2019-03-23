@@ -78,29 +78,41 @@ public class MerkleTreeUtils {
      * @return
      */
     public static byte[] recoverMerkleRoot(byte[] hashedMessage, List<ProofValue> proofValues, MessageDigest digest){
-        int level = 0;
+
         byte[] resultMessage = hashedMessage;
-        for(ProofValue proofValue: proofValues){
-            if(level == proofValue.getLevel()){
-                if(proofValue.getType() == NodeType.left.getValue()) {
-                    byte[] brotherValueBytes = BytesUtils.toByteArray(proofValue.getBrotherValue());
+        ProofValue lastProofValue = proofValues.get( proofValues.size() - 1 );
+        int totalLevelCount = lastProofValue.getLevel() + 1;
+        int level = 0;
+        for(; level < totalLevelCount; level++){
+            ProofValue foundProofValue = null;
+            for(int index = 0; index < proofValues.size(); index ++) {
+                if (level == proofValues.get( index ).getLevel()){
+                    foundProofValue = proofValues.get( index );
+                    break;
+                }
+            }
+            if(foundProofValue != null){
+                if(foundProofValue.getType() == NodeType.left.getValue()) {
+                    byte[] brotherValueBytes = BytesUtils.toByteArray(foundProofValue.getBrotherValue());
                     if(brotherValueBytes != null){
                         digest.update( brotherValueBytes);
                     }
                     digest.update( resultMessage );
-                }else if(proofValue.getType() == NodeType.right.getValue()){
-                    byte[] brotherValueBytes = BytesUtils.toByteArray(proofValue.getBrotherValue());
+                }else if(foundProofValue.getType() == NodeType.right.getValue()){
+                    byte[] brotherValueBytes = BytesUtils.toByteArray(foundProofValue.getBrotherValue());
                     digest.update( resultMessage );
                     if(brotherValueBytes != null){
                         digest.update( brotherValueBytes);
                     }
                 }
                 resultMessage = digest.digest();
-                digest.reset();
-            }
-            level += 1;
-        }
 
+            }else{
+                resultMessage = digest.digest( resultMessage );
+            }
+            digest.reset();
+
+        }
         return resultMessage;
     }
 

@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @RunWith(JUnit4.class)
@@ -33,8 +34,8 @@ public class MerkleTreeUtilsTest {
             assert false;
         }
         leaves = new ArrayList<>();
-        for(int i = 0; i < 1000; i++){
-            byte[] randomBytes = CryptoUtils.randomBytes( 32 );
+        for(int i = 0; i < 12; i++){
+            byte[] randomBytes = new byte[]{(byte)i};
             MerkleLeaf leaf = new MerkleLeaf( randomBytes );
             leaves.add( leaf );
         }
@@ -82,8 +83,17 @@ public class MerkleTreeUtilsTest {
 
     @Test
     public void recoverMerkleRootTest(){
-        MerkleLeaf leaf = leaves.get( 2 );
+//        Random random = new Random();
+//        int index = random.nextInt( leaves.size() );
+//        ArrayList<byte[]> arrayList = new ArrayList<>();
+        MerkleLeaf leaf = leaves.get(11);
+        List<byte[]> nodeValues = new ArrayList<>();
+        MerkleTreeUtils.recursionPreorderTraversal( tree, nodeValues );
+        for(byte[] value : nodeValues){
+            log.info( "Merkle Tree node value: {}", BytesUtils.toHexString( value, Prefix.ZeroLowerX ) );
+        }
         List<ProofValue> values = MerkleTreeUtils.getMerkleProof( leaf );
+        System.out.println( "proof:" + JSON.toJSONString( values ) );
         byte[] recoverRoot = MerkleTreeUtils.recoverMerkleRoot(leaf.getValue(), values,
                 messageDigest );
 
@@ -96,7 +106,7 @@ public class MerkleTreeUtilsTest {
     public void benchmarkMerkleTree(){
         List<MerkleLeaf> list = new ArrayList<>();
 
-        for(int i = 0; i < 1000; i++){
+        for(int i = 0; i < 2333; i++){
             byte[] randomBytes = CryptoUtils.randomBytes( 32 );
             MerkleLeaf leaf = new MerkleLeaf( randomBytes );
             list.add( leaf );
@@ -109,9 +119,9 @@ public class MerkleTreeUtilsTest {
         log.info("elapsed time: {}", delta);
         ArrayList<byte[]> recursion = new ArrayList();
         MerkleTreeUtils.recursionPreorderTraversal(currentTree, recursion );
-        for(byte[] value : recursion){
-            log.info( "value:" + BytesUtils.toHexString( value, Prefix.ZeroLowerX ) );
-        }
+//        for(byte[] value : recursion){
+//            log.info( "value:" + BytesUtils.toHexString( value, Prefix.ZeroLowerX ) );
+//        }
         log.info( "Size is: {}", recursion.size() );
     }
 
