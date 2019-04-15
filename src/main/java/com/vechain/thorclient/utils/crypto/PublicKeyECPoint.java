@@ -12,6 +12,7 @@ public class PublicKeyECPoint {
 	private byte[] y = new byte[32];
 	private ECPoint point;
 
+	//TODO
 	public PublicKeyECPoint(ECPoint point) {
 		this.point = point;
 		byte[] raw = point.getEncoded(false);
