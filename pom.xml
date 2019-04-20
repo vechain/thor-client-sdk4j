@@ -160,7 +160,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>vechainRepo</id>
+			<id>releases</id>
 			<name>Vechain Repository</name>
 			<url>https://nexus.vechaindev.com/content/repositories/releases/</url>
 		</repository>
