@@ -10,7 +10,7 @@ import org.junit.runners.JUnit4;
 import com.alibaba.fastjson.JSONObject;
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.Block;
-import com.vechain.thorclient.core.model.blockchain.FilteredLogEvent;
+import com.vechain.thorclient.core.model.blockchain.EventList;
 import com.vechain.thorclient.core.model.blockchain.FilteredTransferEvent;
 import com.vechain.thorclient.core.model.blockchain.LogFilter;
 import com.vechain.thorclient.core.model.blockchain.Options;
@@ -48,8 +48,10 @@ public class LogsClientTest extends BaseTest {
 		logFilter.addTopicSet(Address.VTHO_Address.toHexString(null), abiMethodHexString, null,
 				"0x000000000000000000000000" + fromAddress.substring(2), null, null);
 
-		ArrayList<FilteredLogEvent> filteredEvents = LogsClient.getFilteredLogEvents(logFilter);
-		logger.info("filteredEvents:{}", JSONObject.toJSONString(filteredEvents));
+		EventList filteredEvents = LogsClient.getFilteredLogEvents(logFilter);
+		for (FilteredTransferEvent filteredTransferEvent : filteredEvents) {
+			logger.info("filteredTransferEvent:{}", JSONObject.toJSONString(filteredTransferEvent));
+		}
 	}
 
 	@Test

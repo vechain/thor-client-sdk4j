@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.EventFilter;
+import com.vechain.thorclient.core.model.blockchain.EventList;
 import com.vechain.thorclient.core.model.blockchain.FilteredEvent;
 import com.vechain.thorclient.core.model.blockchain.FilteredLogEvent;
 import com.vechain.thorclient.core.model.blockchain.FilteredTransfer;
@@ -86,12 +87,12 @@ public class LogsClient extends AbstractClient {
      * @return ArrayList {@link FilteredLogEvent}
      * @throws ClientIOException
      */
-    public static ArrayList<FilteredLogEvent> getFilteredLogEvents(LogFilter logFilter) throws ClientIOException {
+    public static EventList getFilteredLogEvents(LogFilter logFilter) throws ClientIOException {
         if (logFilter == null) {
             throw ClientArgumentException.exception( "logFilter is null" );
         }
         return sendPostRequest( Path.PostFilterEventsLogPath, null, null, logFilter,
-                new ArrayList<FilteredLogEvent>().getClass());
+        		EventList.class);
     }
 
     /**
@@ -106,7 +107,7 @@ public class LogsClient extends AbstractClient {
             throw ClientArgumentException.exception( "transferredFilter is null" );
         }
         return sendPostRequest( Path.PostFilterTransferLogPath, null, null, transferredFilter,
-                new ArrayList<FilteredTransferEvent>().getClass());
+        		EventList.class);
     }
 
 
