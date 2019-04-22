@@ -14,6 +14,7 @@ import com.vechain.thorclient.core.model.blockchain.FilteredTransfer;
 import com.vechain.thorclient.core.model.blockchain.FilteredTransferEvent;
 import com.vechain.thorclient.core.model.blockchain.LogFilter;
 import com.vechain.thorclient.core.model.blockchain.Order;
+import com.vechain.thorclient.core.model.blockchain.TransferEventList;
 import com.vechain.thorclient.core.model.blockchain.TransferFilter;
 import com.vechain.thorclient.core.model.blockchain.TransferredFilter;
 import com.vechain.thorclient.core.model.clients.Address;
@@ -87,7 +88,7 @@ public class LogsClient extends AbstractClient {
      * @return ArrayList {@link FilteredLogEvent}
      * @throws ClientIOException
      */
-    public static EventList getFilteredLogEvents(LogFilter logFilter) throws ClientIOException {
+    public static ArrayList<FilteredLogEvent> getFilteredLogEvents(LogFilter logFilter) throws ClientIOException {
         if (logFilter == null) {
             throw ClientArgumentException.exception( "logFilter is null" );
         }
@@ -107,7 +108,7 @@ public class LogsClient extends AbstractClient {
             throw ClientArgumentException.exception( "transferredFilter is null" );
         }
         return sendPostRequest( Path.PostFilterTransferLogPath, null, null, transferredFilter,
-        		EventList.class);
+        		TransferEventList.class);
     }
 
 
