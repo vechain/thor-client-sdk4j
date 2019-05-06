@@ -202,6 +202,7 @@
 								<phase>package</phase>
 								<goals>
 									<goal>assembly</goal>
+									
 								</goals>
 							</execution>
 						</executions>
