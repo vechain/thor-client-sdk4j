@@ -7,12 +7,14 @@ import java.util.HashMap;
 
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.EventFilter;
+import com.vechain.thorclient.core.model.blockchain.EventList;
 import com.vechain.thorclient.core.model.blockchain.FilteredEvent;
 import com.vechain.thorclient.core.model.blockchain.FilteredLogEvent;
 import com.vechain.thorclient.core.model.blockchain.FilteredTransfer;
 import com.vechain.thorclient.core.model.blockchain.FilteredTransferEvent;
 import com.vechain.thorclient.core.model.blockchain.LogFilter;
 import com.vechain.thorclient.core.model.blockchain.Order;
+import com.vechain.thorclient.core.model.blockchain.TransferEventList;
 import com.vechain.thorclient.core.model.blockchain.TransferFilter;
 import com.vechain.thorclient.core.model.blockchain.TransferredFilter;
 import com.vechain.thorclient.core.model.clients.Address;
@@ -91,7 +93,7 @@ public class LogsClient extends AbstractClient {
             throw ClientArgumentException.exception( "logFilter is null" );
         }
         return sendPostRequest( Path.PostFilterEventsLogPath, null, null, logFilter,
-                new ArrayList<FilteredLogEvent>().getClass());
+        		EventList.class);
     }
 
     /**
@@ -106,7 +108,7 @@ public class LogsClient extends AbstractClient {
             throw ClientArgumentException.exception( "transferredFilter is null" );
         }
         return sendPostRequest( Path.PostFilterTransferLogPath, null, null, transferredFilter,
-                new ArrayList<FilteredTransferEvent>().getClass());
+        		TransferEventList.class);
     }
 
 

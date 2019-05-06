@@ -4,7 +4,11 @@ import java.io.Serializable;
 
 public class PeerStat implements Serializable {
 
-    private String bestBlockID;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6521416424665369076L;
+	private String bestBlockID;
     private int totalScore;
     private String peerID;
     private String netAddr;
