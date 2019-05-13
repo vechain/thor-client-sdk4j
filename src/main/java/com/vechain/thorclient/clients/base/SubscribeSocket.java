@@ -1,59 +1,84 @@
 package com.vechain.thorclient.clients.base;
 
-import com.alibaba.fastjson.JSONObject;
 import org.eclipse.jetty.websocket.api.CloseStatus;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.ParameterizedType;
+import com.alibaba.fastjson.JSONObject;
 
-
-@WebSocket(maxTextMessageSize = 16 * 1024* 1024)
+@WebSocket(maxTextMessageSize = 16 * 1024 * 1024)
 public class SubscribeSocket<T> {
-    private SubscribingCallback callback;
-    @SuppressWarnings("unused")
-    private Session session;
 
-    public SubscribeSocket(SubscribingCallback callback)
-    {
-        this.callback = callback;
-    }
+	private static Logger logger = LoggerFactory.getLogger(SubscribeSocket.class);
+	private SubscribingCallback callback;
+	@SuppressWarnings("unused")
+	private Session session;
+	private WebSocketClient client;
 
-    public void close(int status, String message){
-        CloseStatus closeStatus = new CloseStatus( status, message );
-        this.session.close(closeStatus);
-    }
+	public SubscribeSocket(WebSocketClient client, SubscribingCallback callback) {
+		this.client = client;
+		this.callback = callback;
+	}
 
-    @OnWebSocketClose
-    public void onClose(int statusCode, String reason)
-    {
-        System.out.printf("Connection closed: %d - %s%n",statusCode,reason);
-        if(this.callback != null){
-            this.callback.onClose(statusCode, reason);
-        }
-        this.callback = null;
-        this.session = null;
-    }
+	public void close(int status, String message) {
+		logger.info("close: {} {} {}", status, session, message);
+		if (this.session != null) {
+			CloseStatus closeStatus = new CloseStatus(status, message);
+			this.session.close(closeStatus);
+		}
+		clean();
+	}
 
-    @OnWebSocketConnect
-    public void onConnect(Session session)
-    {
-        System.out.printf("Got connect: %s%n",session);
-        this.session = session;
-        if (this.callback != null){
-            this.callback.onConnect( session );
-        }
-    }
+	@OnWebSocketClose
+	public void onClose(int statusCode, String reason) {
+		logger.info("Connection closed: {} {}", statusCode, reason);
+		if (this.callback != null) {
+			this.callback.onClose(statusCode, reason);
+		}
+		clean();
+	}
 
-    @OnWebSocketMessage
-    public void onMessage(String msg)
-    {
-        if (this.callback != null){
-            Object obj =  JSONObject.parseObject(msg,  callback.responseClass());
-            callback.onSubscribe( obj );
-        }
-    }
+	@OnWebSocketConnect
+	public void onConnect(Session session) {
+		logger.info("Got connect: {} ", session);
+		this.session = session;
+		if (this.callback != null) {
+			this.callback.onConnect(session);
+		}
+	}
+
+	@OnWebSocketMessage
+	public void onMessage(String msg) {
+		if (this.callback != null) {
+			logger.info("onMessage: {} ", msg);
+			Object obj = JSONObject.parseObject(msg, callback.responseClass());
+			callback.onSubscribe(obj);
+		}
+	}
+
+	public boolean isConnected() {
+		return this.session != null;
+	}
+
+	private void clean() {
+		this.callback = null;
+		this.session = null;
+		if (this.client != null) {
+			try {
+				logger.info("client closed...");
+				this.client.stop();
+				logger.info("client closed success");
+			} catch (Exception e) {
+				logger.error("WebSocketClient close error", e);
+			} finally {
+				this.client = null;
+			}
+		}
+	}
 }
