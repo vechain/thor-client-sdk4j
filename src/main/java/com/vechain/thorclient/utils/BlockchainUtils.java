@@ -6,12 +6,16 @@ import com.vechain.thorclient.utils.crypto.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
  * Blockchain utility, include address check, blockId check, amount calculate.
  */
 public class BlockchainUtils {
+
+	public static final int SIGNATURE_LEN = 65;
 
 	/**
 	 * Check if the block revision is valid.
@@ -200,24 +204,34 @@ public class BlockchainUtils {
         if(rawTransaction == null){
             return null;
         }
-        RawTransaction newRawTransaction = rawTransaction.copy();
-        newRawTransaction.setSignature( null );
-        byte[] signature = rawTransaction.getSignature();
-        if(signature == null || signature.length != 65){
-            return null;
-        }
-        byte[] rlpTxRaw = RLPUtils.encodeRawTransaction( newRawTransaction );
-        byte[] rBytes = new byte[32];
-        byte[] sBytes = new byte[32];
-        System.arraycopy( signature, 0, rBytes, 0, rBytes.length );
-        System.arraycopy( signature, 32, sBytes, 0, sBytes.length );
-        byte recovery = signature[64];
-        byte[] signingHash = CryptoUtils.blake2b( rlpTxRaw );
-        ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
-        BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, signingHash);
-        return new ECPublicKey( publicKey );
+        return recoverPublicKey(rawTransaction);
 
     }
+
+    public static  Key recoverPublicKey(RawTransaction rawTransaction){
+    	if (rawTransaction.getSignature() == null){
+    		return null;
+		}
+		if(rawTransaction == null){
+			return null;
+		}
+		RawTransaction newRawTransaction = rawTransaction.copy();
+		newRawTransaction.setSignature( null );
+		byte[] signature = rawTransaction.getSignature();
+		if(signature == null || signature.length != 65){
+			return null;
+		}
+		byte[] rlpTxRaw = RLPUtils.encodeRawTransaction( newRawTransaction );
+		byte[] rBytes = new byte[32];
+		byte[] sBytes = new byte[32];
+		System.arraycopy( signature, 0, rBytes, 0, rBytes.length );
+		System.arraycopy( signature, 32, sBytes, 0, sBytes.length );
+		byte recovery = signature[64];
+		byte[] signingHash = CryptoUtils.blake2b( rlpTxRaw );
+		ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
+		BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, signingHash);
+		return new ECPublicKey( publicKey );
+	}
 
 
     /**
@@ -253,5 +267,56 @@ public class BlockchainUtils {
         byte[] txIdBytes = CryptoUtils.blake2b( concatenatedBytes );
         return BytesUtils.toHexString( txIdBytes, Prefix.ZeroLowerX );
     }
+
+
+    /**
+     * Get the signing hash value.
+     * @param rawTransaction
+     * @return
+     */
+	public static byte[] signingHash(RawTransaction rawTransaction){
+		if(rawTransaction == null){
+			return null;
+		}
+		RawTransaction copyRawTransaction = rawTransaction.copy();
+		copyRawTransaction.setSignature( null );
+		byte[] rlp = RLPUtils.encodeRawTransaction( copyRawTransaction );
+		return CryptoUtils.blake2b( rlp );
+	}
+
+	/**
+     * Get delegator signing hash value.
+	 */
+	public static byte[] delegatorSigningHash(RawTransaction rawTransaction){
+		byte[] signHash = signingHash( rawTransaction );
+		Key key = recoverPublicKey( rawTransaction );
+		byte[] address = key.getRawAddress();
+		if (signHash != null
+				&& signHash.length == 32
+				&& address != null
+				&& address.length == 20){
+			ArrayList<byte[]> messages = new ArrayList<>();
+			messages.add( signHash );
+			messages.add( address );
+			return CryptoUtils.blake2b( messages );
+		}else {
+			return null;
+		}
+	}
+
+	/**
+	 * Concatenate senderSignature
+	 * @param senderSignature
+	 * @param gasPayerSignature
+	 * @return
+	 */
+	public static byte[] concatenateSignature(byte[] senderSignature, byte[] gasPayerSignature){
+    	int len = SIGNATURE_LEN << 1;
+		byte[] signature = new byte[len];
+		System.arraycopy( senderSignature,0, signature, 0, senderSignature.length );
+		System.arraycopy( gasPayerSignature, 0, signature, senderSignature.length, gasPayerSignature.length );
+		return signature;
+	}
+
 
 }

@@ -22,6 +22,8 @@ public class Transaction implements Serializable {
 
     private String origin;
 
+    private String delegator;
+
     private String raw;
 
     private  TxMeta meta;
@@ -128,5 +130,13 @@ public class Transaction implements Serializable {
 
     public void setRaw(String raw) {
         this.raw = raw;
+    }
+
+    public String getDelegator() {
+        return delegator;
+    }
+
+    public void setDelegator(String delegator) {
+        this.delegator = delegator;
     }
 }

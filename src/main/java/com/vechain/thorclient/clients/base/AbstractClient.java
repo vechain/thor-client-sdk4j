@@ -31,9 +31,14 @@ public abstract class AbstractClient {
 	public enum Path {
 
 		// Accounts
-		GetAccountPath("/accounts/{address}"), PostContractCallPath("/accounts/{address}"), PostDeployContractPath(
-				"/accounts"), GetAccountCodePath(
-						"/accounts/{address}/code"), GetStorageValuePath("/accounts/{address}/storage/{key}"),
+		GetAccountPath("/accounts/{address}"),
+		PostContractCallPath("/accounts/{address}"),
+		PostDeployContractPath(
+				"/accounts"),
+		PostAccountCallPath("/account"),
+		GetAccountCodePath(
+						"/accounts/{address}/code"),
+		GetStorageValuePath("/accounts/{address}/storage/{key}"),
 
 		// Transactions
 		GetTransactionPath("/transactions/{id}"), GetTransactionReceipt("/transactions/{id}/receipt"), PostTransaction(

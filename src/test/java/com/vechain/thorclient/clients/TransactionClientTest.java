@@ -24,7 +24,7 @@ import java.lang.reflect.Array;
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
-	static String hexId = "0x5ae99683e105d9a5b477a228e6ba1666d01950a57c787bb5cddb061c311be3eb";
+	static String hexId = "0x99a4831feec4051f077f1a7e46ebc4c75c7fbb11cda948d15de0e423a929d55a";
 	static String addUserTxId = "0x652b5c0f68d03fed86625969ad38e0634993f8da950126518b0c02e6e630d3de";
 	static String removeUserTxId = "0x3bec812d64615584414595e050bb52be9c0807cb1c05dc2ea9286a1e7c6a4da0";
 	static String setUserPlanTxId = "0x9dbdd7dc102eafe882f9e084ca01671ae8eebe59751ffcfbd1abfeb5cb687846";
@@ -153,7 +153,7 @@ public class TransactionClientTest extends BaseTest {
 		amount.setDecimalAmount("100");
 		ToClause clause = TransactionClient.buildVETToClause(
 				Address.fromHexString("0x000000002beadb038203be21ed5ce7c9b1bff602"), amount, ToData.ZERO);
-		return RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 21000, (byte) 0x0,
+		return RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 31000, (byte) 0x0,
 				CryptoUtils.generateTxNonce(), clause);
 	}
 
@@ -219,5 +219,21 @@ public class TransactionClientTest extends BaseTest {
 		Assert.assertNotNull(transferResult);
 		Assert.assertEquals(txIdHex, transferResult.getId());
 
+	}
+
+	@Test
+	public void testDelegatorSignAndTransfer() throws ClientIOException{
+		RawTransaction rawTransaction = generatingVETRawTxn();
+		TransactionReserved reserved = new TransactionReserved();
+		reserved.setDelegationFeature(true);
+		rawTransaction.setReserved(reserved);
+		RawTransaction signRawTransaction = TransactionClient.sign(rawTransaction, ECKeyPair.create( "0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2"));
+		RawTransaction delegatorSignRawTransaction = TransactionClient.delegatorSign( signRawTransaction, ECKeyPair.create( "0x87e0eba9c86c494d98353800571089f316740b0cb84c9a7cdf2fe5c9997c7966" ) );
+
+		TransferResult result = TransactionClient.transfer( delegatorSignRawTransaction );
+		String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction,
+				Address.fromHexString(ECKeyPair.create("0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2").getAddress()));
+		logger.info( "Send delegator pay gas Transaction result: " + JSON.toJSONString(result ) );
+		logger.info( "Calc txId: " + txIdHex );
 	}
 }

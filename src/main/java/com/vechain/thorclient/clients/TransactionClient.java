@@ -141,13 +141,40 @@ public class TransactionClient extends AbstractClient {
      * @return {@link RawTransaction} with signature.
      */
     public static RawTransaction sign(RawTransaction rawTransaction, ECKeyPair keyPair){
-        if (rawTransaction == null) {
-            throw ClientArgumentException.exception("raw transaction object is invalid");
+        if (rawTransaction == null || keyPair == null) {
+            throw ClientArgumentException.exception("raw transaction object is invalid.");
         }
         ECDSASign.SignatureData signature = ECDSASign.signMessage(rawTransaction.encode(), keyPair, true);
         byte[] signBytes = signature.toByteArray();
         rawTransaction.setSignature(signBytes);
         return rawTransaction;
+    }
+
+    /**
+     * Delegator signs the transaction.
+     * @param rawTransaction {@link RawTransaction}
+     * @param keyPair
+     * @return
+     */
+    public static RawTransaction delegatorSign(RawTransaction rawTransaction, ECKeyPair keyPair){
+        if(rawTransaction == null || keyPair == null){
+            throw ClientArgumentException.exception( "raw transaction object or keyPair is invalid." );
+        }
+        if(!rawTransaction.getReserved().isDelegationFeature()){
+            throw ClientArgumentException.exception( "raw transaction has no delegation feature, the raw transaction is invalid." );
+        }
+        byte[] delegatorSigningHash = BlockchainUtils.delegatorSigningHash( rawTransaction );
+        ECDSASign.SignatureData signatureData = ECDSASign.signMessage( delegatorSigningHash, keyPair, false );
+        byte[] delegationSignature = signatureData.toByteArray();
+        if(delegationSignature != null){
+            byte[] signature = rawTransaction.getSignature();
+            byte[] concatenatingSignature =  BlockchainUtils.concatenateSignature(signature,   delegationSignature);
+            rawTransaction.setSignature( concatenatingSignature );
+            return rawTransaction;
+        }else{
+            return null;
+        }
+
     }
 
     /**
