@@ -4,20 +4,12 @@ import java.math.BigInteger;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vechain.thorclient.core.model.clients.RawTransaction;
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.CryptoUtils;
-import com.vechain.thorclient.utils.X509CertificateUtils;
 import com.vechain.thorclient.utils.crypto.ECDSASign;
 import com.vechain.thorclient.utils.crypto.ECDSASignature;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 public class CertUtils {
-
-	private static final Logger logger = LoggerFactory.getLogger(CertUtils.class);
 
 	public static String PERFIX_PUBLIC = "04";
 
@@ -161,34 +153,8 @@ public class CertUtils {
 			throws CertificateEncodingException {
 		X509Certificate x509Certificate = X509CertificateUtils.loadCertificate(certString);
 		byte[] allBytes = buildSignContent(x509Certificate, params);
-
-//		String publicKey = BytesUtils.toHexString(X509CertificateUtils.extractPublicKey(x509Certificate), null);
-//		String recoverPublicKey = recoverPublicKey(BytesUtils.toByteArray(signHexString), allBytes);
-//		logger.info("verifySignature p1:{}", publicKey);
-//		logger.info("verifySignature p2:{}", recoverPublicKey);
-//		return publicKey.equals(recoverPublicKey);
 		return X509CertificateUtils.verifyTxSignature(BytesUtils.toHexString(CryptoUtils.sha256(allBytes), null),
 				signHexString, x509Certificate);
 
-	}
-
-	public static void main(String[] args) throws CertificateEncodingException {
-		String msg = "-----BEGIN CERTIFICATE-----" + "MIIBBTCBrQIKfqrMEyQ7DQoAATAKBggqhkjOPQQDAjANMQswCQYDVQQKDAJ2ZTAe"
-				+ "Fw0xOTAxMDgwNjQ0MDNaFw0yMDAxMDgwNjQ0MDNaMAwxCjAIBgNVBAoMAWgwVjAQ"
-				+ "BgcqhkjOPQIBBgUrgQQACgNCAARgR37amqthM4xc+G5rY7K4yu5GNo5gB6EkhxWj"
-				+ "uS4mURWoUyhp9aTMwXWXpla0h1u/EqNuVBg/jfZ029PGGur/MAoGCCqGSM49BAMC"
-				+ "A0cAMEQCIB6BSeGhhyYHLyh9wb5KB4QpMMRi6wPhoGvqSV6TItdGAiA/jVbD2v5n"
-				+ "MNciVOwZRkv9ibyQFtZQEqCEuO7dWCUUxw==" + "-----END CERTIFICATE-----";
-		X509Certificate x509Certificate = X509CertificateUtils.loadCertificate(msg);
-		byte[] all = buildSignContent(msg, "618a1acdfb1b9183fddfa4f1f71dbbc0", "201902191502337181048580096",
-				"1550562213718");
-		System.out.println(BytesUtils.toHexString(all, null));
-		String s = hashAndSign(all, "380481fbd888d0c27bc75d6deb0576cc7e31e91cd98078e9bde6294171c70b88");
-		String p = recoverPublicKey(BytesUtils.toByteArray(s), all);
-		System.out.println(p);
-		System.out.println(BytesUtils.toHexString(X509CertificateUtils.extractPublicKey(x509Certificate), null));
-		boolean ok = verifySignature(msg, s, "618a1acdfb1b9183fddfa4f1f71dbbc0", "201902191502337181048580096",
-				"1550562213718");
-		System.out.println(ok);
 	}
 }
