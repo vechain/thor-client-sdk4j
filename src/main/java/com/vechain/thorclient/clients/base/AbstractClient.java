@@ -155,7 +155,6 @@ public abstract class AbstractClient {
 			HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException {
 		String rawURL = rawUrl(path);
 		String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
-
 		HttpResponse<String> jsonNode = null;
 		String postString = JSON.toJSONString(postBody);
 		try {
