@@ -42,13 +42,13 @@ public class TransactionClient extends AbstractClient {
 		if (!BlockchainUtils.isId(txId)) {
 			throw ClientArgumentException.exception("Tx id is invalid");
 		}
-//        Revision currRevision = revision;
-//        if (currRevision == null) {
-//            currRevision = Revision.BEST;
-//        }
+		Revision currRevision = revision;
+		if (currRevision != null && currRevision.toString().equals(Revision.BEST.toString())) {
+			currRevision = null;
+		}
 		HashMap<String, String> uriParams = parameters(new String[] { "id" }, new String[] { txId });
 		HashMap<String, String> queryParams = parameters(new String[] { "head", "raw" },
-				new String[] { revision == null ? null : revision.toString(), Boolean.toString(isRaw) });
+				new String[] { currRevision == null ? null : currRevision.toString(), Boolean.toString(isRaw) });
 		return sendGetRequest(Path.GetTransactionPath, uriParams, queryParams, Transaction.class);
 	}
 
@@ -64,10 +64,13 @@ public class TransactionClient extends AbstractClient {
 		if (!BlockchainUtils.isId(txId)) {
 			throw ClientArgumentException.exception("Tx id is invalid");
 		}
+		Revision currRevision = revision;
+		if (currRevision != null && currRevision.toString().equals(Revision.BEST.toString())) {
+			currRevision = null;
+		}
 		HashMap<String, String> uriParams = parameters(new String[] { "id" }, new String[] { txId });
-		return sendGetRequest(Path.GetTransactionReceipt, uriParams,
-				revision == null ? null : parameters(new String[] { "head" }, new String[] { revision.toString() }),
-				Receipt.class);
+		return sendGetRequest(Path.GetTransactionReceipt, uriParams, currRevision == null ? null
+				: parameters(new String[] { "head" }, new String[] { currRevision.toString() }), Receipt.class);
 	}
 
 	/**
