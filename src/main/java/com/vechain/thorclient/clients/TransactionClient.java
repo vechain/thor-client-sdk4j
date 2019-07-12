@@ -50,7 +50,7 @@ public class TransactionClient extends AbstractClient {
             currRevision = Revision.BEST;
         }
         HashMap<String, String> uriParams = parameters(new String[] { "id" }, new String[] { txId });
-        HashMap<String, String> queryParams = parameters(new String[] { "revision", "raw" }, new String[] { currRevision.toString(), Boolean.toString(isRaw) });
+        HashMap<String, String> queryParams = parameters(new String[] { "head", "raw" }, new String[] { currRevision.toString(), Boolean.toString(isRaw) });
         return sendGetRequest(Path.GetTransactionPath, uriParams, queryParams, Transaction.class);
     }
 
@@ -73,7 +73,7 @@ public class TransactionClient extends AbstractClient {
             currRevision = Revision.BEST;
         }
         HashMap<String, String> uriParams = parameters(new String[] { "id" }, new String[] { txId });
-        HashMap<String, String> queryParams = parameters(new String[] { "revision" }, new String[] { currRevision.toString() });
+        HashMap<String, String> queryParams = parameters(new String[] { "head" }, new String[] { currRevision.toString() });
         return sendGetRequest(Path.GetTransactionReceipt, uriParams, queryParams, Receipt.class);
     }
 
