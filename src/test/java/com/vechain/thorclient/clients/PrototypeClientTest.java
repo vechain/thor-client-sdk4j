@@ -311,7 +311,7 @@ public class PrototypeClientTest extends BaseTest {
 				new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
 				expiration, ECKeyPair.create(privateKey));
 		if (transferResult != null) {
-			logger.info("MPP add user:" + JSON.toJSONString(transferResult));
+			logger.info("MPP addChildTrees user:" + JSON.toJSONString(transferResult));
 			this.checkReceiptAndBlock(transferResult.getId(), start, expiration);
 		} else {
 			throw new ThorException("ProtoTypeContractClient.addUser出错了~");
@@ -369,7 +369,7 @@ public class PrototypeClientTest extends BaseTest {
 				expirationBlock, ECKeyPair.create(privateKey));
 
 		if (transferResult != null) {
-			logger.info("MPP to add user:" + JSON.toJSONString(transferResult));
+			logger.info("MPP to addChildTrees user:" + JSON.toJSONString(transferResult));
 			this.checkReceiptAndBlock(transferResult.getId(), start, expiration);
 		} else {
 			throw new ThorException("ProtoTypeContractClient.addUser出错了~");

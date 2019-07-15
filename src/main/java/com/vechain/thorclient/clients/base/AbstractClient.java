@@ -3,7 +3,10 @@ package com.vechain.thorclient.clients.base;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
@@ -31,13 +34,20 @@ public abstract class AbstractClient {
 	public enum Path {
 
 		// Accounts
-		GetAccountPath("/accounts/{address}"), PostContractCallPath("/accounts/{address}"), PostDeployContractPath(
-				"/accounts"), GetAccountCodePath(
-						"/accounts/{address}/code"), GetStorageValuePath("/accounts/{address}/storage/{key}"),
+
+		GetAccountPath("/accounts/{address}"),
+		PostContractCallPath("/accounts/{address}"),
+		PostDeployContractPath(
+				"/accounts"),
+		PostAccountCallPath("/account"),
+		GetAccountCodePath(
+						"/accounts/{address}/code"),
+
+		GetStorageValuePath("/accounts/{address}/storage/{key}"),
 
 		// Transactions
-		GetTransactionPath("/transactions/{id}"), GetTransactionReceipt("/transactions/{id}/receipt"), PostTransaction(
-				"/transactions"),
+		GetTransactionPath("/transactions/{id}"), GetTransactionReceipt("/transactions/{id}/receipt"),
+		PostTransaction("/transactions"),
 
 		// Blocks
 		GetBlockPath("/blocks/{revision}"),
@@ -52,8 +62,8 @@ public abstract class AbstractClient {
 		GetNodeInfoPath("/node/network/peers"),
 
 		// SubscribeSocket
-		GetSubBlockPath("/subscriptions/block"), GetSubEventPath("/subscriptions/event"), GetSubTransferPath(
-				"/subscriptions/transfer"),;
+		GetSubBlockPath("/subscriptions/block"), GetSubEventPath("/subscriptions/event"),
+		GetSubTransferPath("/subscriptions/transfer"),;
 		private final String value;
 
 		Path(String value) {
@@ -89,19 +99,13 @@ public abstract class AbstractClient {
 	/**
 	 * Get the request
 	 *
-	 * @param path
-	 *            {@link Path}
-	 * @param uriParams
-	 *            uri parameters
-	 * @param queryParams
-	 *            query string parameters
-	 * @param tClass
-	 *            the class of result java object.
-	 * @param <T>
-	 *            Type of result java object.
+	 * @param path        {@link Path}
+	 * @param uriParams   uri parameters
+	 * @param queryParams query string parameters
+	 * @param tClass      the class of result java object.
+	 * @param             <T> Type of result java object.
 	 * @return response java object, could be null, mean can not find any result.
-	 * @throws IOException
-	 *             node is not reachable or request is not valid.
+	 * @throws IOException node is not reachable or request is not valid.
 	 */
 	public static <T> T sendGetRequest(Path path, HashMap<String, String> uriParams,
 			HashMap<String, String> queryParams, Class<T> tClass) throws ClientIOException {
@@ -139,25 +143,18 @@ public abstract class AbstractClient {
 	/**
 	 * Post the request
 	 *
-	 * @param path
-	 *            {@link Path}
-	 * @param uriParams
-	 *            uri parameters
-	 * @param queryParams
-	 *            query string parameters
-	 * @param tClass
-	 *            the class of result java object.
-	 * @param <T>
-	 *            Type of result java object.
+	 * @param path        {@link Path}
+	 * @param uriParams   uri parameters
+	 * @param queryParams query string parameters
+	 * @param tClass      the class of result java object.
+	 * @param             <T> Type of result java object.
 	 * @return response java object, could be null, mean can not find any result.
-	 * @throws ClientIOException
-	 *             http status 4xx means not enough energy amount.
+	 * @throws ClientIOException http status 4xx means not enough energy amount.
 	 */
 	public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams,
 			HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException {
 		String rawURL = rawUrl(path);
 		String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
-
 		HttpResponse<String> jsonNode = null;
 		String postString = JSON.toJSONString(postBody);
 		try {
@@ -170,7 +167,8 @@ public abstract class AbstractClient {
 
 	/**
 	 * Make connection for subscription.
-	 * @param url long live connection url.
+	 * 
+	 * @param url      long live connection url.
 	 * @param callback {@link SubscribeSocket}
 	 * @return {@link SubscribeSocket}
 	 * @throws Exception
@@ -180,11 +178,32 @@ public abstract class AbstractClient {
 			throw new ClientIOException("Invalid arguments ");
 		}
 		WebSocketClient client = new WebSocketClient();
-		SubscribeSocket subscribeSocket = new SubscribeSocket(callback);
-		client.start();
-		URI subUri = new URI(url);
-		ClientUpgradeRequest request = new ClientUpgradeRequest();
-		client.connect(subscribeSocket, subUri, request);
+		SubscribeSocket subscribeSocket = new SubscribeSocket(client, callback);
+		try {
+			logger.info("subscribeSocketConnect start connect ... {}", url);
+			client.start();
+			URI subUri = new URI(url);
+			ClientUpgradeRequest request = new ClientUpgradeRequest();
+			Future<Session> f = client.connect(subscribeSocket, subUri, request);
+			logger.info("subscribeSocketConnect end connect...");
+			Session s = f.get(10, TimeUnit.SECONDS);
+			if (s.isOpen()) {
+				logger.info("subscribeSocketConnect success:{}", s.getRemoteAddress().toString());
+			} else {
+				logger.error("subscribeSocketConnect failed:{}", s.isOpen());
+			}
+		} catch (Exception e) {
+			logger.error("SubscribeSocket error", e);
+		} finally {
+			if (!subscribeSocket.isConnected()) {
+				logger.info("subscribeSocketConnect stop...");
+				try {
+					subscribeSocket.close(0, "WebSocket can't connect to: " + url);
+				} catch (Exception e) {
+					logger.error("SubscribeSocket stop error", e);
+				}
+			}
+		}
 		return subscribeSocket;
 	}
 
@@ -201,16 +220,14 @@ public abstract class AbstractClient {
 	}
 
 	/**
-	 * Call the contract view function or try to run the transaction to see the gas-used.
-	 * @param call
-	 *            {@link ContractCall}
-	 * @param contractAddress
-	 *            {@link Address}
-	 * @param revision
-	 *            {@link Revision}
+	 * Call the contract view function or try to run the transaction to see the
+	 * gas-used.
+	 * 
+	 * @param call            {@link ContractCall}
+	 * @param contractAddress {@link Address}
+	 * @param revision        {@link Revision}
 	 * @return {@link ContractCallResult}
-	 * @throws ClientIOException
-	 *             network error
+	 * @throws ClientIOException network error
 	 */
 	public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)
 			throws ClientIOException {

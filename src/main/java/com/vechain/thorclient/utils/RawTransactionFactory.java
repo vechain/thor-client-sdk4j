@@ -31,7 +31,7 @@ public class RawTransactionFactory {
 	 */
 	public RawTransaction createRawTransaction(byte chainTag, byte[] blockRef, int expiration, int gasInt,
 			byte gasPriceCoef, byte[] nonce, ToClause... toClauses) throws IllegalArgumentException {
-		if (chainTag == 0 || blockRef == null || expiration <= 0 || gasInt < 21000 || gasPriceCoef < 0
+		if (chainTag == 0 || blockRef == null || expiration <= 0 || gasInt < 21000
 				|| toClauses == null) {
 			throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
 		}
@@ -89,7 +89,7 @@ public class RawTransactionFactory {
 	 */
 	public RawTransaction createRawTransaction(byte chainTag, byte[] blockRef, int expiration, int gasInt,
 			byte gasPriceCoef, byte[] nonce, RawClause[] rawClauses) throws IllegalArgumentException {
-		if (chainTag == 0 || blockRef == null || expiration <= 0 || gasInt < 21000 || gasPriceCoef < 0
+		if (chainTag == 0 || blockRef == null || expiration <= 0 || gasInt < 21000
 				|| rawClauses == null) {
 			throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
 		}

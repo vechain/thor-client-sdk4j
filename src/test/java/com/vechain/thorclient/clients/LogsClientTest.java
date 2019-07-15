@@ -10,6 +10,7 @@ import org.junit.runners.JUnit4;
 import com.alibaba.fastjson.JSONObject;
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.Block;
+import com.vechain.thorclient.core.model.blockchain.EventList;
 import com.vechain.thorclient.core.model.blockchain.FilteredLogEvent;
 import com.vechain.thorclient.core.model.blockchain.FilteredTransferEvent;
 import com.vechain.thorclient.core.model.blockchain.LogFilter;
@@ -49,7 +50,9 @@ public class LogsClientTest extends BaseTest {
 				"0x000000000000000000000000" + fromAddress.substring(2), null, null);
 
 		ArrayList<FilteredLogEvent> filteredEvents = LogsClient.getFilteredLogEvents(logFilter);
-		logger.info("filteredEvents:{}", JSONObject.toJSONString(filteredEvents));
+		for (FilteredLogEvent filteredTransferEvent : filteredEvents) {
+			logger.info("filteredTransferEvent:{}", JSONObject.toJSONString(filteredTransferEvent));
+		}
 	}
 
 	@Test

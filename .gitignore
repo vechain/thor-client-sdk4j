@@ -44,3 +44,4 @@ gen
 /.settings/
 /logs/
 /thor-client-sdk4j.iml
+/.vscode/

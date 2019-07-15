@@ -40,12 +40,35 @@ public class AccountClient extends AbstractClient {
      * @param contractCall {@link ContractCall}
      * @return {@link ContractCallResult}
      * @throws ClientIOException if network error or invalid request.
+     * @Deprecated please use {@link AccountClient.performAccountCall} instead.
      */
+    @Deprecated
     public static ContractCallResult deployContractInfo(ContractCall contractCall) throws ClientIOException{
         if(contractCall  == null){
             throw ClientArgumentException.exception( "contract call object is null" );
         }
         return sendPostRequest( Path.PostDeployContractPath, null, null, contractCall, ContractCallResult.class );
+    }
+
+
+    /**
+     * Perform an account call
+     * @param revision  block revision, can be null
+     * @param accountCall required, an account call object.
+     * @return {@link AccountCallResult}
+     * @throws ClientIOException
+     */
+    public static AccountCallResult performAccountCall(Revision revision, AccountCall accountCall) throws
+            ClientIOException{
+        if (accountCall == null){
+            throw ClientArgumentException.exception( "account call object is null" );
+        }
+        Revision currRevision = revision;
+        if(currRevision == null){
+            currRevision = Revision.BEST;
+        }
+        HashMap<String, String> queryParams = parameters(new String[]{"revision"},new String[]{currRevision.toString()});
+        return sendPostRequest(Path.PostAccountCallPath, null, queryParams, accountCall, AccountCallResult.class );
     }
 
     /**

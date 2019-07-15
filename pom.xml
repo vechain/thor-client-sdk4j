@@ -5,7 +5,7 @@
 
 	<groupId>com.vechain.client</groupId>
 	<artifactId>thor-client-sdk4j</artifactId>
-	<version>0.0.8</version>
+	<version>0.0.9</version>
 	<packaging>jar</packaging>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -95,6 +95,14 @@
 			<artifactId>websocket-client</artifactId>
 			<version>9.4.12.v20180830</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.6</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -152,7 +160,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>vechainRepo</id>
+			<id>releases</id>
 			<name>Vechain Repository</name>
 			<url>https://nexus.vechaindev.com/content/repositories/releases/</url>
 		</repository>
@@ -194,6 +202,7 @@
 								<phase>package</phase>
 								<goals>
 									<goal>assembly</goal>
+									
 								</goals>
 							</execution>
 						</executions>

@@ -1,7 +1,7 @@
 package com.vechain.thorclient.core.model.blockchain;
 
 import java.io.Serializable;
-
+@Deprecated
 public class TransactionAttributes implements Serializable {
 
     public enum TransactionType {

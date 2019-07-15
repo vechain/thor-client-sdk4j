@@ -17,7 +17,7 @@ public class RawTransaction {
     private byte[] dependsOn;
     private byte[] nonce;    //8 bytes
     private byte[] signature;
-    private byte[][] reserved;
+    private TransactionReserved reserved;
 
     public RawTransaction(){
     }
@@ -96,7 +96,7 @@ public class RawTransaction {
     }
 
 
-    public byte[][] getReserved() {
+    public TransactionReserved getReserved() {
         return reserved;
     }
 
@@ -117,8 +117,11 @@ public class RawTransaction {
         transaction.setGasPriceCoef( this.gasPriceCoef );
         transaction.setNonce( this.nonce );
         transaction.setGas( this.gas );
-
+        transaction.setReserved( this.reserved );
         return transaction;
     }
 
+    public void setReserved(TransactionReserved reserved) {
+        this.reserved = reserved;
+    }
 }

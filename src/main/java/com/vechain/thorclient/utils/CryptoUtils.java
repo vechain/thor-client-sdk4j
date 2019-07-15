@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 /**
  * A cryptography relative utility class.
@@ -35,6 +36,22 @@ public class CryptoUtils {
             return null;
         }
     }
+
+
+    public static byte[] blake2b(ArrayList<byte[]> messages){
+        Blake2b blake2b = new Blake2b(256);
+        for(byte[] message: messages){
+            blake2b.update(message, 0, message.length);
+        }
+        byte[] digest = new byte[32];
+        int size = blake2b.digest( digest, 0 );
+        if (size > 0){
+            return digest;
+        }else {
+            return null;
+        }
+    }
+
 
     /**
      * Generate a random nonce for transaction with cryptography method.

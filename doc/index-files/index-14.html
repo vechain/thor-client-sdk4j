@@ -79,7 +79,7 @@
 <dd>
 <div class="block">[0xf7]
  If the total payload of a list is more than 55 bytes long, the RLP
- encoding consists of a single byte with value 0xf7 plus the length of the
+ encoding consists of a single byte with brotherValue 0xf7 plus the length of the
  length of the list in binary form, followed by the length of the list,
  followed by the concatenation of the RLP encodings of the items.</div>
 </dd>
@@ -87,7 +87,7 @@
 <dd>
 <div class="block">[0xb7]
  If a string is more than 55 bytes long, the RLP encoding consists of a
- single byte with value 0xb7 plus the length of the length of the string
+ single byte with brotherValue 0xb7 plus the length of the length of the string
  in binary form, followed by the length of the string, followed by the
  string.</div>
 </dd>
@@ -96,14 +96,14 @@
 <div class="block">[0xc0]
  If the total payload of a list (i.e. the combined length of all its
  items) is 0-55 bytes long, the RLP encoding consists of a single byte
- with value 0xc0 plus the length of the list followed by the concatenation
+ with brotherValue 0xc0 plus the length of the list followed by the concatenation
  of the RLP encodings of the items.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../com/vechain/thorclient/utils/rlp/RlpDecoder.html#OFFSET_SHORT_STRING">OFFSET_SHORT_STRING</a></span> - 类 中的静态变量com.vechain.thorclient.utils.rlp.<a href="../com/vechain/thorclient/utils/rlp/RlpDecoder.html" title="com.vechain.thorclient.utils.rlp中的类">RlpDecoder</a></dt>
 <dd>
 <div class="block">[0x80]
  If a string is 0-55 bytes long, the RLP encoding consists of a single
- byte with value 0x80 plus the length of the string followed by the
+ byte with brotherValue 0x80 plus the length of the string followed by the
  string.</div>
 </dd>
 <dt><a href="../com/vechain/thorclient/core/model/blockchain/Options.html" title="com.vechain.thorclient.core.model.blockchain中的类"><span class="typeNameLink">Options</span></a> - <a href="../com/vechain/thorclient/core/model/blockchain/package-summary.html">com.vechain.thorclient.core.model.blockchain</a>中的类</dt>

@@ -3,13 +3,12 @@ package com.vechain.thorclient.clients;
 import com.vechain.thorclient.clients.base.AbstractClient;
 import com.vechain.thorclient.core.model.blockchain.Block;
 import com.vechain.thorclient.core.model.blockchain.PeerStat;
+import com.vechain.thorclient.core.model.blockchain.PeerStatList;
 import com.vechain.thorclient.core.model.clients.BlockRef;
 import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.BlockchainUtils;
 import com.vechain.thorclient.utils.BytesUtils;
-
-import java.util.ArrayList;
 
 /**
  * Get information of blockchain. It can get block tag, block reference, nodes status of blockchain.
@@ -42,9 +41,9 @@ public class BlockchainClient extends AbstractClient{
      * @return array of {@link PeerStat}
      * @throws ClientIOException network error.
      */
-   public static ArrayList getPeerStatusList()throws ClientIOException{
+   public static PeerStatList getPeerStatusList()throws ClientIOException{
 
-        return sendGetRequest( Path.GetNodeInfoPath, null, null, (new ArrayList<PeerStat>()).getClass() );
+        return sendGetRequest( Path.GetNodeInfoPath, null, null, PeerStatList.class );
    }
 
     /**

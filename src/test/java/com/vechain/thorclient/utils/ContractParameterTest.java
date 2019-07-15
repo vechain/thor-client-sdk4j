@@ -46,9 +46,9 @@ public class ContractParameterTest extends BaseTest {
 	// String p1 =
 	// "davedavedavedavedavedavedavedavedavedavedavedavedavedavedavedave";
 	// List<Type> list = new ArrayList<Type>();
-	// list.add(new DynamicBytes(p1.getBytes()));
-	// list.add(new Bool(true));
-	// list.add(new StaticArray<Uint>(new Uint(BigInteger.ONE), new
+	// list.addChildTrees(new DynamicBytes(p1.getBytes()));
+	// list.addChildTrees(new Bool(true));
+	// list.addChildTrees(new StaticArray<Uint>(new Uint(BigInteger.ONE), new
 	// Uint(BigInteger.valueOf(2)),
 	// new Uint(BigInteger.valueOf(3)), new Uint(BigInteger.valueOf(4)), new
 	// Uint(BigInteger.valueOf(5)),
@@ -58,19 +58,19 @@ public class ContractParameterTest extends BaseTest {
 	// String s1 = FunctionEncoder.encode(function);
 	//
 	// List<NamedType> inputs = new ArrayList<NamedType>();
-	// inputs.add(new NamedType("a", "bytes"));
-	// inputs.add(new NamedType("b", "bool"));
-	// inputs.add(new NamedType("c", "uint[6]"));
+	// inputs.addChildTrees(new NamedType("a", "bytes"));
+	// inputs.addChildTrees(new NamedType("b", "bool"));
+	// inputs.addChildTrees(new NamedType("c", "uint[6]"));
 	// AbiDefinition abiDefinition = new AbiDefinition(true, inputs, fname, null,
 	// "", false);
 	//
 	// List<BigInteger> plist = new ArrayList<BigInteger>();
-	// plist.add(BigInteger.ONE);
-	// plist.add(BigInteger.valueOf(2));
-	// plist.add(BigInteger.valueOf(3));
-	// plist.add(BigInteger.valueOf(4));
-	// plist.add(BigInteger.valueOf(5));
-	// plist.add(BigInteger.valueOf(6));
+	// plist.addChildTrees(BigInteger.ONE);
+	// plist.addChildTrees(BigInteger.valueOf(2));
+	// plist.addChildTrees(BigInteger.valueOf(3));
+	// plist.addChildTrees(BigInteger.valueOf(4));
+	// plist.addChildTrees(BigInteger.valueOf(5));
+	// plist.addChildTrees(BigInteger.valueOf(6));
 	// ContractCall call = FakeContract.buildCall(abiDefinition, p1.getBytes(),
 	// true, plist);
 	// Assert.assertEquals(s1.substring(10), call.getData().substring(10));
@@ -79,13 +79,13 @@ public class ContractParameterTest extends BaseTest {
 	// @Test
 	// public void testFunctionMDynamicArrayEncode2() {
 	// List<Type> list = new ArrayList<Type>();
-	// list.add(new DynamicBytes(stringParam.getBytes()));
-	// list.add(new Utf8String(bytesParam));
-	// list.add(new DynamicArray<Uint>(new Uint(BigInteger.ONE), new
+	// list.addChildTrees(new DynamicBytes(stringParam.getBytes()));
+	// list.addChildTrees(new Utf8String(bytesParam));
+	// list.addChildTrees(new DynamicArray<Uint>(new Uint(BigInteger.ONE), new
 	// Uint(BigInteger.valueOf(2)),
 	// new Uint(BigInteger.valueOf(3)), new Uint(BigInteger.valueOf(4)), new
 	// Uint(BigInteger.valueOf(5))));
-	// list.add(new org.web3j.abi.datatypes.Address(fromAddress));
+	// list.addChildTrees(new org.web3j.abi.datatypes.Address(fromAddress));
 	// Function function = new Function(fname, list,
 	// Collections.<TypeReference<?>>emptyList());
 	// String s1 = FunctionEncoder.encode(function);

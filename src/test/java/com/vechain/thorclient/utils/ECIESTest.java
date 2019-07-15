@@ -1,8 +1,12 @@
 package com.vechain.thorclient.utils;
 
+import java.io.*;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.Arrays;
 
+import ch.qos.logback.core.encoder.ByteArrayUtil;
+import ch.qos.logback.core.util.FileUtil;
 import com.vechain.thorclient.utils.crypto.ECKey;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
@@ -169,12 +173,54 @@ public class ECIESTest {
 		String receiverPublicKey = "048e8c9a162dec4a76dbbdd89391353ad399e7a6c8c2332ed04ca22f77f51f45f0af867b4e06a82cdfd819019ca335b33ac369ac3ccd3920a6befad2c7903f50d4";
 		String receiverPrivateKey = "cab2002ddebea021ef9da251ea92198cf6bbeb6de34d834078783fbd86446334";
 		String shareSecretKey = "1c6ce96caacedd14f7f9ee25bdb4b75fbd2db4df";
-		String enString = ECIESUtils.encrypt(receiverPublicKey, shareSecretKey, msg);
-
-		String receiverMsg = ECIESUtils.decrypt(receiverPrivateKey, shareSecretKey, enString);
-
-		Assert.assertEquals(msg, receiverMsg);
+		byte[] enString = ECIESUtils.encrypt(receiverPublicKey, shareSecretKey, msg.getBytes());
+		byte[] receiverMsg = ECIESUtils.decrypt(receiverPrivateKey, shareSecretKey, enString);
+		System.out.println( "receiverMsg:" + new String(receiverMsg) );
+		Assert.assertEquals(msg, new String(receiverMsg) );
 
 	}
+
+	@Test
+	public void testECIES() throws Exception {
+        URL eciesURL = this.getClass().getClassLoader().getResource("ecies.txt");
+        File file = new File( eciesURL.getPath() );
+        FileInputStream fis = null;
+        byte fileContent[] = null;
+        try {
+            fis = new FileInputStream(file);
+            fileContent = new byte[(int)file.length()];
+            fis.read(fileContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        System.out.println( "File content size:" + fileContent.length );
+        String receiverPublicKey = "048e8c9a162dec4a76dbbdd89391353ad399e7a6c8c2332ed04ca22f77f51f45f0af867b4e06a82cdfd819019ca335b33ac369ac3ccd3920a6befad2c7903f50d4";
+        String receiverPrivateKey = "cab2002ddebea021ef9da251ea92198cf6bbeb6de34d834078783fbd86446334";
+        String shareSecretKey = "1c6ce96caacedd14f7f9ee25bdb4b75fbd2db4df";
+        byte[] encodeBytes = null;
+        try {
+            encodeBytes = ECIESUtils.encrypt(receiverPublicKey, shareSecretKey, fileContent);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        byte[] decryptBytes = ECIESUtils.decrypt(receiverPrivateKey, shareSecretKey, encodeBytes);
+        byte[] plainHash = CryptoUtils.blake2b( fileContent );
+        byte[] recoveryHash = CryptoUtils.blake2b( decryptBytes );
+        System.out.println( "original file content hash:" + BytesUtils.toHexString( plainHash, Prefix.ZeroLowerX ) );
+        Assert.assertEquals( BytesUtils.toHexString( plainHash , Prefix.ZeroLowerX), BytesUtils.toHexString(
+                recoveryHash, Prefix.ZeroLowerX) );
+
+
+    }
 
 }

@@ -2,6 +2,7 @@ package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
+import com.vechain.thorclient.core.model.clients.TransactionReserved;
 import com.vechain.thorclient.utils.rlp.*;
 
 
@@ -82,7 +83,12 @@ public class RLPUtils {
             RlpList reservedList = new RlpList(reservedRlp);
             result.add(reservedList);
         }else{
-            throw new IllegalArgumentException("reservedList is not supported");
+            List<RlpType> reservedRlpList = new ArrayList<>();
+            for(byte[] reservedValue: rawTransaction.getReserved().getReservedValues()){
+                reservedRlpList.add( RlpString.create( reservedValue ));
+            }
+            RlpList reservedList = new RlpList(reservedRlpList);
+            result.add(reservedList);
         }
 
         if(rawTransaction.getSignature() != null) {
@@ -196,12 +202,26 @@ public class RLPUtils {
                 rawTransaction.setNonce(rlpString.getBytes());
                 break;
             case Reserved:
+                RlpList rlpList = (RlpList) listValues.get( index );
+                fillReserved( rlpList, rawTransaction );
                 break;
             case Signature:
                 rlpString = (RlpString)listValues.get( index ) ;
                 rawTransaction.setSignature(rlpString.getBytes());
                 break;
         }
+    }
+
+    private static void fillReserved(RlpList rlpList, RawTransaction rawTransaction){
+
+        List<RlpType> rlpTypeList = rlpList.getValues();
+        TransactionReserved transactionReserved = new TransactionReserved();
+        for(RlpType rlpType: rlpTypeList){
+            RlpString reservedRlpString = (RlpString)rlpType;
+            byte[] reservedBytes = reservedRlpString.getBytes();
+            transactionReserved.getReservedValues().add( reservedBytes );
+        }
+        rawTransaction.setReserved( transactionReserved );
     }
 
     private static void fillClauses(RawTransaction rawTransaction, RlpList list){

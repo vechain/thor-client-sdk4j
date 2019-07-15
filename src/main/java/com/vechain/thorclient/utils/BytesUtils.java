@@ -187,8 +187,8 @@ public class BytesUtils {
      * @param input
      * @return
      */
-    public static boolean containsHexPrefix(String input) {
-        return (input.startsWith(Prefix.ZeroLowerX.getPrefixString()));
+	public static boolean containsHexPrefix(String input) {
+        return (input.toLowerCase().startsWith(Prefix.ZeroLowerX.getPrefixString()));
     }
 
     public static String cleanHexPrefix(String input) {

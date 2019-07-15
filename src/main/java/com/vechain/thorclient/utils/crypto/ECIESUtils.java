@@ -1,22 +1,7 @@
 package com.vechain.thorclient.utils.crypto;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.Arrays;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
+import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.CryptoUtils;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
@@ -27,12 +12,15 @@ import org.eclipse.jetty.io.RuntimeIOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vechain.thorclient.utils.BytesUtils;
-import com.vechain.thorclient.utils.CryptoUtils;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 public class ECIESUtils {
-
 	private static Logger logger = LoggerFactory.getLogger(ECIESUtils.class);
+	private static final int MaxContentLength = 2*1024*1024;
 
 	/**
 	 * encrypt with ECIES(uncompressed publicKey)
@@ -44,20 +32,24 @@ public class ECIESUtils {
 	 * @return encrypted hex string
 	 * @throws UnsupportedEncodingException
 	 */
-	public static String encrypt(String receiverPublicKey, String shareSecretKey, String msgtoEncrypt)
+	public static byte[] encrypt(String receiverPublicKey, String shareSecretKey, byte[] message)
 			throws UnsupportedEncodingException {
-		StringBuffer rtnStr = new StringBuffer();
+        if(message == null || message.length == 0 ){
+            throw new IllegalArgumentException( "message is illegal." );
+        }
+        if(message.length >= MaxContentLength){
+            throw new IllegalArgumentException( "message length is too large" );
+        }
 		logger.debug("1. 产⽣生随机数r，并计算R=r*G");
 		byte[] r = CryptoUtils.randomBytes(32);
 
-		ECPoint R = ECKey.publicPointFromPrivate(BytesUtils.bytesToBigInt(r));
-		rtnStr.append(ByteUtils.toHexString(R.getEncoded(false)));
-		logger.debug("R:{}", rtnStr.toString());
+		ECPoint rPoint = ECKey.publicPointFromPrivate(BytesUtils.bytesToBigInt(r));
+		byte[] rBytes =  rPoint.getEncoded( false );
 
-		logger.debug("2. 计算共享密钥，S=Px，P=(Px,Py)=r*KB,这⾥里里KB为Bob的公钥");
+		logger.debug("2. 计算共享密钥，S=Px，P=(Px,Py)=r*KB,这⾥KB为Bob的公钥");
 		ECPoint receiverPublicKeyPoint = ECIESUtils.createECPointFromPublicKey(receiverPublicKey);
 		PublicKeyECPoint P = ECIESUtils.multiply(receiverPublicKeyPoint, r);
-		logger.debug("P:" + P.toString());
+
 
 		logger.debug("3. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
 		byte[] shareKeyBytes = BytesUtils.toByteArray(shareSecretKey);
@@ -65,27 +57,27 @@ public class ECIESUtils {
 		byte[] K = ECIESUtils.pbkdf2withsha512(P.getX(), shareKeyBytes);
 		byte[] keBytes = Arrays.copyOfRange(K, 0, 32);
 		byte[] kmBytes = Arrays.copyOfRange(K, 32, K.length);
-		logger.debug("Ke:" + ByteUtils.toHexString(keBytes));
-		logger.debug("Km:" + ByteUtils.toHexString(kmBytes));
 
 		logger.debug("4. 对消息进⾏行行加密，c=E(KE,m)");
 		byte[] cBytes = null;
 		try {
-			cBytes = ECIESUtils.encodeAesCtr128(keBytes, msgtoEncrypt.getBytes(), Arrays.copyOfRange(P.getY(), 0, 16));
+			cBytes = ECIESUtils.encodeAesCtr128(keBytes, message, Arrays.copyOfRange(P.getY(), 0, 16));
 		} catch (Exception e) {
 			logger.error("encodeAesCtr128 error", e);
 		}
-		logger.debug("c:" + ByteUtils.toHexString(cBytes));
-		rtnStr.append(ByteUtils.toHexString(cBytes));
 
 		logger.debug("5. 计算加密信息的tag d，d=MAC(KM,c||S2)");
 		byte[] dBytes = calcSignature(shareKeyBytes, kmBytes, cBytes);
-		logger.debug("d:" + ByteUtils.toHexString(dBytes));
-		rtnStr.append(ByteUtils.toHexString(dBytes));
 
+
+		byte[] buffer = new byte[rBytes.length + cBytes.length + dBytes.length];
+        logger.debug( "rBytes:" + rBytes.length + "  cBytes:" + cBytes.length + "  dBytes:" + dBytes.length );
+        System.arraycopy( rBytes, 0, buffer, 0, rBytes.length );
+        System.arraycopy( cBytes, 0, buffer, rBytes.length, cBytes.length );
+        System.arraycopy( dBytes, 0, buffer, cBytes.length + rBytes.length, dBytes.length);
 		logger.debug("6. 返回结果 R||c||d");
-		logger.debug(rtnStr.toString());
-		return rtnStr.toString();
+
+		return buffer;
 	}
 
 	/**
@@ -93,35 +85,39 @@ public class ECIESUtils {
 	 * 
 	 * @param receiverPrivateKey
 	 * @param shareSecretKey
-	 * @param cryptMsg
+	 * @param cryptedMessage
 	 * @return
 	 * @throws Exception
 	 */
-	public static String decrypt(String receiverPrivateKey, String shareSecretKey, String cryptMsg) throws Exception {
-		byte[] cryptMsgBytes = BytesUtils.toByteArray(cryptMsg);
-		byte[] Rbytes = Arrays.copyOfRange(cryptMsgBytes, 0, 65);
-		byte[] msgBytes = Arrays.copyOfRange(cryptMsgBytes, 65, cryptMsgBytes.length - 32);
-		byte[] dBytes = Arrays.copyOfRange(cryptMsgBytes, cryptMsgBytes.length - 32, cryptMsgBytes.length);
-		logger.debug(cryptMsg);
-		logger.debug("receiver R:{} msg:{} d:{}", ByteUtils.toHexString(Rbytes), ByteUtils.toHexString(msgBytes),
-				ByteUtils.toHexString(dBytes));
+	public static byte[] decrypt(String receiverPrivateKey, String shareSecretKey, byte[] cryptedMessage) throws
+            Exception {
+        if(cryptedMessage == null || cryptedMessage.length == 0){
+            throw new IllegalArgumentException( "cryptedMessage is illegal." );
+        }
+
+        if (cryptedMessage.length >= MaxContentLength + 65 + 32 + 32){
+            throw new IllegalArgumentException( "cryptedMessage is too large" );
+        }
+
+		byte[] Rbytes = Arrays.copyOfRange(cryptedMessage, 0, 65);
+		byte[] msgBytes = Arrays.copyOfRange(cryptedMessage, 65, cryptedMessage.length - 32);
+		byte[] dBytes = Arrays.copyOfRange(cryptedMessage, cryptedMessage.length - 32, cryptedMessage.length);
 
 		logger.debug("1. 计算共享密钥，S=Px。 P=(Px,Py)=kb*R=kb*r*G=r*kb*G=r*KB");
 		ECPoint R = ECIESUtils.createECPointFromPublicKey(ByteUtils.toHexString(Rbytes));
 		PublicKeyECPoint P = ECIESUtils.multiply(R, BytesUtils.toByteArray(receiverPrivateKey));
-		logger.debug("P:" + P.toString());
+
 
 		byte[] shareKeyBytes = BytesUtils.toByteArray(shareSecretKey);
 		logger.debug("2. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
 		byte[] K = ECIESUtils.pbkdf2withsha512(P.getX(), shareKeyBytes);
 		byte[] keBytes = Arrays.copyOfRange(K, 0, 32);
 		byte[] kmBytes = Arrays.copyOfRange(K, 32, K.length);
-		logger.debug("Ke:" + ByteUtils.toHexString(keBytes));
-		logger.debug("Km:" + ByteUtils.toHexString(kmBytes));
+
 
 		logger.debug("3. 使⽤用Mac计算Mac是否正确:MAC(KM||c||S2)");
 		byte[] calcD = calcSignature(shareKeyBytes, kmBytes, msgBytes);
-		logger.debug("calc d:" + ByteUtils.toHexString(calcD));
+
 		if (!ByteUtils.toHexString(calcD).equals(ByteUtils.toHexString(dBytes))) {
 			logger.error("different d:{} calc:{}", ByteUtils.toHexString(dBytes), ByteUtils.toHexString(calcD));
 			throw new RuntimeIOException("decrypt error : 加密信息的tag验证失败");
@@ -129,10 +125,7 @@ public class ECIESUtils {
 
 		logger.debug("4. 解码原始加密⽂文件，解码密码为Ke，c为收到的加密⽂文件");
 		try {
-			byte[] plain = ECIESUtils.decodeAesCtr128(keBytes, msgBytes, Arrays.copyOfRange(P.getY(), 0, 16));
-			logger.debug("plain:" + new String(plain));
-
-			return new String(plain, "UTF-8");
+            return ECIESUtils.decodeAesCtr128(keBytes, msgBytes, Arrays.copyOfRange(P.getY(), 0, 16));
 		} catch (Exception e) {
 			logger.error("", e);
 			throw e;
@@ -161,11 +154,13 @@ public class ECIESUtils {
 	 */
 	public static ECPoint createECPointFromPublicKey(String receiverPublicKey) {
 		byte[] receiverPublicKeyBytes = BytesUtils.toByteArray(receiverPublicKey);
-		boolean hasPrefix = receiverPublicKeyBytes.length == 65;
+		if(receiverPublicKeyBytes == null || receiverPublicKeyBytes.length != 65 || receiverPublicKeyBytes[0] != 0x04){
+            throw new IllegalArgumentException( "receiverPublicKey is illegal." );
+        }
 		byte[] RxBytes = new byte[32];
 		byte[] RyBytes = new byte[32];
-		System.arraycopy(receiverPublicKeyBytes, hasPrefix ? 1 : 0, RxBytes, 0, RxBytes.length);
-		System.arraycopy(receiverPublicKeyBytes, RxBytes.length + (hasPrefix ? 1 : 0), RyBytes, 0, RyBytes.length);
+		System.arraycopy(receiverPublicKeyBytes, 1, RxBytes, 0, RxBytes.length);
+		System.arraycopy(receiverPublicKeyBytes, RxBytes.length +  1, RyBytes, 0, RyBytes.length);
 
 		ECPoint publicKeyPoint = ECKeyPair.CURVE.getCurve().createPoint(BytesUtils.bytesToBigInt(RxBytes),
 				BytesUtils.bytesToBigInt(RyBytes));
@@ -214,74 +209,37 @@ public class ECIESUtils {
 	 * @param ivBytes
 	 *            初始向量
 	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws NoSuchPaddingException
-	 * @throws InvalidKeyException
-	 * @throws InvalidAlgorithmParameterException
-	 * @throws IOException
+	 *
 	 */
 	public static byte[] decodeAesCtr128(byte[] keyBytes, byte[] cipherBytes, byte[] ivBytes)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-			InvalidAlgorithmParameterException, IOException {
+			throws Exception {
 		SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
 		IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 		cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
-		ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-		CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
-		try {
-			cOut.write(cipherBytes);
-		} catch (IOException e) {
-			// ignore
-		} finally {
-			cOut.close();
-		}
-		return bOut.toByteArray();
+		return cipher.doFinal( cipherBytes );
 	}
 
 	/**
 	 * encodeAesCtr128
 	 * 
 	 * @param keyBytes
-	 *            秘钥
+	 *            private key bytes array
 	 * @param msg
-	 *            加密原文
+	 *            plain original text
 	 * @param ivBytes
-	 *            初始向量
+	 *            initial bytes array
 	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws NoSuchProviderException
-	 * @throws NoSuchPaddingException
-	 * @throws InvalidKeyException
-	 * @throws InvalidAlgorithmParameterException
-	 * @throws IOException
+	 * @throws Exception
 	 */
 	public static byte[] encodeAesCtr128(byte[] keyBytes, byte[] msg, byte[] ivBytes)
-			throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException,
-			InvalidAlgorithmParameterException, IOException {
+            throws Exception{
 		SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
 		IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-		cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
-		ByteArrayInputStream bIn = new ByteArrayInputStream(msg);
-		CipherInputStream cIn = new CipherInputStream(bIn, cipher);
-		ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-		int ch;
-		try {
-			while ((ch = cIn.read()) >= 0) {
-				bOut.write(ch);
-			}
-		} catch (IOException e) {
-			// ignore
-		} finally {
-			cIn.close();
-			bIn.close();
-			bOut.close();
-		}
+		cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+        return cipher.doFinal( msg );
 
-		byte[] cipherText = bOut.toByteArray();
-
-		return cipherText;
 	}
 
 }

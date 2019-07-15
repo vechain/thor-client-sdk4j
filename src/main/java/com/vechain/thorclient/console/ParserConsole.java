@@ -38,7 +38,12 @@ public class ParserConsole {
             byte[] addressBytes = rawClause.getTo();
             byte[] valueBytes = rawClause.getValue();
             Amount amount = Amount.VET();
-            amount.setHexAmount( BytesUtils.toHexString( valueBytes, Prefix.ZeroLowerX ) );
+            if (valueBytes == null || valueBytes.length == 0){
+                amount.setHexAmount( "0x00" );
+            }else{
+                amount.setHexAmount( BytesUtils.toHexString( valueBytes, Prefix.ZeroLowerX ) );
+            }
+
             System.out.println( "No." + index);
             System.out.println( "Address:" + BytesUtils.toHexString( addressBytes, Prefix.ZeroLowerX ) );
             System.out.println( "Value:" + amount.getAmount().toPlainString());
