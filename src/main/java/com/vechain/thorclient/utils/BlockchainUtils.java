@@ -218,7 +218,7 @@ public class BlockchainUtils {
 		RawTransaction newRawTransaction = rawTransaction.copy();
 		newRawTransaction.setSignature( null );
 		byte[] signature = rawTransaction.getSignature();
-		if(signature == null || signature.length != 65){
+		if(signature == null || signature.length < 65){
 			return null;
 		}
 		byte[] rlpTxRaw = RLPUtils.encodeRawTransaction( newRawTransaction );
