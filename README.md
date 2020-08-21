@@ -13,7 +13,7 @@ latest version 0.0.9
 default package jar without dependencies,use -Pall to build all in one jar
 
 ## License
-Thor Java Client SDK is licensed under the GNU Lesser General Public License v3.0, also included in LICENSE file in repository.
+Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE file in the repository.
 - - - -
 
 ## Set blockchain nodes provider
