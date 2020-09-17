@@ -1,14 +1,16 @@
 package com.vechain.thorclient.utils;
 
-import com.vechain.thorclient.core.model.clients.Address;
-import com.vechain.thorclient.core.model.clients.RawTransaction;
-import com.vechain.thorclient.utils.crypto.*;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+import com.vechain.thorclient.core.model.clients.Address;
+import com.vechain.thorclient.core.model.clients.RawTransaction;
+import com.vechain.thorclient.utils.crypto.ECDSASign;
+import com.vechain.thorclient.utils.crypto.ECDSASignature;
+import com.vechain.thorclient.utils.crypto.ECPublicKey;
+import com.vechain.thorclient.utils.crypto.Key;
 
 /**
  * Blockchain utility, include address check, blockId check, amount calculate.
@@ -20,8 +22,7 @@ public class BlockchainUtils {
 	/**
 	 * Check if the block revision is valid.
 	 * 
-	 * @param revision
-	 *            block revision string.
+	 * @param revision block revision string.
 	 * @return boolean value.
 	 */
 	public static boolean isValidRevision(String revision) {
@@ -45,20 +46,18 @@ public class BlockchainUtils {
 	/**
 	 * Check if the address hex string is valid.
 	 * 
-	 * @param address
-	 *            address hex string start with "0x", "VX" or without prefix string.
+	 * @param address address hex string start with "0x", "VX" or without prefix
+	 *                string.
 	 * @return boolean value.
 	 */
 	public static boolean isAddress(final String address) {
 		return (StringUtils.isCriticalHex(address) && address.length() == 42);
 	}
 
-
 	/**
 	 * Check if hexId string is valid.
 	 * 
-	 * @param hexId
-	 *            is block Id or txId.
+	 * @param hexId is block Id or txId.
 	 * @return true or false.
 	 */
 	public static boolean isId(String hexId) {
@@ -102,8 +101,7 @@ public class BlockchainUtils {
 	/**
 	 * Get checksum address from hex string address with 0x prefix
 	 * 
-	 * @param address
-	 *            hex string
+	 * @param address hex string
 	 * @return checksum address string.
 	 */
 	public static String getChecksumAddress(String address) {
@@ -155,12 +153,9 @@ public class BlockchainUtils {
 	/**
 	 * get amount of {@link BigDecimal} value.
 	 * 
-	 * @param hexString
-	 *            hex string of the amount.
-	 * @param precision
-	 *            the precision of the amount, with is 18 by default
-	 * @param scale
-	 *            the remain digits numbers of fractional part
+	 * @param hexString hex string of the amount.
+	 * @param precision the precision of the amount, with is 18 by default
+	 * @param scale     the remain digits numbers of fractional part
 	 * @return the amount value which can show to the end user.
 	 */
 	public static BigDecimal amount(String hexString, int precision, int scale) {
@@ -175,10 +170,8 @@ public class BlockchainUtils {
 	/**
 	 * Convert big decimal to byte array.
 	 * 
-	 * @param amount
-	 *            amount {@link BigDecimal}
-	 * @param precision
-	 *            must >= 0
+	 * @param amount    amount {@link BigDecimal}
+	 * @param precision must >= 0
 	 * @return byte array.
 	 */
 	public static byte[] byteArrayAmount(BigDecimal amount, int precision) {
@@ -193,130 +186,145 @@ public class BlockchainUtils {
 		return BytesUtils.trimLeadingZeroes(bigInt.toByteArray());
 	}
 
-    /**
-     * Recover public key
-     */
-    public static Key recoverPublicKey(String rawTransactionHex){
-        if(StringUtils.isBlank( rawTransactionHex )){
-            return null;
-        }
-        RawTransaction rawTransaction = RLPUtils.decode( rawTransactionHex );
-        if(rawTransaction == null){
-            return null;
-        }
-        return recoverPublicKey(rawTransaction);
-
-    }
-
-    public static  Key recoverPublicKey(RawTransaction rawTransaction){
-    	if (rawTransaction.getSignature() == null){
-    		return null;
+	/**
+	 * Recover public key
+	 */
+	public static Key recoverPublicKey(String rawTransactionHex) {
+		if (StringUtils.isBlank(rawTransactionHex)) {
+			return null;
 		}
-		if(rawTransaction == null){
+		RawTransaction rawTransaction = RLPUtils.decode(rawTransactionHex);
+		if (rawTransaction == null) {
+			return null;
+		}
+		return recoverPublicKey(rawTransaction);
+
+	}
+
+	public static Key recoverPublicKey(RawTransaction rawTransaction) {
+		if (rawTransaction == null || rawTransaction.getSignature() == null) {
 			return null;
 		}
 		RawTransaction newRawTransaction = rawTransaction.copy();
-		newRawTransaction.setSignature( null );
+		newRawTransaction.setSignature(null);
 		byte[] signature = rawTransaction.getSignature();
-		if(signature == null || signature.length < 65){
+		if (signature == null || signature.length < 65) {
 			return null;
 		}
-		byte[] rlpTxRaw = RLPUtils.encodeRawTransaction( newRawTransaction );
+		byte[] rlpTxRaw = RLPUtils.encodeRawTransaction(newRawTransaction);
 		byte[] rBytes = new byte[32];
 		byte[] sBytes = new byte[32];
-		System.arraycopy( signature, 0, rBytes, 0, rBytes.length );
-		System.arraycopy( signature, 32, sBytes, 0, sBytes.length );
+		System.arraycopy(signature, 0, rBytes, 0, rBytes.length);
+		System.arraycopy(signature, 32, sBytes, 0, sBytes.length);
 		byte recovery = signature[64];
-		byte[] signingHash = CryptoUtils.blake2b( rlpTxRaw );
+		byte[] signingHash = CryptoUtils.blake2b(rlpTxRaw);
 		ECDSASignature ecdsaSignature = new ECDSASignature(rBytes, sBytes);
-		BigInteger publicKey = ECDSASign.recoverFromSignature( recovery, ecdsaSignature, signingHash);
-		return new ECPublicKey( publicKey );
-	}
-
-
-    /**
-     * Generate transaction id.
-     * @param rawTransaction {@link RawTransaction}
-     * @param signer {@link Address}
-     * @return a hex string id with "0x"
-     */
-	public static String generateTransactionId(RawTransaction rawTransaction, Address signer){
-	    if(rawTransaction == null || signer == null){
-	        return null;
-        }
-        RawTransaction copyRawTransaction = rawTransaction.copy();
-	    copyRawTransaction.setSignature( null );
-        byte[] rlp = RLPUtils.encodeRawTransaction( copyRawTransaction );
-	    byte[] signHash = CryptoUtils.blake2b( rlp );
-        return generateTransactionId( signHash, signer );
-    }
-
-    /**
-     * Generate txId
-     * @param signingHash byte array
-     * @param signer
-     * @return a hex string id with "0x"
-     */
-    public static String generateTransactionId(byte[] signingHash, Address signer){
-	    if(signingHash == null || signer == null){
-	        return null;
-        }
-        byte[] concatenatedBytes = new byte[52];
-        System.arraycopy( signingHash, 0, concatenatedBytes, 0, signingHash.length );
-        System.arraycopy( signer.toByteArray(), 0 , concatenatedBytes, signingHash.length, signer.toByteArray().length );
-        byte[] txIdBytes = CryptoUtils.blake2b( concatenatedBytes );
-        return BytesUtils.toHexString( txIdBytes, Prefix.ZeroLowerX );
-    }
-
-
-    /**
-     * Get the signing hash value.
-     * @param rawTransaction
-     * @return
-     */
-	public static byte[] signingHash(RawTransaction rawTransaction){
-		if(rawTransaction == null){
-			return null;
-		}
-		RawTransaction copyRawTransaction = rawTransaction.copy();
-		copyRawTransaction.setSignature( null );
-		byte[] rlp = RLPUtils.encodeRawTransaction( copyRawTransaction );
-		return CryptoUtils.blake2b( rlp );
+		BigInteger publicKey = ECDSASign.recoverFromSignature(recovery, ecdsaSignature, signingHash);
+		return new ECPublicKey(publicKey);
 	}
 
 	/**
-     * Get delegator signing hash value.
+	 * Generate transaction id.
+	 * 
+	 * @param rawTransaction {@link RawTransaction}
+	 * @param signer         {@link Address}
+	 * @return a hex string id with "0x"
 	 */
-	public static byte[] delegatorSigningHash(RawTransaction rawTransaction){
-		byte[] signHash = signingHash( rawTransaction );
-		Key key = recoverPublicKey( rawTransaction );
+	public static String generateTransactionId(RawTransaction rawTransaction, Address signer) {
+		if (rawTransaction == null || signer == null) {
+			return null;
+		}
+		RawTransaction copyRawTransaction = rawTransaction.copy();
+		copyRawTransaction.setSignature(null);
+		byte[] rlp = RLPUtils.encodeRawTransaction(copyRawTransaction);
+		byte[] signHash = CryptoUtils.blake2b(rlp);
+		return generateTransactionId(signHash, signer);
+	}
+
+	/**
+	 * Generate txId
+	 * 
+	 * @param signingHash byte array
+	 * @param signer
+	 * @return a hex string id with "0x"
+	 */
+	public static String generateTransactionId(byte[] signingHash, Address signer) {
+		if (signingHash == null || signer == null) {
+			return null;
+		}
+		byte[] concatenatedBytes = new byte[52];
+		System.arraycopy(signingHash, 0, concatenatedBytes, 0, signingHash.length);
+		System.arraycopy(signer.toByteArray(), 0, concatenatedBytes, signingHash.length, signer.toByteArray().length);
+		byte[] txIdBytes = CryptoUtils.blake2b(concatenatedBytes);
+		return BytesUtils.toHexString(txIdBytes, Prefix.ZeroLowerX);
+	}
+
+	/**
+	 * Get the signing hash value.
+	 * 
+	 * @param rawTransaction
+	 * @return
+	 */
+	public static byte[] signingHash(RawTransaction rawTransaction) {
+		if (rawTransaction == null) {
+			return null;
+		}
+		RawTransaction copyRawTransaction = rawTransaction.copy();
+		copyRawTransaction.setSignature(null);
+		byte[] rlp = RLPUtils.encodeRawTransaction(copyRawTransaction);
+		return CryptoUtils.blake2b(rlp);
+	}
+
+	/**
+	 * Get delegator signing hash value.
+	 */
+	public static byte[] delegatorSigningHash(RawTransaction rawTransaction) {
+		byte[] signHash = signingHash(rawTransaction);
+		Key key = recoverPublicKey(rawTransaction);
 		byte[] address = key.getRawAddress();
-		if (signHash != null
-				&& signHash.length == 32
-				&& address != null
-				&& address.length == 20){
+		if (signHash != null && signHash.length == 32 && address != null && address.length == 20) {
 			ArrayList<byte[]> messages = new ArrayList<>();
-			messages.add( signHash );
-			messages.add( address );
-			return CryptoUtils.blake2b( messages );
-		}else {
+			messages.add(signHash);
+			messages.add(address);
+			return CryptoUtils.blake2b(messages);
+		} else {
 			return null;
 		}
 	}
 
 	/**
 	 * Concatenate senderSignature
+	 * 
 	 * @param senderSignature
 	 * @param gasPayerSignature
 	 * @return
 	 */
-	public static byte[] concatenateSignature(byte[] senderSignature, byte[] gasPayerSignature){
-    	int len = SIGNATURE_LEN << 1;
+	public static byte[] concatenateSignature(byte[] senderSignature, byte[] gasPayerSignature) {
+		int len = SIGNATURE_LEN << 1;
 		byte[] signature = new byte[len];
-		System.arraycopy( senderSignature,0, signature, 0, senderSignature.length );
-		System.arraycopy( gasPayerSignature, 0, signature, senderSignature.length, gasPayerSignature.length );
+		System.arraycopy(senderSignature, 0, signature, 0, senderSignature.length);
+		System.arraycopy(gasPayerSignature, 0, signature, senderSignature.length, gasPayerSignature.length);
 		return signature;
 	}
 
+	/**
+	 * calcAddressFromTxID
+	 * 
+	 * @param txId
+	 * @param clauseIndex 
+	 * @return
+	 */
+	public static Address calcAddressFromTxID(String txId, int clauseIndex) {
+		byte[] txIdBytes = BytesUtils.toByteArray(txId);
+		byte[] clauseIndexBytes = BytesUtils.toBytesPadded(new BigInteger(clauseIndex + ""), 4);
+		byte[] creationCountBytes = BytesUtils.toBytesPadded(new BigInteger("0"), 4);
+
+		byte[] contactBytes = BytesUtils.contactBytes(txIdBytes, clauseIndexBytes, creationCountBytes);
+
+		byte[] bytes = CryptoUtils.keccak256(contactBytes);
+		byte[] addressBytes = new byte[20];
+		System.arraycopy(bytes, 12, addressBytes, 0, 20);
+		return Address.fromBytes(addressBytes);
+	}
 
 }
