@@ -3,8 +3,8 @@
 
 A SDK toolkit for client to call VeChainThor Restful API.
 
-[!WARNING] 
-This repository is not actively maintained
+> [!WARNING]  
+> This repository is not actively maintained
 
 - - - -
 Requires JDK8.
