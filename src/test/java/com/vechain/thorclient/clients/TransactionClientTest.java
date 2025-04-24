@@ -11,15 +11,10 @@ import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.*;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import com.vechain.thorclient.utils.crypto.Key;
-import org.apache.commons.codec.digest.Crypt;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import sun.awt.image.ByteArrayImageSource;
-
-import java.lang.reflect.Array;
 
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
