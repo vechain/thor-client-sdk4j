@@ -36,6 +36,7 @@ public class AccountClientTest extends BaseTest {
         Assert.assertNotNull(data);
     }
 
+
     @Test
     // Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address--code/get.
     public void testGetCodeTest() {
