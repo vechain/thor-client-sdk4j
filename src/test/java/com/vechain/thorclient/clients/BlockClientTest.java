@@ -18,9 +18,10 @@ import com.vechain.thorclient.utils.Prefix;
 @RunWith(JUnit4.class)
 public class BlockClientTest extends BaseTest {
 
+	// Galactica tested:
 	@Test
 	public void testGetBlock() throws IOException {
-		Revision revision = Revision.create(1232);
+		Revision revision = Revision.BEST;
 		Block block = BlockClient.getBlock(revision);
 
 		logger.info("block:" + JSON.toJSONString(block));
