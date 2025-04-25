@@ -17,7 +17,7 @@ import org.junit.runners.JUnit4;
 public class AccountClientTest extends BaseTest {
 
     @Test
-    // Galactica tested.
+    // Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get.
     public void testGetAccountInfo() {
         Address address = Address.fromHexString("0x3db469a79593dcc67f07DE1869d6682fC1eaf535");
         Account account = AccountClient.getAccountInfo(address, null);
@@ -26,6 +26,7 @@ public class AccountClientTest extends BaseTest {
         Assert.assertNotNull(account);
     }
 
+    // Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address-storage-key/get.
     @Test
     public void testGetStorageAt() {
         byte[] address = BytesUtils.toByteArray(fromAddress);
@@ -36,7 +37,7 @@ public class AccountClientTest extends BaseTest {
     }
 
     @Test
-    // Galactica tested.
+    // Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address--code/get.
     public void testGetCodeTest() {
         Address tokenAddr = Address.VTHO_Address;
         AccountCode code = AccountClient.getAccountCode(tokenAddr, null);

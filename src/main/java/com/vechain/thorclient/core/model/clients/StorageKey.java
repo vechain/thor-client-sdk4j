@@ -5,7 +5,7 @@ import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
 
 public class StorageKey {
-    private final byte[] data;
+    public final byte[] data;
 
     public static StorageKey create(int index, byte[] value) {
 
