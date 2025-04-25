@@ -11,7 +11,7 @@ import com.vechain.thorclient.utils.StringUtils;
  */
 public class Address {
     public static Address NULL_ADDRESS = new NULLAddress();
-    public static Address VTHO_Address = Address.fromHexString( "0x0000000000000000000000000000456e65726779" );
+    public static Address VTHO_Address = Address.fromHexString( "0x0000000000000000000000000000456e65726779" ); // Galactica tested.
 
     private  static final int ADDRESS_SIZE = 20;
     private String sanitizeHexAddress;
