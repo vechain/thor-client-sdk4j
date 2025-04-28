@@ -18,14 +18,16 @@ import com.vechain.thorclient.utils.Prefix;
 @RunWith(JUnit4.class)
 public class BlockClientTest extends BaseTest {
 
-	// Galactica tested:
+	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/blocks-revision/get
+	// GET http://localhost:8669/blocks/best
+	// Accept: application/json, text/plain
 	@Test
 	public void testGetBlock() throws IOException {
 		Revision revision = Revision.BEST;
 		Block block = BlockClient.getBlock(revision);
 
-		logger.info("block:" + JSON.toJSONString(block));
-		logger.info("blockRef;" + BytesUtils.toHexString(block.blockRef().toByteArray(), Prefix.ZeroLowerX));
+		logger.info("block:" + JSON.toJSONString(block, true));
+		logger.info("blockRef:" + BytesUtils.toHexString(block.blockRef().toByteArray(), Prefix.ZeroLowerX));
 		Assert.assertNotNull(block);
 	}
 
