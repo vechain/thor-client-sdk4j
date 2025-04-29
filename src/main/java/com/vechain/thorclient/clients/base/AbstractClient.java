@@ -136,7 +136,6 @@ public abstract class AbstractClient {
 			throw clientIOException;
 		} else {
 			return JSON.parseObject(jsonNode.getBody().toString(), tClass);
-
 		}
 	}
 
@@ -162,6 +161,8 @@ public abstract class AbstractClient {
 		} catch (UnirestException e) {
 			throw new ClientIOException(e);
 		}
+		String body = jsonNode.getBody().toString();
+		logger.info(body);
 		return parseResult(tClass, jsonNode);
 	}
 
