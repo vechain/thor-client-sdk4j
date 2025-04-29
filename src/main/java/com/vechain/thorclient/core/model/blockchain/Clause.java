@@ -2,9 +2,14 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.io.Serializable;
 
+/**
+ * [Clause](http://localhost:8669/doc/stoplight-ui/#/schemas/Clause)
+ *
+ * @version galactica
+ */
 public class Clause implements Serializable {
     private String to; //to address
-    private String value; //hex form of coin to transferred
+    private String value; // hex form of coin transferred
     private String data;
 
     public Clause() {

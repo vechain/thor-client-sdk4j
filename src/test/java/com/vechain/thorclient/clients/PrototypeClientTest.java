@@ -25,19 +25,23 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 @RunWith(JUnit4.class)
 public class PrototypeClientTest extends BaseTest {
 
+	boolean prettyFormat = true;
+
 	static final String UserAddress = "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
 	static final String MasterAddress2 = "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed";
 	static final String Master2PrivateKey = "0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0";
 
+	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-*/post
 	@Test
-	public void testGetMaster() throws IOException {
+	public void testGetMaster() {
+		// pre-seeded galactica solo address[7]
+		String privateKey = "6e8ad4e4ffb888082d94975a58dc9a8179f8724ba22301cd8392ba5352af7e25";
 		String currentPrivateKeyAddr = ECKeyPair.create(privateKey).getHexAddress();
 		ContractCallResult callResult = ProtoTypeContractClient
 				.getMasterAddress(Address.fromHexString(currentPrivateKeyAddr), Revision.BEST);
 		logger.info("testGetMaster fromAddress:" + currentPrivateKeyAddr);
-		logger.info("testGetMaster result:" + JSON.toJSONString(callResult));
+		logger.info("testGetMaster result:" + JSON.toJSONString(callResult, prettyFormat));
 		Assert.assertNotNull(callResult.getData());
-
 	}
 
 	@Test

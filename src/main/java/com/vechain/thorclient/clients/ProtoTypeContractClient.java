@@ -41,7 +41,7 @@ public class ProtoTypeContractClient extends TransactionClient {
 
 
     /**
-     * Get a master address from target address.
+     * Get a master address from the target address.
      * @param target required {@link Address} target address, means transfer to address.
      * @param revision optional can be null {@link Revision} block revision.
      * @return Contract call result {@link Revision}

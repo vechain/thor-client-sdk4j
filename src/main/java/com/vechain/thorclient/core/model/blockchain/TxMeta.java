@@ -1,5 +1,10 @@
 package com.vechain.thorclient.core.model.blockchain;
 
+/**
+ * [TxMeta](http://localhost:8669/doc/stoplight-ui/#/schemas/TxMeta)
+ *
+ * @version galactica
+ */
 public class TxMeta {
     private String blockID;
     private int blockNumber;

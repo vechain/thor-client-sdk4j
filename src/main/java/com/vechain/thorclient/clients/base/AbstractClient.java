@@ -29,220 +29,228 @@ import com.vechain.thorclient.utils.URLUtils;
 
 public abstract class AbstractClient {
 
-	private static Logger logger = LoggerFactory.getLogger(AbstractClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
 
-	public enum Path {
+    public enum Path {
 
-		// Accounts
+        // Accounts
 
-		GetAccountPath("/accounts/{address}"),
-		PostContractCallPath("/accounts/{address}"),
-		PostDeployContractPath(
-				"/accounts"),
-		PostAccountCallPath("/account"),
-		GetAccountCodePath(
-						"/accounts/{address}/code"),
+        GetAccountPath("/accounts/{address}"),
+        PostContractCallPath("/accounts/{address}"),
+        PostDeployContractPath(
+                "/accounts"),
+        PostAccountCallPath("/account"),
+        GetAccountCodePath(
+                "/accounts/{address}/code"),
 
-		GetStorageValuePath("/accounts/{address}/storage/{key}"),
+        GetStorageValuePath("/accounts/{address}/storage/{key}"),
 
-		// Transactions
-		GetTransactionPath("/transactions/{id}"), GetTransactionReceipt("/transactions/{id}/receipt"),
-		PostTransaction("/transactions"),
+        // Transactions
+        GetTransactionPath("/transactions/{id}"), GetTransactionReceipt("/transactions/{id}/receipt"),
+        PostTransaction("/transactions"),
 
-		// Blocks
-		GetBlockPath("/blocks/{revision}"),
+        // Blocks
+        GetBlockPath("/blocks/{revision}"),
 
-		// Events
-		PostFilterEventsLogPath("/logs/event"),
+        // Events
+        PostFilterEventsLogPath("/logs/event"),
 
-		// Transfers
-		PostFilterTransferLogPath("/logs/transfer"),
+        // Transfers
+        PostFilterTransferLogPath("/logs/transfer"),
 
-		// Nodes
-		GetNodeInfoPath("/node/network/peers"),
+        // Nodes
+        GetNodeInfoPath("/node/network/peers"),
 
-		// SubscribeSocket
-		GetSubBlockPath("/subscriptions/block"), GetSubEventPath("/subscriptions/event"),
-		GetSubTransferPath("/subscriptions/transfer"),;
-		private final String value;
+        // SubscribeSocket
+        GetSubBlockPath("/subscriptions/block"), GetSubEventPath("/subscriptions/event"),
+        GetSubTransferPath("/subscriptions/transfer"),
+        ;
+        private final String value;
 
-		Path(String value) {
-			this.value = value;
-		}
+        Path(String value) {
+            this.value = value;
+        }
 
-		public String getPath() {
-			return value;
-		}
+        public String getPath() {
+            return value;
+        }
 
-	}
+    }
 
-	protected WebSocketClient client = new WebSocketClient();
+    protected WebSocketClient client = new WebSocketClient();
 
-	static {
-		setTimeout(5000);
-	}
+    static {
+        setTimeout(5000);
+    }
 
-	private static String rawUrl(Path path) {
-		return NodeProvider.getNodeProvider().getProvider() + path.getPath();
-	}
+    private static String rawUrl(Path path) {
+        return NodeProvider.getNodeProvider().getProvider() + path.getPath();
+    }
 
-	public static void setTimeout(int timeout) {
-		try {
-			logger.warn("setTimeout:{}", timeout);
-			Unirest.shutdown();
-		} catch (IOException e) {
-			logger.error("Unirest shutdown error", e);
-		}
-		Unirest.setTimeouts(timeout, timeout);
-	}
+    public static void setTimeout(int timeout) {
+        try {
+            logger.warn("setTimeout:{}", timeout);
+            Unirest.shutdown();
+        } catch (IOException e) {
+            logger.error("Unirest shutdown error", e);
+        }
+        Unirest.setTimeouts(timeout, timeout);
+    }
 
-	/**
-	 * Get the request
-	 *
-	 * @param path        {@link Path}
-	 * @param uriParams   uri parameters
-	 * @param queryParams query string parameters
-	 * @param tClass      the class of result java object.
-	 * @param             <T> Type of result java object.
-	 * @return response java object, could be null, mean can not find any result.
-	 * @throws IOException node is not reachable or request is not valid.
-	 */
-	public static <T> T sendGetRequest(Path path, HashMap<String, String> uriParams,
-			HashMap<String, String> queryParams, Class<T> tClass) throws ClientIOException {
-		String rawURL = rawUrl(path);
-		String getURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
-		HttpResponse<String> jsonNode = null;
-		try {
-			jsonNode = Unirest.get(getURL).asString();
-		} catch (UnirestException e) {
-			throw new ClientIOException(e);
-		}
-		return parseResult(tClass, jsonNode);
+    /**
+     * Get the request
+     *
+     * @param path        {@link Path}
+     * @param uriParams   uri parameters
+     * @param queryParams query string parameters
+     * @param tClass      the class of result java object.
+     * @param <T>         Type of result java object.
+     * @return response java object, could be null, mean can not find any result.
+     * @throws IOException node is not reachable or request is not valid.
+     */
+    public static <T> T sendGetRequest(
+            final Path path,
+            final HashMap<String, String> uriParams,
+            final HashMap<String, String> queryParams,
+            final Class<T> tClass
+    ) throws ClientIOException {
+        final String rawURL = rawUrl(path);
+        final String getURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
+        try {
+            final HttpResponse<String> jsonNode = Unirest.get(getURL).asString();
+            return parseResult(tClass, jsonNode);
+        } catch (UnirestException e) {
+            throw new ClientIOException(e);
+        }
+    }
 
-	}
+    private static <T> T parseResult(
+            final Class<T> tClass,
+            final HttpResponse<String> jsonNode
+    ) throws ClientIOException {
+        final int status = jsonNode.getStatus();
+        final String body = jsonNode.getBody();
+        if (status != 200) {
+            String exception_msg = "response exception";
+            if (status == 400) {
+                exception_msg = "bad request";
+            } else if (status == 403) {
+                exception_msg = "request forbidden";
+            }
+            ClientIOException clientIOException = new ClientIOException(
+                    exception_msg + " " + body);
+            clientIOException.setHttpStatus(status);
+            throw clientIOException;
+        } else {
+            return JSON.parseObject(body, tClass);
+        }
+    }
 
-	private static <T> T parseResult(Class<T> tClass, HttpResponse<String> jsonNode) throws ClientIOException {
-		int status = jsonNode.getStatus();
-		if (status != 200) {
-			String exception_msg = "response exception";
-			if (status == 400) {
-				exception_msg = "bad request";
-			} else if (status == 403) {
-				exception_msg = "request forbidden";
-			}
-			ClientIOException clientIOException = new ClientIOException(
-					exception_msg + " " + jsonNode.getBody().toString());
-			clientIOException.setHttpStatus(status);
-			throw clientIOException;
-		} else {
-			return JSON.parseObject(jsonNode.getBody().toString(), tClass);
-		}
-	}
+    /**
+     * Post the request
+     *
+     * @param path        {@link Path}
+     * @param uriParams   uri parameters
+     * @param queryParams query string parameters
+     * @param tClass      the class of result java object.
+     * @param <T>         Type of result java object.
+     * @return response java object, could be null, mean can not find any result.
+     * @throws ClientIOException http status 4xx means not enough energy amount.
+     */
+    public static <T> T sendPostRequest(
+            final Path path, HashMap<String, String> uriParams,
+            final HashMap<String, String> queryParams,
+            final Object postBody,
+            final Class<T> tClass
+    ) throws ClientIOException {
+        final String rawURL = rawUrl(path);
+        final String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
+        final String postJSON = JSON.toJSONString(postBody);
+        try {
+            HttpResponse<String> jsonNode = Unirest.post(postURL).body(postJSON).asString();
+            return parseResult(tClass, jsonNode);
+        } catch (UnirestException e) {
+            throw new ClientIOException(e);
+        }
+    }
 
-	/**
-	 * Post the request
-	 *
-	 * @param path        {@link Path}
-	 * @param uriParams   uri parameters
-	 * @param queryParams query string parameters
-	 * @param tClass      the class of result java object.
-	 * @param             <T> Type of result java object.
-	 * @return response java object, could be null, mean can not find any result.
-	 * @throws ClientIOException http status 4xx means not enough energy amount.
-	 */
-	public static <T> T sendPostRequest(Path path, HashMap<String, String> uriParams,
-			HashMap<String, String> queryParams, Object postBody, Class<T> tClass) throws ClientIOException {
-		String rawURL = rawUrl(path);
-		String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
-		HttpResponse<String> jsonNode = null;
-		String postString = JSON.toJSONString(postBody);
-		try {
-			jsonNode = Unirest.post(postURL).body(postString).asString();
-		} catch (UnirestException e) {
-			throw new ClientIOException(e);
-		}
-		String body = jsonNode.getBody().toString();
-		logger.info(body);
-		return parseResult(tClass, jsonNode);
-	}
+    /**
+     * Make connection for subscription.
+     *
+     * @param url      long live connection url.
+     * @param callback {@link SubscribeSocket}
+     * @return {@link SubscribeSocket}
+     * @throws Exception
+     */
+    public static SubscribeSocket subscribeSocketConnect(String url, SubscribingCallback<?> callback) throws Exception {
+        if (StringUtils.isBlank(url) || callback == null) {
+            throw new ClientIOException("Invalid arguments ");
+        }
+        WebSocketClient client = new WebSocketClient();
+        SubscribeSocket subscribeSocket = new SubscribeSocket(client, callback);
+        try {
+            logger.info("subscribeSocketConnect start connect ... {}", url);
+            client.start();
+            URI subUri = new URI(url);
+            ClientUpgradeRequest request = new ClientUpgradeRequest();
+            Future<Session> f = client.connect(subscribeSocket, subUri, request);
+            logger.info("subscribeSocketConnect end connect...");
+            Session s = f.get(10, TimeUnit.SECONDS);
+            if (s.isOpen()) {
+                logger.info("subscribeSocketConnect success:{}", s.getRemoteAddress().toString());
+            } else {
+                logger.error("subscribeSocketConnect failed:{}", s.isOpen());
+            }
+        } catch (Exception e) {
+            logger.error("SubscribeSocket error", e);
+        } finally {
+            if (!subscribeSocket.isConnected()) {
+                logger.info("subscribeSocketConnect stop...");
+                try {
+                    subscribeSocket.close(0, "WebSocket can't connect to: " + url);
+                } catch (Exception e) {
+                    logger.error("SubscribeSocket stop error", e);
+                }
+            }
+        }
+        return subscribeSocket;
+    }
 
-	/**
-	 * Make connection for subscription.
-	 * 
-	 * @param url      long live connection url.
-	 * @param callback {@link SubscribeSocket}
-	 * @return {@link SubscribeSocket}
-	 * @throws Exception
-	 */
-	public static SubscribeSocket subscribeSocketConnect(String url, SubscribingCallback<?> callback) throws Exception {
-		if (StringUtils.isBlank(url) || callback == null) {
-			throw new ClientIOException("Invalid arguments ");
-		}
-		WebSocketClient client = new WebSocketClient();
-		SubscribeSocket subscribeSocket = new SubscribeSocket(client, callback);
-		try {
-			logger.info("subscribeSocketConnect start connect ... {}", url);
-			client.start();
-			URI subUri = new URI(url);
-			ClientUpgradeRequest request = new ClientUpgradeRequest();
-			Future<Session> f = client.connect(subscribeSocket, subUri, request);
-			logger.info("subscribeSocketConnect end connect...");
-			Session s = f.get(10, TimeUnit.SECONDS);
-			if (s.isOpen()) {
-				logger.info("subscribeSocketConnect success:{}", s.getRemoteAddress().toString());
-			} else {
-				logger.error("subscribeSocketConnect failed:{}", s.isOpen());
-			}
-		} catch (Exception e) {
-			logger.error("SubscribeSocket error", e);
-		} finally {
-			if (!subscribeSocket.isConnected()) {
-				logger.info("subscribeSocketConnect stop...");
-				try {
-					subscribeSocket.close(0, "WebSocket can't connect to: " + url);
-				} catch (Exception e) {
-					logger.error("SubscribeSocket stop error", e);
-				}
-			}
-		}
-		return subscribeSocket;
-	}
+    protected static HashMap<String, String> parameters(String[] keys, String[] values) {
+        if (keys == null || values == null || keys.length != values.length) {
+            throw ClientArgumentException.exception("Parameters creating failed");
+        }
 
-	protected static HashMap<String, String> parameters(String[] keys, String[] values) {
-		if (keys == null || values == null || keys.length != values.length) {
-			throw ClientArgumentException.exception("Parameters creating failed");
-		}
+        HashMap<String, String> params = new HashMap<>();
+        for (int index = 0; index < keys.length; index++) {
+            params.put(keys[index], values[index]);
+        }
+        return params;
+    }
 
-		HashMap<String, String> params = new HashMap<>();
-		for (int index = 0; index < keys.length; index++) {
-			params.put(keys[index], values[index]);
-		}
-		return params;
-	}
+    /**
+     * Call the contract view function or try to run the transaction to see the
+     * gas-used.
+     *
+     * @param call            {@link ContractCall}
+     * @param contractAddress {@link Address}
+     * @param revision        {@link Revision}
+     * @return {@link ContractCallResult}
+     * @throws ClientIOException network error
+     */
+    public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)
+            throws ClientIOException {
+        Revision currentRevision = revision;
+        if (currentRevision == null) {
+            currentRevision = Revision.BEST;
+        }
 
-	/**
-	 * Call the contract view function or try to run the transaction to see the
-	 * gas-used.
-	 * 
-	 * @param call            {@link ContractCall}
-	 * @param contractAddress {@link Address}
-	 * @param revision        {@link Revision}
-	 * @return {@link ContractCallResult}
-	 * @throws ClientIOException network error
-	 */
-	public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)
-			throws ClientIOException {
-		Revision currentRevision = revision;
-		if (currentRevision == null) {
-			currentRevision = Revision.BEST;
-		}
+        HashMap<String, String> uriParams = parameters(new String[]{"address"},
+                new String[]{contractAddress.toHexString(Prefix.ZeroLowerX)});
+        HashMap<String, String> queryParams = parameters(new String[]{"revision"},
+                new String[]{currentRevision.toString()});
 
-		HashMap<String, String> uriParams = parameters(new String[] { "address" },
-				new String[] { contractAddress.toHexString(Prefix.ZeroLowerX) });
-		HashMap<String, String> queryParams = parameters(new String[] { "revision" },
-				new String[] { currentRevision.toString() });
-
-		return sendPostRequest(Path.PostContractCallPath, uriParams, queryParams, call, ContractCallResult.class);
-	}
+        return sendPostRequest(Path.PostContractCallPath, uriParams, queryParams, call, ContractCallResult.class);
+    }
 
 }
