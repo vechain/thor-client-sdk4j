@@ -39,7 +39,7 @@ public class TransactionClientTest extends BaseTest {
 	@Test
 	public void testGetTransaction() throws ClientIOException {
 		// Transaction 0 in block 1.
-		String txId = "0xa52a72bf3a9ea3df02495cb20936d9776b1fba58f511954494906e4afe535bad";
+		String txId = "0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07";
 		Transaction transaction = TransactionClient.getTransaction(txId, false, null);
 		logger.info("Transaction WithOut Raw :" + JSON.toJSONString(transaction, prettyFormat));
 		Assert.assertNotNull(transaction);
@@ -47,13 +47,20 @@ public class TransactionClientTest extends BaseTest {
 		Assert.assertNull(transaction.getRaw());
 	}
 
+	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id/get
+	// # curl --request GET
+	// #  --url 'http://localhost:8669/blocks/1?expanded=false&raw=true'
+	// #  --header 'Accept: application/json, text/plain'
+	// GET http://localhost:8669/blocks/1?expanded=false&raw=true
+	// Accept: application/json, text/plain
 	@Test
 	public void testGetTransactionRaw() throws ClientIOException {
+		String txId = "0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07";
 		Transaction transaction = TransactionClient.getTransaction(hexId, true, null);
-		logger.info("Transaction With Raw:" + JSON.toJSONString(transaction));
-//		Assert.assertNotNull(transaction);
-//		Assert.assertNotNull(transaction.getRaw());
-//		Assert.assertNotNull(transaction.getMeta());
+		logger.info("Transaction With Raw:" + JSON.toJSONString(transaction, prettyFormat));
+		Assert.assertNotNull(transaction);
+		Assert.assertNotNull(transaction.getRaw());
+		Assert.assertNull(transaction.getMeta());
 	}
 
 	@Test
