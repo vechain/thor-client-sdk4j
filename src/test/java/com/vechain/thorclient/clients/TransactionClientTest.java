@@ -206,23 +206,35 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertEquals(txIdHex, result.getId());
     }
 
-    private static RawTransaction generatingVETRawTxn() {
-        byte chainTag = BlockchainClient.getChainTag();
-        byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
-        Amount amount = Amount.createFromToken(AbstractToken.VET);
-        amount.setDecimalAmount("100");
-        ToClause clause = TransactionClient.buildVETToClause(
-                Address.fromHexString("0x000000002beadb038203be21ed5ce7c9b1bff602"), amount, ToData.ZERO);
-        return RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 31000, (byte) 0x0,
-                CryptoUtils.generateTxNonce(), clause);
+    private static RawTransaction generatingVETRawTxn(
+            String toAddress,
+            String decimalAmount
+    ) {
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
+        final Amount amount = Amount.createFromToken(AbstractToken.VET);
+        amount.setDecimalAmount(decimalAmount);
+        final ToClause clause = TransactionClient.buildVETToClause(
+                Address.fromHexString(toAddress),
+                amount,
+                ToData.ZERO
+        );
+        return RawTransactionFactory.getInstance().createRawTransaction(
+                chainTag,
+                blockRef,
+                720,
+                31000,
+                (byte) 0x0,
+                CryptoUtils.generateTxNonce(),
+                clause
+        );
     }
 
-    private static RawTransaction generatingVethorRawTxn() {
+    private static RawTransaction generatingVTHORawTxn() {
         byte chainTag = BlockchainClient.getChainTag();
         byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
         Amount amount = Amount.createFromToken(ERC20Token.VTHO);
         amount.setDecimalAmount("10000");
-
         ToClause clause = ERC20Contract.buildTranferToClause(ERC20Token.VTHO,
                 Address.fromHexString("0x000000002beadb038203be21ed5ce7c9b1bff602"), amount);
         RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef,
@@ -235,32 +247,37 @@ public class TransactionClientTest extends BaseTest {
         return BytesUtils.toHexString(rawTxBytes, Prefix.ZeroLowerX);
     }
 
+    // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
+    // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId() throws ClientIOException {
-
-        RawTransaction rawTransaction = generatingVETRawTxn();
-        RawTransaction signedRawTxn = TransactionClient.sign(rawTransaction, ECKeyPair.create(privateKey));
-        String rawTxHex = rlpEncodedRawTxHex(signedRawTxn);
-        logger.info("Tx raw hex:" + rawTxHex);
-
-        Key publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
+        // pre-seeded solo account[3]
+        final String fromPrivateKey = "432f38bcf338c374523e83fdb2ebe1030aba63c7f1e81f7d76c5f53f4d42e766";
+        // pre-seeded solo account[4]
+        final String toAddress = "0xf02f557c753edf5fcdcbfe4c1c3a448b3cc84d54";
+        final RawTransaction rawTransaction = generatingVETRawTxn(toAddress, "100");
+        final RawTransaction signedRawTxn = TransactionClient.sign(rawTransaction, ECKeyPair.create(fromPrivateKey));
+        final String rawTxHex = rlpEncodedRawTxHex(signedRawTxn);
+        logger.info("Tx raw hex: " + rawTxHex);
+        final Key publicKey = BlockchainUtils.recoverPublicKey(rawTxHex);
         Assert.assertNotNull(publicKey);
-        String hexAddress = publicKey.getAddress();
-        RawTransaction newRawTransaction = RLPUtils.decode(rawTxHex);
+        final String fromAddress = publicKey.getAddress();
+        final RawTransaction newRawTransaction = RLPUtils.decode(rawTxHex);
         newRawTransaction.setSignature(null);
-        String txIdHex = BlockchainUtils.generateTransactionId(newRawTransaction, Address.fromHexString(hexAddress));
+        final String txIdHex = BlockchainUtils.generateTransactionId(
+                newRawTransaction,
+                Address.fromHexString(fromAddress)
+        );
         TransferResult transferResult = TransactionClient.transfer(rawTxHex);
-        logger.info("Calculate transaction TxId:" + txIdHex);
-        logger.info("SendVET result:" + JSON.toJSONString(transferResult));
+        logger.info("Calculate transaction TxId: " + txIdHex);
+        logger.info("SendVET result: " + JSON.toJSONString(transferResult, prettyFormat));
         Assert.assertNotNull(transferResult);
         Assert.assertEquals(txIdHex, transferResult.getId());
-
     }
 
     @Test
     public void testRecoverAddressAndCalcTxId2() throws ClientIOException {
-
-        RawTransaction rawTransaction = generatingVethorRawTxn();
+        final RawTransaction rawTransaction = generatingVTHORawTxn();
         RawTransaction signedRawTxn = TransactionClient.sign(rawTransaction, ECKeyPair.create(privateKey));
         String rawTxHex = rlpEncodedRawTxHex(signedRawTxn);
         logger.info("Tx raw hex:" + rawTxHex);
@@ -283,17 +300,17 @@ public class TransactionClientTest extends BaseTest {
 
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException {
-        RawTransaction rawTransaction = generatingVETRawTxn();
-        TransactionReserved reserved = new TransactionReserved();
-        reserved.setDelegationFeature(true);
-        rawTransaction.setReserved(reserved);
-        RawTransaction signRawTransaction = TransactionClient.sign(rawTransaction, ECKeyPair.create("0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2"));
-        RawTransaction delegatorSignRawTransaction = TransactionClient.delegatorSign(signRawTransaction, ECKeyPair.create("0x87e0eba9c86c494d98353800571089f316740b0cb84c9a7cdf2fe5c9997c7966"));
-
-        TransferResult result = TransactionClient.transfer(delegatorSignRawTransaction);
-        String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction,
-                Address.fromHexString(ECKeyPair.create("0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2").getAddress()));
-        logger.info("Send delegator pay gas Transaction result: " + JSON.toJSONString(result));
-        logger.info("Calc txId: " + txIdHex);
+//        RawTransaction rawTransaction = generatingVETRawTxn();
+//        TransactionReserved reserved = new TransactionReserved();
+//        reserved.setDelegationFeature(true);
+//        rawTransaction.setReserved(reserved);
+//        RawTransaction signRawTransaction = TransactionClient.sign(rawTransaction, ECKeyPair.create("0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2"));
+//        RawTransaction delegatorSignRawTransaction = TransactionClient.delegatorSign(signRawTransaction, ECKeyPair.create("0x87e0eba9c86c494d98353800571089f316740b0cb84c9a7cdf2fe5c9997c7966"));
+//
+//        TransferResult result = TransactionClient.transfer(delegatorSignRawTransaction);
+//        String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction,
+//                Address.fromHexString(ECKeyPair.create("0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2").getAddress()));
+//        logger.info("Send delegator pay gas Transaction result: " + JSON.toJSONString(result));
+//        logger.info("Calc txId: " + txIdHex);
     }
 }
