@@ -3,22 +3,28 @@ package com.vechain.thorclient.core.model.blockchain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * [GetTxReceiptResponse](http://localhost:8669/doc/stoplight-ui/#/schemas/GetTxReceiptResponse)
+ *
+ * @version galactica
+ */
 public class Receipt implements Serializable {
+    private long type;
     private long gasUsed;
     private String gasPayer;
     private String paid; //hex form of defaultDecimalStringToByteArray of paid energy
     private String reward; //hex form of defaultDecimalStringToByteArray of reward
     private boolean reverted; //if it is true, then the transaction was reverted by blockchain network
-    private LogMeta meta;
+    private ReceiptMeta meta;
 
     private ArrayList<ReceiptOutput> outputs;
 
-    public LogMeta getMeta() {
-        return meta;
+    public long getType() {
+        return type;
     }
 
-    public void setMeta(LogMeta meta) {
-        this.meta = meta;
+    public void setType(long type) {
+        this.type = type;
     }
 
     public long getGasUsed() {
@@ -61,13 +67,20 @@ public class Receipt implements Serializable {
         this.reverted = reverted;
     }
 
-    public  ArrayList<ReceiptOutput> getOutputs() {
+    public ArrayList<ReceiptOutput> getOutputs() {
         return outputs;
     }
 
-    public void setOutputs( ArrayList<ReceiptOutput> outputs) {
+    public void setOutputs(ArrayList<ReceiptOutput> outputs) {
         this.outputs = outputs;
     }
 
+    public ReceiptMeta getMeta() {
+        return meta;
+    }
+
+    public void setMeta(ReceiptMeta meta) {
+        this.meta = meta;
+    }
 
 }

@@ -2,6 +2,11 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.io.Serializable;
 
+/**
+ * [Transfer](http://localhost:8669/doc/stoplight-ui/#/schemas/Transfer)
+ *
+ * @version galactica
+ */
 public class Transfer implements Serializable {
     private  String sender;
     private String  recipient;

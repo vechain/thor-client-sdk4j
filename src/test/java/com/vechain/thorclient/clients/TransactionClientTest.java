@@ -32,9 +32,9 @@ public class TransactionClientTest extends BaseTest {
 
 	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id/get
 	// # curl --request GET
-	// #  --url http://localhost:8669/transactions/0xa52a72bf3a9ea3df02495cb20936d9776b1fba58f511954494906e4afe535bad
+	// #  --url http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07
 	// #  --header 'Accept: application/json, text/plain'
-	// GET http://localhost:8669/transactions/0xa52a72bf3a9ea3df02495cb20936d9776b1fba58f511954494906e4afe535bad?raw=false
+	// GET http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07
 	// Accept: application/json, text/plain
 	@Test
 	public void testGetTransaction() throws ClientIOException {
@@ -49,14 +49,14 @@ public class TransactionClientTest extends BaseTest {
 
 	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id/get
 	// # curl --request GET
-	// #  --url 'http://localhost:8669/blocks/1?expanded=false&raw=true'
+	// #  --url http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07?raw=true
 	// #  --header 'Accept: application/json, text/plain'
-	// GET http://localhost:8669/blocks/1?expanded=false&raw=true
+	// GET http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07?raw=true
 	// Accept: application/json, text/plain
 	@Test
 	public void testGetTransactionRaw() throws ClientIOException {
 		String txId = "0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07";
-		Transaction transaction = TransactionClient.getTransaction(hexId, true, null);
+		Transaction transaction = TransactionClient.getTransaction(txId, true, null);
 		logger.info("Transaction With Raw:" + JSON.toJSONString(transaction, prettyFormat));
 		Assert.assertNotNull(transaction);
 		Assert.assertNotNull(transaction.getRaw());
@@ -83,12 +83,20 @@ public class TransactionClientTest extends BaseTest {
 		Assert.assertNotNull(result.getId());
 	}
 
+
+	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id--receipt/get
+	// # curl --request GET
+	// #  --url http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07/receipt
+	// #  --header 'Accept: application/json, text/plain'
+	// GET http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07/receipt
+	// Accept: application/json, text/plain
 	@Test
 	public void testGetTransactionReceipt() throws ClientIOException {
-		Receipt receipt = TransactionClient.getTransactionReceipt(hexId, null);
-		logger.info("Receipt:" + JSON.toJSONString(receipt));
-		// Assert.assertNotNull(receipt);
-		// Assert.assertNotNull(receipt.getMeta());
+		String txId = "0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07";
+		Receipt receipt = TransactionClient.getTransactionReceipt(txId, null);
+		logger.info("Receipt:" + JSON.toJSONString(receipt, prettyFormat));
+		Assert.assertNotNull(receipt);
+		Assert.assertNotNull(receipt.getMeta());
 	}
 
 	@Test

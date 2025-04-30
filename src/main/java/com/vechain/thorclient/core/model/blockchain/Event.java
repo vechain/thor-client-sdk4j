@@ -3,6 +3,11 @@ package com.vechain.thorclient.core.model.blockchain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * [Event](http://localhost:8669/doc/stoplight-ui/#/schemas/Event)
+ *
+ * @version galactica
+ */
 public class Event implements Serializable {
     private String address;
     private ArrayList<String> topics;
