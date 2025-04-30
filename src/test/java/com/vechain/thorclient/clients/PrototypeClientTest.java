@@ -31,10 +31,11 @@ public class PrototypeClientTest extends BaseTest {
 	static final String MasterAddress2 = "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed";
 	static final String Master2PrivateKey = "0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0";
 
-	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-*/post
+	// Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-*/post
+	// Solo tested.
 	@Test
 	public void testGetMaster() {
-		// pre-seeded galactica solo address[7]
+		// pre-seeded galactica solo account[7]
 		String privateKey = "6e8ad4e4ffb888082d94975a58dc9a8179f8724ba22301cd8392ba5352af7e25";
 		String currentPrivateKeyAddr = ECKeyPair.create(privateKey).getHexAddress();
 		ContractCallResult callResult = ProtoTypeContractClient

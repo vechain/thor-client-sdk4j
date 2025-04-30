@@ -11,7 +11,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BlockchainClientTest extends BaseTest {
 
-    // Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/blocks-revision/get
+    // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/blocks-revision/get
+    // Solo tested
     // GET http://localhost:8669/blocks/0
     // Accept: application/json, text/plain
     @Test
@@ -22,7 +23,7 @@ public class BlockchainClientTest extends BaseTest {
         Assert.assertTrue(chainTagInt > 0);
     }
 
-    // Galactica tested: https://testnet.vechain.org/doc/stoplight-ui/#/paths/node-network-peers/get
+    // Galactica documented at: https://testnet.vechain.org/doc/stoplight-ui/#/paths/node-network-peers/get
     @Test
     public void testGetNodeStats() throws ClientArgumentException {
         PeerStatList list = BlockchainClient.getPeerStatusList();

@@ -20,7 +20,8 @@ public class ERC20ContractClientTest extends BaseTest {
 
     boolean prettyFormat = false;
 
-    // Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get
+    // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get
+    // Solo tested.
     // GET http://localhost:8669/accounts/0x3e3d79163b08502a086213cd09660721740443d7
     // Accept: application/json, text/plain
     @Test
@@ -34,13 +35,14 @@ public class ERC20ContractClientTest extends BaseTest {
         Assert.assertNotNull(balance);
     }
 
-    // Galactica tested: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/accounts-*/post
+    // Galactica documented at: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/accounts-*/post
+    // Solo tested.
     @Test
     public void sendERC20Token() {
-        // pre-seeded galactica solo address[8]
+        // pre-seeded galactica solo account[8]
         String fromPrivateKey = "521b7793c6eb27d137b617627c6b85d57c0aa303380e9ca4e30a30302fbc6676";
         Address fromAddress = Address.fromHexString("0x062f167a905c1484de7e75b88edc7439f82117de");
-        // pre-seeded galactica solo address[9]
+        // pre-seeded galactica solo account[9]
         Address toAddress = Address.fromHexString("0x3e3d79163b08502a086213cd09660721740443d7");
 
         String amountFigure = "10000000";

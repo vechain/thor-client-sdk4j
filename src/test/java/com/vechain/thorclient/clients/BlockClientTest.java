@@ -18,7 +18,8 @@ import com.vechain.thorclient.utils.Prefix;
 @RunWith(JUnit4.class)
 public class BlockClientTest extends BaseTest {
 
-	// Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/blocks-revision/get
+	// Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/blocks-revision/get
+	// Solo tested.
 	// GET http://localhost:8669/blocks/best
 	// Accept: application/json, text/plain
 	@Test

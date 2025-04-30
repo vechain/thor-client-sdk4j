@@ -22,30 +22,8 @@ public class LogsClientTest extends BaseTest {
 
     boolean prettyFormat = true;
 
-    // Galactica tested: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/logs-event/post
-    // # curl --request POST
-    // #  --url http://127.0.0.1:8669/logs/event
-    // #  --header 'Accept: application/json, text/plain'
-    // #  --header 'Content-Type: application/json'
-    // #  --data '{
-    // #  "range": {
-    // #    "unit": "block",
-    // #    "from": 0,
-    // #    "to": 10
-    // #  },
-    // #  "options": {
-    // #    "offset": 0,
-    // #    "limit": 100,
-    // #    "includeIndexes": true
-    // #  },
-    // #  "criteriaSet": [
-    // #    {
-    // #      "address": "0x0000000000000000000000000000506172616d73",
-    // #      "topic0": "0x28e3246f80515f5c1ed987b133ef2f193439b25acba6a5e69f219e896fc9d179"
-    // #    }
-    // #  ],
-    // #  "order": "desc"
-    // #}'
+    // Galactica documented at: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/logs-event/post
+    // Solo tested.
     // POST http://127.0.0.1:8669/logs/event
     // Accept: application/json, text/plain
     // Content-Type: application/json
@@ -101,30 +79,8 @@ public class LogsClientTest extends BaseTest {
         }
     }
 
-    // Galactica tested: http://localhost:8669/doc/stoplight-ui/#/paths/logs-transfer/post
-    // # curl --request POST
-    // #  --url http://localhost:8669/logs/transfer
-    // #  --header 'Accept: application/json, text/plain'
-    // #  --header 'Content-Type: application/json'
-    // #  --data '{
-    // #  "range": {
-    // #    "unit": "block",
-    // #    "from": 0,
-    // #    "to": 17289864
-    // #  },
-    // #  "options": {
-    // #    "offset": 0,
-    // #    "limit": 100,
-    // #    "includeIndexes": true
-    // #  },
-    // #  "criteriaSet": [
-    // #    {
-    // #      "txOrigin": "0xf077b491b355e64048ce21e3a6fc4751eeea77fa",
-    // #      "sender": "0xf077b491b355e64048ce21e3a6fc4751eeea77fa"
-    // #    }
-    // #  ],
-    // #  "order": "asc"
-    // #}'
+    // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/logs-transfer/post
+    // Solo tested.
     // POST http://localhost:8669/logs/transfer
     // Accept: application/json, text/plain
     // Content-Type: application/json
@@ -160,22 +116,6 @@ public class LogsClientTest extends BaseTest {
         transferredFilter.setOrder(Order.DESC.getValue());
         ArrayList<FilteredTransferEvent> transferLogs = LogsClient.getFilteredTransferLogs(transferredFilter);
         logger.info("transferLogs:{}", JSONObject.toJSONString(transferLogs, prettyFormat));
-    }
-
-    @Test
-    public void x() {
-        String body = "{\n" +
-                "      \"blockID\": \"0x00000000c05a20fbca2bf6ae3affba6af4a74b800b585bf7a4988aba7aea69f6\",\n" +
-                "      \"blockNumber\": 0,\n" +
-                "      \"blockTimestamp\": 1526400000,\n" +
-                "      \"txID\": \"0x0000000000000000000000000000000000000000000000000000000000000000\",\n" +
-                "      \"txOrigin\": \"0x0000000000000000000000000000000000000000\",\n" +
-                "      \"clauseIndex\": 1,\n" +
-                "      \"txIndex\": 2,\n" +
-                "      \"logIndex\": 3\n" +
-                "    }";
-        LogMeta lm = JSONObject.parseObject(body, LogMeta.class);
-        logger.info("lm:{}", JSONObject.toJSONString(lm, true));
     }
 
 }
