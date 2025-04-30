@@ -13,7 +13,7 @@ Requires JDK8.
 latest version 0.0.10
 
 - - - -
-default package jar without dependencies,use -Pall to build all in one jar
+default package jar without dependencies, use -Pall to build all in one jar
 
 ## License
 Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE file in the repository.

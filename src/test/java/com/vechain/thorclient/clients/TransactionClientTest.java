@@ -319,17 +319,29 @@ public class TransactionClientTest extends BaseTest {
 
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException {
-//        RawTransaction rawTransaction = generatingVETRawTxn();
-//        TransactionReserved reserved = new TransactionReserved();
-//        reserved.setDelegationFeature(true);
-//        rawTransaction.setReserved(reserved);
-//        RawTransaction signRawTransaction = TransactionClient.sign(rawTransaction, ECKeyPair.create("0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2"));
-//        RawTransaction delegatorSignRawTransaction = TransactionClient.delegatorSign(signRawTransaction, ECKeyPair.create("0x87e0eba9c86c494d98353800571089f316740b0cb84c9a7cdf2fe5c9997c7966"));
-//
-//        TransferResult result = TransactionClient.transfer(delegatorSignRawTransaction);
-//        String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction,
-//                Address.fromHexString(ECKeyPair.create("0x2d7c882bad2a01105e36dda3646693bc1aaaa45b0ed63fb0ce23c060294f3af2").getAddress()));
-//        logger.info("Send delegator pay gas Transaction result: " + JSON.toJSONString(result));
-//        logger.info("Calc txId: " + txIdHex);
+        // pre-seed solo account[0]
+        final String gasPayerPrivateKey = "7f9290cc44c5fd2b95fe21d6ad6fe5fa9c177e1cd6f3b4c96a97b13e09eaa158";
+        // pre-seed solo account[1]
+        final String senderPrivateKey = "ea5383ac1f9e625220039a4afac6a7f868bf1ad4f48ce3a1dd78bd214ee4ace5";
+        // pre-seed solo account[2]
+        final String toAddress = "0x9e7911de289c3c856ce7f421034f66b6cde49c39";
+        final RawTransaction rawTransaction = generatingVETRawTxn(toAddress, "100");
+        final TransactionReserved reserved = new TransactionReserved();
+        reserved.setDelegationFeature(true);
+        rawTransaction.setReserved(reserved);
+        final RawTransaction senderSignRawTransaction = TransactionClient.sign(
+                rawTransaction,
+                ECKeyPair.create(senderPrivateKey));
+        final RawTransaction gasPayerSignRawTransaction = TransactionClient.delegatorSign(
+                senderSignRawTransaction,
+                ECKeyPair.create(gasPayerPrivateKey));
+        final TransferResult transferResult = TransactionClient.transfer(gasPayerSignRawTransaction);
+        final String txIdHex = BlockchainUtils.generateTransactionId(
+                rawTransaction,
+                Address.fromHexString(ECKeyPair.create(senderPrivateKey).getAddress()));
+        logger.info("Send delegator pay gas Transaction transferResult: " + JSON.toJSONString(transferResult, prettyFormat));
+        logger.info("Calc txId: " + txIdHex);
+        Assert.assertNotNull(transferResult);
+        Assert.assertEquals(txIdHex, transferResult.getId());
     }
 }
