@@ -2,6 +2,9 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.util.ArrayList;
 
+/**
+ * [SubscriptionBlockResponse](http://localhost:8669/doc/stoplight-ui/#/schemas/SubscriptionBlockResponse)
+ */
 public class BlockSubscribingResponse {
     private String number;
     private String id;
@@ -11,10 +14,13 @@ public class BlockSubscribingResponse {
     private long gasLimit;
     private String beneficiary;
     private long gasUsed;
+    private String baseFeePerGas; // hex galactica
     private long totalScore;
     private String txsRoot; //32 bytes
+    private long txsFeatures; // integer galactica
     private String stateRoot; //32 bytes
     private String receiptsRoot; //32 bytes
+    private boolean com; // boolean galactica
     private String signer;
     private boolean obsolete;
     private ArrayList<String> transactions;
@@ -83,6 +89,14 @@ public class BlockSubscribingResponse {
         this.gasUsed = gasUsed;
     }
 
+    public String getBaseFeePerGas() {
+        return baseFeePerGas;
+    }
+
+    public void setBaseFeePerGas(String baseFeePerGas) {
+        this.baseFeePerGas = baseFeePerGas;
+    }
+
     public long getTotalScore() {
         return totalScore;
     }
@@ -99,6 +113,14 @@ public class BlockSubscribingResponse {
         this.txsRoot = txsRoot;
     }
 
+    public long getTxsFeatures() {
+        return txsFeatures;
+    }
+
+    public void setTxsFeatures(long txsFeatures) {
+        this.txsFeatures = txsFeatures;
+    }
+
     public String getStateRoot() {
         return stateRoot;
     }
@@ -113,6 +135,14 @@ public class BlockSubscribingResponse {
 
     public void setReceiptsRoot(String receiptsRoot) {
         this.receiptsRoot = receiptsRoot;
+    }
+
+    public boolean isCom() {
+        return com;
+    }
+
+    public void setCom(boolean com) {
+        this.com = com;
     }
 
     public String getSigner() {
