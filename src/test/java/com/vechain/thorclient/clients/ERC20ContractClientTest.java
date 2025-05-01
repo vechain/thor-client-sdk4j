@@ -15,21 +15,21 @@ import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
-// @RunWith(JUnit4.class)
+@RunWith(JUnit4.class)
 public class ERC20ContractClientTest extends BaseTest {
 
-    boolean prettyFormat = false;
+    boolean prettyFormat = isPretty();
 
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get
     // Solo tested.
     // GET http://localhost:8669/accounts/0x3e3d79163b08502a086213cd09660721740443d7
     // Accept: application/json, text/plain
     @Test
-    public void testERC20GetBalance() {
-        Address address = Address.fromHexString("0x3e3d79163b08502a086213cd09660721740443d7");
-        Amount balance = ERC20ContractClient.getERC20Balance(address, ERC20Token.VTHO, null);
+    public void testGetERC20Balance() {
+        final Address address = Address.fromHexString(System.getProperty("ERC20ContractClientTest.testGetERC20Balance"));
+        final Amount balance = ERC20ContractClient.getERC20Balance(address, ERC20Token.VTHO, null);
         if (balance != null) {
-            logger.info("Get VTHO:" + balance.getAmount());
+            logger.info("Get VTHO: " + balance.getAmount());
         }
 
         Assert.assertNotNull(balance);
@@ -38,20 +38,17 @@ public class ERC20ContractClientTest extends BaseTest {
     // Galactica documented at: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/accounts-*/post
     // Solo tested.
     @Test
-    public void sendERC20Token() {
-        // pre-seeded galactica solo account[8]
-        String fromPrivateKey = "521b7793c6eb27d137b617627c6b85d57c0aa303380e9ca4e30a30302fbc6676";
-        Address fromAddress = Address.fromHexString("0x062f167a905c1484de7e75b88edc7439f82117de");
-        // pre-seeded galactica solo account[9]
-        Address toAddress = Address.fromHexString("0x3e3d79163b08502a086213cd09660721740443d7");
-
-        String amountFigure = "10000000";
-        Amount amount = Amount.VTHO();
+    public void testTransferERC20Token() {
+        final String fromPrivateKey = System.getProperty("ERC20ContractClientTest.testTransferERC20Token.fromKey");
+        final Address fromAddress = Address.fromBytes(ECKeyPair.create(fromPrivateKey).getRawAddress());
+        final Address toAddress = Address.fromHexString(System.getProperty("ERC20ContractClientTest.testTransferERC20Token.toAddress"));
+        final String amountFigure = "10000";
+        final Amount amount = Amount.VTHO();
         amount.setDecimalAmount(amountFigure);
 
-        Amount fromBalanceBefore = ERC20ContractClient.getERC20Balance(fromAddress, ERC20Token.VTHO, null);
+        final Amount fromBalanceBefore = ERC20ContractClient.getERC20Balance(fromAddress, ERC20Token.VTHO, null);
         if (fromBalanceBefore != null) {
-            String message = String.format(
+            final String message = String.format(
                     "BEFORE: Account %s: VTHO %s.",
                     fromAddress.toHexString(Prefix.ZeroLowerX),
                     fromBalanceBefore.getAmount().toString()
@@ -60,9 +57,9 @@ public class ERC20ContractClientTest extends BaseTest {
         } else {
             Assert.fail(String.format("Account %s not found!", fromAddress.toHexString(Prefix.ZeroLowerX)));
         }
-        Amount toBalanceBefore = ERC20ContractClient.getERC20Balance(toAddress, ERC20Token.VTHO, null);
+        final Amount toBalanceBefore = ERC20ContractClient.getERC20Balance(toAddress, ERC20Token.VTHO, null);
         if (toBalanceBefore != null) {
-            String message = String.format(
+            final String message = String.format(
                     "BEFORE: Account %s: VTHO %s.",
                     toAddress.toHexString(Prefix.ZeroLowerX),
                     toBalanceBefore.getAmount().toString()
@@ -72,25 +69,30 @@ public class ERC20ContractClientTest extends BaseTest {
             Assert.fail(String.format("Account %s not found!", toAddress.toHexString(Prefix.ZeroLowerX)));
         }
 
-        TransferResult transferResult = ERC20ContractClient.transferERC20Token(
-                new Address[]{toAddress}, new Amount[]{amount}, 1000000, (byte) 0x0, 720,
-                ECKeyPair.create(fromPrivateKey));
-        logger.info("sendERC20Token: " + JSON.toJSONString(transferResult, prettyFormat));
+        final TransferResult transferResult = ERC20ContractClient.transferERC20Token(
+                new Address[]{toAddress},
+                new Amount[]{amount},
+                1000000,
+                (byte) 0x0,
+                720,
+                ECKeyPair.create(fromPrivateKey)
+        );
+        logger.info("transferERC20Token: " + JSON.toJSONString(transferResult, prettyFormat));
 
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
-            String message = String.format("InterruptedException: %s", e.getMessage());
+            final String message = String.format("InterruptedException: %s", e.getMessage());
             logger.error(message);
             Assert.fail(message);
         }
 
-        Receipt receipt = TransactionClient.getTransactionReceipt(transferResult.getId(), null);
-        logger.info("Receipt:" + JSON.toJSONString(receipt, prettyFormat));
+        final Receipt receipt = TransactionClient.getTransactionReceipt(transferResult.getId(), null);
+        logger.info("Receipt: " + JSON.toJSONString(receipt, prettyFormat));
 
-        Amount fromBalanceAfter = ERC20ContractClient.getERC20Balance(fromAddress, ERC20Token.VTHO, null);
+        final Amount fromBalanceAfter = ERC20ContractClient.getERC20Balance(fromAddress, ERC20Token.VTHO, null);
         if (fromBalanceAfter != null) {
-            String message = String.format(
+            final String message = String.format(
                     "AFTER: Account %s: VTHO %s.",
                     fromAddress.toHexString(Prefix.ZeroLowerX),
                     fromBalanceAfter.getAmount().toString()
@@ -99,7 +101,7 @@ public class ERC20ContractClientTest extends BaseTest {
         } else {
             Assert.fail(String.format("Account %s not found!", fromAddress.toHexString(Prefix.ZeroLowerX)));
         }
-        Amount toBalanceAfter = ERC20ContractClient.getERC20Balance(toAddress, ERC20Token.VTHO, null);
+        final Amount toBalanceAfter = ERC20ContractClient.getERC20Balance(toAddress, ERC20Token.VTHO, null);
         if (toBalanceAfter != null) {
             String message = String.format(
                     "AFTER: Account %s: VTHO %s.",
