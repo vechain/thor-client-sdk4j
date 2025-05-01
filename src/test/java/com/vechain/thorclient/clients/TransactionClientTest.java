@@ -317,6 +317,8 @@ public class TransactionClientTest extends BaseTest {
 
     }
 
+    // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
+    // Solo tested.
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException {
         // pre-seed solo account[0]
