@@ -13,36 +13,42 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.Map;
+
 @RunWith(JUnit4.class)
 public class AccountClientTest extends BaseTest {
 
+    final boolean prettyFormat = true;
+
     @Test
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get.
+    // Solo tested.
     public void testGetAccountInfo() {
-        Address address = Address.fromHexString("0x3db469a79593dcc67f07DE1869d6682fC1eaf535");
-        Account account = AccountClient.getAccountInfo(address, null);
-        logger.info("account info:" + JSON.toJSONString(account));
+        final Address address = Address.fromHexString(System.getProperty("AccountClientTest.testGetAccountInfo"));
+        final Account account = AccountClient.getAccountInfo(address, null);
+        logger.info("account info:" + JSON.toJSONString(account, prettyFormat));
         logger.info("VET:" + account.VETBalance().getAmount() + " Energy:" + account.energyBalance().getAmount());
         Assert.assertNotNull(account);
     }
 
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address-storage-key/get.
+    // Solo tested.
     @Test
     public void testGetStorageAt() {
-        byte[] address = BytesUtils.toByteArray(fromAddress);
+        byte[] address = BytesUtils.toByteArray(System.getProperty("AccountClientTest.testGetStorageAt"));
         StorageKey key = StorageKey.create(4, address);
         StorageData data = AccountClient.getStorageAt(Address.VTHO_Address, key, null);
-        logger.info("Storage At:" + JSON.toJSONString(data));
+        logger.info("Storage At:" + JSON.toJSONString(data, prettyFormat));
         Assert.assertNotNull(data);
     }
 
 
     @Test
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address--code/get.
-    public void testGetCodeTest() {
-        Address tokenAddr = Address.VTHO_Address;
-        AccountCode code = AccountClient.getAccountCode(tokenAddr, null);
-        logger.info("code:" + JSON.toJSONString(code));
+    // Solo tested.
+    public void testGetCode() {
+        AccountCode code = AccountClient.getAccountCode(Address.VTHO_Address, null);
+        logger.info("code:" + JSON.toJSONString(code, prettyFormat));
         Assert.assertNotNull(code);
     }
 

@@ -15,7 +15,7 @@ import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
-@RunWith(JUnit4.class)
+// @RunWith(JUnit4.class)
 public class ERC20ContractClientTest extends BaseTest {
 
     boolean prettyFormat = false;

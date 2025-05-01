@@ -22,7 +22,7 @@ import com.vechain.thorclient.core.model.exception.TransactionException;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
-@RunWith(JUnit4.class)
+// @RunWith(JUnit4.class)
 public class PrototypeClientTest extends BaseTest {
 
 	static final String UserAddress = "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
