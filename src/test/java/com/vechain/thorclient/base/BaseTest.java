@@ -23,9 +23,17 @@ public abstract class BaseTest implements SlatKeys {
     protected String fromAddress;
     private Map<String, String> environment = new HashMap<String, String>();
 
+    private static final int DEFAULT_TIMEOUT = 5000;
+
+    private static boolean DEFAULT_PRETTY_FORMAT = false;
+
     private static final String PATH = "config.properties";
 
-    private static final int DEFAULT_TIMEOUT = 5000;
+    private static final String PRETTY_FORMAT = "prettyFormat";
+
+    public boolean isPretty() {
+        return Boolean.parseBoolean(System.getProperty(PRETTY_FORMAT, String.valueOf(DEFAULT_PRETTY_FORMAT)));
+    }
 
     @Before
     public void loadEnv() {

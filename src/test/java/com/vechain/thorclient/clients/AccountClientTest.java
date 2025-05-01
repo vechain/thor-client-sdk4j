@@ -13,12 +13,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Map;
-
 @RunWith(JUnit4.class)
 public class AccountClientTest extends BaseTest {
 
-    final boolean prettyFormat = true;
+    final boolean prettyFormat = isPretty();
 
     @Test
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get.

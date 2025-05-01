@@ -1,6 +1,7 @@
 package com.vechain.thorclient.clients;
 
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.NodeProvider;
 import com.vechain.thorclient.core.model.blockchain.PeerStatList;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import org.junit.Assert;
@@ -17,18 +18,21 @@ public class BlockchainClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetChainTag() throws ClientArgumentException {
-        byte chainTag = BlockchainClient.getChainTag();
-        int chainTagInt = chainTag & 0xff;
+        final byte chainTag = BlockchainClient.getChainTag();
+        final int chainTagInt = chainTag & 0xff;
         logger.info("chainTag: " + chainTagInt);
         Assert.assertTrue(chainTagInt > 0);
     }
 
     // Galactica documented at: https://testnet.vechain.org/doc/stoplight-ui/#/paths/node-network-peers/get
+    // Solo tested.
     @Test
     public void testGetNodeStats() throws ClientArgumentException {
-        PeerStatList list = BlockchainClient.getPeerStatusList();
+        final PeerStatList list = BlockchainClient.getPeerStatusList();
         logger.info("nodes list:" + list);
-        // Assert.assertNotNull(list);
+        if (NodeProvider.getNodeProvider().getProvider().contains("localhost")) {
+            Assert.assertNotNull(list);
+        }
     }
 
 }
