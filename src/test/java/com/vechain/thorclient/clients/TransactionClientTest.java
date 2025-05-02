@@ -82,7 +82,7 @@ public class TransactionClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetTransactionReceipt() throws ClientIOException {
-        final String txId = "0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07";
+        final String txId = System.getProperty("TransactionClientTest.testGetTransactionReceipt.txId");
         final Receipt receipt = TransactionClient.getTransactionReceipt(txId, null);
         logger.info("Receipt:" + JSON.toJSONString(receipt, prettyFormat));
         Assert.assertNotNull(receipt);
