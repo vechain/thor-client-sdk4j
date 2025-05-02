@@ -131,10 +131,8 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testSendRemarkTx() throws ClientIOException {
-        // pre-seeded solo account[5]
-        final String fromPrivateKey = "f9fc826b63a35413541d92d2bfb6661128cd5075fcdca583446d20c59994ba26";
-        // pre-seeded solo account [6]
-        final String toAddress = "0xb717b660cd51109334bd10b2c168986055f58c1a";
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendRemarkTx.fromPrivateKey");
+        final String toAddress = System.getProperty("TransactionClientTest.testSendRemarkTx.toAddress");
         final byte chainTag = BlockchainClient.getChainTag();
         final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
         final ToData toData = new ToData();
