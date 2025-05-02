@@ -93,10 +93,8 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testSendVTHOTransaction() throws ClientIOException {
-        // pre-seeded solo account [5]
-        final String fromPrivateKey = "f9fc826b63a35413541d92d2bfb6661128cd5075fcdca583446d20c59994ba26";
-        // pre-seeded solo account [6]
-        final String toAddress = "0xb717b660cd51109334bd10b2c168986055f58c1a";
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVTHOTransaction.fromPrivateKey");
+        final String toAddress = System.getProperty("TransactionClientTest.testSendVTHOTransaction.toAddress");
         final byte chainTag = BlockchainClient.getChainTag();
         final byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
         final Amount amount = Amount.createFromToken(ERC20Token.VTHO);
@@ -115,7 +113,10 @@ public class TransactionClientTest extends BaseTest {
                 clause
         );
         logger.info("SendVTHO Raw:" + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
-        final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
+        final TransferResult result = TransactionClient.signThenTransfer(
+                rawTransaction,
+                ECKeyPair.create(fromPrivateKey)
+        );
         logger.info("SendVTHO Result:" + JSON.toJSONString(result, prettyFormat));
         Assert.assertNotNull(result);
         final String txIdHex = BlockchainUtils.generateTransactionId(
