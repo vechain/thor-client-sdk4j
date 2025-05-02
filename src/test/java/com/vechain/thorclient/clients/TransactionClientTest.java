@@ -171,10 +171,10 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testSendVETTransaction() throws ClientIOException {
-        // pre-seeded galactica solo account[8]
-        final String fromPrivateKey = "521b7793c6eb27d137b617627c6b85d57c0aa303380e9ca4e30a30302fbc6676";
-        // pre-seeded galactica solo account[9]
-        final Address toAddress = Address.fromHexString("0x3e3d79163b08502a086213cd09660721740443d7");
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransaction.fromPrivateKey");
+        final Address toAddress = Address.fromHexString(
+                System.getProperty("TransactionClientTest.testSendVETTransaction.toAddress")
+        );
         final byte chainTag = BlockchainClient.getChainTag();
         final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
         final Amount amount = Amount.createFromToken(AbstractToken.VET);
