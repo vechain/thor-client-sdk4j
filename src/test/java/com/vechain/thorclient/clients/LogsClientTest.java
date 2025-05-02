@@ -3,13 +3,13 @@ package com.vechain.thorclient.clients;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vechain.thorclient.core.model.blockchain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.ERC20Contract;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
@@ -20,7 +20,7 @@ import com.vechain.thorclient.utils.Prefix;
 @RunWith(JUnit4.class)
 public class LogsClientTest extends BaseTest {
 
-    boolean prettyFormat = isPretty();
+    final boolean prettyFormat = isPretty();
 
     // Galactica documented at: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/logs-event/post
     // Solo tested.

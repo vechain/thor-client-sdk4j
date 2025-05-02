@@ -18,7 +18,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 @RunWith(JUnit4.class)
 public class ERC20ContractClientTest extends BaseTest {
 
-    boolean prettyFormat = isPretty();
+    final boolean prettyFormat = isPretty();
 
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get
     // Solo tested.
