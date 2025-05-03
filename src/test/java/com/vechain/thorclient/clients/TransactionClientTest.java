@@ -319,12 +319,15 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException {
-        // pre-seed solo account[0]
-        final String gasPayerPrivateKey = "7f9290cc44c5fd2b95fe21d6ad6fe5fa9c177e1cd6f3b4c96a97b13e09eaa158";
-        // pre-seed solo account[1]
-        final String senderPrivateKey = "ea5383ac1f9e625220039a4afac6a7f868bf1ad4f48ce3a1dd78bd214ee4ace5";
-        // pre-seed solo account[2]
-        final String toAddress = "0x9e7911de289c3c856ce7f421034f66b6cde49c39";
+        final String gasPayerPrivateKey = System.getProperty(
+                "TransactionClientTest.testDelegatorSignAndTransfer.gasPayerPrivateKey"
+        );
+        final String senderPrivateKey = System.getProperty(
+                "TransactionClientTest.testDelegatorSignAndTransfer.senderPrivateKey"
+        );
+        final String toAddress = System.getProperty(
+                "TransactionClientTest.testDelegatorSignAndTransfer.toAddress"
+        );
         final RawTransaction rawTransaction = generatingVETRawTxn(toAddress, "100");
         final TransactionReserved reserved = new TransactionReserved();
         reserved.setDelegationFeature(true);
