@@ -49,7 +49,9 @@ public class LogsClientTest extends BaseTest {
     //}
     @Test
     public void testGetFilteredLogEvents() throws ClientArgumentException {
+        // Set in `config.properties`.
         final String address = System.getProperty("LogsClientTest.testGetFilteredLogEvents.address");
+        // Set in `config.properties`.
         final String topic0 = System.getProperty("LogsClientTest.testGetFilteredLogEvents.topic0");
         final Block block = BlockClient.getBlock(null);
         final List<String> eventsTransferInputs = new ArrayList<>();
@@ -103,7 +105,9 @@ public class LogsClientTest extends BaseTest {
     // }
     @Test
     public void testGetFilteredTransferLogs() throws ClientArgumentException {
+        // Set in `config.properties`.
         final String txOrigin = System.getProperty("LogsClientTest.testGetFilteredTransferLogs.txOrigin");
+        // Set in `config.properties`.
         final String sender = System.getProperty("LogsClientTest.testGetFilteredTransferLogs.sender");
         final Block block = BlockClient.getBlock(null);
         final TransferredFilter transferredFilter = TransferredFilter.createFilter(

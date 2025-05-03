@@ -22,6 +22,7 @@ public class AccountClientTest extends BaseTest {
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get.
     // Solo tested.
     public void testGetAccountInfo() {
+        // Set in `config.properties`.
         final Address address = Address.fromHexString(System.getProperty("AccountClientTest.testGetAccountInfo"));
         final Account account = AccountClient.getAccountInfo(address, null);
         logger.info("account info:" + JSON.toJSONString(account, prettyFormat));
@@ -33,6 +34,7 @@ public class AccountClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testGetStorageAt() {
+        // Set in `config.properties`.
         byte[] address = BytesUtils.toByteArray(System.getProperty("AccountClientTest.testGetStorageAt"));
         StorageKey key = StorageKey.create(4, address);
         StorageData data = AccountClient.getStorageAt(Address.VTHO_Address, key, null);

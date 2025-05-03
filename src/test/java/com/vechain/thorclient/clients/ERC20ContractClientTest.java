@@ -26,6 +26,7 @@ public class ERC20ContractClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetERC20Balance() {
+        // Set in `config.properties`.
         final Address address = Address.fromHexString(System.getProperty("ERC20ContractClientTest.testGetERC20Balance"));
         final Amount balance = ERC20ContractClient.getERC20Balance(address, ERC20Token.VTHO, null);
         if (balance != null) {
@@ -39,8 +40,10 @@ public class ERC20ContractClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testTransferERC20Token() {
+        // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty("ERC20ContractClientTest.testTransferERC20Token.fromKey");
         final Address fromAddress = Address.fromBytes(ECKeyPair.create(fromPrivateKey).getRawAddress());
+        // Set in `config.properties`.
         final Address toAddress = Address.fromHexString(System.getProperty("ERC20ContractClientTest.testTransferERC20Token.toAddress"));
         final String amountFigure = "10000";
         final Amount amount = Amount.VTHO();

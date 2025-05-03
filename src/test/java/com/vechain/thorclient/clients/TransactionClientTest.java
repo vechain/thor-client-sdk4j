@@ -28,6 +28,7 @@ public class TransactionClientTest extends BaseTest {
     @Test
     public void testGetTransaction() throws ClientIOException {
         // The first transaction of block 1
+        // Set in `config.properties`.
         final String txId = System.getProperty("TransactionClientTest.testGetTransaction.txId");
         final Transaction transaction = TransactionClient.getTransaction(txId, false, null);
         logger.info("Transaction WithOut Raw: " + JSON.toJSONString(transaction, prettyFormat));
@@ -42,6 +43,7 @@ public class TransactionClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetTransactionRaw() throws ClientIOException {
+        // Set in `config.properties`.
         final String txId = System.getProperty("TransactionClientTest.testGetTransactionRaw.txId");
         final Transaction transaction = TransactionClient.getTransaction(txId, true, null);
         logger.info("Transaction With Raw: " + JSON.toJSONString(transaction, prettyFormat));
@@ -54,7 +56,9 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testDeployContract() throws ClientIOException {
+        // Set in `config.properties`.
         final String privateKey = System.getProperty("TransactionClientTest.testDeployContract.privateKey");
+        // Set in `config.properties`.
         final String contractHex = System.getProperty("TransactionClientTest.testDeployContract.contractHex");
         final TransferResult result = TransactionClient.deployContract(
                 contractHex,
@@ -82,6 +86,7 @@ public class TransactionClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetTransactionReceipt() throws ClientIOException {
+        // Set in `config.properties`.
         final String txId = System.getProperty("TransactionClientTest.testGetTransactionReceipt.txId");
         final Receipt receipt = TransactionClient.getTransactionReceipt(txId, null);
         logger.info("Receipt:" + JSON.toJSONString(receipt, prettyFormat));
@@ -93,7 +98,9 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testSendVTHOTransaction() throws ClientIOException {
+        // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVTHOTransaction.fromPrivateKey");
+        // Set in `config.properties`.
         final String toAddress = System.getProperty("TransactionClientTest.testSendVTHOTransaction.toAddress");
         final byte chainTag = BlockchainClient.getChainTag();
         final byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
@@ -131,7 +138,9 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testSendRemarkTx() throws ClientIOException {
+        // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendRemarkTx.fromPrivateKey");
+        // Set in `config.properties`.
         final String toAddress = System.getProperty("TransactionClientTest.testSendRemarkTx.toAddress");
         final byte chainTag = BlockchainClient.getChainTag();
         final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
@@ -171,7 +180,9 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testSendVETTransaction() throws ClientIOException {
+        // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransaction.fromPrivateKey");
+        // Set in `config.properties`.
         final Address toAddress = Address.fromHexString(
                 System.getProperty("TransactionClientTest.testSendVETTransaction.toAddress")
         );
@@ -258,9 +269,11 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VET() throws ClientIOException {
+        // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty(
                 "TransactionClientTest.testRecoverAddressAndCalcTxId_VET.fromPrivateKey"
         );
+        // Set in `config.properties`.
         final String toAddress = System.getProperty(
                 "TransactionClientTest.testRecoverAddressAndCalcTxId_VET.toAddress"
         );
@@ -288,9 +301,11 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VTHO() throws ClientIOException {
+        // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty(
                 "TransactionClientTest.testRecoverAddressAndCalcTxId_VTHO.fromPrivateKey"
         );
+        // Set in `config.properties`.
         final String toAddress = System.getProperty(
                 "TransactionClientTest.testRecoverAddressAndCalcTxId_VTHO.toAddress"
         );
@@ -319,12 +334,15 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException {
+        // Set in `config.properties`.
         final String gasPayerPrivateKey = System.getProperty(
                 "TransactionClientTest.testDelegatorSignAndTransfer.gasPayerPrivateKey"
         );
+        // Set in `config.properties`.
         final String senderPrivateKey = System.getProperty(
                 "TransactionClientTest.testDelegatorSignAndTransfer.senderPrivateKey"
         );
+        // Set in `config.properties`.
         final String toAddress = System.getProperty(
                 "TransactionClientTest.testDelegatorSignAndTransfer.toAddress"
         );
