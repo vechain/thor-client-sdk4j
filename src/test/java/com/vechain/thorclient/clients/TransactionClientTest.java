@@ -258,10 +258,12 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VET() throws ClientIOException {
-        // pre-seeded solo account[3]
-        final String fromPrivateKey = "432f38bcf338c374523e83fdb2ebe1030aba63c7f1e81f7d76c5f53f4d42e766";
-        // pre-seeded solo account[4]
-        final String toAddress = "0xf02f557c753edf5fcdcbfe4c1c3a448b3cc84d54";
+        final String fromPrivateKey = System.getProperty(
+                "TransactionClientTest.testRecoverAddressAndCalcTxId_VET.fromPrivateKey"
+        );
+        final String toAddress = System.getProperty(
+                "TransactionClientTest.testRecoverAddressAndCalcTxId_VET.toAddress"
+        );
         final RawTransaction rawTransaction = generatingVETRawTxn(toAddress, "100");
         final RawTransaction signedRawTxn = TransactionClient.sign(rawTransaction, ECKeyPair.create(fromPrivateKey));
         final String rawTxHex = rlpEncodedRawTxHex(signedRawTxn);
@@ -275,7 +277,7 @@ public class TransactionClientTest extends BaseTest {
                 newRawTransaction,
                 Address.fromHexString(fromAddress)
         );
-        TransferResult transferResult = TransactionClient.transfer(rawTxHex);
+        final TransferResult transferResult = TransactionClient.transfer(rawTxHex);
         logger.info("Calculate transaction TxId: " + txIdHex);
         logger.info("SendVET result: " + JSON.toJSONString(transferResult, prettyFormat));
         Assert.assertNotNull(transferResult);
@@ -286,10 +288,12 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VTHO() throws ClientIOException {
-        // pre-seeded solo account[3]
-        final String fromPrivateKey = "432f38bcf338c374523e83fdb2ebe1030aba63c7f1e81f7d76c5f53f4d42e766";
-        // pre-seeded solo account[4]
-        final String toAddress = "0xf02f557c753edf5fcdcbfe4c1c3a448b3cc84d54";
+        final String fromPrivateKey = System.getProperty(
+                "TransactionClientTest.testRecoverAddressAndCalcTxId_VTHO.fromPrivateKey"
+        );
+        final String toAddress = System.getProperty(
+                "TransactionClientTest.testRecoverAddressAndCalcTxId_VTHO.toAddress"
+        );
         final RawTransaction rawTransaction = generatingVTHORawTxn(toAddress, "10000");
         final RawTransaction signedRawTxn = TransactionClient.sign(rawTransaction, ECKeyPair.create(fromPrivateKey));
         final String rawTxHex = rlpEncodedRawTxHex(signedRawTxn);
