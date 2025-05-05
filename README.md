@@ -6,14 +6,51 @@ A SDK toolkit for client to call VeChainThor Restful API.
 > [!WARNING]  
 > This repository is not actively maintained
 
+## Notes on Thor Galactica release
 - - - -
-Requires JDK8.
+Requires JDK 8 or later, tested with Amazon Corretto 1.8, 17, OpenJDK 23.
 
 - - - -
-latest version 0.0.10
+Latest version 0.0.11
+
+Code adapted for **Thor Galactica** release is annotated with `@version galactica`.
+
+Tests run with **Thor Galactica Solo** Docker image `ghcr.io/vechain/thor:release-galactica-latest`
+- Download and install the [vechain-sdk-js](https://github.com/vechain/vechain-sdk-js), from **vechain-sdk-js**
+- Run **Thor Solo** with
+  - `yarn start-thor-solo`.
+- Seed accounts with
+  - `yarn seed-thor-solo`.
+- In **thor-client-sdk4j** run tests
+  - `mvn test`,
+- or build the project with
+  - `mvn install`.
+
+To skip tests, build the project with
+`mvn install -DskipTests`.
+
+Tests adapted for **Thor Galactica** are documented as follows,
+the example refers to `src/test/java/com/vechain/thorclient/clients/TransactionClientTest.java`.
+
+```java
+// Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id/get
+// Solo tested.
+```
+
+Accounts, keys, identifiers of blocks or transactions used in the tests adapted for
+**Thor Galactica** are set in the file `src/test/resources/config.properties`, for example
+the entry
+
+```text
+TransactionClientTest.testDelegatorSignAndTransfer.toAddress=0x9e7911de289c3c856ce7f421034f66b6cde49c39
+```
+sets the `toAddress` variable in the `testDelegatorSignAndTransfer` method of the `TransactionClientTest` class.
+
+Below the next separation line, the text is the original one released for version 0.0.10, before the adaptation
+to **Thor Galactica**
 
 - - - -
-default package jar without dependencies, use -Pall to build all in one jar
+Default package jar without dependencies, use -Pall to build all in one jar
 
 ## License
 Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE file in the repository.
