@@ -47,7 +47,7 @@ TransactionClientTest.testDelegatorSignAndTransfer.toAddress=0x9e7911de289c3c856
 sets the `toAddress` variable in the `testDelegatorSignAndTransfer` method of the `TransactionClientTest` class.
 
 Below the next separation line, the text is the original one released for version 0.0.10, before the adaptation
-to **Thor Galactica**
+to **Thor Galactica**.
 
 - - - -
 Default package jar without dependencies, use -Pall to build all in one jar
