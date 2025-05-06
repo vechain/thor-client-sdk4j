@@ -73,8 +73,6 @@ public class LogsClientTest extends BaseTest {
         final ArrayList<FilteredLogEvent> filteredEvents = LogsClient.getFilteredLogEvents(logFilter);
         for (FilteredLogEvent filteredTransferEvent : filteredEvents) {
             logger.info("filteredTransferEvent:{}", JSONObject.toJSONString(filteredTransferEvent, prettyFormat));
-            LogMeta lm = filteredTransferEvent.getMeta();
-            logger.info(JSONObject.toJSONString(lm, prettyFormat));
         }
     }
 

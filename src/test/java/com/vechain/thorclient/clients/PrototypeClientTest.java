@@ -22,14 +22,14 @@ import com.vechain.thorclient.core.model.exception.TransactionException;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
-// @RunWith(JUnit4.class)
+@RunWith(JUnit4.class)
 public class PrototypeClientTest extends BaseTest {
 
 	static final String UserAddress = "0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779";
 	static final String MasterAddress2 = "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed";
 	static final String Master2PrivateKey = "0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0";
 
-	// @Test
+	@Test
 	public void testGetMaster() throws IOException {
 		String currentPrivateKeyAddr = ECKeyPair.create(privateKey).getHexAddress();
 		ContractCallResult callResult = ProtoTypeContractClient
@@ -155,7 +155,7 @@ public class PrototypeClientTest extends BaseTest {
 		testIsOnSponsor();
 	}
 
-	// @Test
+	@Test
 	public void testIsUser() throws IOException {
 		ContractCallResult callResult = ProtoTypeContractClient.isUser(Address.fromHexString(fromAddress),
 				Address.fromHexString(UserAddress), Revision.BEST);
@@ -202,14 +202,14 @@ public class PrototypeClientTest extends BaseTest {
 		logger.info("set user plans:" + JSON.toJSONString(result));
 	}
 
-	// @Test
+	@Test
 	public void testGetUserPlan() throws IOException {
 		ContractCallResult callResult = ProtoTypeContractClient.getCreditPlan(Address.fromHexString(fromAddress),
 				Revision.BEST);
 		logger.info("Get user plan result:" + JSON.toJSONString(callResult));
 	}
 
-	// @Test
+	@Test
 	public void testGetUserCredit() throws IOException {
 		ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(Address.fromHexString(fromAddress),
 				Address.fromHexString(UserAddress), Revision.BEST);
@@ -226,7 +226,7 @@ public class PrototypeClientTest extends BaseTest {
 
 	}
 
-	// @Test
+	@Test
 	public void testIsOnSponsor() throws IOException {
 		String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
 		ContractCallResult contractCallResult = ProtoTypeContractClient.isSponsor(Address.fromHexString(fromAddress),
@@ -246,7 +246,7 @@ public class PrototypeClientTest extends BaseTest {
 
 	}
 
-	// @Test
+	@Test
 	public void testQueryCurrentSponsor() throws IOException {
 		ContractCallResult result = ProtoTypeContractClient.getCurrentSponsor(Address.fromHexString(fromAddress), null);
 		logger.info("getCurrentSponsor result :" + JSON.toJSONString(result));
