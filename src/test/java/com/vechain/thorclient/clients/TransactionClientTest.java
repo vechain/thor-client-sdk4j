@@ -2,6 +2,7 @@ package com.vechain.thorclient.clients;
 
 import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
+import com.vechain.thorclient.core.model.blockchain.Block;
 import com.vechain.thorclient.core.model.blockchain.Receipt;
 import com.vechain.thorclient.core.model.blockchain.Transaction;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
@@ -16,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
+
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
 
@@ -27,14 +30,22 @@ public class TransactionClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetTransaction() throws ClientIOException {
-        // The first transaction of block 1
+        // The transactions of block at revision.
         // Set in `config.properties`.
-        final String txId = System.getProperty("TransactionClientTest.testGetTransaction.txId");
-        final Transaction transaction = TransactionClient.getTransaction(txId, false, null);
-        logger.info("Transaction WithOut Raw: " + JSON.toJSONString(transaction, prettyFormat));
-        Assert.assertNotNull(transaction);
-        Assert.assertNotNull(transaction.getMeta());
-        Assert.assertNull(transaction.getRaw());
+        final int blockRevision = Integer.parseInt(
+                System.getProperty("TransactionClientTest.testGetTransaction.blockRevision")
+        );
+        final Block block = BlockClient.getBlock(Revision.create(blockRevision));
+        final ArrayList<String> transactions = block.getTransactions();
+        Assert.assertNotNull(transactions);
+        Assert.assertTrue(transactions.size() > 0);
+        transactions.forEach(txId -> {
+            final Transaction transaction = TransactionClient.getTransaction(txId, false, null);
+            logger.info("Transaction WithOut Raw: " + JSON.toJSONString(transaction, prettyFormat));
+            Assert.assertNotNull(transaction);
+            Assert.assertNotNull(transaction.getMeta());
+            Assert.assertNull(transaction.getRaw());
+        });
     }
 
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id/get
@@ -43,13 +54,22 @@ public class TransactionClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetTransactionRaw() throws ClientIOException {
+        // The transactions of block at revision.
         // Set in `config.properties`.
-        final String txId = System.getProperty("TransactionClientTest.testGetTransactionRaw.txId");
-        final Transaction transaction = TransactionClient.getTransaction(txId, true, null);
-        logger.info("Transaction With Raw: " + JSON.toJSONString(transaction, prettyFormat));
-        Assert.assertNotNull(transaction);
-        Assert.assertNotNull(transaction.getRaw());
-        Assert.assertNotNull(transaction.getMeta());
+        final int blockRevision = Integer.parseInt(
+                System.getProperty("TransactionClientTest.testGetTransactionRaw.blockRevision")
+        );
+        final Block block = BlockClient.getBlock(Revision.create(blockRevision));
+        final ArrayList<String> transactions = block.getTransactions();
+        Assert.assertNotNull(transactions);
+        Assert.assertTrue(transactions.size() > 0);
+        transactions.forEach(txId -> {
+            final Transaction transaction = TransactionClient.getTransaction(txId, true, null);
+            logger.info("Transaction With Raw: " + JSON.toJSONString(transaction, prettyFormat));
+            Assert.assertNotNull(transaction);
+            Assert.assertNotNull(transaction.getRaw());
+            Assert.assertNotNull(transaction.getMeta());
+        });
     }
 
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post
@@ -86,16 +106,25 @@ public class TransactionClientTest extends BaseTest {
     // Accept: application/json, text/plain
     @Test
     public void testGetTransactionReceipt() throws ClientIOException {
+        // The transactions of block at revision.
         // Set in `config.properties`.
-        final String txId = System.getProperty("TransactionClientTest.testGetTransactionReceipt.txId");
-        final Receipt receipt = TransactionClient.getTransactionReceipt(txId, null);
-        logger.info("Receipt:" + JSON.toJSONString(receipt, prettyFormat));
-        Assert.assertNotNull(receipt);
-        Assert.assertNotNull(receipt.getMeta());
+        final int blockRevision = Integer.parseInt(
+                System.getProperty("TransactionClientTest.testGetTransactionReceipt.blockRevision")
+        );
+        final Block block = BlockClient.getBlock(Revision.create(blockRevision));
+        final ArrayList<String> transactions = block.getTransactions();
+        Assert.assertNotNull(transactions);
+        Assert.assertTrue(transactions.size() > 0);
+        transactions.forEach(txId -> {
+            final Receipt receipt = TransactionClient.getTransactionReceipt(txId, null);
+            logger.info("Receipt:" + JSON.toJSONString(receipt, prettyFormat));
+            Assert.assertNotNull(receipt);
+            Assert.assertNotNull(receipt.getMeta());
+        });
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-    // Solo tested.
+// Solo tested.
     @Test
     public void testSendVTHOTransaction() throws ClientIOException {
         // Set in `config.properties`.
@@ -135,7 +164,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-    // Solo tested.
+// Solo tested.
     @Test
     public void testSendRemarkTx() throws ClientIOException {
         // Set in `config.properties`.
@@ -177,7 +206,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-    // Solo tested.
+// Solo tested.
     @Test
     public void testSendVETTransaction() throws ClientIOException {
         // Set in `config.properties`.
@@ -266,7 +295,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-    // Solo tested.
+// Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VET() throws ClientIOException {
         // Set in `config.properties`.
@@ -298,7 +327,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-    // Solo tested.
+// Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VTHO() throws ClientIOException {
         // Set in `config.properties`.
@@ -331,7 +360,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-    // Solo tested.
+// Solo tested.
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException {
         // Set in `config.properties`.
