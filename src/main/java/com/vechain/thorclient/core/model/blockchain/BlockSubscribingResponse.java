@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 /**
  * [SubscriptionBlockResponse](http://localhost:8669/doc/stoplight-ui/#/schemas/SubscriptionBlockResponse)
+ *
+ * @version galactica
  */
 public class BlockSubscribingResponse {
     private String number;
