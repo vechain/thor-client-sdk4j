@@ -1,13 +1,8 @@
 package com.vechain.thorclient.utils;
 
-import java.io.*;
-import java.math.BigInteger;
-import java.net.URL;
-import java.util.Arrays;
-
-import ch.qos.logback.core.encoder.ByteArrayUtil;
-import ch.qos.logback.core.util.FileUtil;
+import com.vechain.thorclient.utils.crypto.ECIESUtils;
 import com.vechain.thorclient.utils.crypto.ECKey;
+import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
@@ -16,9 +11,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.vechain.thorclient.utils.crypto.ECDSASign;
-import com.vechain.thorclient.utils.crypto.ECIESUtils;
-import com.vechain.thorclient.utils.crypto.ECKeyPair;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class ECIESTest {
