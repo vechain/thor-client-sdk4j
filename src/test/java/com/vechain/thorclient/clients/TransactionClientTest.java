@@ -28,6 +28,7 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     // GET http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07
     // Accept: application/json, text/plain
+    // https://galactica.dev.node.vechain.org/transactions/0x34d4175fbb310013f6d88c709837dc607fcde9359bda33e833f13ab9171f6be1 tested
     @Test
     public void testGetTransaction() throws ClientIOException {
         // The transactions of block at revision.
@@ -52,6 +53,7 @@ public class TransactionClientTest extends BaseTest {
     // Solo tested.
     // GET http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07?raw=true
     // Accept: application/json, text/plain
+    // https://galactica.dev.node.vechain.org/transactions/0x34d4175fbb310013f6d88c709837dc607fcde9359bda33e833f13ab9171f6be1 tested
     @Test
     public void testGetTransactionRaw() throws ClientIOException {
         // The transactions of block at revision.

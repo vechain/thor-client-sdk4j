@@ -22,6 +22,7 @@ public class BlockClientTest extends BaseTest {
 	// Solo tested.
 	// GET http://localhost:8669/blocks/best
 	// Accept: application/json, text/plain
+	// https://galactica.dev.node.vechain.org tested.
 	@Test
 	public void testGetBlock() throws IOException {
 		final Revision revision = Revision.BEST;
