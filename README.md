@@ -6,14 +6,75 @@ A SDK toolkit for client to call VeChainThor Restful API.
 > [!WARNING]  
 > This repository is not actively maintained
 
-## Notes on Thor Galactica release
-- - - -
-Requires JDK 8 or later, tested with Amazon Corretto 1.8, 17, OpenJDK 23.
-
-- - - -
 Latest version 0.0.11
 
-Code adapted for **Thor Galactica** release is annotated with `@version galactica`.
+- - - -
+
+## License
+Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE file in the repository.
+
+- - - -
+
+## Release notes on Thor Galactica
+
+### JVM compatibility
+
+It requires **JDK 1.8** or later.
+
+Tested with
+- Amazon Corretto 1.8, 
+- Amazon Corretto 17,
+- OpenJDK 23.
+
+### Thor compatibility
+
+#### Blocks
+
+Blocks are **read** and represented according the
+[schema](https://galactica.dev.node.vechain.org/doc/stoplight-ui/#/schemas/Block)
+including the property `baseFeePerGas`
+introduced in with **Galactica**.
+
+Blocks made **before Galactica** hard-fork have the `baseFeePerGas`
+property set to `null`.
+
+#### Fees
+
+The new end points
+- `/fees/history`,
+- `/fees/priority`
+are not supported.
+
+#### Subscriptions
+
+Events are **notified** according the
+[schema](https://galactica.dev.node.vechain.org/doc/stoplight-ui/#/schemas/SubscriptionBlockResponse)
+representing the properties `type`, `maxFeePerGas` and `maxPriorityFeePerGas`
+introduced in with **Galactica**.
+
+Transactions made **before Galactica** hard-fork have the same properties
+set to `null`.
+
+#### Transactions
+
+Transactions are **read** according the
+[schema](https://galactica.dev.node.vechain.org/doc/stoplight-ui/#/schemas/GetTxResponse)
+representing the properties  `type`, `maxFeePerGas` and `maxPriorityFeePerGas` 
+introduced in with **Galactica**.
+
+Transaction **receipts** are represented according the
+[schema](https://galactica.dev.node.vechain.org/doc/stoplight-ui/#/schemas/Receipt)
+including the property  `type`
+introduced in with **Galactica**.
+
+Transactions made **before Galactica** hard-fork have the same properties
+set to `null`.
+
+**This SDK does not support sending dynamic fee transactions to Thor.**
+
+- - - -
+
+### Test
 
 Tests run with **Thor Galactica Solo** Docker image `ghcr.io/vechain/thor:release-galactica-latest`
 - Download and install the [vechain-sdk-js](https://github.com/vechain/vechain-sdk-js), from **vechain-sdk-js**
@@ -22,38 +83,57 @@ Tests run with **Thor Galactica Solo** Docker image `ghcr.io/vechain/thor:releas
 - Seed accounts with
   - `yarn seed-thor-solo`.
 - In **thor-client-sdk4j** run tests
-  - `mvn test`,
-- or build the project with
-  - `mvn install`.
+  - `mvn test`.
 
-To skip tests, build the project with
-`mvn install -DskipTests`.
+Accounts, keys, identifiers of blocks or transactions **fixtures** used in the tests adapted for
+**Thor Galactica** are set in the file `src/test/resources/config.properties`.
 
-Tests adapted for **Thor Galactica** are documented as follows,
-the example refers to `src/test/java/com/vechain/thorclient/clients/TransactionClientTest.java`.
-
-```java
-// Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id/get
-// Solo tested.
-```
-
-Accounts, keys, identifiers of blocks or transactions used in the tests adapted for
-**Thor Galactica** are set in the file `src/test/resources/config.properties`, for example
-the entry
+For example, the entry
 
 ```text
 TransactionClientTest.testDelegatorSignAndTransfer.toAddress=0x9e7911de289c3c856ce7f421034f66b6cde49c39
 ```
 sets the `toAddress` variable in the `testDelegatorSignAndTransfer` method of the `TransactionClientTest` class.
 
-Below the next separation line, the text is the original one released for version 0.0.10, before the adaptation
-to **Thor Galactica**.
+
+### Build
+
+Build the project with
+  - `mvn install`.
+
+To skip tests when Thor Galactica Solo is not available, build the project with
+- `mvn install -DskipTests`.
+
+To build the fat **jar** artifact with dependecies, run
+- `mvn install -Pall`.
 
 - - - -
-Default package jar without dependencies, use -Pall to build all in one jar
 
-## License
-Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE file in the repository.
+### Source code annotations
+
+**Classes** adapted for Thor Galactica release is annotated with
+- `@version galactica`.
+
+**Tests** adapted for Thor Galactica are documented 
+referring to the Thor end-points involved.
+
+For example, the test at `src/test/java/com/vechain/thorclient/clients/TransactionClientTest.java`
+includes the following comment.
+
+```java
+// Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id/get
+// Solo tested.
+```
+
+Testes inherited from version 0.0.10 involving specific **Binance** fixtures are annotated with
+- `// @Test`
+
+to exclude them to be executed by default.
+
+- - - -
+
+> **Below the next separation line, the text is the original released for version 0.0.10**.
+
 - - - -
 
 ## Set blockchain nodes provider
