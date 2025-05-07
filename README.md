@@ -26,7 +26,7 @@ Tested with
 - Amazon Corretto 17,
 - OpenJDK 23.
 
-### Thor compatibility
+### Thor Galactica compatibility
 
 #### Blocks
 
