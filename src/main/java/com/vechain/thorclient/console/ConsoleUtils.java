@@ -19,7 +19,6 @@ import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.ERC20Contract;
 import com.vechain.thorclient.core.model.clients.ERC20Token;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
-import com.vechain.thorclient.core.model.clients.Revision;
 import com.vechain.thorclient.core.model.clients.ToClause;
 import com.vechain.thorclient.core.model.clients.ToData;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;

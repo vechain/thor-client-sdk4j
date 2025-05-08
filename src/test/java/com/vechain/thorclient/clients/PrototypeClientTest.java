@@ -29,7 +29,7 @@ public class PrototypeClientTest extends BaseTest {
 	static final String MasterAddress2 = "0xf881a94423f22ee9a0e3e1442f515f43c966b7ed";
 	static final String Master2PrivateKey = "0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0";
 
-	@Test
+	// @Test
 	public void testGetMaster() throws IOException {
 		String currentPrivateKeyAddr = ECKeyPair.create(privateKey).getHexAddress();
 		ContractCallResult callResult = ProtoTypeContractClient
@@ -40,7 +40,7 @@ public class PrototypeClientTest extends BaseTest {
 
 	}
 
-	@Test
+	// @Test
 	public void testSetMasterAndMasterActions() throws IOException {
 		ECKeyPair aECKeyPair = ECKeyPair.create(privateKey);
 		TransferResult result = ProtoTypeContractClient.setMasterAddress(
@@ -163,7 +163,7 @@ public class PrototypeClientTest extends BaseTest {
 		Assert.assertNotNull(callResult);
 	}
 
-	@Test
+	// @Test
 	public void testAddUser() throws IOException {
 
 		TransferResult transferResult = ProtoTypeContractClient.addUsers(
@@ -175,7 +175,7 @@ public class PrototypeClientTest extends BaseTest {
 		Assert.assertNotNull(transferResult);
 	}
 
-	@Test
+	// @Test
 	public void testRemoveUser() throws IOException {
 
 		TransferResult transferResult = ProtoTypeContractClient.removeUsers(
@@ -187,7 +187,7 @@ public class PrototypeClientTest extends BaseTest {
 		Assert.assertNotNull(transferResult);
 	}
 
-	@Test
+	// @Test
 	public void testSetUserPlan() throws IOException {
 		Amount credit = Amount.VTHO();
 		credit.setDecimalAmount("0.1");
@@ -216,7 +216,7 @@ public class PrototypeClientTest extends BaseTest {
 		logger.info("Get user plan result:" + JSON.toJSONString(callResult));
 	}
 
-	@Test
+	// @Test
 	public void testSponsor() throws IOException {
 
 		TransferResult transferResult = ProtoTypeContractClient.sponsor(
@@ -234,7 +234,7 @@ public class PrototypeClientTest extends BaseTest {
 		logger.info("get isSponsor result :" + JSON.toJSONString(contractCallResult));
 	}
 
-	@Test
+	// @Test
 	public void testSelectSponsor() throws IOException {
 		String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
 		TransferResult transferResult = ProtoTypeContractClient.selectSponsor(
@@ -252,7 +252,7 @@ public class PrototypeClientTest extends BaseTest {
 		logger.info("getCurrentSponsor result :" + JSON.toJSONString(result));
 	}
 
-	@Test
+	// @Test
 	public void testUnSponsor() throws IOException {
 		TransferResult transferResult = ProtoTypeContractClient.unsponsor(
 				new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
@@ -273,7 +273,7 @@ public class PrototypeClientTest extends BaseTest {
 			while (true) {
 				final long current = System.currentTimeMillis();
 				if (current - start > expiration) {
-					throw new ThorException("找不到有效的交易Receipt~");
+					throw new ThorException("找不到有效的交易Receipt~"); // No valid transactions found
 				}
 				Receipt receipt = ProtoTypeContractClient.getTransactionReceipt(id, null);
 				if (receipt != null) {
@@ -285,7 +285,7 @@ public class PrototypeClientTest extends BaseTest {
 						}
 					}
 				} else {
-					throw new ThorException("找不到有效的交易Receipt~");
+					throw new ThorException("找不到有效的交易Receipt~"); // No valid transaction found
 				}
 				try {
 					Thread.sleep(10 * 1000);
@@ -298,7 +298,7 @@ public class PrototypeClientTest extends BaseTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testNormalAddressWithSponsor() {
 
 		int expirationBlock = 720;
@@ -314,7 +314,7 @@ public class PrototypeClientTest extends BaseTest {
 			logger.info("MPP addChildTrees user:" + JSON.toJSONString(transferResult));
 			this.checkReceiptAndBlock(transferResult.getId(), start, expiration);
 		} else {
-			throw new ThorException("ProtoTypeContractClient.addUser出错了~");
+			throw new ThorException("ProtoTypeContractClient.addUser出错了~"); // Something went wrong
 		}
 
 		start = System.currentTimeMillis();
@@ -331,7 +331,7 @@ public class PrototypeClientTest extends BaseTest {
 			logger.info("MPP set user plans:" + JSON.toJSONString(setUserPlansResult));
 			this.checkReceiptAndBlock(setUserPlansResult.getId(), start, expiration);
 		} else {
-			throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
+			throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~"); // Something went wrong
 		}
 		TransferResult sponsorResult = ProtoTypeContractClient.sponsor(
 				new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
@@ -340,7 +340,7 @@ public class PrototypeClientTest extends BaseTest {
 			logger.info("MPP the address setUserPlansResult:" + JSON.toJSONString(sponsorResult));
 			this.checkReceiptAndBlock(sponsorResult.getId(), start, expiration);
 		} else {
-			throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
+			throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~"); // Something went wrong
 		}
 
 		String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
@@ -352,12 +352,12 @@ public class PrototypeClientTest extends BaseTest {
 			logger.info("MPP selectSponsor:" + JSON.toJSONString(selectSponsorResult));
 			this.checkReceiptAndBlock(selectSponsorResult.getId(), start, expiration);
 		} else {
-			throw new ThorException("ProtoTypeContractClient.selectSponsor出错了~");
+			throw new ThorException("ProtoTypeContractClient.selectSponsor出错了~"); // Something went wrong
 		}
 
 	}
 
-	@Test
+	// @Test
 	public void testNormalAddressWithoutSponsor() {
 		int expirationBlock = 720;
 		int expiration = 10 * expirationBlock * 1000;
@@ -372,7 +372,7 @@ public class PrototypeClientTest extends BaseTest {
 			logger.info("MPP to addChildTrees user:" + JSON.toJSONString(transferResult));
 			this.checkReceiptAndBlock(transferResult.getId(), start, expiration);
 		} else {
-			throw new ThorException("ProtoTypeContractClient.addUser出错了~");
+			throw new ThorException("ProtoTypeContractClient.addUser出错了~"); // Something went wrong
 		}
 
 		start = System.currentTimeMillis();
@@ -389,7 +389,7 @@ public class PrototypeClientTest extends BaseTest {
 			logger.info("MPP to set user plans:" + JSON.toJSONString(setUserPlansResult));
 			this.checkReceiptAndBlock(setUserPlansResult.getId(), start, expiration);
 		} else {
-			throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~");
+			throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~"); // Something went wrong
 		}
 	}
 

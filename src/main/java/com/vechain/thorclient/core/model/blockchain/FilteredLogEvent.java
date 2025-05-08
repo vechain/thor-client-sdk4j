@@ -3,10 +3,9 @@ package com.vechain.thorclient.core.model.blockchain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FilteredLogEvent implements Serializable {
-	/**
-	 * 
-	 */
+public class
+FilteredLogEvent implements Serializable {
+
 	private static final long serialVersionUID = -3469622661699885493L;
 	private String address;
 	private ArrayList<String> topics;

@@ -14,21 +14,54 @@ import java.util.Properties;
 
 public abstract class BaseTest implements SlatKeys {
 
-    protected Logger            logger      = LoggerFactory.getLogger(this.getClass());
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected String            privateKey;
-    protected String            sponsorKey;
-    protected String            nodeProviderUrl;
-    protected String            nodeWSProviderUrl;
-    protected String            fromAddress;
+    protected String privateKey;
+    protected String sponsorKey;
+    protected String nodeProviderUrl;
+    protected String nodeWSProviderUrl;
+    protected String fromAddress;
     private Map<String, String> environment = new HashMap<String, String>();
+
+    private static final int DEFAULT_TIMEOUT = 5000;
+
+    private static boolean DEFAULT_PRETTY_FORMAT = false;
+
+    private static final String PATH = "config.properties";
+
+    private static final String PRETTY_FORMAT = "prettyFormat";
+
+    public boolean isPretty() {
+        return Boolean.parseBoolean(System.getProperty(PRETTY_FORMAT, String.valueOf(DEFAULT_PRETTY_FORMAT)));
+    }
+
+    @Before
+    public void loadEnv() {
+        try (final InputStream is = BaseTest.class.getClassLoader().getResourceAsStream(PATH)) {
+            final Properties properties = new Properties();
+            properties.load(is);
+            properties.forEach((k, v) -> {
+                final String key = k.toString();
+                final String value = v.toString();
+                if (!StringUtils.isBlank(value)) {
+                    System.setProperty(key, value);
+                }
+            });
+        } catch (Exception e) {
+            logger.error("Can not load the file {} in classpath", PATH);
+        }
+        final NodeProvider nodeProvider = NodeProvider.getNodeProvider();
+        nodeProvider.setProvider(System.getProperty(NODE_PROVIDER_URL));
+        nodeProvider.setWsProvider(System.getProperty(NODE_WSPROVIDER_URL));
+        nodeProvider.setTimeout(Integer.parseInt(System.getProperty(NODE_TIMEOUT, String.valueOf(DEFAULT_TIMEOUT))));
+    }
 
     @Before
     public void setProvider() {
         privateKey = System.getenv(PRIVATE_KEY);
         sponsorKey = System.getenv(SPONSOR_KEY);
         nodeProviderUrl = System.getenv(NODE_PROVIDER_URL);
-        nodeWSProviderUrl = System.getenv( NODE_WSPROVIDER_URL );
+        nodeWSProviderUrl = System.getenv(NODE_WSPROVIDER_URL);
         String nodeTimeout = System.getenv(NODE_TIMEOUT);
 
         Properties properties = new Properties();
@@ -53,8 +86,8 @@ public abstract class BaseTest implements SlatKeys {
             if (StringUtils.isBlank(privateKey)) {
                 privateKey = properties.getProperty(PRIVATE_KEY);
             }
-            if (StringUtils.isBlank( sponsorKey )){
-                sponsorKey = properties.getProperty( SPONSOR_KEY );
+            if (StringUtils.isBlank(sponsorKey)) {
+                sponsorKey = properties.getProperty(SPONSOR_KEY);
             }
             environment.put(PRIVATE_KEY, privateKey);
             if (StringUtils.isBlank(nodeProviderUrl)) {
@@ -73,7 +106,7 @@ public abstract class BaseTest implements SlatKeys {
 
         NodeProvider nodeProvider = NodeProvider.getNodeProvider();
         nodeProvider.setProvider(this.nodeProviderUrl);
-        nodeProvider.setWsProvider( this.nodeWSProviderUrl );
+        nodeProvider.setWsProvider(this.nodeWSProviderUrl);
         nodeProvider.setTimeout(timeout);
 
         this.recoverAddress();

@@ -3,7 +3,16 @@ package com.vechain.thorclient.core.model.blockchain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * [GetTxReceiptResponse.outputs](http://localhost:8669/doc/stoplight-ui/#/schemas/GetTxReceiptResponse)
+ *
+ * @version galactica
+ */
 public class ReceiptOutput implements Serializable {
+    private String contractAddress;
+    private ArrayList<Event> events;
+    private ArrayList<Transfer> transfers;
+
     public String getContractAddress() {
         return contractAddress;
     }
@@ -28,7 +37,4 @@ public class ReceiptOutput implements Serializable {
         this.transfers = transfers;
     }
 
-    private String contractAddress;
-    private ArrayList<Event> events;
-    private ArrayList<Transfer> transfers;
 }
