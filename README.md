@@ -7,7 +7,8 @@ A SDK toolkit for client to call VeChainThor Restful API.
 > This repository is not actively maintained.
 > 
 > Cryptographic functions are provided by [Bouncycastle](https://www.bouncycastle.org/)
-> using the library `bcprov-jdk15on 1.59` for Java 1.5. The library is deprecated.
+> using the library `bcprov-jdk15on 1.59` for Java 1.5.
+> The library is deprecated.
 > Use at your own risk.
 > 
 > Contact VeChain if you need support to upgrade to not deprecated dependencies.
