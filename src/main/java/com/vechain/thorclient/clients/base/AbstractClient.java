@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -13,9 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
