@@ -14,7 +14,7 @@ A SDK toolkit for client to call VeChainThor Restful API.
 > Contact VeChain if you need support to upgrade to not deprecated dependencies.
 > 
 
-Latest version 0.0.11
+Latest version 0.0.12
 
 - - - -
 

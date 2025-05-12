@@ -5,7 +5,7 @@
 
     <groupId>com.vechain.client</groupId>
     <artifactId>thor-client-sdk4j</artifactId>
-    <version>0.0.11</version>
+    <version>0.0.12</version>
     <packaging>jar</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <snapshot>0.0.1-SNAPSHOT</snapshot>
+        <snapshot>0.0.12-SNAPSHOT</snapshot>
     </properties>
 
     <dependencies>
@@ -21,13 +21,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.7</version>
+            <version>1.5.13</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.1.7</version>
+            <version>1.5.13</version>
         </dependency>
 
         <dependency>
