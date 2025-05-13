@@ -25,7 +25,7 @@ public class WalletUtilsTest extends BaseTest {
 
 
     @Test
-    public void testCreateWallet() {
+    public void testCreateWallet() throws JsonProcessingException {
         WalletInfo walletInfo = WalletUtils.createWallet("123456");
         String keyStoreString = walletInfo.toKeystoreString();
 
