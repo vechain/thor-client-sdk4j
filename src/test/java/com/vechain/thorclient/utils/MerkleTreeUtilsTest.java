@@ -1,6 +1,9 @@
 package com.vechain.thorclient.utils;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.utils.merkle.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,11 +19,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 @RunWith(JUnit4.class)
-public class MerkleTreeUtilsTest {
+public class MerkleTreeUtilsTest extends BaseTest {
+
+	final boolean prettyFormat = isPretty();
+
+	final ObjectMapper objectMapper = new ObjectMapper();
+
+	final ObjectWriter writer = prettyFormat ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
+
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	MerkleTree tree;
@@ -75,16 +84,16 @@ public class MerkleTreeUtilsTest {
 	}
 
 	@Test
-	public void getMerkleProofValueTest() {
+	public void getMerkleProofValueTest() throws JsonProcessingException {
 		MerkleLeaf leaf = leaves.get(2);
 		List<ProofValue> values = MerkleTreeUtils.getMerkleProof(leaf);
-		String string = JSON.toJSONString(values);
-		System.out.println("Proof value: " + string);
+		String string = writer.writeValueAsString(values);
+		logger.info("Proof value: {}", string);
 
 	}
 
 	@Test
-	public void recoverMerkleRootTest() {
+	public void recoverMerkleRootTest() throws JsonProcessingException {
 //        Random random = new Random();
 //        int index = random.nextInt( leaves.size() );
 //        ArrayList<byte[]> arrayList = new ArrayList<>();
@@ -95,7 +104,7 @@ public class MerkleTreeUtilsTest {
 			logger.info("Merkle Tree node value: {}", BytesUtils.toHexString(value, Prefix.ZeroLowerX));
 		}
 		List<ProofValue> values = MerkleTreeUtils.getMerkleProof(leaf);
-		System.out.println("proof:" + JSON.toJSONString(values));
+		logger.info("proof: {}", writer.writeValueAsString(values));
 		byte[] recoverRoot = MerkleTreeUtils.recoverMerkleRoot(leaf.getValue(), values, messageDigest);
 
 		logger.info("recover root:{}", BytesUtils.toHexString(recoverRoot, Prefix.ZeroLowerX));

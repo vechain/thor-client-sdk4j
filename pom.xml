@@ -13,7 +13,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <snapshot>0.0.12-SNAPSHOT</snapshot>
+        <snapshot>${version}-SNAPSHOT</snapshot>
     </properties>
 
     <dependencies>
@@ -131,8 +131,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>8</release>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

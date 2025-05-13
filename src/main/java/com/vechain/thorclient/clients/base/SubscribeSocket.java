@@ -1,5 +1,6 @@
 package com.vechain.thorclient.clients.base;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.eclipse.jetty.websocket.api.CloseStatus;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -54,7 +55,7 @@ public class SubscribeSocket<T> {
 	}
 
 	@OnWebSocketMessage
-	public void onMessage(String msg) {
+	public void onMessage(String msg) throws JsonProcessingException {
 		if (this.callback != null) {
 			logger.info("onMessage: {} ", msg);
 			Object obj = JSONObject.parseObject(msg, callback.responseClass());
