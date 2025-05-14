@@ -14,7 +14,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
 
 public class ExtendedKey {
@@ -91,7 +90,7 @@ public class ExtendedKey {
                     throw new ValidationException("This is rather unlikely, but it did just " +
                             "happen");
                 }
-                pub = new ECPoint.Fp(curve.getCurve(), q.getX(), q.getY(), true).getEncoded();
+                pub = q.getEncoded(false);
                 return new ExtendedKey(new ECPublicKey(pub), r, depth, parent, sequence);
             }
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {

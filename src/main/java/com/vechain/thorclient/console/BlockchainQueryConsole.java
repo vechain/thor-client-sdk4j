@@ -2,12 +2,12 @@ package com.vechain.thorclient.console;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 
 import com.vechain.thorclient.clients.BlockClient;
 import com.vechain.thorclient.clients.BlockchainClient;
 import com.vechain.thorclient.core.model.blockchain.Block;
 import com.vechain.thorclient.core.model.clients.Revision;
+import org.bouncycastle.util.encoders.Hex;
 
 public class BlockchainQueryConsole {
 
@@ -15,7 +15,7 @@ public class BlockchainQueryConsole {
 
     public static void getBestBlockRef() {
         byte[] blockRefByte = BlockClient.getBlock(Revision.BEST).blockRef().toByteArray();
-        String blockRef = ByteUtils.toHexString(blockRefByte);
+        String blockRef = Hex.toHexString(blockRefByte);
         System.out.println("BlockRef:");
         System.out.println("0x" + blockRef);
     }
