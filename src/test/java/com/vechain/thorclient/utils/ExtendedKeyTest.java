@@ -32,7 +32,8 @@ public class ExtendedKeyTest extends BaseTest{
             Key child = key.derived( 0x00c04133 ).getMaster();
             byte[] pub = child.getRawPublicKey( false );
             logger.info( "child pubkey :" + BytesUtils.toHexString( pub, Prefix.ZeroLowerX ) );
-            Assert.assertEquals("0x04a023b109ea129e1526cac7384ef17ef2092182499f94e80973608f9985dea45d0df740616133bb50c1d8ed30aa4945c5f564f4657cb5ec2b81d33ca5f9ce946e",
+            Assert.assertEquals(
+                    "0x04a023b109ea129e1526cac7384ef17ef2092182499f94e80973608f9985dea45d0df740616133bb50c1d8ed30aa4945c5f564f4657cb5ec2b81d33ca5f9ce946e",
                     BytesUtils.toHexString( pub, Prefix.ZeroLowerX ));
         } catch (ValidationException e) {
             e.printStackTrace();

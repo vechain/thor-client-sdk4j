@@ -3,7 +3,7 @@ package com.vechain.thorclient.utils.crypto;
 import java.util.Arrays;
 
 import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+import org.bouncycastle.util.encoders.Hex;
 import org.eclipse.jetty.io.RuntimeIOException;
 
 public class PublicKeyECPoint {
@@ -50,7 +50,7 @@ public class PublicKeyECPoint {
 
 	@Override
 	public String toString() {
-		return "[x=" + ByteUtils.toHexString(x) + ", y=" + ByteUtils.toHexString(y) + "]";
+		return "[x=" + Hex.toHexString(x) + ", y=" + Hex.toHexString(y) + "]";
 	}
 
 }

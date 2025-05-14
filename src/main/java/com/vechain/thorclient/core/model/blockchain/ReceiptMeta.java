@@ -6,18 +6,18 @@ package com.vechain.thorclient.core.model.blockchain;
  * @version galactica
  */
 public class ReceiptMeta {
-    String blockId;         // hex ^0x[0-9a-f]{64}$
+    String blockID;         // hex ^0x[0-9a-f]{64}$
     int blockNumber;        // integer
     long blockTimestamp;    // integer
     String txID;            // hex ^0x[0-9a-f]{64}$
     String txOrigin;        // hex address ^0x[0-9a-f]{40}$
 
-    public String getBlockId() {
-        return blockId;
+    public String getBlockID() {
+        return blockID;
     }
 
-    public void setBlockId(String blockId) {
-        this.blockId = blockId;
+    public void setBlockID(String blockID) {
+        this.blockID = blockID;
     }
 
     public int getBlockNumber() {

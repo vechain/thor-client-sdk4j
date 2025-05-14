@@ -3,11 +3,13 @@ package com.vechain.thorclient.clients;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.alibaba.fastjson.JSONObject;
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.*;
 import com.vechain.thorclient.core.model.clients.Address;
@@ -21,6 +23,10 @@ import com.vechain.thorclient.utils.Prefix;
 public class LogsClientTest extends BaseTest {
 
     final boolean prettyFormat = isPretty();
+
+    final ObjectMapper objectMapper = new ObjectMapper();
+
+    final ObjectWriter writer = prettyFormat ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
 
     // Galactica documented at: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/logs-event/post
     // Solo tested.
@@ -48,7 +54,7 @@ public class LogsClientTest extends BaseTest {
     //   "order": "desc"
     //}
     @Test
-    public void testGetFilteredLogEvents() throws ClientArgumentException {
+    public void testGetFilteredLogEvents() throws ClientArgumentException, JsonProcessingException {
         // Set in `config.properties`.
         final String address = System.getProperty("LogsClientTest.testGetFilteredLogEvents.address");
         // Set in `config.properties`.
@@ -72,7 +78,7 @@ public class LogsClientTest extends BaseTest {
         logFilter.setOrder(Order.DESC.getValue());
         final ArrayList<FilteredLogEvent> filteredEvents = LogsClient.getFilteredLogEvents(logFilter);
         for (FilteredLogEvent filteredTransferEvent : filteredEvents) {
-            logger.info("filteredTransferEvent:{}", JSONObject.toJSONString(filteredTransferEvent, prettyFormat));
+            logger.info("filteredTransferEvent: {}", writer.writeValueAsString(filteredTransferEvent));
         }
     }
 
@@ -102,7 +108,7 @@ public class LogsClientTest extends BaseTest {
     //  "order": "desc"
     // }
     @Test
-    public void testGetFilteredTransferLogs() throws ClientArgumentException {
+    public void testGetFilteredTransferLogs() throws ClientArgumentException, JsonProcessingException {
         // Set in `config.properties`.
         final String txOrigin = System.getProperty("LogsClientTest.testGetFilteredTransferLogs.txOrigin");
         // Set in `config.properties`.
@@ -118,7 +124,7 @@ public class LogsClientTest extends BaseTest {
                 null);
         transferredFilter.setOrder(Order.DESC.getValue());
         final ArrayList<FilteredTransferEvent> transferLogs = LogsClient.getFilteredTransferLogs(transferredFilter);
-        logger.info("transferLogs:{}", JSONObject.toJSONString(transferLogs, prettyFormat));
+        logger.info("transferLogs: {}", writer.writeValueAsString(transferLogs));
     }
 
 }

@@ -1,17 +1,18 @@
 package com.vechain.thorclient.utils;
 
 import java.math.BigDecimal;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(JUnit4.class)
 public class BytesUtilsTest {
 
-    static Logger logger = Logger.getLogger("thorclient");
+    protected Logger logger = LoggerFactory.getLogger("thorclient");
 
     @Test
     public void testBalance() {

@@ -20,7 +20,7 @@ public class BlockchainClientTest extends BaseTest {
     public void testGetChainTag() throws ClientArgumentException {
         final byte chainTag = BlockchainClient.getChainTag();
         final int chainTagInt = chainTag & 0xff;
-        logger.info("chainTag: " + chainTagInt);
+        logger.info("chainTag: {}", chainTagInt);
         Assert.assertTrue(chainTagInt > 0);
     }
 
@@ -29,7 +29,7 @@ public class BlockchainClientTest extends BaseTest {
     @Test
     public void testGetNodeStats() throws ClientArgumentException {
         final PeerStatList list = BlockchainClient.getPeerStatusList();
-        logger.info("nodes list:" + list);
+        logger.info("nodes list: {}", list);
         if (NodeProvider.getNodeProvider().getProvider().contains("localhost")) {
             Assert.assertNotNull(list);
         }

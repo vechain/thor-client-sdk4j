@@ -1,11 +1,11 @@
 package com.vechain.thorclient.utils;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.vechain.thorclient.core.model.exception.HttpException;
-import org.json.JSONObject;
+import kong.unirest.core.HttpResponse;
+import kong.unirest.core.JsonNode;
+import kong.unirest.core.Unirest;
+import kong.unirest.core.UnirestException;
+import kong.unirest.core.json.JSONObject;
 
 import java.util.Map;
 

@@ -10,11 +10,11 @@ import org.junit.runners.JUnit4;
 public class AmountTest extends BaseTest {
 
     @Test
-    public void testAmount(){
+    public void testAmount() {
         String hex = "0x000000000000000000000000000000000000000000000000a688906bd8b00000";
         Amount amount = Amount.VTHO();
-        amount.setHexAmount( hex );
-        logger.info( "Decimal amount:" + amount.getAmount().toString() );
+        amount.setHexAmount(hex);
+        logger.info("Decimal amount: {}", amount.getAmount().toString());
     }
 
 }

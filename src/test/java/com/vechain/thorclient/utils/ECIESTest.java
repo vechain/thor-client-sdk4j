@@ -5,7 +5,8 @@ import com.vechain.thorclient.utils.crypto.ECKey;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,17 +30,17 @@ public class ECIESTest {
 		System.out.println("Alice Key===================");
 		String AlicePrivateKey = "a8e1664e42fa6014c8a97fb64f943a114660de14dc8889f1024487ebcc9aa67a";
 		ECKeyPair aliceKey = ECKeyPair.create(BytesUtils.toByteArray(AlicePrivateKey));
-		System.out.println(ByteUtils.toHexString(aliceKey.getRawPublicKey(false)));
+		System.out.println(Hex.toHexString(aliceKey.getRawPublicKey(false)));
 		System.out.println(aliceKey.getAddress());
 
 		System.out.println("Bob Key===================");
 		String BobPrivateKey = "cab2002ddebea021ef9da251ea92198cf6bbeb6de34d834078783fbd86446334";
 		ECKeyPair bobKey = ECKeyPair.create(BytesUtils.toByteArray(BobPrivateKey));
 		ECPoint bobPoint = ECKey.publicPointFromPrivate(BytesUtils.bytesToBigInt(BytesUtils.toByteArray(BobPrivateKey)));
-		System.out.println(ByteUtils.toHexString(bobKey.getRawPublicKey(false)));
+		System.out.println(Hex.toHexString(bobKey.getRawPublicKey(false)));
 		System.out.println(bobKey.getHexAddress());
 
-		ECPoint bobPoint1 = ECIESUtils.createECPointFromPublicKey(ByteUtils.toHexString(bobKey.getRawPublicKey(false)));
+		ECPoint bobPoint1 = ECIESUtils.createECPointFromPublicKey(Hex.toHexString(bobKey.getRawPublicKey(false)));
 		System.out.println(bobPoint.equals(bobPoint1));
 
 		System.out.println("S1 S2===================");
@@ -54,11 +55,11 @@ public class ECIESTest {
 
 		ECPoint R = ECKey.publicPointFromPrivate(BytesUtils.bytesToBigInt(BytesUtils.toByteArray(r)));
 		byte[] Rencoded = R.getEncoded(false);
-		System.out.println("R:" + ByteUtils.toHexString(Rencoded));
+		System.out.println("R:" + Hex.toHexString(Rencoded));
 		// remove prefix
 		byte[] Rencoded2 = BytesUtils.toBytesPadded(new BigInteger(1, Arrays.copyOfRange(Rencoded, 1, Rencoded.length)),
 				64);
-		System.out.println("R:" + ByteUtils.toHexString(Rencoded2));
+		System.out.println("R:" + Hex.toHexString(Rencoded2));
 
 		System.out.println("2. 计算共享密钥，S=Px，P=(Px,Py)=r*KB,这⾥里里KB为Bob的公钥");
 		ECPoint P = new FixedPointCombMultiplier().multiply(bobPoint,
@@ -70,8 +71,8 @@ public class ECIESTest {
 		byte[] pyBytes = new byte[32];
 		System.arraycopy(Pencoded2, 0, pxBytes, 0, pxBytes.length);
 		System.arraycopy(Pencoded2, 32, pyBytes, 0, pyBytes.length);
-		System.out.println("Px:" + ByteUtils.toHexString(pxBytes));
-		System.out.println("Py:" + ByteUtils.toHexString(pyBytes));
+		System.out.println("Px:" + Hex.toHexString(pxBytes));
+		System.out.println("Py:" + Hex.toHexString(pyBytes));
 
 		System.out.println("3. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
 
@@ -80,11 +81,11 @@ public class ECIESTest {
 		byte[] kmBytes = new byte[32];
 		System.arraycopy(K, 0, keBytes, 0, keBytes.length);
 		System.arraycopy(K, 32, kmBytes, 0, kmBytes.length);
-		System.out.println("Ke:" + ByteUtils.toHexString(keBytes));
-		System.out.println("Km:" + ByteUtils.toHexString(kmBytes));
+		System.out.println("Ke:" + Hex.toHexString(keBytes));
+		System.out.println("Km:" + Hex.toHexString(kmBytes));
 
-		System.out.println("Ke:" + ByteUtils.toHexString(Arrays.copyOfRange(K, 0, 32)));
-		System.out.println("Km:" + ByteUtils.toHexString(Arrays.copyOfRange(K, 32, K.length)));
+		System.out.println("Ke:" + Hex.toHexString(Arrays.copyOfRange(K, 0, 32)));
+		System.out.println("Km:" + Hex.toHexString(Arrays.copyOfRange(K, 32, K.length)));
 
 		System.out.println("4. 对消息进⾏行行加密，c=E(KE,m)");
 		byte[] ivBytes = new byte[16];
@@ -95,7 +96,7 @@ public class ECIESTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("c:" + ByteUtils.toHexString(cBytes));
+		System.out.println("c:" + Hex.toHexString(cBytes));
 
 		System.out.println("5. 计算加密信息的tag d，d=MAC(KM,c||S2)");
 		byte[] blakeContent = new byte[kmBytes.length + cBytes.length + s2bytes.length];
@@ -103,11 +104,11 @@ public class ECIESTest {
 		System.arraycopy(cBytes, 0, blakeContent, kmBytes.length, cBytes.length);
 		System.arraycopy(s2bytes, 0, blakeContent, kmBytes.length + cBytes.length, s2bytes.length);
 		byte[] dBytes = CryptoUtils.blake2b(blakeContent);
-		System.out.println("d:" + ByteUtils.toHexString(dBytes));
+		System.out.println("d:" + Hex.toHexString(dBytes));
 
 		System.out.println("6. 返回结果 R||c||d");
 		System.out.println(
-				ByteUtils.toHexString(Rencoded) + ByteUtils.toHexString(cBytes) + ByteUtils.toHexString(dBytes));
+				Hex.toHexString(Rencoded) + Hex.toHexString(cBytes) + Hex.toHexString(dBytes));
 
 		// 解密
 		System.out.println("解密======================");
@@ -130,8 +131,8 @@ public class ECIESTest {
 		byte[] py_client_bytes = new byte[32];
 		System.arraycopy(P_client_bytes_without_prefix, 0, px_client_bytes, 0, px_client_bytes.length);
 		System.arraycopy(P_client_bytes_without_prefix, 32, py_client_bytes, 0, py_client_bytes.length);
-		System.out.println("Px:" + ByteUtils.toHexString(px_client_bytes));
-		System.out.println("Py:" + ByteUtils.toHexString(py_client_bytes));
+		System.out.println("Px:" + Hex.toHexString(px_client_bytes));
+		System.out.println("Py:" + Hex.toHexString(py_client_bytes));
 
 		System.out.println("2. 使⽤用KDF算法，⽣生成对称加密密码和MAC的密码:KE||KM = KDF(S||S1)");
 		byte[] K_client = ECIESUtils.pbkdf2withsha512(px_client_bytes, BytesUtils.toByteArray(S1));
@@ -139,8 +140,8 @@ public class ECIESTest {
 		byte[] km_client_bytes = new byte[32];
 		System.arraycopy(K_client, 0, ke_client_bytes, 0, ke_client_bytes.length);
 		System.arraycopy(K_client, 32, km_client_bytes, 0, km_client_bytes.length);
-		System.out.println("Ke:" + ByteUtils.toHexString(ke_client_bytes));
-		System.out.println("Km:" + ByteUtils.toHexString(km_client_bytes));
+		System.out.println("Ke:" + Hex.toHexString(ke_client_bytes));
+		System.out.println("Km:" + Hex.toHexString(km_client_bytes));
 
 		System.out.println("3. 使⽤用Mac计算Mac是否正确:MAC(KM||c||S2)");
 		byte[] blake_client = new byte[km_client_bytes.length + cBytes.length + s2bytes.length];
@@ -148,7 +149,7 @@ public class ECIESTest {
 		System.arraycopy(cBytes, 0, blake_client, km_client_bytes.length, cBytes.length);
 		System.arraycopy(s2bytes, 0, blake_client, km_client_bytes.length + cBytes.length, s2bytes.length);
 		byte[] mac_bytes = CryptoUtils.blake2b(blake_client);
-		System.out.println("calc d:" + ByteUtils.toHexString(mac_bytes));
+		System.out.println("calc d:" + Hex.toHexString(mac_bytes));
 
 		System.out.println("4. 解码原始加密⽂文件，解码密码为Ke，c为收到的加密⽂文件");
 		byte[] iv_client_bytes = new byte[16];

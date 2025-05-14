@@ -6,16 +6,17 @@ import java.util.HashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kong.unirest.core.HttpResponse;
+import kong.unirest.core.Unirest;
+import kong.unirest.core.UnirestException;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
@@ -29,7 +30,9 @@ import com.vechain.thorclient.utils.URLUtils;
 
 public abstract class AbstractClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractClient.class);
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public enum Path {
 
@@ -88,13 +91,9 @@ public abstract class AbstractClient {
     }
 
     public static void setTimeout(int timeout) {
-        try {
-            logger.warn("setTimeout:{}", timeout);
-            Unirest.shutdown();
-        } catch (IOException e) {
-            logger.error("Unirest shutdown error", e);
-        }
-        Unirest.setTimeouts(timeout, timeout);
+        LOGGER.warn("setTimeout: " + timeout);
+        Unirest.config().reset();
+        Unirest.config().connectTimeout(timeout).requestTimeout(timeout);
     }
 
     /**
@@ -105,8 +104,8 @@ public abstract class AbstractClient {
      * @param queryParams query string parameters
      * @param tClass      the class of result java object.
      * @param <T>         Type of result java object.
-     * @return response java object, could be null, mean can not find any result.
-     * @throws IOException node is not reachable or request is not valid.
+     * @return response java object, could be null, mean cannot find any result.
+     * @throws IOException if the node is not reachable or the request is not valid.
      */
     public static <T> T sendGetRequest(
             final Path path,
@@ -141,9 +140,12 @@ public abstract class AbstractClient {
                     exception_msg + " " + body);
             clientIOException.setHttpStatus(status);
             throw clientIOException;
-        } else {
-            return JSON.parseObject(body, tClass);
+        } else try {
+            return OBJECT_MAPPER.readValue(body, tClass);
+        } catch (JsonProcessingException e) {
+            throw new ClientIOException(e);
         }
+
     }
 
     /**
@@ -154,8 +156,8 @@ public abstract class AbstractClient {
      * @param queryParams query string parameters
      * @param tClass      the class of result java object.
      * @param <T>         Type of result java object.
-     * @return response java object, could be null, mean can not find any result.
-     * @throws ClientIOException http status 4xx means not enough energy amount.
+     * @return response java object, could be null, mean cannot find any result.
+     * @throws ClientIOException http status 4xx means not enough energy amounts.
      */
     public static <T> T sendPostRequest(
             final Path path, HashMap<String, String> uriParams,
@@ -165,11 +167,15 @@ public abstract class AbstractClient {
     ) throws ClientIOException {
         final String rawURL = rawUrl(path);
         final String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
-        final String postJSON = JSON.toJSONString(postBody);
         try {
-            HttpResponse<String> jsonNode = Unirest.post(postURL).body(postJSON).asString();
-            return parseResult(tClass, jsonNode);
-        } catch (UnirestException e) {
+            final String postJSON = OBJECT_MAPPER.writeValueAsString(postBody);
+            try {
+                final HttpResponse<String> jsonNode = Unirest.post(postURL).body(postJSON).asString();
+                return parseResult(tClass, jsonNode);
+            } catch (UnirestException e) {
+                throw new ClientIOException(e);
+            }
+        } catch (JsonProcessingException e) {
             throw new ClientIOException(e);
         }
     }
@@ -189,27 +195,27 @@ public abstract class AbstractClient {
         WebSocketClient client = new WebSocketClient();
         SubscribeSocket subscribeSocket = new SubscribeSocket(client, callback);
         try {
-            logger.info("subscribeSocketConnect start connect ... {}", url);
+            LOGGER.info("subscribeSocketConnect start connect ... {}", url);
             client.start();
             URI subUri = new URI(url);
             ClientUpgradeRequest request = new ClientUpgradeRequest();
             Future<Session> f = client.connect(subscribeSocket, subUri, request);
-            logger.info("subscribeSocketConnect end connect...");
+            LOGGER.info("subscribeSocketConnect end connect...");
             Session s = f.get(10, TimeUnit.SECONDS);
             if (s.isOpen()) {
-                logger.info("subscribeSocketConnect success:{}", s.getRemoteAddress().toString());
+                LOGGER.info("subscribeSocketConnect success: {}", s.getRemoteAddress().toString());
             } else {
-                logger.error("subscribeSocketConnect failed:{}", s.isOpen());
+                LOGGER.error("subscribeSocketConnect failed: " + s.isOpen());
             }
         } catch (Exception e) {
-            logger.error("SubscribeSocket error", e);
+            LOGGER.error("SubscribeSocket error", e);
         } finally {
             if (!subscribeSocket.isConnected()) {
-                logger.info("subscribeSocketConnect stop...");
+                LOGGER.info("subscribeSocketConnect stop...");
                 try {
                     subscribeSocket.close(0, "WebSocket can't connect to: " + url);
                 } catch (Exception e) {
-                    logger.error("SubscribeSocket stop error", e);
+                    LOGGER.error("SubscribeSocket stop error", e);
                 }
             }
         }

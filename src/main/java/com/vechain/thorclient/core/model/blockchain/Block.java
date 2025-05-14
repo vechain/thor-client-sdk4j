@@ -160,19 +160,19 @@ public class Block implements Serializable {
         this.signer = signer;
     }
 
-    public boolean getTrunk() {
+    public boolean getIsTrunk() {
         return isTrunk;
     }
 
-    public boolean setTrunk(boolean trunk) {
+    public boolean setIsTrunk(boolean trunk) {
         return isTrunk = trunk;
     }
 
-    public boolean getFinalized() {
+    public boolean getIsFinalized() {
         return isFinalized;
     }
 
-    public boolean setFinalized(boolean finalized) {
+    public boolean setIsFinalized(boolean finalized) {
         return isFinalized = finalized;
     }
 
