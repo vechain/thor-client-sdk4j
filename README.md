@@ -1,7 +1,7 @@
 # Thor Java Client SDK
 [![Build Status](https://travis-ci.org/vechain/thor-client-sdk4j.svg?branch=master)](https://travis-ci.org/vechain/thor-client-sdk4j.svg?branch=master)
 
-A SDK toolkit for client to call VeChainThor Restful API.
+A SDK toolkit for JDK to call VeChainThor Restful API.
 
 > [!WARNING]  
 > This repository is not actively maintained.
