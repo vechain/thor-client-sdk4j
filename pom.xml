@@ -31,6 +31,7 @@
 
     <dependencies>
         <!-- COMPILE -->
+        <!-- Compile scope included in the delivered jar artifact - SECURITY SENSITIVE -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -96,6 +97,7 @@
         </dependency>
 
         <!-- TEST -->
+        <!-- Test scope is not included in the delivered jar artifact - NOT SECURITY SENSITIVE -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -104,6 +106,7 @@
         </dependency>
 
         <!-- MAVEN -->
+        <!-- Used by maven to build the jar artifact, not included in the built jar - NOT SECURITY SENSITIVE -->
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
