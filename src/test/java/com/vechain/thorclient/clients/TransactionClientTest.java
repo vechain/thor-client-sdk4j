@@ -145,7 +145,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testSendVTHOTransaction() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -185,7 +185,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testSendRemarkTx() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -227,7 +227,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testSendVETTransaction() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -259,6 +259,21 @@ public class TransactionClientTest extends BaseTest {
         final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
+    }
+
+    @Test
+    public void testSendVETTransactionWithDynamicFee() {
+        // Set in `config.properties`.
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransactionWithDynamicFee.fromPrivateKey");
+        // Set in `config.properties`.
+        final Address toAddress = Address.fromHexString(
+                System.getProperty("TransactionClientTest.testSendVETTransactionWithDynamicFee.toAddress")
+        );
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
+        final Amount amount = Amount.createFromToken(AbstractToken.VET);
+        amount.setDecimalAmount("100");
+        final ToClause clause = TransactionClient.buildVETToClause(toAddress, amount, ToData.ZERO);
     }
 
     private static RawTransaction generatingVETRawTxn(
@@ -316,7 +331,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VET() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -348,7 +363,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VTHO() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -381,7 +396,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -414,5 +429,32 @@ public class TransactionClientTest extends BaseTest {
         logger.info("Calc txId: {}", txIdHex);
         Assert.assertNotNull(transferResult);
         Assert.assertEquals(txIdHex, transferResult.getId());
+    }
+
+    @Test
+    public void testDynamicFeeVETTransferWithMaxFeePerGasAndMaxPriorityFeePerGas() {
+        ToClause clause = new ToClause(
+                Address.fromHexString("0x62226ae029dabcf90f3cb66f091919d2687d5257"),
+                Amount.createFromToken(AbstractToken.VET).setDecimalAmount("0"),
+                ToData.ZERO
+        );
+        byte[] blockRef = {
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+        };
+        byte[] nonce = new byte[0xff];
+        RawTransaction rtx = RawTransactionFactory.getInstance().createRawTransaction(
+                (byte) 0xf6,    // chainTag
+                blockRef,       // blockRef
+                32,             // expiration
+                21000,          // gasInt
+                (byte) 128,     // gasPriceCoef
+                nonce,
+                clause
+        );
+        String hex = BytesUtils.toHexString(rtx.encode(), Prefix.ZeroLowerX);
+        logger.info("Raw tx: {}", hex);
+        // J 0xed81.f6.0020e0df94.62226ae029dabcf90f3cb66f091919d2687d5257.880de0b6b3a76400008081808252088000c0
+        // T 0xe681.f6.8020d8d794.62226ae029dabcf90f3cb66f091919d2687d5257.018081808252088081ffc0
+
     }
 }

@@ -47,13 +47,10 @@ public class RawTransactionBuilder {
 		return this;
 	}
 
-
-
 	/**
 	 * @return
 	 */
 	public RawTransaction build() {
-
 		RawTransaction rawTransaction = new RawTransaction();
 		BeanRefUtils.setFieldValue(rawTransaction, this.refValue);
 		rawTransaction.setClauses(clauses);

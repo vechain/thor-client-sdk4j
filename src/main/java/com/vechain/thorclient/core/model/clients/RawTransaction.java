@@ -3,10 +3,10 @@ package com.vechain.thorclient.core.model.clients;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.utils.RLPUtils;
 
-public class RawTransaction {
-    private byte chainTag; // 1 bytes
-    private byte[] blockRef; //8 bytes
-    private byte[] expiration; //4 bytes
+public class RawTransaction implements TransactionCommonalities {
+    private byte chainTag;      // 1 byte
+    private byte[] blockRef;    // 8 bytes
+    private byte[] expiration;  // 4 bytes
     private RawClause[] clauses;
 
     // 1-255 used baseprice 255 used 2x base price
@@ -16,12 +16,11 @@ public class RawTransaction {
     private byte[] gas;//64 bytes
     private byte[] dependsOn;
     private byte[] nonce;    //8 bytes
-    private byte[] signature;
     private TransactionReserved reserved;
+    private byte[] signature;
 
-    public RawTransaction(){
+    public RawTransaction() {
     }
-
 
     public byte getChainTag() {
         return chainTag;
@@ -87,6 +86,14 @@ public class RawTransaction {
         this.nonce = nonce;
     }
 
+    public TransactionReserved getReserved() {
+        return reserved;
+    }
+
+    public void setReserved(TransactionReserved reserved) {
+        this.reserved = reserved;
+    }
+
     public byte[] getSignature() {
         return signature;
     }
@@ -96,32 +103,22 @@ public class RawTransaction {
     }
 
 
-    public TransactionReserved getReserved() {
-        return reserved;
-    }
-
-
-    public byte[] encode(){
+    public byte[] encode() {
         return RLPUtils.encodeRawTransaction(this);
     }
 
-
-    public RawTransaction copy(){
+    public RawTransaction copy() {
         RawTransaction transaction = new RawTransaction();
-        transaction.setSignature( this.signature );
-        transaction.setClauses( this.clauses );
-        transaction.setBlockRef( this.blockRef );
-        transaction.setDependsOn( this.dependsOn );
-        transaction.setChainTag( this.chainTag );
-        transaction.setExpiration( this.expiration );
-        transaction.setGasPriceCoef( this.gasPriceCoef );
-        transaction.setNonce( this.nonce );
-        transaction.setGas( this.gas );
-        transaction.setReserved( this.reserved );
+        transaction.setChainTag(this.chainTag);
+        transaction.setBlockRef(this.blockRef);
+        transaction.setExpiration(this.expiration);
+        transaction.setClauses(this.clauses);
+        transaction.setGasPriceCoef(this.gasPriceCoef);
+        transaction.setGas(this.gas);
+        transaction.setDependsOn(this.dependsOn);
+        transaction.setNonce(this.nonce);
+        transaction.setReserved(this.reserved);
+        transaction.setSignature(this.signature);
         return transaction;
-    }
-
-    public void setReserved(TransactionReserved reserved) {
-        this.reserved = reserved;
     }
 }

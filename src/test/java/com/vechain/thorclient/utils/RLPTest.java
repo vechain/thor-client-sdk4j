@@ -19,69 +19,69 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @RunWith(JUnit4.class)
 public class RLPTest extends BaseTest {
 
 
     @Test
-    public void testByteArray(){
+    public void testByteArray() {
         List<RlpType> result = new ArrayList<>();
-        result.add( RlpString.create(new byte[]{}));
+        result.add(RlpString.create(new byte[]{}));
 
         RlpList rlpList = new RlpList(result);
-        byte[] empty =  RlpEncoder.encode(rlpList);
+        byte[] empty = RlpEncoder.encode(rlpList);
 
         logger.info("RLP empty array:" + BytesUtils.toHexString(empty, Prefix.ZeroLowerX));
 
     }
+
     @Test
-    public void testZero(){
+    public void testZero() {
         List<RlpType> result = new ArrayList<>();
         RlpList rlpList = new RlpList(result);
-        result.add( RlpString.create( BigInteger.ZERO));
-        byte[] empty =  RlpEncoder.encode(rlpList);
+        result.add(RlpString.create(BigInteger.ZERO));
+        byte[] empty = RlpEncoder.encode(rlpList);
 
         logger.info("RLP zero array:" + BytesUtils.toHexString(empty, Prefix.ZeroLowerX));
     }
 
     @Test
-    public void testBytesZero(){
+    public void testBytesZero() {
         List<RlpType> result = new ArrayList<>();
-        byte zeros[] = new byte[32];
-        result.add( RlpString.create(zeros));
+        byte[] zeros = new byte[32];
+        result.add(RlpString.create(zeros));
 
         RlpList rlpList = new RlpList(result);
-        byte[] empty =  RlpEncoder.encode(rlpList);
+        byte[] empty = RlpEncoder.encode(rlpList);
         logger.info("RLP zeros array:" + BytesUtils.toHexString(empty, Prefix.ZeroLowerX));
     }
 
     @Test
-    public void testDecodeRlp(){
+    public void testDecodeRlp() {
         String hexRaw = "0xf83d81c7860881eec535498202d0e1e094000000002beadb038203be21ed5ce7c9b1bff60289056bc75e2d63100000808082520880884773cc184328eb3ec0";
-        RawTransaction rawTransaction =  RLPUtils.decode(hexRaw );
-        byte[] encoded = RLPUtils.encodeRawTransaction( rawTransaction );
-        String hexEncoded = BytesUtils.toHexString( encoded, Prefix.ZeroLowerX );
+        RawTransaction rawTransaction = RLPUtils.decode(hexRaw);
+        byte[] encoded = RLPUtils.encodeRawTransaction(rawTransaction);
+        String hexEncoded = BytesUtils.toHexString(encoded, Prefix.ZeroLowerX);
         Assert.assertEquals(hexRaw, hexEncoded);
     }
 
     @Test
-    public void testDecodeRawTxn(){
-        String hexRawTxn ="0xf83d81c7860881eec535498202d0e1e094000000002beadb038203be21ed5ce7c9b1bff60289056bc75e2d63100000808082520880884773cc184328eb3ec0";
-        RawTransaction rawTransaction =  RLPUtils.decode(hexRawTxn );
+    public void testDecodeRawTx() {
+        String hexRawTx = "0xf83d81c7860881eec535498202d0e1e094000000002beadb038203be21ed5ce7c9b1bff60289056bc75e2d63100000808082520880884773cc184328eb3ec0";
+        RawTransaction rawTransaction = RLPUtils.decode(hexRawTx);
         RawClause[] rawClauses = rawTransaction.getClauses();
         int index = 1;
-        for(RawClause rawClause : rawClauses){
+        for (RawClause rawClause : rawClauses) {
             byte[] addressBytes = rawClause.getTo();
             byte[] valueBytes = rawClause.getValue();
             Amount amount = Amount.VET();
-            amount.setHexAmount( BytesUtils.toHexString( valueBytes, Prefix.ZeroLowerX ) );
-            logger.info( index +".-----------------start------------------------------------" );
-            logger.info( "Address:" + BytesUtils.toHexString( addressBytes, Prefix.ZeroLowerX ) );
-            logger.info( "Value:" + amount.getAmount().toPlainString());
-            logger.info( "-----------------end------------------------------------" );
+            amount.setHexAmount(BytesUtils.toHexString(valueBytes, Prefix.ZeroLowerX));
+            logger.info(index + ".-----------------start------------------------------------");
+            logger.info("Address:" + BytesUtils.toHexString(addressBytes, Prefix.ZeroLowerX));
+            logger.info("Value:" + amount.getAmount().toPlainString());
+            logger.info("-----------------end------------------------------------");
             index++;
         }
-
     }
+
 }
