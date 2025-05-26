@@ -1,8 +1,10 @@
 package com.vechain.thorclient.utils;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.utils.merkle.*;
-import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,115 +18,121 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-@Slf4j
 @RunWith(JUnit4.class)
-public class MerkleTreeUtilsTest {
+public class MerkleTreeUtilsTest extends BaseTest {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
-	MerkleTree tree;
-	List<MerkleLeaf> leaves;
-	MessageDigest messageDigest = null;
+    final boolean prettyFormat = isPretty();
 
-	@Before
-	public void setup() {
+    final ObjectMapper objectMapper = new ObjectMapper();
 
-		try {
-			messageDigest = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			assert false;
-		}
-		leaves = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
-			byte[] randomBytes = new byte[] { (byte) i };
-			MerkleLeaf leaf = new MerkleLeaf(randomBytes);
-			leaves.add(leaf);
-		}
-		tree = MerkleTreeUtils.build(leaves, messageDigest);
-	}
+    final ObjectWriter writer = prettyFormat ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
 
-	@Test
-	public void testBuildMerkleTree() {
-		IBinaryTreeNode temp = tree;
-		List<byte[]> traversalList = new ArrayList<>();
-		MerkleTreeUtils.recursionPreorderTraversal(temp, traversalList);
-		for (byte[] value : traversalList) {
-			logger.info("value: {}", BytesUtils.toHexString(value, Prefix.ZeroLowerX));
-		}
-	}
 
-	@Test
-	public void getMerkleProofTest() {
-		MerkleLeaf leaf = leaves.get(1);
-		MerkleProof proof = MerkleProver.getProvementNode(leaf);
-		int level = 0;
-		MerkleProof tempProof = proof;
-		while (tempProof != null) {
-			logger.info("level {} - self value:{}", level,
-					BytesUtils.toHexString(tempProof.getSelfNode().getValue(), Prefix.ZeroLowerX));
-			if (tempProof.getBrotherNode() != null) {
-				logger.info("brother node value {}",
-						BytesUtils.toHexString(tempProof.getBrotherNode().getValue(), Prefix.ZeroLowerX));
-			}
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    MerkleTree tree;
+    List<MerkleLeaf> leaves;
+    MessageDigest messageDigest = null;
 
-			level = level + 1;
-			tempProof = tempProof.getParentProof();
-		}
-	}
+    @Before
+    public void setup() {
 
-	@Test
-	public void getMerkleProofValueTest() {
-		MerkleLeaf leaf = leaves.get(2);
-		List<ProofValue> values = MerkleTreeUtils.getMerkleProof(leaf);
-		String string = JSON.toJSONString(values);
-		System.out.println("Proof value: " + string);
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            assert false;
+        }
+        leaves = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            byte[] randomBytes = new byte[]{(byte) i};
+            MerkleLeaf leaf = new MerkleLeaf(randomBytes);
+            leaves.add(leaf);
+        }
+        tree = MerkleTreeUtils.build(leaves, messageDigest);
+    }
 
-	}
+    @Test
+    public void testBuildMerkleTree() {
+        IBinaryTreeNode temp = tree;
+        List<byte[]> traversalList = new ArrayList<>();
+        MerkleTreeUtils.recursionPreorderTraversal(temp, traversalList);
+        for (byte[] value : traversalList) {
+            logger.info("value: {}", BytesUtils.toHexString(value, Prefix.ZeroLowerX));
+        }
+    }
 
-	@Test
-	public void recoverMerkleRootTest() {
+    @Test
+    public void getMerkleProofTest() {
+        MerkleLeaf leaf = leaves.get(1);
+        MerkleProof proof = MerkleProver.getProvementNode(leaf);
+        int level = 0;
+        MerkleProof tempProof = proof;
+        while (tempProof != null) {
+            logger.info("level " + level
+                    + " - self value: " + BytesUtils.toHexString(tempProof.getSelfNode().getValue(), Prefix.ZeroLowerX)
+            );
+            if (tempProof.getBrotherNode() != null) {
+                logger.info("brother node value {}",
+                        BytesUtils.toHexString(tempProof.getBrotherNode().getValue(), Prefix.ZeroLowerX));
+            }
+
+            level = level + 1;
+            tempProof = tempProof.getParentProof();
+        }
+    }
+
+    @Test
+    public void getMerkleProofValueTest() throws JsonProcessingException {
+        MerkleLeaf leaf = leaves.get(2);
+        List<ProofValue> values = MerkleTreeUtils.getMerkleProof(leaf);
+        String string = writer.writeValueAsString(values);
+        logger.info("Proof value: {}", string);
+
+    }
+
+    @Test
+    public void recoverMerkleRootTest() throws JsonProcessingException {
 //        Random random = new Random();
 //        int index = random.nextInt( leaves.size() );
 //        ArrayList<byte[]> arrayList = new ArrayList<>();
-		MerkleLeaf leaf = leaves.get(11);
-		List<byte[]> nodeValues = new ArrayList<>();
-		MerkleTreeUtils.recursionPreorderTraversal(tree, nodeValues);
-		for (byte[] value : nodeValues) {
-			logger.info("Merkle Tree node value: {}", BytesUtils.toHexString(value, Prefix.ZeroLowerX));
-		}
-		List<ProofValue> values = MerkleTreeUtils.getMerkleProof(leaf);
-		System.out.println("proof:" + JSON.toJSONString(values));
-		byte[] recoverRoot = MerkleTreeUtils.recoverMerkleRoot(leaf.getValue(), values, messageDigest);
+        MerkleLeaf leaf = leaves.get(11);
+        List<byte[]> nodeValues = new ArrayList<>();
+        MerkleTreeUtils.recursionPreorderTraversal(tree, nodeValues);
+        for (byte[] value : nodeValues) {
+            logger.info("Merkle Tree node value: {}", BytesUtils.toHexString(value, Prefix.ZeroLowerX));
+        }
+        List<ProofValue> values = MerkleTreeUtils.getMerkleProof(leaf);
+        logger.info("proof: {}", writer.writeValueAsString(values));
+        byte[] recoverRoot = MerkleTreeUtils.recoverMerkleRoot(leaf.getValue(), values, messageDigest);
 
-		logger.info("recover root:{}", BytesUtils.toHexString(recoverRoot, Prefix.ZeroLowerX));
-		logger.info("merkle root: {}", BytesUtils.toHexString(tree.getValue(), Prefix.ZeroLowerX));
-		Assert.assertEquals(BytesUtils.toHexString(tree.getValue(), Prefix.ZeroLowerX),
-				BytesUtils.toHexString(recoverRoot, Prefix.ZeroLowerX));
-	}
+        logger.info("recover root:{}", BytesUtils.toHexString(recoverRoot, Prefix.ZeroLowerX));
+        logger.info("merkle root: {}", BytesUtils.toHexString(tree.getValue(), Prefix.ZeroLowerX));
+        Assert.assertEquals(BytesUtils.toHexString(tree.getValue(), Prefix.ZeroLowerX),
+                BytesUtils.toHexString(recoverRoot, Prefix.ZeroLowerX));
+    }
 
-	@Test
-	public void benchmarkMerkleTree() {
-		List<MerkleLeaf> list = new ArrayList<>();
+    @Test
+    public void benchmarkMerkleTree() {
+        List<MerkleLeaf> list = new ArrayList<>();
 
-		for (int i = 0; i < 100000; i++) {
-			byte[] randomBytes = CryptoUtils.randomBytes(32);
-			MerkleLeaf leaf = new MerkleLeaf(randomBytes);
-			list.add(leaf);
-		}
-		logger.info("leaves size: {}", list.size());
-		long startTime = System.currentTimeMillis();
-		logger.info("Start:{}", startTime);
-		MerkleTree currentTree = MerkleTreeUtils.build(list, messageDigest);
-		long delta = System.currentTimeMillis() - startTime;
-		logger.info("elapsed time: {}", delta);
-		ArrayList<byte[]> recursion = new ArrayList();
-		MerkleTreeUtils.recursionPreorderTraversal(currentTree, recursion);
+        for (int i = 0; i < 100000; i++) {
+            byte[] randomBytes = CryptoUtils.randomBytes(32);
+            MerkleLeaf leaf = new MerkleLeaf(randomBytes);
+            list.add(leaf);
+        }
+        logger.info("leaves size: " + list.size());
+        long startTime = System.currentTimeMillis();
+        logger.info("Start: " + startTime);
+        MerkleTree currentTree = MerkleTreeUtils.build(list, messageDigest);
+        long delta = System.currentTimeMillis() - startTime;
+        logger.info("elapsed time: " + delta);
+        ArrayList<byte[]> recursion = new ArrayList();
+        MerkleTreeUtils.recursionPreorderTraversal(currentTree, recursion);
 //        for(byte[] value : recursion){
 //            logger.info( "value:" + BytesUtils.toHexString( value, Prefix.ZeroLowerX ) );
 //        }
-		logger.info("Size is: {}", recursion.size());
-	}
+        logger.info("Size is: " + recursion.size());
+    }
 
 }

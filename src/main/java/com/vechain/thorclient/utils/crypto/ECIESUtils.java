@@ -7,7 +7,7 @@ import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+import org.bouncycastle.util.encoders.Hex;
 import org.eclipse.jetty.io.RuntimeIOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +104,7 @@ public class ECIESUtils {
 		byte[] dBytes = Arrays.copyOfRange(cryptedMessage, cryptedMessage.length - 32, cryptedMessage.length);
 
 		logger.debug("1. 计算共享密钥，S=Px。 P=(Px,Py)=kb*R=kb*r*G=r*kb*G=r*KB");
-		ECPoint R = ECIESUtils.createECPointFromPublicKey(ByteUtils.toHexString(Rbytes));
+		ECPoint R = ECIESUtils.createECPointFromPublicKey(Hex.toHexString(Rbytes));
 		PublicKeyECPoint P = ECIESUtils.multiply(R, BytesUtils.toByteArray(receiverPrivateKey));
 
 
@@ -118,10 +118,11 @@ public class ECIESUtils {
 		logger.debug("3. 使⽤用Mac计算Mac是否正确:MAC(KM||c||S2)");
 		byte[] calcD = calcSignature(shareKeyBytes, kmBytes, msgBytes);
 
-		if (!ByteUtils.toHexString(calcD).equals(ByteUtils.toHexString(dBytes))) {
-			logger.error("different d:{} calc:{}", ByteUtils.toHexString(dBytes), ByteUtils.toHexString(calcD));
+		if (!Hex.toHexString(calcD).equals(Hex.toHexString(dBytes))) {
+			logger.error("different d:{} calc:{}", Hex.toHexString(dBytes), Hex.toHexString(calcD));
 			throw new RuntimeIOException("decrypt error : 加密信息的tag验证失败");
 		}
+
 
 		logger.debug("4. 解码原始加密⽂文件，解码密码为Ke，c为收到的加密⽂文件");
 		try {

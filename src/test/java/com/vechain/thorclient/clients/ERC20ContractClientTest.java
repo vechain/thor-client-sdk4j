@@ -1,12 +1,14 @@
 package com.vechain.thorclient.clients;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.vechain.thorclient.utils.Prefix;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.alibaba.fastjson.JSON;
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.Receipt;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
@@ -20,6 +22,10 @@ public class ERC20ContractClientTest extends BaseTest {
 
     final boolean prettyFormat = isPretty();
 
+    final ObjectMapper objectMapper = new ObjectMapper();
+
+    final ObjectWriter writer = prettyFormat ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
+
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/accounts-address/get
     // Solo tested.
     // GET http://localhost:8669/accounts/0x3e3d79163b08502a086213cd09660721740443d7
@@ -30,7 +36,7 @@ public class ERC20ContractClientTest extends BaseTest {
         final Address address = Address.fromHexString(System.getProperty("ERC20ContractClientTest.testGetERC20Balance"));
         final Amount balance = ERC20ContractClient.getERC20Balance(address, ERC20Token.VTHO, null);
         if (balance != null) {
-            logger.info("Get VTHO: " + balance.getAmount());
+            logger.info("Get VTHO: {}", balance.getAmount());
         }
 
         Assert.assertNotNull(balance);
@@ -39,7 +45,7 @@ public class ERC20ContractClientTest extends BaseTest {
     // Galactica documented at: http://127.0.0.1:8669/doc/stoplight-ui/#/paths/accounts-*/post
     // Solo tested.
     @Test
-    public void testTransferERC20Token() {
+    public void testTransferERC20Token() throws JsonProcessingException {
         // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty("ERC20ContractClientTest.testTransferERC20Token.fromKey");
         final Address fromAddress = Address.fromBytes(ECKeyPair.create(fromPrivateKey).getRawAddress());
@@ -80,7 +86,7 @@ public class ERC20ContractClientTest extends BaseTest {
                 720,
                 ECKeyPair.create(fromPrivateKey)
         );
-        logger.info("transferERC20Token: " + JSON.toJSONString(transferResult, prettyFormat));
+        logger.info("transferERC20Token: {}", writer.writeValueAsString(transferResult));
 
         try {
             Thread.sleep(10000);
@@ -91,7 +97,7 @@ public class ERC20ContractClientTest extends BaseTest {
         }
 
         final Receipt receipt = TransactionClient.getTransactionReceipt(transferResult.getId(), null);
-        logger.info("Receipt: " + JSON.toJSONString(receipt, prettyFormat));
+        logger.info("Receipt: {}", writer.writeValueAsString(receipt));
 
         final Amount fromBalanceAfter = ERC20ContractClient.getERC20Balance(fromAddress, ERC20Token.VTHO, null);
         if (fromBalanceAfter != null) {

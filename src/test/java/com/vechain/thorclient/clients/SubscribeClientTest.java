@@ -1,6 +1,8 @@
 package com.vechain.thorclient.clients;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.clients.base.SubscribeSocket;
 import com.vechain.thorclient.clients.base.SubscribingCallback;
@@ -15,7 +17,12 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SubscribeClientTest extends BaseTest {
 
-    final boolean prettyFormat = true;
+    final boolean prettyFormat = isPretty();
+
+    final ObjectMapper objectMapper = new ObjectMapper();
+
+    final ObjectWriter writer = prettyFormat ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
+
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/subscriptions-block/get
     // Solo tested
@@ -24,12 +31,12 @@ public class SubscribeClientTest extends BaseTest {
         SubscribingCallback<BlockSubscribingResponse> callback = new SubscribingCallback<BlockSubscribingResponse>() {
             @Override
             public void onClose(int statusCode, String reason) {
-                logger.info("On close: " + statusCode + " reason: " + reason);
+                logger.info("On close: {} reason {}", statusCode, reason);
             }
 
             @Override
             public void onConnect(Session session) {
-                logger.info("On connect: " + session.toString());
+                logger.info("On connect: {}", session.toString());
             }
 
             @Override
@@ -38,8 +45,8 @@ public class SubscribeClientTest extends BaseTest {
             }
 
             @Override
-            public void onSubscribe(BlockSubscribingResponse response) {
-                logger.info("Block Response :" + JSON.toJSONString(response, prettyFormat));
+            public void onSubscribe(BlockSubscribingResponse response) throws JsonProcessingException {
+                logger.info("Block Response: {}", writer.writeValueAsString(response));
             }
         };
         final SubscribeSocket socket = SubscribeClient.subscribeBlock(null, callback);
