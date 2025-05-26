@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
@@ -46,7 +47,7 @@ public class TransactionClientTest extends BaseTest {
         final Block block = BlockClient.getBlock(Revision.create(blockRevision));
         final ArrayList<String> transactions = block.getTransactions();
         Assert.assertNotNull(transactions);
-        Assert.assertTrue(transactions.size() > 0);
+        Assert.assertTrue(!transactions.isEmpty());
         transactions.forEach(txId -> {
             final Transaction transaction = TransactionClient.getTransaction(txId, false, null);
             try {
@@ -75,7 +76,7 @@ public class TransactionClientTest extends BaseTest {
         final Block block = BlockClient.getBlock(Revision.create(blockRevision));
         final ArrayList<String> transactions = block.getTransactions();
         Assert.assertNotNull(transactions);
-        Assert.assertTrue(transactions.size() > 0);
+        Assert.assertTrue(!transactions.isEmpty());
         transactions.forEach(txId -> {
             final Transaction transaction = TransactionClient.getTransaction(txId, true, null);
             try {
@@ -131,7 +132,7 @@ public class TransactionClientTest extends BaseTest {
         final Block block = BlockClient.getBlock(Revision.create(blockRevision));
         final ArrayList<String> transactions = block.getTransactions();
         Assert.assertNotNull(transactions);
-        Assert.assertTrue(transactions.size() > 0);
+        Assert.assertTrue(!transactions.isEmpty());
         transactions.forEach(txId -> {
             final Receipt receipt = TransactionClient.getTransactionReceipt(txId, null);
             try {
@@ -178,7 +179,7 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertNotNull(result);
         final String txIdHex = BlockchainUtils.generateTransactionId(
                 rawTransaction,
-                Address.fromHexString(ECKeyPair.create(fromPrivateKey).getHexAddress())
+                Address.fromHexString(ECKeyPair.create(fromPrivateKey).getAddress())
         );
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
@@ -197,9 +198,7 @@ public class TransactionClientTest extends BaseTest {
         final ToData toData = new ToData();
         final int size = 47 * 1000;
         final byte[] k64 = new byte[size];
-        for (int i = 0; i < size; i++) {
-            k64[i] = (byte) 0xff;
-        }
+        Arrays.fill(k64, (byte) 0xff);
         toData.setData(BytesUtils.toHexString(k64, Prefix.ZeroLowerX));
         final ToClause clause = TransactionClient.buildVETToClause(
                 Address.fromHexString(toAddress),
@@ -220,7 +219,7 @@ public class TransactionClientTest extends BaseTest {
         TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
         logger.info("SendVET result: {}", writer.writeValueAsString(result));
         Assert.assertNotNull(result);
-        final String fromAddress = ECKeyPair.create(fromPrivateKey).getHexAddress();
+        final String fromAddress = ECKeyPair.create(fromPrivateKey).getAddress();
         final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(fromAddress));
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
@@ -255,7 +254,7 @@ public class TransactionClientTest extends BaseTest {
         final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
         logger.info("SendVET result: {}", writer.writeValueAsString(result));
         Assert.assertNotNull(result);
-        final String hexAddress = ECKeyPair.create(fromPrivateKey).getHexAddress();
+        final String hexAddress = ECKeyPair.create(fromPrivateKey).getAddress();
         final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
@@ -274,17 +273,20 @@ public class TransactionClientTest extends BaseTest {
         final Amount amount = Amount.createFromToken(AbstractToken.VET);
         amount.setDecimalAmount("100");
         final ToClause clause = TransactionClient.buildVETToClause(toAddress, amount, ToData.ZERO);
-        final RawTransactionEIP1559 rawTransaction = RawTransactionFactory.getInstance().createRawTransactionEIP1559(
+        final RawTransactionEIP1559 rawTxEIP1559 = RawTransactionFactory.getInstance().createRawTransactionEIP1559(
                 chainTag,
                 blockRef,
                 720,
                 21000,
-                1000000l,
-                10000000000000l,
+                1000000L,
+                10000000000000L,
                 CryptoUtils.generateTxNonce(),
                 clause
         );
-        logger.info("SendVET Raw: {}", BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
+        final String hex = BytesUtils.toHexString(rawTxEIP1559.encode(), Prefix.ZeroLowerX);
+        logger.info("SendVET Raw: {}", hex);
+        RawTransactionEIP1559 actual = RLPUtils.decodeEIP1559(hex);
+        logger.info("SendVET Raw: {}", BytesUtils.toHexString(actual.encode(), Prefix.ZeroLowerX));
     }
 
     private static RawTransaction generatingVETRawTxn(
