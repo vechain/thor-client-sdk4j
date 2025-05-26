@@ -262,18 +262,29 @@ public class TransactionClientTest extends BaseTest {
     }
 
     @Test
-    public void testSendVETTransactionWithDynamicFee() {
+    public void testSendVETTransactionEIP1559() {
         // Set in `config.properties`.
-        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransactionWithDynamicFee.fromPrivateKey");
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransactionEIP1559.fromPrivateKey");
         // Set in `config.properties`.
         final Address toAddress = Address.fromHexString(
-                System.getProperty("TransactionClientTest.testSendVETTransactionWithDynamicFee.toAddress")
+                System.getProperty("TransactionClientTest.testSendVETTransactionEIP1559.toAddress")
         );
         final byte chainTag = BlockchainClient.getChainTag();
         final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
         final Amount amount = Amount.createFromToken(AbstractToken.VET);
         amount.setDecimalAmount("100");
         final ToClause clause = TransactionClient.buildVETToClause(toAddress, amount, ToData.ZERO);
+        final RawTransactionEIP1559 rawTransaction = RawTransactionFactory.getInstance().createRawTransactionEIP1559(
+                chainTag,
+                blockRef,
+                720,
+                21000,
+                1000000l,
+                10000000000000l,
+                CryptoUtils.generateTxNonce(),
+                clause
+        );
+        logger.info("SendVET Raw: {}", BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
     }
 
     private static RawTransaction generatingVETRawTxn(
