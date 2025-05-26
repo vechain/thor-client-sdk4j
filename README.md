@@ -76,7 +76,7 @@ introduced in with **Galactica**.
 Transactions made **before Galactica** hard-fork have the same properties
 set to `null`.
 
-**This SDK does not support sending dynamic fee transactions to Thor.**
+**This SDK implements EIP1559 sending dynamic fee transactions to Thor.**
 
 - - - -
 

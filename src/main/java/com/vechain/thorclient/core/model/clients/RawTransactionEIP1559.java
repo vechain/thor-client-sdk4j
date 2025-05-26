@@ -99,7 +99,6 @@ public class RawTransactionEIP1559 implements TransactionCommonalities {
         this.signature = signature;
     }
 
-
     public TransactionReserved getReserved() {
         return reserved;
     }
