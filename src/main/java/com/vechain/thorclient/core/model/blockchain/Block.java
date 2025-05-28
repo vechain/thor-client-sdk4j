@@ -21,11 +21,14 @@ public class Block implements Serializable {
     private String beneficiary;
     private long gasUsed;
     private String baseFeePerGas;
+    private String type; // Optional field
+    private String maxFeePerGas; // Optional field
+    private String maxPriorityFeePerGas; // Optional field
     private long totalScore;
-    private String txsRoot; //32 bytes
+    private String txsRoot; // 32 bytes
     private long txsFeatures;
-    private String stateRoot; //32 bytes
-    private String receiptsRoot; //32 bytes
+    private String stateRoot; // 32 bytes
+    private String receiptsRoot; // 32 bytes
     private boolean com;
     private String signer;
     private boolean isTrunk;
@@ -102,6 +105,30 @@ public class Block implements Serializable {
 
     public void setBaseFeePerGas(String baseFeePerGas) {
         this.baseFeePerGas = baseFeePerGas;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getMaxFeePerGas() {
+        return maxFeePerGas;
+    }
+
+    public void setMaxFeePerGas(String maxFeePerGas) {
+        this.maxFeePerGas = maxFeePerGas;
+    }
+
+    public String getMaxPriorityFeePerGas() {
+        return maxPriorityFeePerGas;
+    }
+
+    public void setMaxPriorityFeePerGas(String maxPriorityFeePerGas) {
+        this.maxPriorityFeePerGas = maxPriorityFeePerGas;
     }
 
     public long getTotalScore() {
