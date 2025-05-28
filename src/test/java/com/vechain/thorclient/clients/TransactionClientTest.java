@@ -117,6 +117,34 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertNotNull(result.getId());
     }
 
+    // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post
+    // Solo tested.
+    @Test
+    public void testDeployContractEIP1559() throws ClientIOException, JsonProcessingException {
+        // Set in `config.properties`.
+        final String privateKey = System.getProperty("TransactionClientTest.testDeployContractEIP1559.privateKey");
+        // Set in `config.properties`.
+        final String contractHex = System.getProperty("TransactionClientTest.testDeployContractEIP1559.contractHex");
+        final TransferResult result = TransactionClient.deployContract(
+                contractHex,
+                9000000,
+                1000000L,
+                10000000000000L,
+                720,
+                ECKeyPair.create(privateKey)
+        );
+        logger.info("Deploy contract result: {}", writer.writeValueAsString(result));
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            final String message = String.format("InterruptedException: %s", e.getMessage());
+            logger.error(message);
+            Assert.fail(message);
+        }
+        Assert.assertNotNull(result);
+        Assert.assertNotNull(result.getId());
+    }
+
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id--receipt/get
     // Solo tested.
     // GET http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07/receipt
@@ -189,9 +217,9 @@ public class TransactionClientTest extends BaseTest {
     @Test
     public void testSendVTHOTransactionEIP1559() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
-        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVTHOTransaction.fromPrivateKey");
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVTHOTransactionEIP1559.fromPrivateKey");
         // Set in `config.properties`.
-        final String toAddress = System.getProperty("TransactionClientTest.testSendVTHOTransaction.toAddress");
+        final String toAddress = System.getProperty("TransactionClientTest.testSendVTHOTransactionEIP1559.toAddress");
         final byte chainTag = BlockchainClient.getChainTag();
         final byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
         final Amount amount = Amount.createFromToken(ERC20Token.VTHO);

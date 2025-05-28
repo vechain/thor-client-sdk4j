@@ -82,6 +82,19 @@ public class RawTransactionFactory {
         return builder.build();
     }
 
+    /**
+     * Creates a raw transaction.
+     *
+     * @param chainTag The chain identifier byte, typically derived from the genesis block ID.
+     * @param blockRef A byte array containing the first 8 bytes of the block ID, representing the block reference.
+     * @param expiration The block expiration value, indicating the number of blocks from the block reference within which the transaction is valid.
+     * @param gas The gas limit for the transaction, must be greater than or equal to 21000.
+     * @param maxPriorityFeePerGas The maximum priority fee in wei units for miners, used in EIP-1559 transactions.
+     * @param maxFeePerGas The maximum fee per gas in wei units allowed for the transaction, used in EIP-1559 transactions.
+     * @param nonce A unique 8-byte cryptographically generated random number to ensure transaction uniqueness.
+     * @param toClauses An array of {@link ToClause} objects defining the recipient(s), value(s), and data for the transaction.
+     * @return A {@link RawTransaction} object representing the created transaction.
+     */
     public RawTransaction createRawTransaction(
             final byte chainTag,
             final byte[] blockRef,
@@ -95,6 +108,22 @@ public class RawTransactionFactory {
         return createRawTransaction(chainTag, blockRef, expiration, gas, maxPriorityFeePerGas, maxFeePerGas, nonce, fillClauses(toClauses));
     }
 
+    /**
+     * Creates a raw transaction.
+     *
+     * @param chainTag The chain identifier byte, typically derived from the genesis block ID.
+     * @param blockRef A byte array containing the first 8 bytes of the block ID, representing the block reference.
+     * @param expiration The block expiration value, indicating the number of blocks from the block reference within which the transaction is valid.
+     * @param gas The gas limit for the transaction, must be greater than or equal to 21000.
+     * @param maxPriorityFeePerGas The maximum priority fee in wei for miners, used in EIP-1559 transactions.
+     * @param maxFeePerGas The maximum fee per gas in wei allowed for the transaction, used in EIP-1559 transactions.
+     * @param nonce A unique 8-byte cryptographically generated random number to ensure transaction uniqueness.
+     * @param rawClauses An array of {@link RawClause} objects defining the recipients, values, and data for the transaction.
+     * @return A {@link RawTransaction} object representing the created transaction.
+     * @throws IllegalArgumentException If any of the parameters are invalid, such as a null blockRef,
+     *                                  an expiration less than or equal to 0, a gas value less than 21000,
+     *                                  negative maxPriorityFeePerGas or maxFeePerGas, or a null rawClauses array.
+     */
     public RawTransaction createRawTransaction(
             final byte chainTag,
             final byte[] blockRef,
