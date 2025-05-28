@@ -31,17 +31,7 @@ public class RawTransactionFactory {
             final byte[] nonce,
             final ToClause... toClauses
     ) throws IllegalArgumentException {
-        // clause
-        RawClause[] rawClauses = new RawClause[toClauses.length];
-        int index = 0;
-        for (ToClause clause : toClauses) {
-            rawClauses[index] = new RawClause();
-            rawClauses[index].setTo(clause.getTo().toByteArray());
-            rawClauses[index].setValue(clause.getValue().toByteArray());
-            rawClauses[index].setData(clause.getData().toByteArray());
-            index++;
-        }
-        return createRawTransaction(chainTag, blockRef, expiration, gasInt, gasPriceCoef, nonce, rawClauses);
+        return createRawTransaction(chainTag, blockRef, expiration, gasInt, gasPriceCoef, nonce, fillClauses(toClauses));
     }
 
     /**
@@ -71,36 +61,91 @@ public class RawTransactionFactory {
             throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
         }
         final RawTransactionBuilder builder = new RawTransactionBuilder();
-
         // chainTag
         builder.update(Byte.valueOf(chainTag), "chainTag");
-
-        // Expiration
-        final byte[] expirationBytes = BytesUtils.longToBytes(expiration);
-        builder.update(expirationBytes, "expiration");
-
-        // BlockRef
+        // blockRef
         final byte[] currentBlockRef = BytesUtils.trimLeadingZeroes(blockRef);
         builder.update(currentBlockRef, "blockRef");
-
-        // Nonce
-        final byte[] trimedNonce = BytesUtils.trimLeadingZeroes(nonce);
-        builder.update(trimedNonce, "nonce");
-
+        // expiration
+        final byte[] expirationBytes = BytesUtils.longToBytes(expiration);
+        builder.update(expirationBytes, "expiration");
+        // clauses
+        builder.update(rawClauses);
+        // gasPriceCoef
+        builder.update(Byte.valueOf(gasPriceCoef), "gasPriceCoef");
         // gas
         final byte[] gas = BytesUtils.longToBytes(gasInt);
         builder.update(gas, "gas");
-
-        // gasPriceCoef
-        builder.update(Byte.valueOf(gasPriceCoef), "gasPriceCoef");
-
-        // update the clause
-        builder.update(rawClauses);
+        // nonce
+        final byte[] trimedNonce = BytesUtils.trimLeadingZeroes(nonce);
+        builder.update(trimedNonce, "nonce");
         return builder.build();
+    }
+
+    public RawTransaction createRawTransaction(
+            final byte chainTag,
+            final byte[] blockRef,
+            final int expiration,
+            final int gas,
+            final long maxPriorityFeePerGas,
+            final long maxFeePerGas,
+            final byte[] nonce,
+            final ToClause... toClauses
+    ) {
+        return createRawTransaction(chainTag, blockRef, expiration, gas, maxPriorityFeePerGas, maxFeePerGas, nonce, fillClauses(toClauses));
+    }
+
+    public RawTransaction createRawTransaction(
+            final byte chainTag,
+            final byte[] blockRef,
+            final int expiration,
+            final int gas,
+            final long maxPriorityFeePerGas,
+            final long maxFeePerGas,
+            final byte[] nonce,
+            final RawClause[] rawClauses
+    ) {
+        if (chainTag == 0 || blockRef == null || expiration <= 0 || gas < 21000 || maxPriorityFeePerGas < 0 || maxFeePerGas < 0 || rawClauses == null) {
+            throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
+        }
+        final RawTransactionBuilder builder = new RawTransactionBuilder();
+        // chainTag
+        builder.update(Byte.valueOf(chainTag), "chainTag");
+        // blockRef
+        builder.update(BytesUtils.trimLeadingZeroes(blockRef), "blockRef");
+        // expiration
+        builder.update(BytesUtils.longToBytes(expiration), "expiration");
+        // clauses
+        builder.update(rawClauses);
+        // maxPriorityFeePerGas
+        builder.update(BytesUtils.longToBytes(maxPriorityFeePerGas), "maxPriorityFeePerGas");
+        // maxFeePerGas
+        builder.update(BytesUtils.longToBytes(maxFeePerGas), "maxFeePerGas");
+        // gas
+        builder.update(BytesUtils.longToBytes(gas), "gas");
+        // nonce
+        final byte[] trimedNonce = BytesUtils.trimLeadingZeroes(nonce);
+        builder.update(trimedNonce, "nonce");
+        return builder.build();
+
     }
 
     public static RawTransactionFactory getInstance() {
         return INSTANCE;
     }
+
+    private static RawClause[] fillClauses(final ToClause... toClauses) {
+        final RawClause[] rawClauses = new RawClause[toClauses.length];
+        int index = 0;
+        for (ToClause clause : toClauses) {
+            rawClauses[index] = new RawClause();
+            rawClauses[index].setTo(clause.getTo().toByteArray());
+            rawClauses[index].setValue(clause.getValue().toByteArray());
+            rawClauses[index].setData(clause.getData().toByteArray());
+            index++;
+        }
+        return rawClauses;
+    }
+
 
 }

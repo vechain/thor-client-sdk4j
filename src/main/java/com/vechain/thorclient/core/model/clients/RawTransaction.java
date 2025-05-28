@@ -4,6 +4,9 @@ import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.utils.RLPUtils;
 
 public class RawTransaction {
+
+    public static final byte EIP1559 = 0x51; // = 81
+
     private byte chainTag;                  // 1 byte max: numeric
     private byte[] blockRef;                // 8 bytes: compact fixed hex blob
     private byte[] expiration;              // 4 bytes max: numeric
@@ -139,7 +142,14 @@ public class RawTransaction {
     }
 
     public byte[] encode() {
-        return RLPUtils.encodeRawTransaction(this);
+        final byte[] encoded = RLPUtils.encodeRawTransaction(this);
+        if (this.isEIP1559()) {
+            final byte[] eip1559Encoded = new byte[encoded.length + 1];
+            eip1559Encoded[0] = EIP1559;
+            System.arraycopy(encoded, 0, eip1559Encoded, 1, encoded.length);
+            return eip1559Encoded;
+        }
+        return encoded;
     }
 
     public boolean isEIP1559() {

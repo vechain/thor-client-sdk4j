@@ -29,99 +29,98 @@ public class RLPUtils {
     private final static int Data = 2;
 
 
-    public static byte[] encodeRawTransaction(RawTransaction rawTransaction){
-        List<RlpType> values = asRlpValues(rawTransaction);
-        RlpList rlpList = new RlpList(values);
-        return RlpEncoder.encode(rlpList);
+    public static byte[] encodeRawTransaction(final RawTransaction rawTransaction) {
+        return RlpEncoder.encode(new RlpList(asRlpValues(rawTransaction)));
     }
 
-    private static List<RlpType> asRlpValues(RawTransaction rawTransaction){
-        List<RlpType> result = new ArrayList<>();
-        if(rawTransaction.getChainTag() == 0){
+    private static List<RlpType> asRlpValues(final RawTransaction rawTransaction) {
+        final List<RlpType> result = new ArrayList<>();
+
+        if (rawTransaction.getChainTag() == 0) {
             throw new IllegalArgumentException("getChainTag is null");
         }
         result.add(RlpString.create(rawTransaction.getChainTag()));
 
-        if(rawTransaction.getBlockRef() == null){
+        if (rawTransaction.getBlockRef() == null) {
             throw new IllegalArgumentException("getBlockRef is null");
         }
         result.add(RlpString.create(rawTransaction.getBlockRef()));
 
-        if(rawTransaction.getExpiration() == null){
+        if (rawTransaction.getExpiration() == null) {
             throw new IllegalArgumentException("getExpiration is null");
         }
         result.add(RlpString.create(rawTransaction.getExpiration()));
 
-        List<RlpType> clauses = buildRlpClausesLIst( rawTransaction );
-        RlpList rlpList = new RlpList(clauses);
+        final List<RlpType> clauses = buildRlpClausesLIst(rawTransaction);
+        final RlpList rlpList = new RlpList(clauses);
         result.add(rlpList);
 
-        if(rawTransaction.getGasPriceCoef() == 0){
+        if (rawTransaction.getGasPriceCoef() == null || rawTransaction.getGasPriceCoef() == 0) {
             result.add(RlpString.create(RlpString.EMPTY));
-        }else{
-            result.add( RlpString.create( rawTransaction.getGasPriceCoef() ) );
+        } else {
+            result.add(RlpString.create(rawTransaction.getGasPriceCoef()));
         }
 
-        if(rawTransaction.getGas() == null){
+        if (rawTransaction.getGas() == null) {
             throw new IllegalArgumentException("getGas is null");
         }
         result.add(RlpString.create(rawTransaction.getGas()));
 
-        if(rawTransaction.getDependsOn() == null){
+        if (rawTransaction.getDependsOn() == null) {
             result.add(RlpString.create(RlpString.EMPTY));
-        }else {
-            result.add( RlpString.create( rawTransaction.getDependsOn() ) );
+        } else {
+            result.add(RlpString.create(rawTransaction.getDependsOn()));
         }
 
-        if(rawTransaction.getNonce() == null){
+        if (rawTransaction.getNonce() == null) {
             throw new IllegalArgumentException("getNonce is null");
         }
         result.add(RlpString.create(rawTransaction.getNonce()));
 
-        if(rawTransaction.getReserved() == null) {
+        if (rawTransaction.getReserved() == null) {
             List<RlpType> reservedRlp = new ArrayList<>();
             RlpList reservedList = new RlpList(reservedRlp);
             result.add(reservedList);
-        }else{
+        } else {
             List<RlpType> reservedRlpList = new ArrayList<>();
-            for(byte[] reservedValue: rawTransaction.getReserved().getReservedValues()){
-                reservedRlpList.add( RlpString.create( reservedValue ));
+            for (byte[] reservedValue : rawTransaction.getReserved().getReservedValues()) {
+                reservedRlpList.add(RlpString.create(reservedValue));
             }
             RlpList reservedList = new RlpList(reservedRlpList);
             result.add(reservedList);
         }
 
-        if(rawTransaction.getSignature() != null) {
+        if (rawTransaction.getSignature() != null) {
             result.add(RlpString.create(rawTransaction.getSignature()));
         }
         return result;
 
     }
 
-    private static List<RlpType> buildRlpClausesLIst(RawTransaction rawTransaction) {
-        List<RlpType> clauses = new ArrayList<>();
+    private static List<RlpType> buildRlpClausesLIst(final RawTransaction rawTransaction) {
+        final List<RlpType> clauses = new ArrayList<>();
 
-        for (RawClause clause: rawTransaction.getClauses()){
+        for (final RawClause clause : rawTransaction.getClauses()) {
 
-            List<RlpType> rlpClause = new ArrayList<>();
-            if(clause.getTo() == null){
-                rlpClause.add( RlpString.create(RlpString.EMPTY ));
-            }else{
-                rlpClause.add( RlpString.create(clause.getTo()));
+            final List<RlpType> rlpClause = new ArrayList<>();
+            if (clause.getTo() == null) {
+                rlpClause.add(RlpString.create(RlpString.EMPTY));
+            } else {
+                rlpClause.add(RlpString.create(clause.getTo()));
             }
 
-            if(clause.getValue() == null){
-                rlpClause.add(RlpString.create(RlpString.EMPTY ));
-            }else {
-                rlpClause.add( RlpString.create( clause.getValue() ) );
+            if (clause.getValue() == null) {
+                rlpClause.add(RlpString.create(RlpString.EMPTY));
+            } else {
+                rlpClause.add(RlpString.create(clause.getValue()));
             }
 
-            if(clause.getData() == null){
-                rlpClause.add(RlpString.create(RlpString.EMPTY ));
-            }else {
-                rlpClause.add( RlpString.create( clause.getData() ) );
+            if (clause.getData() == null) {
+                rlpClause.add(RlpString.create(RlpString.EMPTY));
+            } else {
+                rlpClause.add(RlpString.create(clause.getData()));
             }
-            RlpList clauseRLP = new RlpList(rlpClause);
+            final RlpList clauseRLP = new RlpList(rlpClause);
             clauses.add(clauseRLP);
         }
         return clauses;
@@ -129,27 +128,25 @@ public class RLPUtils {
 
     /**
      * Decode hex string
+     *
      * @param hexRawTransaction hex raw transaction
      * @return
      */
-    public static RawTransaction decode(String hexRawTransaction){
-        if(!StringUtils.isHex( hexRawTransaction )){
+    public static RawTransaction decode(final String hexRawTransaction) {
+        if (!StringUtils.isHex(hexRawTransaction)) {
             return null;
         }
-        byte[] rawTxBytes = BytesUtils.toByteArray( hexRawTransaction );
-        RlpList list = RlpDecoder.decode( rawTxBytes );
-        if(list == null){
-            return  null;
-        }
-        List<RlpType> rlpContent = list.getValues();
-        //It should only has one element.
-        if(rlpContent.size() != 1){
+        final byte[] rawTxBytes = BytesUtils.toByteArray(hexRawTransaction);
+        final RlpList list = RlpDecoder.decode(rawTxBytes);
+        final List<RlpType> rlpContent = list.getValues();
+        //It should only have one element.
+        if (rlpContent.size() != 1) {
             return null;
         }
-        RawTransaction rawTransaction = new RawTransaction();
-        List listValues = ((RlpList) rlpContent.get( 0 )).getValues();
-        for(int index = 0; index < listValues.size(); index ++){
-            fillTransaction( rawTransaction, listValues, index );
+        final RawTransaction rawTransaction = new RawTransaction();
+        final List listValues = ((RlpList) rlpContent.get(0)).getValues();
+        for (int index = 0; index < listValues.size(); index++) {
+            fillTransaction(rawTransaction, listValues, index);
         }
         return rawTransaction;
     }
@@ -157,96 +154,95 @@ public class RLPUtils {
     private static void fillTransaction(RawTransaction rawTransaction, List listValues, int index) {
         RlpString rlpString;
         RlpList clauseList;
-        switch (index){
+        switch (index) {
             case Chain_Tag:
-                rlpString = (RlpString)listValues.get( index ) ;
+                rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setChainTag(rlpString.getBytes()[0]);
                 break;
             case Block_Ref:
-                rlpString = (RlpString)listValues.get( index ) ;
+                rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setBlockRef(rlpString.getBytes());
                 break;
             case Expiration:
-                rlpString = (RlpString)listValues.get( index ) ;
+                rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setExpiration(rlpString.getBytes());
                 break;
             case Clauses:
-                clauseList = (RlpList)listValues.get( index );
-                fillClauses( rawTransaction, clauseList );
+                clauseList = (RlpList) listValues.get(index);
+                fillClauses(rawTransaction, clauseList);
                 break;
             case GasPriceCoef:
-                rlpString = (RlpString)listValues.get( index ) ;
-                if (rlpString.getBytes().length == 0){
-                    rawTransaction.setGasPriceCoef((byte)0);
-                }else{
+                rlpString = (RlpString) listValues.get(index);
+                if (rlpString.getBytes().length == 0) {
+                    rawTransaction.setGasPriceCoef((byte) 0);
+                } else {
                     rawTransaction.setGasPriceCoef(rlpString.getBytes()[0]);
                 }
-
                 break;
             case Gas:
-                rlpString = (RlpString)listValues.get( index ) ;
+                rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setGas(rlpString.getBytes());
                 break;
             case DependsOn:
-                rlpString = (RlpString)listValues.get( index ) ;
-                if (rlpString.getBytes().length == 0){
+                rlpString = (RlpString) listValues.get(index);
+                if (rlpString.getBytes().length == 0) {
                     rawTransaction.setDependsOn(null);
-                }else{
+                } else {
                     rawTransaction.setDependsOn(rlpString.getBytes());
                 }
 
                 break;
             case Nonce:
-                rlpString = (RlpString)listValues.get( index ) ;
+                rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setNonce(rlpString.getBytes());
                 break;
             case Reserved:
-                RlpList rlpList = (RlpList) listValues.get( index );
-                fillReserved( rlpList, rawTransaction );
+                RlpList rlpList = (RlpList) listValues.get(index);
+                fillReserved(rlpList, rawTransaction);
                 break;
             case Signature:
-                rlpString = (RlpString)listValues.get( index ) ;
+                rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setSignature(rlpString.getBytes());
                 break;
         }
     }
 
-    private static void fillReserved(RlpList rlpList, RawTransaction rawTransaction){
+    private static void fillReserved(RlpList rlpList, RawTransaction rawTransaction) {
 
         List<RlpType> rlpTypeList = rlpList.getValues();
         TransactionReserved transactionReserved = new TransactionReserved();
-        for(RlpType rlpType: rlpTypeList){
-            RlpString reservedRlpString = (RlpString)rlpType;
+        for (RlpType rlpType : rlpTypeList) {
+            RlpString reservedRlpString = (RlpString) rlpType;
             byte[] reservedBytes = reservedRlpString.getBytes();
-            transactionReserved.getReservedValues().add( reservedBytes );
+            transactionReserved.getReservedValues().add(reservedBytes);
         }
-        rawTransaction.setReserved( transactionReserved );
+        rawTransaction.setReserved(transactionReserved);
     }
 
-    private static void fillClauses(RawTransaction rawTransaction, RlpList list){
-        List clauses = (List)list.getValues();
+    private static void fillClauses(RawTransaction rawTransaction, RlpList list) {
+        List clauses = (List) list.getValues();
         int clausesSize = clauses.size();
         RawClause[] rawClause = new RawClause[clausesSize];
-        rawTransaction.setClauses( rawClause );
-        for(int clauseIndex = 0; clauseIndex <clausesSize; clauseIndex ++){
-            List<RlpType> clauseContent = ((RlpList)clauses.get( clauseIndex )).getValues();
-            rawClause[clauseIndex] = new RawClause( );
-            fillOneClause( rawClause, clauseIndex, clauseContent );
+        rawTransaction.setClauses(rawClause);
+        for (int clauseIndex = 0; clauseIndex < clausesSize; clauseIndex++) {
+            List<RlpType> clauseContent = ((RlpList) clauses.get(clauseIndex)).getValues();
+            rawClause[clauseIndex] = new RawClause();
+            fillOneClause(rawClause, clauseIndex, clauseContent);
         }
     }
 
     private static void fillOneClause(RawClause[] rawClause, int clauseIndex, List<RlpType> clauseContent) {
-        for(int index = 0; index < clauseContent.size(); index ++){
+        for (int index = 0; index < clauseContent.size(); index++) {
             RlpString clause = (RlpString) clauseContent.get(index);
-            switch (index){
+            switch (index) {
                 case To:
-                    rawClause[clauseIndex].setTo( clause.getBytes() );
+                    rawClause[clauseIndex].setTo(clause.getBytes());
                     break;
                 case Value:
-                    rawClause[clauseIndex].setValue( clause.getBytes() );
+                    rawClause[clauseIndex].setValue(clause.getBytes());
                     break;
                 case Data:
-                    rawClause[clauseIndex].setData( clause.getBytes() );
+                    rawClause[clauseIndex].setData(clause.getBytes());
                     break;
             }
         }
