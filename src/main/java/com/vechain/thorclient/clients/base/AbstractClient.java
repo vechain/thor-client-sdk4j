@@ -55,6 +55,10 @@ public abstract class AbstractClient {
         // Blocks
         GetBlockPath("/blocks/{revision}"),
 
+        // Fees
+        GetFeeHistoryPath("/fees/history"),
+        GetFeePriorityPath("/fees/priority"),
+
         // Events
         PostFilterEventsLogPath("/logs/event"),
 
@@ -68,6 +72,7 @@ public abstract class AbstractClient {
         GetSubBlockPath("/subscriptions/block"), GetSubEventPath("/subscriptions/event"),
         GetSubTransferPath("/subscriptions/transfer"),
         ;
+
         private final String value;
 
         Path(String value) {
@@ -111,8 +116,7 @@ public abstract class AbstractClient {
             final Path path,
             final HashMap<String, String> uriParams,
             final HashMap<String, String> queryParams,
-            final Class<T> tClass
-    ) throws ClientIOException {
+            final Class<T> tClass) throws ClientIOException {
         final String rawURL = rawUrl(path);
         final String getURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
         try {
@@ -125,8 +129,7 @@ public abstract class AbstractClient {
 
     private static <T> T parseResult(
             final Class<T> tClass,
-            final HttpResponse<String> jsonNode
-    ) throws ClientIOException {
+            final HttpResponse<String> jsonNode) throws ClientIOException {
         final int status = jsonNode.getStatus();
         final String body = jsonNode.getBody();
         if (status != 200) {
@@ -140,11 +143,12 @@ public abstract class AbstractClient {
                     exception_msg + " " + body);
             clientIOException.setHttpStatus(status);
             throw clientIOException;
-        } else try {
-            return OBJECT_MAPPER.readValue(body, tClass);
-        } catch (JsonProcessingException e) {
-            throw new ClientIOException(e);
-        }
+        } else
+            try {
+                return OBJECT_MAPPER.readValue(body, tClass);
+            } catch (JsonProcessingException e) {
+                throw new ClientIOException(e);
+            }
 
     }
 
@@ -163,8 +167,7 @@ public abstract class AbstractClient {
             final Path path, HashMap<String, String> uriParams,
             final HashMap<String, String> queryParams,
             final Object postBody,
-            final Class<T> tClass
-    ) throws ClientIOException {
+            final Class<T> tClass) throws ClientIOException {
         final String rawURL = rawUrl(path);
         final String postURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
         try {
@@ -251,10 +254,10 @@ public abstract class AbstractClient {
             currentRevision = Revision.BEST;
         }
 
-        HashMap<String, String> uriParams = parameters(new String[]{"address"},
-                new String[]{contractAddress.toHexString(Prefix.ZeroLowerX)});
-        HashMap<String, String> queryParams = parameters(new String[]{"revision"},
-                new String[]{currentRevision.toString()});
+        HashMap<String, String> uriParams = parameters(new String[] { "address" },
+                new String[] { contractAddress.toHexString(Prefix.ZeroLowerX) });
+        HashMap<String, String> queryParams = parameters(new String[] { "revision" },
+                new String[] { currentRevision.toString() });
 
         return sendPostRequest(Path.PostContractCallPath, uriParams, queryParams, call, ContractCallResult.class);
     }
