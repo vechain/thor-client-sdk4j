@@ -117,7 +117,6 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertNotNull(result.getId());
     }
 
-
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id--receipt/get
     // Solo tested.
     // GET http://localhost:8669/transactions/0xda74337f4c5ab50dbd34624df2de7a1f5f6ebe9408aa511632e43af6a0be5f07/receipt
@@ -167,6 +166,47 @@ public class TransactionClientTest extends BaseTest {
                 720,
                 80000,
                 (byte) 0x0,
+                CryptoUtils.generateTxNonce(),
+                clause
+        );
+        logger.info("SendVTHO Raw: {}", BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
+        final TransferResult result = TransactionClient.signThenTransfer(
+                rawTransaction,
+                ECKeyPair.create(fromPrivateKey)
+        );
+        logger.info("SendVTHO Result: {}", writer.writeValueAsString(result));
+        Assert.assertNotNull(result);
+        final String txIdHex = BlockchainUtils.generateTransactionId(
+                rawTransaction,
+                Address.fromHexString(ECKeyPair.create(fromPrivateKey).getAddress())
+        );
+        logger.info("Calculate transaction txid: {}", txIdHex);
+        Assert.assertEquals(txIdHex, result.getId());
+    }
+
+    // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
+    // Solo tested.
+    @Test
+    public void testSendVTHOTransactionEIP1559() throws ClientIOException, JsonProcessingException {
+        // Set in `config.properties`.
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVTHOTransaction.fromPrivateKey");
+        // Set in `config.properties`.
+        final String toAddress = System.getProperty("TransactionClientTest.testSendVTHOTransaction.toAddress");
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
+        final Amount amount = Amount.createFromToken(ERC20Token.VTHO);
+        amount.setDecimalAmount("10000");
+        final ToClause clause = ERC20Contract.buildTranferToClause(
+                ERC20Token.VTHO,
+                Address.fromHexString(toAddress), amount
+        );
+        final RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(
+                chainTag,
+                blockRef,
+                720,
+                80000,
+                1000000L,
+                10000000000000L,
                 CryptoUtils.generateTxNonce(),
                 clause
         );
@@ -292,6 +332,10 @@ public class TransactionClientTest extends BaseTest {
         final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
         logger.info("SendVET result: {}", writer.writeValueAsString(result));
         Assert.assertNotNull(result);
+        final String hexAddress = ECKeyPair.create(fromPrivateKey).getAddress();
+        final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
+        logger.info("Calculate transaction txid: {}", txIdHex);
+        Assert.assertEquals(txIdHex, result.getId());
     }
 
     private static RawTransaction generatingVETRawTxn(
