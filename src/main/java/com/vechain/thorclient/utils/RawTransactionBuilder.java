@@ -2,85 +2,64 @@ package com.vechain.thorclient.utils;
 
 import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
-import com.vechain.thorclient.core.model.clients.RawTransactionEIP1559;
 
 import java.util.HashMap;
 
 public class RawTransactionBuilder {
 
-    private final HashMap<String, Object> refValue;
-    private RawClause[] clauses;
+	private final HashMap<String, Object>	refValue;
+	private RawClause[]						clauses;
+
+	public RawTransactionBuilder() {
+		this.refValue = new HashMap<>();
+	}
 
     /**
-     * Constructs a new instance of the RawTransactionBuilder.
-     * This builder is designed to create and assemble a {@link RawTransaction} object.
-     * It initializes an internal map to hold field values for the transaction.
-     */
-    public RawTransactionBuilder() {
-        this.refValue = new HashMap<>();
-    }
-
-    /**
-     * Updates the internal map with the specified field and value.
+     * Updates the internal reference map by associating the specified field with the given value.
      *
-     * @param value the Byte value to associate with the specified field
-     * @param field the String representing the field to be updated
-     * @return the current instance of RawTransactionBuilder to allow method chaining
+     * @param value the byte value to associate with the specified field
+     * @param field the key with which the specified value is to be associated
+     * @return the current instance of RawTransactionBuilder for method chaining
      */
-    public RawTransactionBuilder update(final Byte value, final String field) {
-        this.refValue.put(field, value);
-        return this;
-    }
+	public RawTransactionBuilder update(final Byte value, final String field) {
+		this.refValue.put(field, value);
+		return this;
+	}
 
     /**
-     * Updates the internal map with the specified field and value.
+     * Updates the internal reference map by associating the specified field with the given byte array value.
      *
-     * @param value the byte array to associate with the specified field
-     * @param field the String representing the field to be updated
-     * @return the current instance of RawTransactionBuilder to allow method chaining
+     * @param value the byte array value to associate with the specified field
+     * @param field the key with which the specified value is to be associated
+     * @return the current instance of RawTransactionBuilder for method chaining
      */
-    public RawTransactionBuilder update(final byte[] value, final String field) {
-        this.refValue.put(field, value);
-        return this;
-    }
+	public RawTransactionBuilder update(final byte[] value, final String field) {
+		this.refValue.put(field, value);
+		return this;
+	}
 
     /**
-     * Updates the internal clauses with the provided array of {@link RawClause} instances.
-     * This method replaces the existing clauses with the specified array.
+     * Updates the internal array of clauses with the specified array of RawClause objects.
      *
-     * @param clauses an array of {@link RawClause} objects representing the new transaction clauses
-     * @return the current instance of {@code RawTransactionBuilder} to allow method chaining
+     * @param clauses an array of RawClause objects to be set as the new clauses
+     * @return the current instance of RawTransactionBuilder for method chaining
      */
-    public RawTransactionBuilder update(RawClause[] clauses) {
-        this.clauses = clauses;
-        return this;
-    }
+	public RawTransactionBuilder update(final RawClause[] clauses) {
+		this.clauses = clauses;
+		return this;
+	}
 
     /**
-     * Builds and returns a new instance of legacy {@link RawTransaction} using the current state of the builder.
-     * The method populates the {@code RawTransaction} instance with the reference value
-     * and clauses that were provided to the builder.
+     * Builds and returns a fully constructed instance of {@link RawTransaction}.
+     * The method initializes a new {@code RawTransaction}, sets its fields with the current state
+     * of the builder's internal reference values and clauses, and returns the resulting transaction.
      *
-     * @return a newly constructed legacy {@link RawTransaction} instance containing the data set in the builder
+     * @return a new {@code RawTransaction} instance with the configured values
      */
-    public RawTransaction build() {
-        RawTransaction rawTx = new RawTransaction();
-        BeanRefUtils.setFieldValue(rawTx, this.refValue);
-        rawTx.setClauses(clauses);
-        return rawTx;
-    }
-
-    /**
-     * Builds and returns a new instance of {@link RawTransactionEIP1559} using the current state of the builder.
-     * The method populates the {@code RawTransactionEIP1559} instance with the reference values
-     * and clauses set in the builder.
-     *
-     * @return a newly constructed {@link RawTransactionEIP1559} instance containing the data configured in the builder
-     */
-    public RawTransactionEIP1559 buildEIP1559() {
-        RawTransactionEIP1559 rawTxEIP1559 = new RawTransactionEIP1559();
-        BeanRefUtils.setFieldValue(rawTxEIP1559, this.refValue);
-        rawTxEIP1559.setClauses(clauses);
-        return rawTxEIP1559;
-    }
+	public RawTransaction build() {
+		final RawTransaction rawTransaction = new RawTransaction();
+		BeanRefUtils.setFieldValue(rawTransaction, this.refValue);
+		rawTransaction.setClauses(clauses);
+		return rawTransaction;
+	}
 }
