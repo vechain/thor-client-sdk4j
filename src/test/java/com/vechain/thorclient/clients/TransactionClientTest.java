@@ -493,30 +493,4 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertEquals(txIdHex, transferResult.getId());
     }
 
-    @Test
-    public void testDynamicFeeVETTransferWithMaxFeePerGasAndMaxPriorityFeePerGas() {
-        ToClause clause = new ToClause(
-                Address.fromHexString("0x62226ae029dabcf90f3cb66f091919d2687d5257"),
-                Amount.createFromToken(AbstractToken.VET).setDecimalAmount("0"),
-                ToData.ZERO
-        );
-        byte[] blockRef = {
-                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-        };
-        byte[] nonce = new byte[0xff];
-        RawTransaction rtx = RawTransactionFactory.getInstance().createRawTransaction(
-                (byte) 0xf6,    // chainTag
-                blockRef,       // blockRef
-                32,             // expiration
-                21000,          // gasInt
-                (byte) 128,     // gasPriceCoef
-                nonce,
-                clause
-        );
-        String hex = BytesUtils.toHexString(rtx.encode(), Prefix.ZeroLowerX);
-        logger.info("Raw tx: {}", hex);
-        // J 0xed81.f6.0020e0df94.62226ae029dabcf90f3cb66f091919d2687d5257.880de0b6b3a76400008081808252088000c0
-        // T 0xe681.f6.8020d8d794.62226ae029dabcf90f3cb66f091919d2687d5257.018081808252088081ffc0
-
-    }
 }
