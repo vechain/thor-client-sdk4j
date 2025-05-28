@@ -249,7 +249,8 @@ public class TransactionClientTest extends BaseTest {
                 CryptoUtils.generateTxNonce(),
                 clause
         );
-        logger.info("SendVET Raw: {}", BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
+        final String hex = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
+        logger.info("SendVET Raw: {}", hex, Prefix.ZeroLowerX);
         logger.info("SignHash Raw: {}", BytesUtils.toHexString(CryptoUtils.blake2b(rawTransaction.encode()), Prefix.ZeroLowerX));
         final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
         logger.info("SendVET result: {}", writer.writeValueAsString(result));
@@ -260,8 +261,10 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertEquals(txIdHex, result.getId());
     }
 
+    // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
+    // Solo tested.
     @Test
-    public void testSendVETTransactionEIP1559() {
+    public void testSendVETTransactionEIP1559() throws JsonProcessingException {
         // Set in `config.properties`.
         final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransactionEIP1559.fromPrivateKey");
         // Set in `config.properties`.
@@ -285,8 +288,10 @@ public class TransactionClientTest extends BaseTest {
         );
         final String hex = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
         logger.info("SendVET Raw: {}", hex);
-        RawTransaction actual = RLPUtils.decode(hex);
-//        logger.info("SendVET Raw: {}", BytesUtils.toHexString(actual.encode(), Prefix.ZeroLowerX));
+        logger.info("SignHash Raw: {}", BytesUtils.toHexString(CryptoUtils.blake2b(rawTransaction.encode()), Prefix.ZeroLowerX));
+        final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
+        logger.info("SendVET result: {}", writer.writeValueAsString(result));
+        Assert.assertNotNull(result);
     }
 
     private static RawTransaction generatingVETRawTxn(

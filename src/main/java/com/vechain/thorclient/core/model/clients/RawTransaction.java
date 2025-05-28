@@ -123,7 +123,6 @@ public class RawTransaction {
         this.signature = signature;
     }
 
-
     public RawTransaction copy() {
         RawTransaction transaction = new RawTransaction();
         transaction.chainTag = this.chainTag;
@@ -142,14 +141,7 @@ public class RawTransaction {
     }
 
     public byte[] encode() {
-        final byte[] encoded = RLPUtils.encodeRawTransaction(this);
-        if (this.isEIP1559()) {
-            final byte[] eip1559Encoded = new byte[encoded.length + 1];
-            eip1559Encoded[0] = EIP1559;
-            System.arraycopy(encoded, 0, eip1559Encoded, 1, encoded.length);
-            return eip1559Encoded;
-        }
-        return encoded;
+        return RLPUtils.encodeRawTransaction(this);
     }
 
     public boolean isEIP1559() {
@@ -159,6 +151,5 @@ public class RawTransaction {
     public boolean isLegacy() {
         return this.gasPriceCoef != null && this.maxPriorityFeePerGas == null && this.maxFeePerGas == null;
     }
-
 
 }

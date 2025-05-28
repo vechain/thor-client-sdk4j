@@ -7,33 +7,121 @@ import com.vechain.thorclient.utils.rlp.*;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * RLP encoding utility
  */
 public class RLPUtils {
-    private final static int Chain_Tag = 0;
-    private final static int Block_Ref = 1;
-    private final static int Expiration = 2;
-    private final static int Clauses = 3;
-    private final static int GasPriceCoef = 4;
-    private final static int Gas = 5;
-    private final static int DependsOn = 6;
-    private final static int Nonce = 7;
-    private final static int Reserved = 8;
-    private final static int Signature = 9;
+    private final static int EIP1559_CHAIN_TAG = 0;
+    private final static int EIP1559_BLOCK_REF = 1;
+    private final static int EIP1559_EXPIRATION = 2;
+    private final static int EIP1559_CLAUSES = 3;
+    private final static int EIP1559_MAX_PRIORITY_FEE_PER_GAS = 4;
+    private final static int EIP1559_MAX_FEE_PER_GAS = 5;
+    private final static int EIP1559_GAS = 6;
+    private final static int EIP1559_DEPENDS_ON = 7;
+    private final static int EIP1559_NONCE = 8;
+    private final static int EIP1559_RESERVED = 9;
+    private final static int EIP1559_SIGNATURE = 10;
 
-    private final static int To = 0;
-    private final static int Value = 1;
-    private final static int Data = 2;
+    private final static int LEGACY_CHAIN_TAG = 0;
+    private final static int LEGACY_BLOCK_REF = 1;
+    private final static int LEGACY_EXPIRATION = 2;
+    private final static int LEGACY_CLAUSES = 3;
+    private final static int LEGACY_GAS_PRICE_COEF = 4;
+    private final static int LEGACY_GAS = 5;
+    private final static int LEGACY_DEPENDS_ON = 6;
+    private final static int LEGACY_NONCE = 7;
+    private final static int LEGACY_RESERVED = 8;
+    private final static int LEGACY_SIGNATURE = 9;
+
+    private final static int CLAUSE_TO = 0;
+    private final static int CLAUSE_VALUE = 1;
+    private final static int CLAUSE_DATA = 2;
 
 
     public static byte[] encodeRawTransaction(final RawTransaction rawTransaction) {
-        return RlpEncoder.encode(new RlpList(asRlpValues(rawTransaction)));
+        if (rawTransaction.isEIP1559()) {
+            final byte[] encoded = RlpEncoder.encode(new RlpList(asRlpValuesEIP1559(rawTransaction)));
+            final byte[] prefixed = new byte[encoded.length + 1];
+            prefixed[0] = RawTransaction.EIP1559;
+            System.arraycopy(encoded, 0, prefixed, 1, encoded.length);
+            return prefixed;
+        }
+        return RlpEncoder.encode(new RlpList(asRlpValuesLegacy(rawTransaction)));
     }
 
-    private static List<RlpType> asRlpValues(final RawTransaction rawTransaction) {
+    private static List<RlpType> asRlpValuesEIP1559(final RawTransaction rawTransaction) {
+        final List<RlpType> result = new ArrayList<>();
+
+        if (rawTransaction.getChainTag() == 0) {
+            throw new IllegalArgumentException("getChainTag is null");
+        }
+        result.add(RlpString.create(rawTransaction.getChainTag()));
+
+        if (rawTransaction.getBlockRef() == null) {
+            throw new IllegalArgumentException("getBlockRef is null");
+        }
+        result.add(RlpString.create(rawTransaction.getBlockRef()));
+
+        if (rawTransaction.getExpiration() == null) {
+            throw new IllegalArgumentException("getExpiration is null");
+        }
+        result.add(RlpString.create(rawTransaction.getExpiration()));
+
+        final List<RlpType> clauses = buildRlpClausesLIst(rawTransaction);
+        final RlpList rlpList = new RlpList(clauses);
+        result.add(rlpList);
+
+        if (rawTransaction.getMaxPriorityFeePerGas() == null) {
+            throw new IllegalArgumentException("getMaxPriorityFeePerGas is null");
+        }
+        result.add(RlpString.create(rawTransaction.getMaxPriorityFeePerGas()));
+
+        if (rawTransaction.getMaxFeePerGas() == null) {
+            throw new IllegalArgumentException("getMaxFeePerGas is null");
+        }
+        result.add(RlpString.create(rawTransaction.getMaxFeePerGas()));
+
+        if (rawTransaction.getGas() == null) {
+            throw new IllegalArgumentException("getGas is null");
+        }
+        result.add(RlpString.create(rawTransaction.getGas()));
+
+        if (rawTransaction.getDependsOn() == null) {
+            result.add(RlpString.create(RlpString.EMPTY));
+        } else {
+            result.add(RlpString.create(rawTransaction.getDependsOn()));
+        }
+
+        if (rawTransaction.getNonce() == null) {
+            throw new IllegalArgumentException("getNonce is null");
+        }
+        result.add(RlpString.create(rawTransaction.getNonce()));
+
+        if (rawTransaction.getReserved() == null) {
+            List<RlpType> reservedRlp = new ArrayList<>();
+            RlpList reservedList = new RlpList(reservedRlp);
+            result.add(reservedList);
+        } else {
+            List<RlpType> reservedRlpList = new ArrayList<>();
+            for (byte[] reservedValue : rawTransaction.getReserved().getReservedValues()) {
+                reservedRlpList.add(RlpString.create(reservedValue));
+            }
+            RlpList reservedList = new RlpList(reservedRlpList);
+            result.add(reservedList);
+        }
+
+        if (rawTransaction.getSignature() != null) {
+            result.add(RlpString.create(rawTransaction.getSignature()));
+        }
+        return result;
+
+    }
+
+    private static List<RlpType> asRlpValuesLegacy(final RawTransaction rawTransaction) {
         final List<RlpType> result = new ArrayList<>();
 
         if (rawTransaction.getChainTag() == 0) {
@@ -137,6 +225,13 @@ public class RLPUtils {
             return null;
         }
         final byte[] rawTxBytes = BytesUtils.toByteArray(hexRawTransaction);
+        if (rawTxBytes[0] == RawTransaction.EIP1559) {
+            return decode(Arrays.copyOfRange(rawTxBytes, 1, rawTxBytes.length), true);
+        }
+        return decode(rawTxBytes, false);
+    }
+
+    private static RawTransaction decode(final byte[] rawTxBytes, boolean isEIP1559) {
         final RlpList list = RlpDecoder.decode(rawTxBytes);
         final List<RlpType> rlpContent = list.getValues();
         //It should only have one element.
@@ -145,33 +240,95 @@ public class RLPUtils {
         }
         final RawTransaction rawTransaction = new RawTransaction();
         final List listValues = ((RlpList) rlpContent.get(0)).getValues();
-        for (int index = 0; index < listValues.size(); index++) {
-            fillTransaction(rawTransaction, listValues, index);
+        if (isEIP1559) {
+            for (int index = 0; index < listValues.size(); index++) {
+                fillTransactionEIP1559(rawTransaction, listValues, index);
+            }
+        } else {
+            for (int index = 0; index < listValues.size(); index++) {
+                fillTransactionLegacy(rawTransaction, listValues, index);
+            }
         }
         return rawTransaction;
     }
 
-    private static void fillTransaction(RawTransaction rawTransaction, List listValues, int index) {
+    private static void fillTransactionEIP1559(RawTransaction rawTransaction, List listValues, int index) {
         RlpString rlpString;
         RlpList clauseList;
         switch (index) {
-            case Chain_Tag:
+            case EIP1559_CHAIN_TAG:
                 rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setChainTag(rlpString.getBytes()[0]);
                 break;
-            case Block_Ref:
+            case EIP1559_BLOCK_REF:
                 rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setBlockRef(rlpString.getBytes());
                 break;
-            case Expiration:
+            case EIP1559_EXPIRATION:
                 rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setExpiration(rlpString.getBytes());
                 break;
-            case Clauses:
+            case EIP1559_CLAUSES:
                 clauseList = (RlpList) listValues.get(index);
                 fillClauses(rawTransaction, clauseList);
                 break;
-            case GasPriceCoef:
+            case EIP1559_MAX_PRIORITY_FEE_PER_GAS:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setMaxPriorityFeePerGas(rlpString.getBytes());
+                break;
+            case EIP1559_MAX_FEE_PER_GAS:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setMaxFeePerGas(rlpString.getBytes());
+                break;
+            case EIP1559_GAS:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setGas(rlpString.getBytes());
+                break;
+            case EIP1559_DEPENDS_ON:
+                rlpString = (RlpString) listValues.get(index);
+                if (rlpString.getBytes().length == 0) {
+                    rawTransaction.setDependsOn(null);
+                } else {
+                    rawTransaction.setDependsOn(rlpString.getBytes());
+                }
+                break;
+            case EIP1559_NONCE:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setNonce(rlpString.getBytes());
+                break;
+            case EIP1559_RESERVED:
+//                RlpList rlpList = (RlpList) listValues.get(index);
+//                fillReserved(rlpList, rawTransaction);
+                break;
+            case EIP1559_SIGNATURE:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setSignature(rlpString.getBytes());
+                break;
+        }
+    }
+
+
+    private static void fillTransactionLegacy(RawTransaction rawTransaction, List listValues, int index) {
+        RlpString rlpString;
+        RlpList clauseList;
+        switch (index) {
+            case LEGACY_CHAIN_TAG:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setChainTag(rlpString.getBytes()[0]);
+                break;
+            case LEGACY_BLOCK_REF:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setBlockRef(rlpString.getBytes());
+                break;
+            case LEGACY_EXPIRATION:
+                rlpString = (RlpString) listValues.get(index);
+                rawTransaction.setExpiration(rlpString.getBytes());
+                break;
+            case LEGACY_CLAUSES:
+                clauseList = (RlpList) listValues.get(index);
+                fillClauses(rawTransaction, clauseList);
+                break;
+            case LEGACY_GAS_PRICE_COEF:
                 rlpString = (RlpString) listValues.get(index);
                 if (rlpString.getBytes().length == 0) {
                     rawTransaction.setGasPriceCoef((byte) 0);
@@ -179,28 +336,27 @@ public class RLPUtils {
                     rawTransaction.setGasPriceCoef(rlpString.getBytes()[0]);
                 }
                 break;
-            case Gas:
+            case LEGACY_GAS:
                 rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setGas(rlpString.getBytes());
                 break;
-            case DependsOn:
+            case LEGACY_DEPENDS_ON:
                 rlpString = (RlpString) listValues.get(index);
                 if (rlpString.getBytes().length == 0) {
                     rawTransaction.setDependsOn(null);
                 } else {
                     rawTransaction.setDependsOn(rlpString.getBytes());
                 }
-
                 break;
-            case Nonce:
+            case LEGACY_NONCE:
                 rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setNonce(rlpString.getBytes());
                 break;
-            case Reserved:
+            case LEGACY_RESERVED:
                 RlpList rlpList = (RlpList) listValues.get(index);
                 fillReserved(rlpList, rawTransaction);
                 break;
-            case Signature:
+            case LEGACY_SIGNATURE:
                 rlpString = (RlpString) listValues.get(index);
                 rawTransaction.setSignature(rlpString.getBytes());
                 break;
@@ -235,13 +391,13 @@ public class RLPUtils {
         for (int index = 0; index < clauseContent.size(); index++) {
             RlpString clause = (RlpString) clauseContent.get(index);
             switch (index) {
-                case To:
+                case CLAUSE_TO:
                     rawClause[clauseIndex].setTo(clause.getBytes());
                     break;
-                case Value:
+                case CLAUSE_VALUE:
                     rawClause[clauseIndex].setValue(clause.getBytes());
                     break;
-                case Data:
+                case CLAUSE_DATA:
                     rawClause[clauseIndex].setData(clause.getBytes());
                     break;
             }
