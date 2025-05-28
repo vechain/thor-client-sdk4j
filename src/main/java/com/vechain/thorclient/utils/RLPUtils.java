@@ -54,8 +54,7 @@ public class RLPUtils {
     }
 
     private static List<RlpType> asRlpValuesEIP1559(final RawTransaction rawTransaction) {
-        final List<RlpType> result = asRlpValuesinCommon(rawTransaction);
-
+        final List<RlpType> result = asRlpValuesinCommonHead(new ArrayList<>(), rawTransaction);
         if (rawTransaction.getMaxPriorityFeePerGas() == null) {
             throw new IllegalArgumentException("getMaxPriorityFeePerGas is null");
         }
@@ -65,45 +64,13 @@ public class RLPUtils {
             throw new IllegalArgumentException("getMaxFeePerGas is null");
         }
         result.add(RlpString.create(rawTransaction.getMaxFeePerGas()));
-
-        if (rawTransaction.getGas() == null) {
-            throw new IllegalArgumentException("getGas is null");
-        }
-        result.add(RlpString.create(rawTransaction.getGas()));
-
-        if (rawTransaction.getDependsOn() == null) {
-            result.add(RlpString.create(RlpString.EMPTY));
-        } else {
-            result.add(RlpString.create(rawTransaction.getDependsOn()));
-        }
-
-        if (rawTransaction.getNonce() == null) {
-            throw new IllegalArgumentException("getNonce is null");
-        }
-        result.add(RlpString.create(rawTransaction.getNonce()));
-
-        if (rawTransaction.getReserved() == null) {
-            List<RlpType> reservedRlp = new ArrayList<>();
-            RlpList reservedList = new RlpList(reservedRlp);
-            result.add(reservedList);
-        } else {
-            List<RlpType> reservedRlpList = new ArrayList<>();
-            for (byte[] reservedValue : rawTransaction.getReserved().getReservedValues()) {
-                reservedRlpList.add(RlpString.create(reservedValue));
-            }
-            RlpList reservedList = new RlpList(reservedRlpList);
-            result.add(reservedList);
-        }
-
-        if (rawTransaction.getSignature() != null) {
-            result.add(RlpString.create(rawTransaction.getSignature()));
-        }
-        return result;
+        return asRlpValuesinCommonTail(result, rawTransaction);
     }
 
-    private static List<RlpType> asRlpValuesinCommon(final RawTransaction rawTransaction) {
-        final List<RlpType> result = new ArrayList<>();
-
+    private static List<RlpType> asRlpValuesinCommonHead(
+            final List<RlpType> result,
+            final RawTransaction rawTransaction
+    ) {
         if (rawTransaction.getChainTag() == 0) {
             throw new IllegalArgumentException("getChainTag is null");
         }
@@ -119,21 +86,16 @@ public class RLPUtils {
         }
         result.add(RlpString.create(rawTransaction.getExpiration()));
 
-        final List<RlpType> clauses = buildRlpClausesLIst(rawTransaction);
+        final List<RlpType> clauses = buildRlpClausesList(rawTransaction);
         final RlpList rlpList = new RlpList(clauses);
         result.add(rlpList);
         return result;
     }
 
-    private static List<RlpType> asRlpValuesLegacy(final RawTransaction rawTransaction) {
-        final List<RlpType> result = asRlpValuesinCommon(rawTransaction);
-
-        if (rawTransaction.getGasPriceCoef() == null || rawTransaction.getGasPriceCoef() == 0) {
-            result.add(RlpString.create(RlpString.EMPTY));
-        } else {
-            result.add(RlpString.create(rawTransaction.getGasPriceCoef()));
-        }
-
+    private static List<RlpType> asRlpValuesinCommonTail(
+            final List<RlpType> result,
+            final RawTransaction rawTransaction
+    ) {
         if (rawTransaction.getGas() == null) {
             throw new IllegalArgumentException("getGas is null");
         }
@@ -166,10 +128,21 @@ public class RLPUtils {
         if (rawTransaction.getSignature() != null) {
             result.add(RlpString.create(rawTransaction.getSignature()));
         }
+
         return result;
     }
 
-    private static List<RlpType> buildRlpClausesLIst(final RawTransaction rawTransaction) {
+    private static List<RlpType> asRlpValuesLegacy(final RawTransaction rawTransaction) {
+        final List<RlpType> result = asRlpValuesinCommonHead(new ArrayList<>(), rawTransaction);
+        if (rawTransaction.getGasPriceCoef() == null || rawTransaction.getGasPriceCoef() == 0) {
+            result.add(RlpString.create(RlpString.EMPTY));
+        } else {
+            result.add(RlpString.create(rawTransaction.getGasPriceCoef()));
+        }
+        return asRlpValuesinCommonTail(result, rawTransaction);
+    }
+
+    private static List<RlpType> buildRlpClausesList(final RawTransaction rawTransaction) {
         final List<RlpType> clauses = new ArrayList<>();
 
         for (final RawClause clause : rawTransaction.getClauses()) {
@@ -199,10 +172,13 @@ public class RLPUtils {
     }
 
     /**
-     * Decode hex string
+     * Decodes a raw transaction from its hexadecimal string representation.
      *
-     * @param hexRawTransaction hex raw transaction
-     * @return
+     * @param hexRawTransaction the hexadecimal string representation of the raw transaction.
+     *                          Must be a valid hexadecimal string; otherwise, the method
+     *                          returns null.
+     * @return the decoded {@link RawTransaction} object, or null if the input string is not
+     *         a valid hexadecimal or contains invalid transaction data.
      */
     public static RawTransaction decode(final String hexRawTransaction) {
         if (!StringUtils.isHex(hexRawTransaction)) {
