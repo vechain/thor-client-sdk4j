@@ -297,8 +297,8 @@ public class RLPUtils {
                 rawTransaction.setNonce(rlpString.getBytes());
                 break;
             case EIP1559_RESERVED:
-//                RlpList rlpList = (RlpList) listValues.get(index);
-//                fillReserved(rlpList, rawTransaction);
+                RlpList rlpList = (RlpList) listValues.get(index);
+                fillReserved(rlpList, rawTransaction);
                 break;
             case EIP1559_SIGNATURE:
                 rlpString = (RlpString) listValues.get(index);
