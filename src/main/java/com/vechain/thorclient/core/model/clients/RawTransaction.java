@@ -130,9 +130,9 @@ public class RawTransaction {
         transaction.blockRef = this.blockRef;
         transaction.expiration = this.expiration;
         transaction.clauses = this.clauses;
-        transaction.gasPriceCoef = this.gasPriceCoef; // optional
+        transaction.gasPriceCoef = this.gasPriceCoef; // optional, mandatory for legacy
         transaction.maxPriorityFeePerGas = this.maxPriorityFeePerGas; // optional
-        transaction.maxFeePerGas = this.maxFeePerGas; // optional
+        transaction.maxFeePerGas = this.maxFeePerGas; // optional, mandatory for EIP1559
         transaction.gas = this.gas;
         transaction.dependsOn = this.dependsOn;
         transaction.nonce = this.nonce;
