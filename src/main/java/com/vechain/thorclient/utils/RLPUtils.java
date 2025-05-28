@@ -54,26 +54,7 @@ public class RLPUtils {
     }
 
     private static List<RlpType> asRlpValuesEIP1559(final RawTransaction rawTransaction) {
-        final List<RlpType> result = new ArrayList<>();
-
-        if (rawTransaction.getChainTag() == 0) {
-            throw new IllegalArgumentException("getChainTag is null");
-        }
-        result.add(RlpString.create(rawTransaction.getChainTag()));
-
-        if (rawTransaction.getBlockRef() == null) {
-            throw new IllegalArgumentException("getBlockRef is null");
-        }
-        result.add(RlpString.create(rawTransaction.getBlockRef()));
-
-        if (rawTransaction.getExpiration() == null) {
-            throw new IllegalArgumentException("getExpiration is null");
-        }
-        result.add(RlpString.create(rawTransaction.getExpiration()));
-
-        final List<RlpType> clauses = buildRlpClausesLIst(rawTransaction);
-        final RlpList rlpList = new RlpList(clauses);
-        result.add(rlpList);
+        final List<RlpType> result = asRlpValuesinCommon(rawTransaction);
 
         if (rawTransaction.getMaxPriorityFeePerGas() == null) {
             throw new IllegalArgumentException("getMaxPriorityFeePerGas is null");
@@ -118,10 +99,9 @@ public class RLPUtils {
             result.add(RlpString.create(rawTransaction.getSignature()));
         }
         return result;
-
     }
 
-    private static List<RlpType> asRlpValuesLegacy(final RawTransaction rawTransaction) {
+    private static List<RlpType> asRlpValuesinCommon(final RawTransaction rawTransaction) {
         final List<RlpType> result = new ArrayList<>();
 
         if (rawTransaction.getChainTag() == 0) {
@@ -142,6 +122,11 @@ public class RLPUtils {
         final List<RlpType> clauses = buildRlpClausesLIst(rawTransaction);
         final RlpList rlpList = new RlpList(clauses);
         result.add(rlpList);
+        return result;
+    }
+
+    private static List<RlpType> asRlpValuesLegacy(final RawTransaction rawTransaction) {
+        final List<RlpType> result = asRlpValuesinCommon(rawTransaction);
 
         if (rawTransaction.getGasPriceCoef() == null || rawTransaction.getGasPriceCoef() == 0) {
             result.add(RlpString.create(RlpString.EMPTY));
@@ -182,7 +167,6 @@ public class RLPUtils {
             result.add(RlpString.create(rawTransaction.getSignature()));
         }
         return result;
-
     }
 
     private static List<RlpType> buildRlpClausesLIst(final RawTransaction rawTransaction) {
