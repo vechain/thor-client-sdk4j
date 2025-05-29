@@ -6,7 +6,8 @@ A SDK toolkit for JDK to call VeChainThor Restful API.
 > [!WARNING]  
 > This repository is not actively maintained.
 > 
-> Cryptographic functions are provided by [Bouncycastle](https://www.bouncycastle.org/)
+> Cryptographic functions are provided by [Bouncycastle](https://www.bouncycastle.org/).
+> 
 > Use at your own risk.
 > 
 > Contact VeChain if you need support to upgrade to not deprecated dependencies.
