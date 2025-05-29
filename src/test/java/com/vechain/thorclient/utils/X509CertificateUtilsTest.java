@@ -10,9 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.vechain.thorclient.base.BaseTest;
-import com.vechain.thorclient.clients.BlockchainClient;
 import com.vechain.thorclient.clients.TransactionClient;
-import com.vechain.thorclient.core.model.blockchain.NodeProvider;
 import com.vechain.thorclient.core.model.clients.Address;
 import com.vechain.thorclient.core.model.clients.Amount;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
@@ -147,7 +145,7 @@ public class X509CertificateUtilsTest extends BaseTest {
 				720, 21000, (byte) 0x0, "222".getBytes(), clause);
 
 		String privateKey = "380481fbd888d0c27bc75d6deb0576cc7e31e91cd98078e9bde6294171c70b88";
-		String txHash = BytesUtils.toHexString(CryptoUtils.blake2b((rawTransaction).encode()), null);
+		String txHash = BytesUtils.toHexString(CryptoUtils.blake2b(rawTransaction.encode()), null);
 		logger.info("txHash:{}", txHash);
 
 		String pemHex = BytesUtils.toHexString(pem.getBytes(), null);

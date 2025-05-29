@@ -45,7 +45,7 @@ public class ToClause {
     }
 
     /**
-     * Constructor to new a instance.
+     * Constructor to new an instance.
      * @param to {@link Address}
      * @param value {@link Amount}
      * @param data {@link ToData}

@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class TransactionClientTest extends BaseTest {
@@ -46,7 +47,7 @@ public class TransactionClientTest extends BaseTest {
         final Block block = BlockClient.getBlock(Revision.create(blockRevision));
         final ArrayList<String> transactions = block.getTransactions();
         Assert.assertNotNull(transactions);
-        Assert.assertTrue(transactions.size() > 0);
+        Assert.assertTrue(!transactions.isEmpty());
         transactions.forEach(txId -> {
             final Transaction transaction = TransactionClient.getTransaction(txId, false, null);
             try {
@@ -75,7 +76,7 @@ public class TransactionClientTest extends BaseTest {
         final Block block = BlockClient.getBlock(Revision.create(blockRevision));
         final ArrayList<String> transactions = block.getTransactions();
         Assert.assertNotNull(transactions);
-        Assert.assertTrue(transactions.size() > 0);
+        Assert.assertTrue(!transactions.isEmpty());
         transactions.forEach(txId -> {
             final Transaction transaction = TransactionClient.getTransaction(txId, true, null);
             try {
@@ -116,6 +117,33 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertNotNull(result.getId());
     }
 
+    // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post
+    // Solo tested.
+    @Test
+    public void testDeployContractEIP1559() throws ClientIOException, JsonProcessingException {
+        // Set in `config.properties`.
+        final String privateKey = System.getProperty("TransactionClientTest.testDeployContractEIP1559.privateKey");
+        // Set in `config.properties`.
+        final String contractHex = System.getProperty("TransactionClientTest.testDeployContractEIP1559.contractHex");
+        final TransferResult result = TransactionClient.deployContract(
+                contractHex,
+                9000000,
+                1000000L,
+                10000000000000L,
+                720,
+                ECKeyPair.create(privateKey)
+        );
+        logger.info("Deploy contract result: {}", writer.writeValueAsString(result));
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            final String message = String.format("InterruptedException: %s", e.getMessage());
+            logger.error(message);
+            Assert.fail(message);
+        }
+        Assert.assertNotNull(result);
+        Assert.assertNotNull(result.getId());
+    }
 
     // Galactica documented at: http://localhost:8669/doc/stoplight-ui/#/paths/transactions-id--receipt/get
     // Solo tested.
@@ -131,7 +159,7 @@ public class TransactionClientTest extends BaseTest {
         final Block block = BlockClient.getBlock(Revision.create(blockRevision));
         final ArrayList<String> transactions = block.getTransactions();
         Assert.assertNotNull(transactions);
-        Assert.assertTrue(transactions.size() > 0);
+        Assert.assertTrue(!transactions.isEmpty());
         transactions.forEach(txId -> {
             final Receipt receipt = TransactionClient.getTransactionReceipt(txId, null);
             try {
@@ -145,7 +173,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testSendVTHOTransaction() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -178,14 +206,55 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertNotNull(result);
         final String txIdHex = BlockchainUtils.generateTransactionId(
                 rawTransaction,
-                Address.fromHexString(ECKeyPair.create(fromPrivateKey).getHexAddress())
+                Address.fromHexString(ECKeyPair.create(fromPrivateKey).getAddress())
         );
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
+    @Test
+    public void testSendVTHOTransactionEIP1559() throws ClientIOException, JsonProcessingException {
+        // Set in `config.properties`.
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVTHOTransactionEIP1559.fromPrivateKey");
+        // Set in `config.properties`.
+        final String toAddress = System.getProperty("TransactionClientTest.testSendVTHOTransactionEIP1559.toAddress");
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
+        final Amount amount = Amount.createFromToken(ERC20Token.VTHO);
+        amount.setDecimalAmount("10000");
+        final ToClause clause = ERC20Contract.buildTranferToClause(
+                ERC20Token.VTHO,
+                Address.fromHexString(toAddress), amount
+        );
+        final RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(
+                chainTag,
+                blockRef,
+                720,
+                80000,
+                1000000L,
+                10000000000000L,
+                CryptoUtils.generateTxNonce(),
+                clause
+        );
+        logger.info("SendVTHO Raw: {}", BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
+        final TransferResult result = TransactionClient.signThenTransfer(
+                rawTransaction,
+                ECKeyPair.create(fromPrivateKey)
+        );
+        logger.info("SendVTHO Result: {}", writer.writeValueAsString(result));
+        Assert.assertNotNull(result);
+        final String txIdHex = BlockchainUtils.generateTransactionId(
+                rawTransaction,
+                Address.fromHexString(ECKeyPair.create(fromPrivateKey).getAddress())
+        );
+        logger.info("Calculate transaction txid: {}", txIdHex);
+        Assert.assertEquals(txIdHex, result.getId());
+    }
+
+    // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
+    // Solo tested.
     @Test
     public void testSendRemarkTx() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -197,9 +266,7 @@ public class TransactionClientTest extends BaseTest {
         final ToData toData = new ToData();
         final int size = 47 * 1000;
         final byte[] k64 = new byte[size];
-        for (int i = 0; i < size; i++) {
-            k64[i] = (byte) 0xff;
-        }
+        Arrays.fill(k64, (byte) 0xff);
         toData.setData(BytesUtils.toHexString(k64, Prefix.ZeroLowerX));
         final ToClause clause = TransactionClient.buildVETToClause(
                 Address.fromHexString(toAddress),
@@ -220,14 +287,14 @@ public class TransactionClientTest extends BaseTest {
         TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
         logger.info("SendVET result: {}", writer.writeValueAsString(result));
         Assert.assertNotNull(result);
-        final String fromAddress = ECKeyPair.create(fromPrivateKey).getHexAddress();
+        final String fromAddress = ECKeyPair.create(fromPrivateKey).getAddress();
         final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(fromAddress));
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testSendVETTransaction() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -250,12 +317,50 @@ public class TransactionClientTest extends BaseTest {
                 CryptoUtils.generateTxNonce(),
                 clause
         );
-        logger.info("SendVET Raw: {}", BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
+        final String hex = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
+        logger.info("SendVET Raw: {}", hex, Prefix.ZeroLowerX);
         logger.info("SignHash Raw: {}", BytesUtils.toHexString(CryptoUtils.blake2b(rawTransaction.encode()), Prefix.ZeroLowerX));
         final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
         logger.info("SendVET result: {}", writer.writeValueAsString(result));
         Assert.assertNotNull(result);
-        final String hexAddress = ECKeyPair.create(fromPrivateKey).getHexAddress();
+        final String hexAddress = ECKeyPair.create(fromPrivateKey).getAddress();
+        final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
+        logger.info("Calculate transaction txid: {}", txIdHex);
+        Assert.assertEquals(txIdHex, result.getId());
+    }
+
+    // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
+    // Solo tested.
+    @Test
+    public void testSendVETTransactionEIP1559() throws JsonProcessingException {
+        // Set in `config.properties`.
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransactionEIP1559.fromPrivateKey");
+        // Set in `config.properties`.
+        final Address toAddress = Address.fromHexString(
+                System.getProperty("TransactionClientTest.testSendVETTransactionEIP1559.toAddress")
+        );
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
+        final Amount amount = Amount.createFromToken(AbstractToken.VET);
+        amount.setDecimalAmount("100");
+        final ToClause clause = TransactionClient.buildVETToClause(toAddress, amount, ToData.ZERO);
+        final RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(
+                chainTag,
+                blockRef,
+                720,
+                21000,
+                1000000L,
+                10000000000000L,
+                CryptoUtils.generateTxNonce(),
+                clause
+        );
+        final String hex = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
+        logger.info("SendVET Raw: {}", hex);
+        logger.info("SignHash Raw: {}", BytesUtils.toHexString(CryptoUtils.blake2b(rawTransaction.encode()), Prefix.ZeroLowerX));
+        final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
+        logger.info("SendVET result: {}", writer.writeValueAsString(result));
+        Assert.assertNotNull(result);
+        final String hexAddress = ECKeyPair.create(fromPrivateKey).getAddress();
         final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
@@ -316,7 +421,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VET() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -348,7 +453,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testRecoverAddressAndCalcTxId_VTHO() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -381,7 +486,7 @@ public class TransactionClientTest extends BaseTest {
     }
 
     // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
-// Solo tested.
+    // Solo tested.
     @Test
     public void testDelegatorSignAndTransfer() throws ClientIOException, JsonProcessingException {
         // Set in `config.properties`.
@@ -415,4 +520,5 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertNotNull(transferResult);
         Assert.assertEquals(txIdHex, transferResult.getId());
     }
+
 }

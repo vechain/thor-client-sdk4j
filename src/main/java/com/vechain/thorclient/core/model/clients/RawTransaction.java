@@ -4,24 +4,28 @@ import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.utils.RLPUtils;
 
 public class RawTransaction {
-    private byte chainTag; // 1 bytes
-    private byte[] blockRef; //8 bytes
-    private byte[] expiration; //4 bytes
+
+    public static final byte EIP1559 = 0x51; // = 81
+
+    private byte chainTag;                  // 1 byte max: numeric
+    private byte[] blockRef;                // 8 bytes: compact fixed hex blob
+    private byte[] expiration;              // 4 bytes max: numeric
     private RawClause[] clauses;
 
     // 1-255 used baseprice 255 used 2x base price
-    private byte gasPriceCoef;
+    private Byte gasPriceCoef;              // 1 byte max: numeric, not null if legacy tx.
+    private byte[] maxPriorityFeePerGas;    // 32 bytes max: numeric, null if Legacy tx, nullable if EIP-1559 tx.
+    private byte[] maxFeePerGas;            // 32 bytes max: numeric, not null if EIP-1559 tx.
 
     // gas limit the max gas for VET 21000 for VTHO 80000
-    private byte[] gas;//64 bytes
-    private byte[] dependsOn;
-    private byte[] nonce;    //8 bytes
-    private byte[] signature;
+    private byte[] gas;                     // 8 bytes max: numeric
+    private byte[] dependsOn;               // 32 bytes: optional fixed hex blob optional
+    private byte[] nonce;                   // 8 bytes max: numeric
     private TransactionReserved reserved;
+    private byte[] signature;
 
-    public RawTransaction(){
+    public RawTransaction() {
     }
-
 
     public byte getChainTag() {
         return chainTag;
@@ -55,12 +59,28 @@ public class RawTransaction {
         this.clauses = clauses;
     }
 
-    public byte getGasPriceCoef() {
+    public Byte getGasPriceCoef() {
         return gasPriceCoef;
     }
 
-    public void setGasPriceCoef(byte gasPriceCoef) {
+    public void setGasPriceCoef(Byte gasPriceCoef) {
         this.gasPriceCoef = gasPriceCoef;
+    }
+
+    public byte[] getMaxPriorityFeePerGas() {
+        return maxPriorityFeePerGas;
+    }
+
+    public void setMaxPriorityFeePerGas(byte[] maxPriorityFeePerGas) {
+        this.maxPriorityFeePerGas = maxPriorityFeePerGas;
+    }
+
+    public byte[] getMaxFeePerGas() {
+        return maxFeePerGas;
+    }
+
+    public void setMaxFeePerGas(byte[] maxFeePerGas) {
+        this.maxFeePerGas = maxFeePerGas;
     }
 
     public byte[] getGas() {
@@ -87,6 +107,14 @@ public class RawTransaction {
         this.nonce = nonce;
     }
 
+    public TransactionReserved getReserved() {
+        return reserved;
+    }
+
+    public void setReserved(TransactionReserved reserved) {
+        this.reserved = reserved;
+    }
+
     public byte[] getSignature() {
         return signature;
     }
@@ -95,33 +123,33 @@ public class RawTransaction {
         this.signature = signature;
     }
 
-
-    public TransactionReserved getReserved() {
-        return reserved;
-    }
-
-
-    public byte[] encode(){
-        return RLPUtils.encodeRawTransaction(this);
-    }
-
-
-    public RawTransaction copy(){
+    public RawTransaction copy() {
         RawTransaction transaction = new RawTransaction();
-        transaction.setSignature( this.signature );
-        transaction.setClauses( this.clauses );
-        transaction.setBlockRef( this.blockRef );
-        transaction.setDependsOn( this.dependsOn );
-        transaction.setChainTag( this.chainTag );
-        transaction.setExpiration( this.expiration );
-        transaction.setGasPriceCoef( this.gasPriceCoef );
-        transaction.setNonce( this.nonce );
-        transaction.setGas( this.gas );
-        transaction.setReserved( this.reserved );
+        transaction.chainTag = this.chainTag;
+        transaction.blockRef = this.blockRef;
+        transaction.expiration = this.expiration;
+        transaction.clauses = this.clauses;
+        transaction.gasPriceCoef = this.gasPriceCoef; // optional, mandatory for legacy
+        transaction.maxPriorityFeePerGas = this.maxPriorityFeePerGas; // optional
+        transaction.maxFeePerGas = this.maxFeePerGas; // optional, mandatory for EIP1559
+        transaction.gas = this.gas;
+        transaction.dependsOn = this.dependsOn;
+        transaction.nonce = this.nonce;
+        transaction.reserved = this.reserved;
+        transaction.signature = this.signature;
         return transaction;
     }
 
-    public void setReserved(TransactionReserved reserved) {
-        this.reserved = reserved;
+    public byte[] encode() {
+        return RLPUtils.encodeRawTransaction(this);
     }
+
+    public boolean isEIP1559() {
+        return this.gasPriceCoef == null && this.maxFeePerGas != null;
+    }
+
+    public boolean isLegacy() {
+        return this.gasPriceCoef != null && this.maxPriorityFeePerGas == null && this.maxFeePerGas == null;
+    }
+
 }

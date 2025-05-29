@@ -6,15 +6,14 @@ A SDK toolkit for JDK to call VeChainThor Restful API.
 > [!WARNING]  
 > This repository is not actively maintained.
 > 
-> Cryptographic functions are provided by [Bouncycastle](https://www.bouncycastle.org/)
-> using the library `bcprov-jdk15on 1.59` for Java 1.5.
-> The library is deprecated.
+> Cryptographic functions are provided by [Bouncycastle](https://www.bouncycastle.org/).
+> 
 > Use at your own risk.
 > 
 > Contact VeChain if you need support to upgrade to not deprecated dependencies.
 > 
 
-Latest version 0.0.12
+Latest version 0.0.13
 
 - - - -
 
@@ -78,7 +77,7 @@ introduced in with **Galactica**.
 Transactions made **before Galactica** hard-fork have the same properties
 set to `null`.
 
-**This SDK does not support sending dynamic fee transactions to Thor.**
+**This SDK implements EIP1559 sending dynamic fee transactions to Thor.**
 
 - - - -
 

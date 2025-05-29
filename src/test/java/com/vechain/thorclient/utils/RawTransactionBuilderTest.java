@@ -24,7 +24,7 @@ public class RawTransactionBuilderTest extends BaseTest {
         RawTransactionBuilder builder = new RawTransactionBuilder();
 
         byte chainTag = BlockchainClient.getChainTag();
-        int  n        = chainTag & 0xFF;
+        int n = chainTag & 0xFF;
         logger.info("Current chainTag:" + n);
         builder.update(Byte.valueOf(chainTag), "chainTag");
 
@@ -41,13 +41,13 @@ public class RawTransactionBuilderTest extends BaseTest {
         builder.update(gas, "gas");
 
 
-        RawClause clauses[] = new RawClause[1];
+        RawClause[] clauses = new RawClause[1];
         clauses[0] = new RawClause();
         clauses[0].setTo(BytesUtils.toByteArray("0x42191bd624aBffFb1b65e92F1E51EB16f4d2A3Ce"));
         clauses[0].setValue(BytesUtils.defaultDecimalStringToByteArray("42.42"));
         builder.update(clauses);
         RawTransaction rawTxn = builder.build();
-        byte           tag    = rawTxn.getChainTag();
+        byte tag = rawTxn.getChainTag();
         Assert.assertEquals("ChainTag is not equal.", chainTag, tag);
 
     }
