@@ -8,9 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kong.unirest.core.HttpResponse;
-import kong.unirest.core.Unirest;
-import kong.unirest.core.UnirestException;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -97,8 +97,7 @@ public abstract class AbstractClient {
 
     public static void setTimeout(int timeout) {
         LOGGER.warn("setTimeout: " + timeout);
-        Unirest.config().reset();
-        Unirest.config().connectTimeout(timeout).requestTimeout(timeout);
+        Unirest.setTimeouts(timeout, timeout);
     }
 
     /**

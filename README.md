@@ -13,7 +13,7 @@ A SDK toolkit for JDK to call VeChainThor Restful API.
 > Contact VeChain if you need support to upgrade to not deprecated dependencies.
 > 
 
-Latest version 0.0.13
+Latest version 0.0.14
 
 - - - -
 
@@ -132,7 +132,7 @@ includes the following comment.
 // Solo tested.
 ```
 
-Testes inherited from version 0.0.10 involving specific **Binance** fixtures are annotated with
+Testes inherited from version 0.0.10 involving specific fixtures are annotated with
 - `// @Test`
 
 to exclude them to be executed by default.
