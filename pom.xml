@@ -96,7 +96,6 @@
             <artifactId>maven-assembly-plugin</artifactId>
             <version>3.7.1</version>
             <scope>provided</scope>
-
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
