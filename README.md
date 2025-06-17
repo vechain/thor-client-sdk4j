@@ -26,10 +26,10 @@ Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE
 
 ### JVM compatibility
 
-It requires **JDK 1.8** or later.
+It requires **JDK 11** or later.
 
 Tested with
-- Amazon Corretto 1.8, 
+- Amazon Corretto 11, 
 - Amazon Corretto 17,
 - OpenJDK 23.
 
