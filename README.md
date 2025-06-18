@@ -10,7 +10,7 @@ A SDK toolkit for JDK to call VeChainThor Restful API.
 > 
 > Use at your own risk.
 > 
-> Contact VeChain if you need support to upgrade to not deprecated dependencies.
+> Contact VeChain if you need support.
 > 
 
 Latest version 0.0.13
@@ -26,9 +26,10 @@ Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE
 
 ### JVM compatibility
 
-It requires **JDK 11** or later.
+It requires **JDK 1.8** or later.
 
 Tested with
+- Amazon Corretto 1.8
 - Amazon Corretto 11, 
 - Amazon Corretto 17,
 - OpenJDK 23.

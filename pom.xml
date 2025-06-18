@@ -5,7 +5,7 @@
 
     <groupId>com.vechain.client</groupId>
     <artifactId>thor-client-sdk4j</artifactId>
-    <version>0.0.13</version>
+    <version>0.0.15</version>
     <packaging>jar</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -15,19 +15,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <snapshot>${version}-SNAPSHOT</snapshot>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- https://mvnrepository.com/artifact/com.konghq/unirest-java-bom -->
-            <dependency>
-                <groupId>com.konghq</groupId>
-                <artifactId>unirest-java-bom</artifactId>
-                <version>4.4.5</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <!-- COMPILE -->
@@ -48,16 +35,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.19.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.konghq</groupId>
-            <artifactId>unirest-java-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.konghq</groupId>
-            <artifactId>unirest-modules-jackson</artifactId>
         </dependency>
 
         <dependency>
