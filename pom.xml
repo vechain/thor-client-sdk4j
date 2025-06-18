@@ -205,14 +205,9 @@
 
     <distributionManagement>
         <repository>
-            <id>releases</id>
-            <name>Vechain Repository</name>
-            <url>https://nexus.vechaindev.com/content/repositories/releases/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/vechain/thor-client-sdk4j</url>
         </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://nexus.vechaindev.com/content/repositories/snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <profiles>
