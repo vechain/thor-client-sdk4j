@@ -1,0 +1,30 @@
+name: Build & Publish Snapshot
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy-snapshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 8
+          cache: maven
+
+      - name: Build SNAPSHOT jar
+        run: mvn clean package -Pall
+
+      - name: Deploy SNAPSHOT to GitHub Packages
+        run: mvn deploy -Pall -DskipTests=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
