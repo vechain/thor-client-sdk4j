@@ -1,0 +1,32 @@
+name: Build & Deploy Javadoc to GitHub Pages
+
+on:
+  workflow_call:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 8
+          cache: maven
+
+      - name: Build Javadoc
+        run: mvn javadoc:javadoc
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/apidocs
+          publish_branch: gh-pages

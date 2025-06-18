@@ -28,3 +28,7 @@ jobs:
         run: mvn deploy -Pall -DskipTests=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-javadoc:
+    needs: build-and-deploy-snapshot
+    uses: ./.github/workflows/publish-javadoc.yml
