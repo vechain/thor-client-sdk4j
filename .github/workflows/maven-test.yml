@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -19,7 +19,11 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
+    - name: Start thor solo
+      run:  make solo-up
+      id: start-solo
     - name: Run tests with Maven
+      id: run-tests
       env:
         privateKey: ${{ secrets.TEST_PRIVATE_KEY }}
         sponsorPrivateKey: ${{ secrets.TEST_SPONSOR_KEY }}
@@ -27,3 +31,7 @@ jobs:
         nodeWSProviderUrl: ${{ secrets.TEST_NODE_WSPROVIDER_URL }}
         timeout: "10000"
       run: mvn -B test
+    - name: Stop thor solo
+      id: stop-solo
+      if: always()
+      run: make solo-down
