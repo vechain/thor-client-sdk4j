@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.junit.Ignore;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.Account;
@@ -52,8 +53,8 @@ public class PrototypeClientTest extends BaseTest {
     public void testSetMasterAndMasterActions() throws IOException {
         ECKeyPair aECKeyPair = ECKeyPair.create(privateKey);
         TransferResult result = ProtoTypeContractClient.setMasterAddress(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(MasterAddress2)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(MasterAddress2) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, aECKeyPair);
         logger.info("testSetMaster masterAddress: {}", MasterAddress2);
         logger.info("testSetMaster result: {}", writer.writeValueAsString(result));
@@ -68,8 +69,8 @@ public class PrototypeClientTest extends BaseTest {
         logger.info("VET: {}; Energy: {}", account.VETBalance().getAmount(), account.energyBalance().getAmount());
 
         TransferResult transferResult = ProtoTypeContractClient.addUsers(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(UserAddress)}, 500000, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(UserAddress) }, 500000, (byte) 0x0,
                 720, ECKeyPair.create(Master2PrivateKey));
         logger.info("Add user: {}", writer.writeValueAsString(transferResult));
 
@@ -94,8 +95,8 @@ public class PrototypeClientTest extends BaseTest {
         recovery.setDecimalAmount("0.00001");
 
         TransferResult setCreditPlansResult = ProtoTypeContractClient.setCreditPlans(
-                new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit},
-                new Amount[]{recovery}, TransactionClient.ContractGasLimit, (byte) 0x0, 720,
+                new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+                new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x0, 720,
                 ECKeyPair.create(Master2PrivateKey));
         Assert.assertNotNull(setCreditPlansResult);
         logger.info("set user plans: {}", writer.writeValueAsString(setCreditPlansResult));
@@ -113,8 +114,8 @@ public class PrototypeClientTest extends BaseTest {
         Assert.assertEquals(true, aAmount.getAmount().toString().startsWith("0.1"));
 
         TransferResult removeUserResult = ProtoTypeContractClient.removeUsers(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(UserAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(Master2PrivateKey));
 
         logger.info("Remove user: {}", writer.writeValueAsString(removeUserResult));
@@ -143,8 +144,8 @@ public class PrototypeClientTest extends BaseTest {
         testIsOnSponsor();
 
         TransferResult selectSponsorTransferResult = ProtoTypeContractClient.selectSponsor(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(addressHex)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(addressHex) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(Master2PrivateKey));
         logger.info("Select sponsor result: {}", writer.writeValueAsString(selectSponsorTransferResult));
         try {
@@ -163,6 +164,7 @@ public class PrototypeClientTest extends BaseTest {
         testIsOnSponsor();
     }
 
+    @Ignore("Deprecated method")
     @Test
     public void testIsUser() throws IOException {
         ContractCallResult callResult = ProtoTypeContractClient.isUser(Address.fromHexString(fromAddress),
@@ -175,8 +177,8 @@ public class PrototypeClientTest extends BaseTest {
     public void testAddUser() throws IOException {
 
         TransferResult transferResult = ProtoTypeContractClient.addUsers(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(UserAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(privateKey));
 
         logger.info("Add user: {}", writer.writeValueAsString(transferResult));
@@ -187,8 +189,8 @@ public class PrototypeClientTest extends BaseTest {
     public void testRemoveUser() throws IOException {
 
         TransferResult transferResult = ProtoTypeContractClient.removeUsers(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(UserAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(privateKey));
 
         logger.info("Remove user: {}", writer.writeValueAsString(transferResult));
@@ -203,13 +205,14 @@ public class PrototypeClientTest extends BaseTest {
         recovery.setDecimalAmount("0.00001");
 
         TransferResult result = ProtoTypeContractClient.setCreditPlans(
-                new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit},
-                new Amount[]{recovery}, TransactionClient.ContractGasLimit, (byte) 0x0, 720,
+                new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+                new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x0, 720,
                 ECKeyPair.create(privateKey));
 
         logger.info("set user plans: {}", writer.writeValueAsString(result));
     }
 
+    @Ignore("Deprecated method")
     @Test
     public void testGetUserPlan() throws IOException {
         ContractCallResult callResult = ProtoTypeContractClient.getCreditPlan(Address.fromHexString(fromAddress),
@@ -217,6 +220,7 @@ public class PrototypeClientTest extends BaseTest {
         logger.info("Get user plan result: {}", writer.writeValueAsString(callResult));
     }
 
+    @Ignore("Deprecated method")
     @Test
     public void testGetUserCredit() throws IOException {
         ContractCallResult callResult = ProtoTypeContractClient.getUserCredit(Address.fromHexString(fromAddress),
@@ -224,16 +228,18 @@ public class PrototypeClientTest extends BaseTest {
         logger.info("Get user plan result: {}", writer.writeValueAsString(callResult));
     }
 
-    // @Test
+    @Ignore("Deprecated method")
+    @Test
     public void testSponsor() throws IOException {
 
         TransferResult transferResult = ProtoTypeContractClient.sponsor(
-                new Address[]{Address.fromHexString(fromAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(sponsorKey));
         logger.info("sponsor the address result: {}", writer.writeValueAsString(transferResult));
 
     }
 
+    @Ignore("Deprecated method")
     @Test
     public void testIsOnSponsor() throws IOException {
         String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
@@ -242,18 +248,20 @@ public class PrototypeClientTest extends BaseTest {
         logger.info("get isSponsor result: {}", writer.writeValueAsString(contractCallResult));
     }
 
-    // @Test
+    @Ignore("Deprecated method")
+    @Test
     public void testSelectSponsor() throws IOException {
         String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
         TransferResult transferResult = ProtoTypeContractClient.selectSponsor(
 
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(addressHex)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(addressHex) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(privateKey));
         logger.info("Select sponsor result: {}", writer.writeValueAsString(transferResult));
 
     }
 
+    @Ignore("Deprecated method")
     @Test
     public void testQueryCurrentSponsor() throws IOException {
         ContractCallResult result = ProtoTypeContractClient.getCurrentSponsor(Address.fromHexString(fromAddress), null);
@@ -263,7 +271,7 @@ public class PrototypeClientTest extends BaseTest {
     // @Test
     public void testUnSponsor() throws IOException {
         TransferResult transferResult = ProtoTypeContractClient.unsponsor(
-                new Address[]{Address.fromHexString(fromAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(sponsorKey));
         logger.info("un-sponsor the address result: {}", writer.writeValueAsString(transferResult));
 
@@ -315,8 +323,8 @@ public class PrototypeClientTest extends BaseTest {
         long start = System.currentTimeMillis();
 
         TransferResult transferResult = ProtoTypeContractClient.addUsers(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(UserAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 expiration, ECKeyPair.create(privateKey));
         if (transferResult != null) {
             logger.info("MPP addChildTrees user: {}", writer.writeValueAsString(transferResult));
@@ -332,8 +340,8 @@ public class PrototypeClientTest extends BaseTest {
         recovery.setDecimalAmount("0.00001");
 
         TransferResult setUserPlansResult = ProtoTypeContractClient.setCreditPlans(
-                new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit},
-                new Amount[]{recovery}, TransactionClient.ContractGasLimit, (byte) 0x0, expirationBlock,
+                new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+                new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x0, expirationBlock,
                 ECKeyPair.create(privateKey));
         if (setUserPlansResult != null) {
             logger.info("MPP set user plans: {}", writer.writeValueAsString(setUserPlansResult));
@@ -342,7 +350,7 @@ public class PrototypeClientTest extends BaseTest {
             throw new ThorException("ProtoTypeContractClient.setUserPlans出错了~"); // Something went wrong
         }
         TransferResult sponsorResult = ProtoTypeContractClient.sponsor(
-                new Address[]{Address.fromHexString(fromAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 720, ECKeyPair.create(sponsorKey));
         if (sponsorResult != null) {
             logger.info("MPP the address setUserPlansResult: {}", writer.writeValueAsString(sponsorResult));
@@ -353,8 +361,8 @@ public class PrototypeClientTest extends BaseTest {
 
         String addressHex = ECKeyPair.create(sponsorKey).getHexAddress();
         TransferResult selectSponsorResult = ProtoTypeContractClient.selectSponsor(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(addressHex)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(addressHex) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 expirationBlock, ECKeyPair.create(privateKey));
         if (selectSponsorResult != null) {
             logger.info("MPP selectSponsor: {}", writer.writeValueAsString(selectSponsorResult));
@@ -372,8 +380,8 @@ public class PrototypeClientTest extends BaseTest {
 
         long start = System.currentTimeMillis();
         TransferResult transferResult = ProtoTypeContractClient.addUsers(
-                new Address[]{Address.fromHexString(fromAddress)},
-                new Address[]{Address.fromHexString(UserAddress)}, TransactionClient.ContractGasLimit, (byte) 0x0,
+                new Address[] { Address.fromHexString(fromAddress) },
+                new Address[] { Address.fromHexString(UserAddress) }, TransactionClient.ContractGasLimit, (byte) 0x0,
                 expirationBlock, ECKeyPair.create(privateKey));
 
         if (transferResult != null) {
@@ -390,8 +398,8 @@ public class PrototypeClientTest extends BaseTest {
         recovery.setDecimalAmount("0.00001");
 
         TransferResult setUserPlansResult = ProtoTypeContractClient.setCreditPlans(
-                new Address[]{Address.fromHexString(fromAddress)}, new Amount[]{credit},
-                new Amount[]{recovery}, TransactionClient.ContractGasLimit, (byte) 0x0, expirationBlock,
+                new Address[] { Address.fromHexString(fromAddress) }, new Amount[] { credit },
+                new Amount[] { recovery }, TransactionClient.ContractGasLimit, (byte) 0x0, expirationBlock,
                 ECKeyPair.create(privateKey));
         if (setUserPlansResult != null) {
             logger.info("MPP to set user plans: {}", writer.writeValueAsString(setUserPlansResult));
