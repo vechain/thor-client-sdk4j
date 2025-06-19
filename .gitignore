@@ -45,3 +45,4 @@ gen
 /logs/
 /thor-client-sdk4j.iml
 /.vscode/
+/target

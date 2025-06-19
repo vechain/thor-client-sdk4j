@@ -10,6 +10,8 @@ import com.vechain.thorclient.core.model.exception.ClientIOException;
 import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
+import java.math.BigInteger;
+
 public class ERC20ContractClient extends TransactionClient {
 
     /**
@@ -83,7 +85,60 @@ public class ERC20ContractClient extends TransactionClient {
 
         }
         return invokeContractMethod(clauses, gas, gasCoef, expiration, keyPair);
+    }
 
+    /**
+     * Transfer ERC20 token using EIP-1559 transaction
+     *
+     * @param receivers  {@link Address} array
+     * @param amounts    {@link Amount} array
+     * @param gas        gas at least 7000
+     * @param maxFeePerGas   The maximum fee per gas in wei units allowed for the transaction
+     * @param maxPriorityFeePerGas  The maximum priority fee in wei units for miners
+     * @param expiration expiration
+     * @param keyPair    your private key.
+     * @return {@link TransferResult}
+     * @throws ClientIOException
+     */
+    public static TransferResult transferERC20Token(
+            Address[] receivers,
+            Amount[] amounts,
+            int gas,
+            BigInteger maxFeePerGas,
+            BigInteger maxPriorityFeePerGas,
+            int expiration,
+            ECKeyPair keyPair
+    ) throws ClientIOException {
+        if (receivers == null) {
+            throw ClientArgumentException.exception("receivers is null");
+        }
+        if (amounts == null) {
+            throw ClientArgumentException.exception("amounts is null");
+        }
+        if (receivers.length != amounts.length) {
+            throw ClientArgumentException.exception("receivers length equal to amounts length.");
+        }
+        if (maxPriorityFeePerGas.compareTo(BigInteger.ZERO) < 0) {
+            throw ClientArgumentException.exception("maxPriorityFeePerGas is too small.");
+        }
+        if (maxFeePerGas.compareTo(BigInteger.ZERO) < 0) {
+            throw ClientArgumentException.exception("maxFeePerGas is too small.");
+        }
+        AbiDefinition abi = ERC20Contract.defaultERC20Contract.findAbiDefinition("transfer");
+        if (abi == null) {
+            throw new IllegalArgumentException("Can not find abi master method");
+        }
+        ToClause[] clauses = new ToClause[receivers.length];
+        for (int index = 0; index < receivers.length; index++) {
+            if (!(amounts[index].getAbstractToken() instanceof ERC20Token)) {
+                throw ClientArgumentException.exception("Token is not ERC20");
+            }
+            ERC20Token token = (ERC20Token) amounts[index].getAbstractToken();
+            clauses[index] = ProtoTypeContract.buildToClause(token.getContractAddress(), abi,
+                    receivers[index].toHexString(Prefix.ZeroLowerX), amounts[index].toBigInteger());
+
+        }
+        return invokeContractMethod(clauses, gas, maxPriorityFeePerGas, maxFeePerGas, expiration, keyPair);
     }
 
 }

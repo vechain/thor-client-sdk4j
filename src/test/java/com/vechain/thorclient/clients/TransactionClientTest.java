@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -128,8 +129,8 @@ public class TransactionClientTest extends BaseTest {
         final TransferResult result = TransactionClient.deployContract(
                 contractHex,
                 9000000,
-                1000000L,
-                10000000000000L,
+                BigInteger.valueOf(1000000L),
+                BigInteger.valueOf(10000000000000L),
                 720,
                 ECKeyPair.create(privateKey)
         );
@@ -233,8 +234,8 @@ public class TransactionClientTest extends BaseTest {
                 blockRef,
                 720,
                 80000,
-                1000000L,
-                10000000000000L,
+                BigInteger.valueOf(1000000L),
+                BigInteger.valueOf(10000000000000L),
                 CryptoUtils.generateTxNonce(),
                 clause
         );
@@ -349,8 +350,8 @@ public class TransactionClientTest extends BaseTest {
                 blockRef,
                 720,
                 21000,
-                1000000L,
-                10000000000000L,
+                BigInteger.valueOf(1000000L),
+                BigInteger.valueOf(10000000000000L),
                 CryptoUtils.generateTxNonce(),
                 clause
         );

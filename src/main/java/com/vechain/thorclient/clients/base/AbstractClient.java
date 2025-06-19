@@ -246,7 +246,6 @@ public abstract class AbstractClient {
      * @return {@link ContractCallResult}
      * @throws ClientIOException network error
      */
-
     @Deprecated
     public static ContractCallResult callContract(ContractCall call, Address contractAddress, Revision revision)
             throws ClientIOException {
