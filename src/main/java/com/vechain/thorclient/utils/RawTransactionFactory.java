@@ -154,9 +154,9 @@ public class RawTransactionFactory {
         // clauses
         builder.update(rawClauses);
         // maxPriorityFeePerGas
-        builder.update(maxFeeSettings.maxPriorityFeePerGas.toByteArray(), "maxPriorityFeePerGas");
+        builder.update(BytesUtils.trimLeadingZeroes(maxFeeSettings.maxPriorityFeePerGas.toByteArray()), "maxPriorityFeePerGas");
         // maxFeePerGas
-        builder.update(maxFeeSettings.maxFeePerGas.toByteArray(), "maxFeePerGas");
+        builder.update(BytesUtils.trimLeadingZeroes(maxFeeSettings.maxFeePerGas.toByteArray()), "maxFeePerGas");
         // gas
         builder.update(BytesUtils.longToBytes(gas), "gas");
         // nonce
