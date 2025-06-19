@@ -4,6 +4,8 @@ import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.core.model.clients.ToClause;
 
+import java.math.BigInteger;
+
 public class RawTransactionFactory {
 
     private static final RawTransactionFactory INSTANCE = new RawTransactionFactory();
@@ -100,8 +102,8 @@ public class RawTransactionFactory {
             final byte[] blockRef,
             final int expiration,
             final int gas,
-            final long maxPriorityFeePerGas,
-            final long maxFeePerGas,
+            final BigInteger maxPriorityFeePerGas,
+            final BigInteger maxFeePerGas,
             final byte[] nonce,
             final ToClause... toClauses
     ) {
@@ -129,12 +131,12 @@ public class RawTransactionFactory {
             final byte[] blockRef,
             final int expiration,
             final int gas,
-            final long maxPriorityFeePerGas,
-            final long maxFeePerGas,
+            final BigInteger maxPriorityFeePerGas,
+            final BigInteger maxFeePerGas,
             final byte[] nonce,
             final RawClause[] rawClauses
     ) {
-        if (chainTag == 0 || blockRef == null || expiration <= 0 || gas < 21000 || maxPriorityFeePerGas < 0 || maxFeePerGas < 0 || rawClauses == null) {
+        if (chainTag == 0 || blockRef == null || expiration <= 0 || gas < 21000 || maxPriorityFeePerGas.compareTo(BigInteger.ZERO) < 0 || maxFeePerGas.compareTo(BigInteger.ZERO) < 0 || rawClauses == null) {
             throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
         }
         final RawTransactionBuilder builder = new RawTransactionBuilder();
@@ -147,9 +149,9 @@ public class RawTransactionFactory {
         // clauses
         builder.update(rawClauses);
         // maxPriorityFeePerGas
-        builder.update(BytesUtils.longToBytes(maxPriorityFeePerGas), "maxPriorityFeePerGas");
+        builder.update(maxPriorityFeePerGas.toByteArray(), "maxPriorityFeePerGas");
         // maxFeePerGas
-        builder.update(BytesUtils.longToBytes(maxFeePerGas), "maxFeePerGas");
+        builder.update(maxFeePerGas.toByteArray(), "maxFeePerGas");
         // gas
         builder.update(BytesUtils.longToBytes(gas), "gas");
         // nonce

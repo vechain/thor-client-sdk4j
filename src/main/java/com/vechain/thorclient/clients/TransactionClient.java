@@ -1,5 +1,6 @@
 package com.vechain.thorclient.clients;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 
 import com.vechain.thorclient.clients.base.AbstractClient;
@@ -268,8 +269,8 @@ public class TransactionClient extends AbstractClient {
     public static TransferResult deployContract(
             final String contractHex,
             final int gas,
-            final long maxPriorityFeePerGas,
-            final long maxFeePerGas,
+            final BigInteger maxPriorityFeePerGas,
+            final BigInteger maxFeePerGas,
             final int expiration,
             final ECKeyPair keyPair
     ) {
@@ -333,11 +334,25 @@ public class TransactionClient extends AbstractClient {
         return TransactionClient.signThenTransfer(rawTransaction, keyPair);
     }
 
+    /**
+     * Invokes a method on a smart contract and sends the transaction to the blockchain.
+     *
+     * @param toClauses  an array of {@link ToClause} representing transaction clauses,
+     *                   detailing the target address, value, and additional data.
+     * @param gas        the gas limit to be consumed by the transaction.
+     * @param maxPriorityFeePerGas  total vtho in wei willing to spend as a validator tip.
+     * @param maxFeePerGas  total vtho in wei willing to spend on the transaction.
+     * @param expiration the expiration time for the transaction, measured in blocks.
+     * @param keyPair    the {@link ECKeyPair} used to sign the transaction, containing the private key.
+     * @return {@link TransferResult} representing the result of the transaction, including its transaction ID.
+     * @throws ClientIOException       if a network error occurs or if chainTag or bestRef cannot be fetched.
+     * @throws ClientArgumentException if any input parameter (gas, gasCoef, expiration, toClauses, or keyPair) is invalid.
+     */
     protected static TransferResult invokeContractMethod(
             final ToClause[] toClauses,
             final int gas,
-            final long maxPriorityFeePerGas,
-            final long maxFeePerGas,
+            final BigInteger maxPriorityFeePerGas,
+            final BigInteger maxFeePerGas,
             final int expiration,
             final ECKeyPair keyPair
     ) throws ClientIOException {
@@ -347,10 +362,10 @@ public class TransactionClient extends AbstractClient {
         if (gas < ContractGasLimit) {
             throw ClientArgumentException.exception("gas is too small.");
         }
-        if (maxPriorityFeePerGas < 0L) {
+        if (maxPriorityFeePerGas.compareTo(BigInteger.ZERO) < 0) {
             throw ClientArgumentException.exception("maxPriorityFeePerGas is too small.");
         }
-        if (maxFeePerGas < 0L) {
+        if (maxFeePerGas.compareTo(BigInteger.ZERO) < 0) {
             throw ClientArgumentException.exception("maxFeePerGas is too small.");
         }
         if (expiration <= 0) {
