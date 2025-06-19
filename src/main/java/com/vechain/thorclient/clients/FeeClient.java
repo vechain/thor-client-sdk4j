@@ -22,9 +22,9 @@ public class FeeClient extends AbstractClient {
      */
     public static Fee getFeeHistory(Number blockCount, String rewardPercentiles, String newestBlock)
             throws ClientIOException {
-        HashMap<String, String> uriParams = parameters(
+        HashMap<String, String> queryParams = parameters(
                 new String[] { "blockCount", "rewardPercentiles", "newestBlock" },
-                new String[] { blockCount.toString(), rewardPercentiles.toString(), newestBlock.toString() });
-        return sendGetRequest(Path.GetFeeHistoryPath, uriParams, null, Fee.class);
+                new String[] { blockCount.toString(), rewardPercentiles, newestBlock });
+        return sendGetRequest(Path.GetFeeHistoryPath, null, queryParams, Fee.class);
     }
 }
