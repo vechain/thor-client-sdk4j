@@ -17,7 +17,7 @@ public class ForkDetector {
      * @return True/False
      */
     public static Boolean isGalacticaForked() {
-        if (cachedGalacticaForkedStatus) {
+        if (Boolean.TRUE.equals(cachedGalacticaForkedStatus)) {
             return true;
         }
         // check best block
