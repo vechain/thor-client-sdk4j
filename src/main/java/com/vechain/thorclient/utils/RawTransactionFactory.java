@@ -1,5 +1,6 @@
 package com.vechain.thorclient.utils;
 
+import com.vechain.thorclient.core.model.blockchain.MaxFees;
 import com.vechain.thorclient.core.model.blockchain.RawClause;
 import com.vechain.thorclient.core.model.clients.RawTransaction;
 import com.vechain.thorclient.core.model.clients.ToClause;
@@ -136,9 +137,13 @@ public class RawTransactionFactory {
             final byte[] nonce,
             final RawClause[] rawClauses
     ) {
-        if (chainTag == 0 || blockRef == null || expiration <= 0 || gas < 21000 || maxPriorityFeePerGas.compareTo(BigInteger.ZERO) < 0 || maxFeePerGas.compareTo(BigInteger.ZERO) < 0 || rawClauses == null) {
+        if (chainTag == 0 || blockRef == null || expiration <= 0 || gas < 21000 || rawClauses == null) {
             throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
         }
+        // get user supplied or computed max fees
+        MaxFees userProvidedMaxFees = new MaxFees(maxFeePerGas, maxPriorityFeePerGas);
+        MaxFees maxFeeSettings = MaxFeeCalculator.calculateMaxFees(userProvidedMaxFees);
+        // build the tx
         final RawTransactionBuilder builder = new RawTransactionBuilder();
         // chainTag
         builder.update(Byte.valueOf(chainTag), "chainTag");
@@ -149,9 +154,9 @@ public class RawTransactionFactory {
         // clauses
         builder.update(rawClauses);
         // maxPriorityFeePerGas
-        builder.update(maxPriorityFeePerGas.toByteArray(), "maxPriorityFeePerGas");
+        builder.update(maxFeeSettings.maxPriorityFeePerGas.toByteArray(), "maxPriorityFeePerGas");
         // maxFeePerGas
-        builder.update(maxFeePerGas.toByteArray(), "maxFeePerGas");
+        builder.update(maxFeeSettings.maxFeePerGas.toByteArray(), "maxFeePerGas");
         // gas
         builder.update(BytesUtils.longToBytes(gas), "gas");
         // nonce

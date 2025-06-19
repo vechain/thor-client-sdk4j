@@ -7,7 +7,7 @@ public class Fee implements Serializable {
     private String[] baseFeePerGas;
     private Number[] gasUsedRatio;
     private String maxPriorityFeePerGas;
-    private String[] reward;
+    private String[][] reward;
 
     public String getOldestBlock() {
         return oldestBlock;
@@ -21,7 +21,7 @@ public class Fee implements Serializable {
         return gasUsedRatio;
     }
 
-    public String[] getReward() {
+    public String[][] getReward() {
         return reward;
     }
 

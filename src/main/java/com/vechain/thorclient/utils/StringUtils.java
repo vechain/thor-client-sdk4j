@@ -1,5 +1,7 @@
 package com.vechain.thorclient.utils;
 
+import java.math.BigInteger;
+
 /**
  * String operation utility class.
  */
@@ -87,6 +89,23 @@ public class StringUtils {
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Converts a Hex string to a BigInteger
+	 * @param hexValue Hexadecimal string value
+	 * @return BigInteger value
+	 */
+	static BigInteger hexStringToBigInteger(String hexValue) {
+		if (isHex(hexValue)) {
+			// Remove "0x" prefix if present
+			if (hexValue.startsWith("0x")) {
+				hexValue = hexValue.substring(2);
+			}
+			// Parse as BigInteger
+			return new BigInteger(hexValue, 16);
+		}
+		throw new IllegalArgumentException("value is not a hex string");
 	}
 
 }
