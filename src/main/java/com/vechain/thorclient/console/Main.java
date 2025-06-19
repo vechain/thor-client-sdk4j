@@ -65,8 +65,7 @@ public class Main {
 			} else if (args[0].equals(BLOCK_REF)) {
 				BlockchainQueryConsole.getBestBlockRef();
 			} else if (args[0].equals(CREATE_WALLET)) {
-				System.out.println("This feature is deprecated");
-				//WalletConsole.createWalletToKeystoreFile(args);
+				WalletConsole.createWalletToKeystoreFile(args);
 			} else if (args[0].equals(SEND)) {
 				// args=signAndSendVET {providerUrl} {privateKey} {filePath}
 				TransactionConsole.sendTransactionFromCSVFile(args, privateKey);
