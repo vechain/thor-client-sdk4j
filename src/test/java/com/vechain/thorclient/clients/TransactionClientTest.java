@@ -397,8 +397,8 @@ public class TransactionClientTest extends BaseTest {
         Assert.assertNotNull(result);
         String txId = result.getId();
         Receipt txReceipt = TransactionUtils.pollForReceipt(txId);
-        assert txReceipt != null;
-        Assert.assertFalse(txReceipt.isReverted());
+        Assert.assertNotNull("Transaction receipt should not be null", txReceipt);
+        Assert.assertFalse("Transaction should not be reverted", txReceipt.isReverted());
     }
 
     private static RawTransaction generatingVETRawTxn(
