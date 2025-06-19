@@ -392,13 +392,23 @@ public class TransactionClientTest extends BaseTest {
                 CryptoUtils.generateTxNonce(),
                 clause
         );
+        // send tx
         final String hex = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
         final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
         Assert.assertNotNull(result);
         String txId = result.getId();
+        // poll for receipt
         Receipt txReceipt = TransactionUtils.pollForReceipt(txId);
         Assert.assertNotNull("Transaction receipt should not be null", txReceipt);
         Assert.assertFalse("Transaction should not be reverted", txReceipt.isReverted());
+        // get the tx
+        Transaction transactionResult = TransactionClient.getTransaction(txId, false, null);
+        logger.info("MaxFeePerGas: {}", transactionResult.getMaxFeePerGas());
+        logger.info("MaxPriorityFeePerGas: {}", transactionResult.getMaxPriorityFeePerGas());
+        BigInteger maxFeePerGas = StringUtils.hexStringToBigInteger(transactionResult.getMaxFeePerGas());
+        BigInteger maxPriorityFeePerGas = StringUtils.hexStringToBigInteger(transactionResult.getMaxPriorityFeePerGas());
+        Assert.assertTrue(maxFeePerGas.compareTo(BigInteger.ZERO) > 0);
+        Assert.assertTrue(maxPriorityFeePerGas.compareTo(BigInteger.ZERO) >= 0);
     }
 
     private static RawTransaction generatingVETRawTxn(

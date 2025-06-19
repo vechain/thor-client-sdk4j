@@ -96,7 +96,7 @@ public class StringUtils {
 	 * @param hexValue Hexadecimal string value
 	 * @return BigInteger value
 	 */
-	static BigInteger hexStringToBigInteger(String hexValue) {
+	public static BigInteger hexStringToBigInteger(String hexValue) {
 		if (isHex(hexValue)) {
 			// Remove "0x" prefix if present
 			if (hexValue.startsWith("0x")) {
