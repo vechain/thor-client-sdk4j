@@ -19,6 +19,7 @@ public class WalletConsole {
 	 *            createWallet password path(options)
 	 * @throws IOException
 	 */
+	@Deprecated
 	public static void createWalletToKeystoreFile(String[] args) throws IOException {
 		if (args.length < 2) {
 			System.out.println("You have input invalid parameters.");
