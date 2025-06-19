@@ -17,6 +17,7 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vechain.thorclient.clients.AccountCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.NodeProvider;
@@ -43,6 +44,7 @@ public abstract class AbstractClient {
         PostDeployContractPath(
                 "/accounts"),
         PostAccountCallPath("/account"),
+        PostInspectClauses("/accounts/*"),
         GetAccountCodePath(
                 "/accounts/{address}/code"),
 
@@ -261,6 +263,33 @@ public abstract class AbstractClient {
                 new String[] { currentRevision.toString() });
 
         return sendPostRequest(Path.PostContractCallPath, uriParams, queryParams, call, ContractCallResult.class);
+    }
+
+    /**
+     * Read contract state.
+     * Simulate the execution of a transaction. This can be useful to determine if
+     * your transaction may revert before submitting it.
+     * Inspect the outputs of a transaction before executing it.
+     * Estimate the gas consumption of a transaction. Note: The caller field should
+     * be provided for higher accuracy.
+     *
+     * @param call     {@link AccountCall}
+     * @param revision {@link Revision}
+     * @return {@link ContractCallResult}
+     * @throws ClientIOException network error
+     */
+
+    public static ContractCallResult readContract(AccountCall call, Revision revision)
+            throws ClientIOException {
+        Revision currentRevision = revision;
+        if (currentRevision == null) {
+            currentRevision = Revision.BEST;
+        }
+
+        HashMap<String, String> queryParams = parameters(new String[] { "revision" },
+                new String[] { currentRevision.toString() });
+
+        return sendPostRequest(Path.PostInspectClauses, null, queryParams, call, ContractCallResult.class);
     }
 
 }
