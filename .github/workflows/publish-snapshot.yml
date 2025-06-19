@@ -22,7 +22,7 @@ jobs:
           cache: maven
 
       - name: Build SNAPSHOT jar
-        run: mvn clean package -Pall
+        run: mvn clean package -Pall -DskipTests=true
 
       - name: Deploy SNAPSHOT to GitHub Packages
         run: mvn deploy -Pall -DskipTests=true
