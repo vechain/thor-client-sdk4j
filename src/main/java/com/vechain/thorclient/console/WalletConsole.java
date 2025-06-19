@@ -14,7 +14,7 @@ public class WalletConsole {
 
 	/**
 	 * createWalletToKeystoreFile
-	 * 
+	 *
 	 * @param args
 	 *            createWallet password path(options)
 	 * @throws IOException
@@ -42,7 +42,5 @@ public class WalletConsole {
 		out.close();
 		System.out.println("The wallet created successfully and the key store is:");
 		System.out.println(keyStoreStr);
-		System.out.println("The wallet created successfully and the privateKey is:");
-		System.out.println(newPrivateKey);
 	}
 }
