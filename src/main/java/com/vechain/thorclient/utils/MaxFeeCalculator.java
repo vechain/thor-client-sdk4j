@@ -16,8 +16,8 @@ public class MaxFeeCalculator {
     /**
      * Calculates the maxFeePerGas and maxPriority fee per gas from user provided values
      * By checking user provided values and adjusting as needed
-     * @param providedFees
-     * @return
+     * @param providedFees user provided max fee settings
+     * @return updated max fee settings
      */
     public static MaxFees calculateMaxFees(MaxFees providedFees) {
         if (providedFees.maxPriorityFeePerGas != null && providedFees.maxFeePerGas != null) {
