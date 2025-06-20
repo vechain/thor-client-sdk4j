@@ -1,5 +1,5 @@
 # Thor Java Client SDK
-[![Build Status](https://travis-ci.org/vechain/thor-client-sdk4j.svg?branch=master)](https://travis-ci.org/vechain/thor-client-sdk4j.svg?branch=master)
+[![Java CI with Maven](https://github.com/vechain/thor-client-sdk4j/actions/workflows/maven-test.yml/badge.svg)](https://github.com/vechain/thor-client-sdk4j/actions/workflows/maven-test.yml)
 
 A SDK toolkit for JDK to call VeChainThor Restful API.
 
