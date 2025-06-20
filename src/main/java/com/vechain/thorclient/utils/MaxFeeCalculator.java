@@ -3,8 +3,9 @@ package com.vechain.thorclient.utils;
 import com.vechain.thorclient.clients.BlockClient;
 import com.vechain.thorclient.clients.FeeClient;
 import com.vechain.thorclient.core.model.blockchain.Block;
-import com.vechain.thorclient.core.model.blockchain.Fee;
+import com.vechain.thorclient.core.model.blockchain.FeeHistoryResponse;
 import com.vechain.thorclient.core.model.blockchain.MaxFees;
+import com.vechain.thorclient.core.model.blockchain.MaxPriorityFeeResponse;
 import com.vechain.thorclient.core.model.clients.Revision;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class MaxFeeCalculator {
         // check if galactica has forked
         if (ForkDetector.isGalacticaForked()) {
             // get recent fee history
-            Fee feeHistory = FeeClient.getFeeHistory(10, "25,50,75", "best");
+            FeeHistoryResponse feeHistory = FeeClient.getFeeHistory(10, "25,50,75", "best");
             BigInteger percentile75;
             if (feeHistory.getReward() != null && feeHistory.getReward().length > 0) {
                 // get latest rewards
@@ -77,8 +78,8 @@ public class MaxFeeCalculator {
                     percentile75 = count > 0 ? sum.divide(BigInteger.valueOf(count)) : BigInteger.ZERO;
                 }
             } else {
-                // default to fees endpoint if history not available
-                percentile75 = StringUtils.hexStringToBigInteger(feeHistory.getMaxPriorityFeePerGas());
+                // default to max priority fees endpoint if history not available
+                percentile75 = FeeClient.getPriorityFee();
             }
             // calculate fee cap as 4.6% of base fee
             BigInteger baseFeeCap = baseFeePerGas.multiply(BigInteger.valueOf(46L)).divide(BigInteger.valueOf(1000L));

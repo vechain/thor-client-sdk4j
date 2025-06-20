@@ -2,11 +2,10 @@ package com.vechain.thorclient.core.model.blockchain;
 
 import java.io.Serializable;
 
-public class Fee implements Serializable {
+public class FeeHistoryResponse implements Serializable {
     private String oldestBlock;
     private String[] baseFeePerGas;
     private Number[] gasUsedRatio;
-    private String maxPriorityFeePerGas;
     private String[][] reward;
 
     public String getOldestBlock() {
@@ -25,8 +24,5 @@ public class Fee implements Serializable {
         return reward;
     }
 
-    public String getMaxPriorityFeePerGas() {
-        return maxPriorityFeePerGas;
-    }
 
 }

@@ -1,10 +1,13 @@
 package com.vechain.thorclient.clients;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 
 import com.vechain.thorclient.clients.base.AbstractClient;
-import com.vechain.thorclient.core.model.blockchain.Fee;
+import com.vechain.thorclient.core.model.blockchain.FeeHistoryResponse;
+import com.vechain.thorclient.core.model.blockchain.MaxPriorityFeeResponse;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
+import com.vechain.thorclient.utils.StringUtils;
 
 public class FeeClient extends AbstractClient {
     /**
@@ -20,11 +23,20 @@ public class FeeClient extends AbstractClient {
      * @return Fee object containing fee history data including base fee per gas and
      *         priority fee percentiles.
      */
-    public static Fee getFeeHistory(Number blockCount, String rewardPercentiles, String newestBlock)
+    public static FeeHistoryResponse getFeeHistory(Number blockCount, String rewardPercentiles, String newestBlock)
             throws ClientIOException {
         HashMap<String, String> queryParams = parameters(
                 new String[] { "blockCount", "rewardPercentiles", "newestBlock" },
                 new String[] { blockCount.toString(), rewardPercentiles, newestBlock });
-        return sendGetRequest(Path.GetFeeHistoryPath, null, queryParams, Fee.class);
+        return sendGetRequest(Path.GetFeeHistoryPath, null, queryParams, FeeHistoryResponse.class);
+    }
+
+    /**
+     * Gets the suggested maxPriorityFeePerGas that ensures transaction will be in next block
+     * @return suggested maxPriorityFeePerGas
+     */
+    public static BigInteger getPriorityFee() {
+        MaxPriorityFeeResponse response =  sendGetRequest(Path.GetFeePriorityPath, null, null, MaxPriorityFeeResponse.class);
+        return StringUtils.hexStringToBigInteger(response.getMaxPriorityFeePerGas());
     }
 }
