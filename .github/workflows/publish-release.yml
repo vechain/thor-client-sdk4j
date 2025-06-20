@@ -26,9 +26,9 @@ jobs:
           mvn versions:set -DnewVersion=$TAG_NAME
 
       - name: Build Release jar
-        run: mvn clean package -Pall -DskipTests=true
+        run: mvn clean package -Pall
 
       - name: Deploy Release to GitHub Packages
-        run: mvn deploy -Pall -DskipTests=true
+        run: mvn deploy -Pall
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

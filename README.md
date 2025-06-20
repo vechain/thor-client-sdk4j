@@ -50,7 +50,7 @@ property set to `null`.
 The new end points
 - `/fees/history`,
 - `/fees/priority`
-are not supported.
+are now supported.
 
 #### Subscriptions
 
@@ -83,17 +83,15 @@ set to `null`.
 
 ### Test
 
-Tests run with **Thor Galactica Solo** Docker image `ghcr.io/vechain/thor:release-galactica-latest`
-- Download and install the [vechain-sdk-js](https://github.com/vechain/vechain-sdk-js), from **vechain-sdk-js**
+Tests run with **Thor Solo** Docker image
 - Run **Thor Solo** with
-  - `yarn start-thor-solo`.
-- Seed accounts with
-  - `yarn seed-thor-solo`.
-- In **thor-client-sdk4j** run tests
-  - `mvn test`.
+  - `make solo-up`.
+- Run tests
+  - `mvn clean test`.
+- Stop solo
+  - `make solo-down`
 
-Accounts, keys, identifiers of blocks or transactions **fixtures** used in the tests adapted for
-**Thor Galactica** are set in the file `src/test/resources/config.properties`.
+Accounts, keys, identifiers of blocks or transactions **fixtures** used in the tests adapted for are set in the file `src/test/resources/config.properties`.
 
 For example, the entry
 

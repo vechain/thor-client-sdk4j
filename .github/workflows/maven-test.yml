@@ -24,12 +24,6 @@ jobs:
       id: start-solo
     - name: Run tests with Maven
       id: run-tests
-      env:
-        privateKey: ${{ secrets.TEST_PRIVATE_KEY }}
-        sponsorPrivateKey: ${{ secrets.TEST_SPONSOR_KEY }}
-        nodeProviderUrl: ${{ secrets.TEST_NODE_PROVIDER_URL }}
-        nodeWSProviderUrl: ${{ secrets.TEST_NODE_WSPROVIDER_URL }}
-        timeout: "10000"
       run: mvn -B test
     - name: Stop thor solo
       id: stop-solo
