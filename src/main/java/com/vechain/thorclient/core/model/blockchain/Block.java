@@ -22,8 +22,6 @@ public class Block implements Serializable {
     private long gasUsed;
     private String baseFeePerGas;
     private String type; // Optional field
-    private String maxFeePerGas; // Optional field
-    private String maxPriorityFeePerGas; // Optional field
     private long totalScore;
     private String txsRoot; // 32 bytes
     private long txsFeatures;
@@ -113,22 +111,6 @@ public class Block implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getMaxFeePerGas() {
-        return maxFeePerGas;
-    }
-
-    public void setMaxFeePerGas(String maxFeePerGas) {
-        this.maxFeePerGas = maxFeePerGas;
-    }
-
-    public String getMaxPriorityFeePerGas() {
-        return maxPriorityFeePerGas;
-    }
-
-    public void setMaxPriorityFeePerGas(String maxPriorityFeePerGas) {
-        this.maxPriorityFeePerGas = maxPriorityFeePerGas;
     }
 
     public long getTotalScore() {

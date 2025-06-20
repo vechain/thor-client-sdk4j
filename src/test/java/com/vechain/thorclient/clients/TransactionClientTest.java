@@ -48,7 +48,7 @@ public class TransactionClientTest extends BaseTest {
         final Block block = BlockClient.getBlock(Revision.create(blockRevision));
         final ArrayList<String> transactions = block.getTransactions();
         Assert.assertNotNull(transactions);
-        Assert.assertTrue(!transactions.isEmpty());
+        Assert.assertFalse(transactions.isEmpty());
         transactions.forEach(txId -> {
             final Transaction transaction = TransactionClient.getTransaction(txId, false, null);
             try {
@@ -365,6 +365,50 @@ public class TransactionClientTest extends BaseTest {
         final String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
         logger.info("Calculate transaction txid: {}", txIdHex);
         Assert.assertEquals(txIdHex, result.getId());
+    }
+
+    // Galactica documented at http://localhost:8669/doc/stoplight-ui/#/paths/transactions/post.
+    // Solo tested.
+    @Test
+    public void testSendVETTransactionEIP1559NoFeesSpecified() throws JsonProcessingException {
+        // Set in `config.properties`.
+        final String fromPrivateKey = System.getProperty("TransactionClientTest.testSendVETTransactionEIP1559.fromPrivateKey");
+        // Set in `config.properties`.
+        final Address toAddress = Address.fromHexString(
+                System.getProperty("TransactionClientTest.testSendVETTransactionEIP1559.toAddress")
+        );
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockchainClient.getBlockRef(Revision.BEST).toByteArray();
+        final Amount amount = Amount.createFromToken(AbstractToken.VET);
+        amount.setDecimalAmount("100");
+        final ToClause clause = TransactionClient.buildVETToClause(toAddress, amount, ToData.ZERO);
+        final RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(
+                chainTag,
+                blockRef,
+                720,
+                21000,
+                null,
+                null,
+                CryptoUtils.generateTxNonce(),
+                clause
+        );
+        // send tx
+        final String hex = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
+        final TransferResult result = TransactionClient.signThenTransfer(rawTransaction, ECKeyPair.create(fromPrivateKey));
+        Assert.assertNotNull(result);
+        String txId = result.getId();
+        // poll for receipt
+        Receipt txReceipt = TransactionUtils.pollForReceipt(txId);
+        Assert.assertNotNull("Transaction receipt should not be null", txReceipt);
+        Assert.assertFalse("Transaction should not be reverted", txReceipt.isReverted());
+        // get the tx
+        Transaction transactionResult = TransactionClient.getTransaction(txId, false, null);
+        logger.info("MaxFeePerGas: {}", transactionResult.getMaxFeePerGas());
+        logger.info("MaxPriorityFeePerGas: {}", transactionResult.getMaxPriorityFeePerGas());
+        BigInteger maxFeePerGas = StringUtils.hexStringToBigInteger(transactionResult.getMaxFeePerGas());
+        BigInteger maxPriorityFeePerGas = StringUtils.hexStringToBigInteger(transactionResult.getMaxPriorityFeePerGas());
+        Assert.assertTrue(maxFeePerGas.compareTo(BigInteger.ZERO) > 0);
+        Assert.assertTrue(maxPriorityFeePerGas.compareTo(BigInteger.ZERO) >= 0);
     }
 
     private static RawTransaction generatingVETRawTxn(
