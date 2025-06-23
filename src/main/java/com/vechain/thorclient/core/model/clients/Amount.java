@@ -58,10 +58,12 @@ public class Amount {
     /**
      * Set hex string to abstractToken value.
      *
-     * @param hexAmount hex amount with "0x", if it is 0, use {@link Amount#ZERO} constant
+     * @param hexAmount hex amount with "0x", if it is 0, use {@link Amount#ZERO}
+     *                  constant
      *                  instance.
      * @return this;
-     * @throws ClientArgumentException if `hexAmount` is an invalid hexadecimal expression;
+     * @throws ClientArgumentException if `hexAmount` is an invalid hexadecimal
+     *                                 expression;
      */
     public Amount setHexAmount(String hexAmount) {
         if (!StringUtils.isHex(hexAmount)) {
@@ -122,7 +124,7 @@ public class Amount {
 
     private static class Zero extends Amount {
         public byte[] toByteArray() {
-            return new byte[]{};
+            return new byte[] {};
         }
 
         public BigDecimal getAmount() {

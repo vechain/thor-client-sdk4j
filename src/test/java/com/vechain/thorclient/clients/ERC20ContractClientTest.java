@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.junit.Ignore;
 
 import com.vechain.thorclient.base.BaseTest;
 import com.vechain.thorclient.core.model.blockchain.Receipt;
@@ -32,7 +31,7 @@ public class ERC20ContractClientTest extends BaseTest {
     // Solo tested.
     // GET http://localhost:8669/accounts/0x3e3d79163b08502a086213cd09660721740443d7
     // Accept: application/json, text/plain
-    @Ignore("Deprecated method")
+
     @Test
     public void testGetERC20Balance() {
         // Set in `config.properties`.
@@ -49,7 +48,6 @@ public class ERC20ContractClientTest extends BaseTest {
     // Galactica documented at:
     // http://127.0.0.1:8669/doc/stoplight-ui/#/paths/accounts-*/post
     // Solo tested.
-    @Ignore("Deprecated method")
     @Test
     public void testTransferERC20Token() throws JsonProcessingException {
         // Set in `config.properties`.
