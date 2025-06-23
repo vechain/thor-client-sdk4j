@@ -1,5 +1,7 @@
 package com.vechain.thorclient.clients;
 
+import java.util.ArrayList;
+
 import com.vechain.thorclient.core.model.blockchain.ContractCall;
 import com.vechain.thorclient.core.model.blockchain.ContractCallResult;
 import com.vechain.thorclient.core.model.blockchain.TransferResult;
@@ -31,7 +33,19 @@ public class ERC20ContractClient extends TransactionClient {
         }
         AbiDefinition abiDefinition = ERC20Contract.defaultERC20Contract.findAbiDefinition("balanceOf");
         ContractCall call = ERC20Contract.buildCall(abiDefinition, address.toHexString(null));
-        ContractCallResult contractCallResult = callContract(call, contractAddr, currRevision);
+        
+        // Create a proper AccountCall object
+        AccountCall accountCall = new AccountCall();
+        ArrayList<ToClause> clauses = new ArrayList<>();
+        clauses.add(new ToClause(
+            contractAddr,
+            Amount.ZERO, // No VET transfer needed for read-only call
+            new ToData(call.getData()) // Use the data from the ContractCall
+        ));
+        accountCall.setClauses(clauses);
+        
+        // Use the readContract method with the proper AccountCall object
+        ContractCallResult contractCallResult = readContract(accountCall, currRevision);
         if (contractCallResult == null) {
             return null;
         }
@@ -56,8 +70,7 @@ public class ERC20ContractClient extends TransactionClient {
             int gas,
             byte gasCoef,
             int expiration,
-            ECKeyPair keyPair
-    ) throws ClientIOException {
+            ECKeyPair keyPair) throws ClientIOException {
         if (receivers == null) {
             throw ClientArgumentException.exception("receivers is null");
         }

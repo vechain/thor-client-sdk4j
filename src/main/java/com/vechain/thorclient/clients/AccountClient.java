@@ -14,6 +14,31 @@ import java.util.HashMap;
 public class AccountClient extends AbstractClient {
 
     /**
+     * Utility to build an AccountCall object for /account endpoint.
+     */
+    public static AccountCall buildAccountCall(
+            java.util.List<ToClause> clauses,
+            long gas,
+            String gasPrice,
+            String caller,
+            String provedWork,
+            String gasPayer,
+            long expiration,
+            String blockRef) {
+        AccountCall accountCall = new AccountCall();
+        accountCall.setClauses(clauses != null ? new java.util.ArrayList<>(clauses) : new java.util.ArrayList<>());
+        accountCall.setGas(gas);
+        accountCall.setGasPrice(gasPrice);
+        accountCall.setCaller(caller);
+        accountCall.setProvedWork(provedWork);
+        accountCall.setGasPayer(gasPayer);
+        accountCall.setExpiration(expiration);
+        accountCall.setBlockRef(blockRef);
+        return accountCall;
+    }
+
+
+    /**
      * Get Account Info.
      * 
      * @param address  required, if null will throw the
