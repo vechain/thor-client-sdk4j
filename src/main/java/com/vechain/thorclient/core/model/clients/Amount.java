@@ -3,6 +3,7 @@ package com.vechain.thorclient.core.model.clients;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.utils.BlockchainUtils;
@@ -58,10 +59,12 @@ public class Amount {
     /**
      * Set hex string to abstractToken value.
      *
-     * @param hexAmount hex amount with "0x", if it is 0, use {@link Amount#ZERO} constant
+     * @param hexAmount hex amount with "0x", if it is 0, use {@link Amount#ZERO}
+     *                  constant
      *                  instance.
      * @return this;
-     * @throws ClientArgumentException if `hexAmount` is an invalid hexadecimal expression;
+     * @throws ClientArgumentException if `hexAmount` is an invalid hexadecimal
+     *                                 expression;
      */
     public Amount setHexAmount(String hexAmount) {
         if (!StringUtils.isHex(hexAmount)) {
@@ -121,13 +124,22 @@ public class Amount {
     }
 
     private static class Zero extends Amount {
+
         public byte[] toByteArray() {
-            return new byte[]{};
+            return new byte[] {};
         }
 
         public BigDecimal getAmount() {
             return new BigDecimal(0);
         }
+    }
+
+    @JsonValue
+    public String toHexAmount() {
+        if (this == ZERO) {
+            return "0x0";
+        }
+        return this.toHexString();
     }
 
 }

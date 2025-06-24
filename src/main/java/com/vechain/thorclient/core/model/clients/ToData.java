@@ -1,5 +1,6 @@
 package com.vechain.thorclient.core.model.clients;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.vechain.thorclient.utils.BytesUtils;
 import com.vechain.thorclient.utils.StringUtils;
 
@@ -11,6 +12,7 @@ public class ToData {
 
 	public static ToData ZERO = new Zero();
 
+	@JsonValue
 	private String hexString;
 
 	public ToData() {
