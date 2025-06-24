@@ -46,12 +46,12 @@ public class ERC20ContractClient extends TransactionClient {
         accountCall.setClauses(clauses);
 
         // Use the readContract method with the proper AccountCall object
-        ContractCallResult contractCallResult = readContract(accountCall, currRevision);
+        ContractCallResult[] contractCallResult = readContract(accountCall, currRevision);
 
         if (contractCallResult == null) {
             return null;
         }
-        return contractCallResult.getBalance(token);
+        return contractCallResult[0].getBalance(token);
     }
 
     /**

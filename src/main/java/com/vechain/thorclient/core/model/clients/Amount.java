@@ -3,6 +3,7 @@ package com.vechain.thorclient.core.model.clients;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.vechain.thorclient.core.model.clients.base.AbstractToken;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.utils.BlockchainUtils;
@@ -123,6 +124,7 @@ public class Amount {
     }
 
     private static class Zero extends Amount {
+
         public byte[] toByteArray() {
             return new byte[] {};
         }
@@ -130,6 +132,14 @@ public class Amount {
         public BigDecimal getAmount() {
             return new BigDecimal(0);
         }
+    }
+
+    @JsonValue
+    public String toHexAmount() {
+        if (this == ZERO) {
+            return "0x0";
+        }
+        return this.toHexString();
     }
 
 }

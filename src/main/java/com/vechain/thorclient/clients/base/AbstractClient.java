@@ -29,6 +29,7 @@ import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.URLUtils;
 
+
 public abstract class AbstractClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractClient.class);
@@ -278,7 +279,7 @@ public abstract class AbstractClient {
      * @throws ClientIOException network error
      */
 
-    public static ContractCallResult readContract(AccountCall call, Revision revision)
+    public static ContractCallResult[] readContract(AccountCall call, Revision revision)
             throws ClientIOException {
         Revision currentRevision = revision;
         if (currentRevision == null) {
@@ -288,7 +289,7 @@ public abstract class AbstractClient {
         HashMap<String, String> queryParams = parameters(new String[] { "revision" },
                 new String[] { currentRevision.toString() });
 
-        return sendPostRequest(Path.PostInspectClauses, null, queryParams, call, ContractCallResult.class);
+        return sendPostRequest(Path.PostInspectClauses, null, queryParams, call, ContractCallResult[].class);
     }
 
 }
