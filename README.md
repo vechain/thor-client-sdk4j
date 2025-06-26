@@ -1,26 +1,29 @@
 # Thor Java Client SDK
+
 [![Java CI with Maven](https://github.com/vechain/thor-client-sdk4j/actions/workflows/maven-test.yml/badge.svg)](https://github.com/vechain/thor-client-sdk4j/actions/workflows/maven-test.yml)
 
 A SDK toolkit for JDK to call VeChainThor Restful API.
 
 > [!WARNING]  
 > This repository is not actively maintained.
-> 
+>
 > Cryptographic functions are provided by [Bouncycastle](https://www.bouncycastle.org/).
-> 
+>
 > Use at your own risk.
-> 
+>
 > Contact VeChain if you need support to upgrade to not deprecated dependencies.
-> 
 
-Latest version 0.0.14
+Latest version 0.1.0 available to download from github packages. All the older versions provided on request.
 
-- - - -
+Previous one 0.0.14
+
+---
 
 ## License
+
 Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE file in the repository.
 
-- - - -
+---
 
 ## Release notes on Thor Galactica
 
@@ -29,7 +32,8 @@ Thor Java Client SDK is licensed under the MIT LICENSE, also included in LICENSE
 It requires **JDK 1.8** or later.
 
 Tested with
-- Amazon Corretto 1.8, 
+
+- Amazon Corretto 1.8,
 - Amazon Corretto 17,
 - OpenJDK 23.
 
@@ -48,9 +52,10 @@ property set to `null`.
 #### Fees
 
 The new end points
+
 - `/fees/history`,
 - `/fees/priority`
-are now supported.
+  are now supported.
 
 #### Subscriptions
 
@@ -66,12 +71,12 @@ set to `null`.
 
 Transactions are **read** according the
 [schema](https://galactica.dev.node.vechain.org/doc/stoplight-ui/#/schemas/GetTxResponse)
-representing the properties  `type`, `maxFeePerGas` and `maxPriorityFeePerGas` 
+representing the properties `type`, `maxFeePerGas` and `maxPriorityFeePerGas`
 introduced in with **Galactica**.
 
 Transaction **receipts** are represented according the
 [schema](https://galactica.dev.node.vechain.org/doc/stoplight-ui/#/schemas/Receipt)
-including the property  `type`
+including the property `type`
 introduced in with **Galactica**.
 
 Transactions made **before Galactica** hard-fork have the same properties
@@ -79,11 +84,12 @@ set to `null`.
 
 **This SDK implements EIP1559 sending dynamic fee transactions to Thor.**
 
-- - - -
+---
 
 ### Test
 
 Tests run with **Thor Solo** Docker image
+
 - Run **Thor Solo** with
   - `make solo-up`.
 - Run tests
@@ -98,28 +104,32 @@ For example, the entry
 ```text
 TransactionClientTest.testDelegatorSignAndTransfer.toAddress=0x9e7911de289c3c856ce7f421034f66b6cde49c39
 ```
-sets the `toAddress` variable in the `testDelegatorSignAndTransfer` method of the `TransactionClientTest` class.
 
+sets the `toAddress` variable in the `testDelegatorSignAndTransfer` method of the `TransactionClientTest` class.
 
 ### Build
 
 Build the project with
-  - `mvn install`.
+
+- `mvn install`.
 
 To skip tests when Thor Galactica Solo is not available, build the project with
+
 - `mvn install -DskipTests`.
 
 To build the fat **jar** artifact with dependecies, run
+
 - `mvn install -Pall`.
 
-- - - -
+---
 
 ### Source code annotations
 
 **Classes** adapted for Thor Galactica release is annotated with
+
 - `@version galactica`.
 
-**Tests** adapted for Thor Galactica are documented 
+**Tests** adapted for Thor Galactica are documented
 referring to the Thor end-points involved.
 
 For example, the test at `src/test/java/com/vechain/thorclient/clients/TransactionClientTest.java`
@@ -131,17 +141,19 @@ includes the following comment.
 ```
 
 Testes inherited from version 0.0.10 involving specific fixtures are annotated with
+
 - `// @Test`
 
 to exclude them to be executed by default.
 
-- - - -
+---
 
 > **Below the next separation line, the text is the original released for version 0.0.10**.
 
-- - - -
+---
 
 ## Set blockchain nodes provider
+
 Set blockchain nodes sample as follows
 
 ```
@@ -150,12 +162,13 @@ nodeProvider.setProvider("http://localhost:8669");
 nodeProvider.setTimeout(10000);
 ```
 
-##  You can find the clients toolkit under the directory :
- **src/main/java/com/vechain/thorclients/clients**
+## You can find the clients toolkit under the directory :
+
+**src/main/java/com/vechain/thorclients/clients**
 
 There are some SDK specifications <a href="https://github.com/vechain/thor-client-sdk4j/blob/dev/doc"> sdk4j doc </a>
 
-For JUnit Test example: there are some required parameters in config.properties file to support JUnit Test running. 
+For JUnit Test example: there are some required parameters in config.properties file to support JUnit Test running.
 
 ### WalletUtils
 
@@ -222,7 +235,7 @@ Account account = AccountClient.getAccountInfo(address, null);
 logger.info("account info:" + JSON.toJSONString(account));
 Assert.assertNotNull(account);
 
-eg. 
+eg.
 Address address = Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A");
 Account account = AccountClient.getAccountInfo(
 	address,  // account address
@@ -233,7 +246,6 @@ account info:
 {"balance":"0x42aeda6af58002f600000","energy":"0x14234c71f08e4db8e504","hasCode":false}
 
 ```
-
 
 #### Get code on a address：
 
@@ -249,9 +261,7 @@ code:
 
 ### TransactionClient
 
-
 #### Sign VET transaction:
-
 
 ```
 byte chainTag = BlockchainClient.getChainTag();
@@ -260,7 +270,7 @@ Amount amount = Amount.createFromToken(AbstractToken.VET);
 amount.setDecimalAmount("1.12");
 ToClause clause = TransactionClient.buildVETToClause(Address.fromHexString("0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A"), amount, ToData.ZERO);
 RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(chainTag, blockRef, 720, 21000, (byte) 0x0, CryptoUtils.generateTxNonce(), clause);
-	
+
 
 String raw = BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX);
 
@@ -276,7 +286,7 @@ String hexAddress = ECKeyPair.create(privateKey).getHexAddress();
 String txIdHex = BlockchainUtils.generateTransactionId(rawTransaction, Address.fromHexString(hexAddress));
 logger.info("Calculate transaction txid:" + txIdHex);
 Assert.assertEquals(txIdHex, result.getId());
-	
+
 ```
 
 #### Sign VTHO transaction:
@@ -338,7 +348,7 @@ byte[] blockRef = BlockClient.getBlock( null ).blockRef().toByteArray();
 Amount amount = Amount.createFromToken( ERC20Token.VTHO);
 amount.setDecimalAmount( "11.12" );
 // construct transaction clause
-ToClause clause = ERC20Contract.buildTranferToClause( 
+ToClause clause = ERC20Contract.buildTranferToClause(
         ERC20Token.VTHO,                                                        // the default ERC20Token.VTHO
         Address.fromHexString("0xc71ADC46c5891a8963Ea5A5eeAF578E0A2959779"),    // receiver address
         amount);                                                                // transfer amount
@@ -365,17 +375,18 @@ contractCallResult:
 {
   "data": "0x00000000000000000000000000000000000000000000001e0c2fcee984ee5c00",
   "events": [
-    
+
   ],
   "gasUsed": 870,
   "reverted": false,
   "transfers": [
-    
+
   ],
   "vmError": ""
 }
 
 ```
+
 #### Query transaction:
 
 ```
@@ -406,7 +417,7 @@ transaction:
 ```
 Receipt receipt = TransactionClient.getTransactionReceipt(txid, Revision);
 
-eg. 
+eg.
 //query receipt info
 Receipt receipt = TransactionClient.getTransactionReceipt("0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5", null);
 logger.info("Receipt:" + JSON.toJSONString(receipt));
@@ -424,7 +435,7 @@ Receipt:
   "outputs": [
     {
       "events": [
-        
+
       ],
       "transfers": [
         {
@@ -441,6 +452,7 @@ Receipt:
 }
 
 ```
+
 #### Generate TransactionId local
 
 ```
@@ -451,7 +463,8 @@ logger.info("Calculate transaction txid:" + txIdHex);
 
 ```
 
-- - - -
+---
+
 ### BlockClient
 
 #### Get block:
@@ -506,8 +519,10 @@ block:
 
 ```
 
-- - - -
+---
+
 ### LogsClient
+
 You can get events logs and transfer logs, the api is also supporting pagination query.
 
 #### Query events logs
@@ -680,6 +695,7 @@ filteredEvents:
   }
 ]
 ```
+
 #### Query transfer logs
 
 ```
@@ -729,7 +745,8 @@ transferLogs:
 ]
 ```
 
-- - - -
+---
+
 ### BlockchainClient
 
 You can get the chain tag and block reference.
@@ -743,6 +760,7 @@ logger.info( "chainTag: " + chainTagInt);
 chainTag: 39
 
 ```
+
 #### Get block reference:
 
 ```
@@ -754,10 +772,11 @@ blockRef:0x000000000b2bce3c
 
 ```
 
+---
 
-- - - -
 ### ProtoTypeClient
-The detail information you can refer to the page[ProtoType Wiki](https://github.com/vechain/thor/wiki/Prototype(CN))
+
+The detail information you can refer to the page[ProtoType Wiki](<https://github.com/vechain/thor/wiki/Prototype(CN)>)
 
 #### Get master address:
 
@@ -768,12 +787,12 @@ logger.info( "testGetMaster result:" + JSON.toJSONString( callResult ) );
 {
   "data": "0x000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed",
   "events": [
-    
+
   ],
   "gasUsed": 1058,
   "reverted": false,
   "transfers": [
-    
+
   ],
   "vmError": ""
 }
@@ -819,12 +838,12 @@ logger.info( "Get isUser result:" + JSON.toJSONString( callResult ) );
 {
   "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
   "events": [
-    
+
   ],
   "gasUsed": 664,
   "reverted": false,
   "transfers": [
-    
+
   ],
   "vmError": ""
 }
@@ -843,6 +862,7 @@ logger.info( "Remove user:"  + JSON.toJSONString( transferResult ));
 transferResult:{"id":"0x1eb2927e48d497d70f4530471abe62aa5700086e54af75ad8523d08005eab45f"}
 
 ```
+
 #### Set Credit Plan:
 
 ```
@@ -858,6 +878,7 @@ logger.info("set user plans:" + JSON.toJSONString(setCreditPlansResult));
 {"id":"0xafe89d896b993efc98cda84add6ded39ea264a19b8a886fcc3f769e54964e990"}
 
 ```
+
 #### Get Credit plan:
 
 ```
@@ -868,12 +889,12 @@ getUserCreditCallResult:
 {
   "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000009184e72a000",
   "events": [
-    
+
   ],
   "gasUsed": 832,
   "reverted": false,
   "transfers": [
-    
+
   ],
   "vmError": ""
 }
@@ -889,12 +910,12 @@ logger.info("Get user plan result:" + JSON.toJSONString(getUserCreditCallResult)
 {
   "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
   "events": [
-    
+
   ],
   "gasUsed": 1138,
   "reverted": false,
   "transfers": [
-    
+
   ],
   "vmError": ""
 }
@@ -902,7 +923,6 @@ logger.info("Get user plan result:" + JSON.toJSONString(getUserCreditCallResult)
 ```
 
 #### Multiple Party Payment:
-
 
 ```
 String targetAddress = "0xD3EF28DF6b553eD2fc47259E8134319cB1121A2A";
@@ -929,22 +949,22 @@ Amount credit = Amount.VTHO();
 credit.setDecimalAmount("100.00");
 Amount recovery = Amount.VTHO();
 recovery.setDecimalAmount("0.00001");
-//set user plan 
+//set user plan
 TransferResult setUserPlansResult = ProtoTypeContractClient.setUserPlans(
-	new Address[] { Address.fromHexString(targetAddress) }, 
+	new Address[] { Address.fromHexString(targetAddress) },
 	new Amount[] { credit },
-        new Amount[] { recovery }, 
-	TransactionClient.ContractGasLimit, 
-	(byte) 0x0, 720, 
+        new Amount[] { recovery },
+	TransactionClient.ContractGasLimit,
+	(byte) 0x0, 720,
 	ECKeyPair.create(privateKey));
 if (setUserPlansResult != null) {
     logger.info("set user plans:" + JSON.toJSONString(setUserPlansResult));
-} 
+}
 
 ```
 
+---
 
-- - - -
 ### Run the test
 
 Use maven to run full test case, which many need about 15 minutes to wait for the test case run, some case may be failed because of the account or block is not existed on your blockchain env.
@@ -963,7 +983,7 @@ mvn clean install -Dmaven.test.skip=true
 
 ### 4. Java console approach
 
-The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction, send transaction, get transaction, query transaction receipt; 
+The SDK support the command line approach to get chainTag, blockRef, create wallet, sign transaction, send transaction, get transaction, query transaction receipt;
 
 Package the jar with maven
 
@@ -978,10 +998,10 @@ Run the following command with jar
 
 There is a example transaction file in src/main/resources/exchange_example.xlsx, you need to replace the blockRef in this file.
 
-#### Get chainTag: 
+#### Get chainTag:
 
 ```
- 
+
 java -jar thor-client-sdk4j-0.0.10.jar getChainTag {blockchain-server-url}
 
 eg. java -jar thor-client-sdk4j-0.0.10.jar getChainTag http://localhost:8669
@@ -991,8 +1011,7 @@ ChainTag:
 
 ```
 
-
-#### Get blockRef: 
+#### Get blockRef:
 
 ```
 java -jar thor-client-sdk4j-0.0.10.jar getBlockRef {blockchain-server-url}
@@ -1001,10 +1020,10 @@ eg. java -jar thor-client-sdk4j-0.0.10.jar getBlockRef http://localhost:8669
 
 BlockRef:
 0x0000695540f491a5
-  
+
 ```
 
-#### Create wallet: 
+#### Create wallet:
 
 ```
 java -jar thor-client-sdk4j-0.0.10.jar createWallet {wallet-password} {keystore-file-path}(optional, defalut: ./keystore.json)
@@ -1013,8 +1032,8 @@ eg. java -jar thor-client-sdk4j-0.0.10.jar createWallet <your password> <keystor
 
 The keystore.json file will generate in current folder.
 
-The wallet created successfully and the key store is: 
-  
+The wallet created successfully and the key store is:
+
 {
   "address": "0x2a200dd7a805db17e9cecbb8e33067306dca143b",
   "crypto": {
@@ -1036,15 +1055,13 @@ The wallet created successfully and the key store is:
   "id": "8df9173d-4c05-4a7e-b847-69ccf490db06",
   "version": 3
 }
-  
+
   The wallet created successfully and the privateKey is:
   0xe5a7eec8266f6b5ed3c9578944e22d396228d9cd9ef36d26497edc89237104f0
-  
+
 ```
 
-
-
-#### Get block: 
+#### Get block:
 
 ```
  java -jar thor-client-sdk4j-0.0.10.jar getBlock {blockchain-server-url}
@@ -1067,17 +1084,17 @@ Block:
   "timestamp": 1530284330,
   "totalScore": 27016,
   "transactions": [
-    
+
   ],
   "txsRoot": "0x45b0cfc220ceec5b7c1c62c4d4193d38e4eba48e8815729ce75f9c0ab0e4c1c0"
 }
-  
-```
-
-#### Get transaction: 
 
 ```
-  
+
+#### Get transaction:
+
+```
+
 java -jar thor-client-sdk4j-0.0.10.jar getTransaction {transaction-id} {blockchain-server-url}
 
 eg. java -jar thor-client-sdk4j-0.0.10.jar getTransaction 0x19dd77d28ef70be8c924319a6c08b996dd456fa36f29f2427dbda90087a8a897 http://localhost:8669
@@ -1096,17 +1113,17 @@ Transaction:
   "raw": "0xf88227865c309a71f9d28202d0e4e3945034aa590125b64023a0262112b98d72e3c8e40e8c0675869909f169d17cc00000808082520880888cd02f9cd3a2af07c0b8412097cdeebb3219df52345c5cdc251bd07f359435164019ada5041416014f7f046ccbb615d24a0d342c5001578aa788cb11ace0891f540bdb0bc7b110f2b6d7d900",
   "size": 0
 }
-  
-```
-
-#### Get transaction receipt: 
 
 ```
-  
+
+#### Get transaction receipt:
+
+```
+
 java -jar thor-client-sdk4j-0.0.10.jar getTransactionReceipt {transaction-id} {blockchain-server-url}
-  
+
 eg. java -jar thor-client-sdk4j-0.0.10.jar getTransactionReceipt 0x6b99c0f1ebfa3b9d93dcfc503f468104ac74271728841551aaa44115d080f5b5 http://localhost:8669
-  
+
 Receipt:
 {
   "gasPayer": "0x866a849122133888214ac9fc59550077adf14975",
@@ -1121,7 +1138,7 @@ Receipt:
   "outputs": [
     {
       "events": [
-        
+
       ],
       "transfers": [
         {
@@ -1136,61 +1153,55 @@ Receipt:
   "reverted": false,
   "reward": "0x576e189f04f60000"
 }
-  
+
 ```
 
-#### Sign transactions: 
+#### Sign transactions:
 
 ```
 java -jar thor-client-sdk4j-0.0.10.jar sign {your-file-path} {privateKey}
 
 eg. java -jar thor-client-sdk4j-0.0.10.jar sign src/main/resources/exchange_example.xlsx 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0
-  
+
 Raw Transaction:
 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
-  
+
 ```
-#### Sign VTHO transactions: 
+
+#### Sign VTHO transactions:
 
 ```
 java -jar thor-client-sdk4j-0.0.10.jar signVTHO {your-file-path} {privateKey}
 
 eg. java -jar thor-client-sdk4j-0.0.10.jar signVTHO src/main/resources/exchange_example.xlsx 0xdce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65
-  
+
 Raw Transaction:
 0xf9011d81c787015e41be43bb958202d0f8bcf85c940000000000000000000000000000456e6572677980b844a9059cbb000000000000000000000000d3ef28df6b553ed2fc47259e8134319cb1121a2a0000000000000000000000000000000000000000000027cf801b9d4f7d800000f85c940000000000000000000000000000456e6572677980b844a9059cbb000000000000000000000000f881a94423f22ee9a0e3e1442f515f43c966b7ed0000000000000000000000000000000000000000000027cf801b9d4f7d8000008082a41080887650b326b78e0c57c0b841fe27b8866d8a658a66a2d8241a310d1ef72e2954d397fc52aa5b4295f9686d0f6705301acc9a0aac6e9e0f93e3aa6fe0a07ff48e4e3287d0db45905d8a0756eb01
-  
+
 ```
 
 #### Send and Sign transactions:
 
 ```
-  
+
 java -jar thor-client-sdk4j-0.0.10.jar signAndSend {blockchain-server-url} {privateKey} {your-file-path}
 
 eg. java -jar thor-client-sdk4j-0.0.10.jar signAndSend http://localhost:8669 0xe0b80216ba7b880d85966b38fcd8f7253882bb1386b68b33a8e0b60775e947c0 src/main/resources/exchange_example.xlsx
-  
+
 Send Result:
 {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
 
 ```
-
-
 
 #### Send raw transactions:
 
 ```
-  
+
 java -jar thor-client-sdk4j-0.0.10.jar sendRaw {blockchain-server-url} {raw}
 
 eg. java -jar thor-client-sdk4j-0.0.10.jar sendRaw http://localhost:8669 0xf8a3819a8702819f5cfc12d38202d0f842e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f8000080e094d3ef28df6b553ed2fc47259e8134319cb1121a2a89364200111c48f80000808082a4108088f06f91293e58610dc0b84173346fba62605d510895a0d240b89a38e0b87fd8a58df2ce17075cd493e8e316528b4ed0f049cef1710936bbd4bd3af23eb3ffb3740dc0fb59db585714dbeaa001
-  
+
 Send Result:
 {"id":"0xd751c50b81c1f13ebd86f4fcd0028a501b6c792fa8b5bbf64028b924a6b2efc9"}
 
 ```
-
-
-
-
-
