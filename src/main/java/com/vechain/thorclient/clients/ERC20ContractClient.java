@@ -7,7 +7,10 @@ import com.vechain.thorclient.core.model.clients.*;
 import com.vechain.thorclient.core.model.clients.base.AbiDefinition;
 import com.vechain.thorclient.core.model.exception.ClientArgumentException;
 import com.vechain.thorclient.core.model.exception.ClientIOException;
+import com.vechain.thorclient.utils.BytesUtils;
+import com.vechain.thorclient.utils.CryptoUtils;
 import com.vechain.thorclient.utils.Prefix;
+import com.vechain.thorclient.utils.RawTransactionFactory;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
 import java.math.BigInteger;
@@ -83,21 +86,23 @@ public class ERC20ContractClient extends TransactionClient {
             throw ClientArgumentException.exception("receivers length equal to amounts length.");
         }
 
-        AbiDefinition abi = ERC20Contract.defaultERC20Contract.findAbiDefinition("transfer");
-        if (abi == null) {
-            throw new IllegalArgumentException("Can not find abi master method");
-        }
-        ToClause[] clauses = new ToClause[receivers.length];
-        for (int index = 0; index < receivers.length; index++) {
-            if (!(amounts[index].getAbstractToken() instanceof ERC20Token)) {
-                throw ClientArgumentException.exception("Token is not ERC20");
-            }
-            ERC20Token token = (ERC20Token) amounts[index].getAbstractToken();
-            clauses[index] = ProtoTypeContract.buildToClause(token.getContractAddress(), abi,
-                    receivers[index].toHexString(Prefix.ZeroLowerX), amounts[index].toBigInteger());
+        final ToClause clause = ERC20Contract.buildTranferToClause(
+                ERC20Token.VTHO,
+                receivers[0], amounts[0]);
 
-        }
-        return invokeContractMethod(clauses, gas, gasCoef, expiration, keyPair);
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
+
+        final RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(
+                chainTag,
+                blockRef,
+                720,
+                80000,
+                (byte) 0x0,
+                CryptoUtils.generateTxNonce(),
+                clause);
+
+        return TransactionClient.signThenTransfer(rawTransaction, keyPair);
     }
 
     /**
@@ -114,7 +119,7 @@ public class ERC20ContractClient extends TransactionClient {
      * @return {@link TransferResult}
      * @throws ClientIOException
      */
-    public static TransferResult transferERC20Token(
+    public static TransferResult transferERC20TokenEIP1559(
             Address[] receivers,
             Amount[] amounts,
             int gas,
@@ -137,21 +142,29 @@ public class ERC20ContractClient extends TransactionClient {
         if (maxFeePerGas.compareTo(BigInteger.ZERO) < 0) {
             throw ClientArgumentException.exception("maxFeePerGas is too small.");
         }
-        AbiDefinition abi = ERC20Contract.defaultERC20Contract.findAbiDefinition("transfer");
-        if (abi == null) {
-            throw new IllegalArgumentException("Can not find abi master method");
-        }
-        ToClause[] clauses = new ToClause[receivers.length];
-        for (int index = 0; index < receivers.length; index++) {
-            if (!(amounts[index].getAbstractToken() instanceof ERC20Token)) {
-                throw ClientArgumentException.exception("Token is not ERC20");
-            }
-            ERC20Token token = (ERC20Token) amounts[index].getAbstractToken();
-            clauses[index] = ProtoTypeContract.buildToClause(token.getContractAddress(), abi,
-                    receivers[index].toHexString(Prefix.ZeroLowerX), amounts[index].toBigInteger());
 
-        }
-        return invokeContractMethod(clauses, gas, maxPriorityFeePerGas, maxFeePerGas, expiration, keyPair);
+        final ToClause clause = ERC20Contract.buildTranferToClause(
+                ERC20Token.VTHO,
+                receivers[0], amounts[0]);
+
+        final byte chainTag = BlockchainClient.getChainTag();
+        final byte[] blockRef = BlockClient.getBlock(null).blockRef().toByteArray();
+
+        // Create raw transaction with explicit null dependsOn field to ensure proper
+        // EIP-1559 structure
+        RawTransaction rawTransaction = RawTransactionFactory.getInstance().createRawTransaction(
+                chainTag,
+                blockRef,
+                expiration,
+                gas,
+                maxFeePerGas,
+                maxPriorityFeePerGas,
+                CryptoUtils.generateTxNonce(),
+                clause);
+
+        rawTransaction.setDependsOn(null);
+
+        return TransactionClient.signThenTransfer(rawTransaction, keyPair);
     }
 
 }
