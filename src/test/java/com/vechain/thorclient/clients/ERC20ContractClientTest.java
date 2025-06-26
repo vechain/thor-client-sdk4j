@@ -86,6 +86,7 @@ public class ERC20ContractClientTest extends BaseTest {
         }
 
         final TransferResult transferResult = ERC20ContractClient.transferERC20Token(
+                ERC20Token.VTHO,
                 new Address[] { toAddress },
                 new Amount[] { amount },
                 1000000,
@@ -166,7 +167,8 @@ public class ERC20ContractClientTest extends BaseTest {
         BigInteger maxFeePerGas = BigInteger.valueOf(1000000L);
         BigInteger maxPriorityFeePerGas = BigInteger.valueOf(10000000000000L);
 
-        final TransferResult transferResult = ERC20ContractClient.transferERC20TokenEIP1559(
+        final TransferResult transferResult = ERC20ContractClient.transferERC20Token(
+                ERC20Token.VTHO,
                 new Address[] { toAddress },
                 new Amount[] { amount },
                 1000000,

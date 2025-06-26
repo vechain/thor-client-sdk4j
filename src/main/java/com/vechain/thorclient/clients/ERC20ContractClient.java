@@ -70,6 +70,7 @@ public class ERC20ContractClient extends TransactionClient {
      * @throws ClientIOException
      */
     public static TransferResult transferERC20Token(
+            ERC20Token token,
             Address[] receivers,
             Amount[] amounts,
             int gas,
@@ -87,7 +88,7 @@ public class ERC20ContractClient extends TransactionClient {
         }
 
         final ToClause clause = ERC20Contract.buildTranferToClause(
-                ERC20Token.VTHO,
+                token,
                 receivers[0], amounts[0]);
 
         final byte chainTag = BlockchainClient.getChainTag();
@@ -108,6 +109,7 @@ public class ERC20ContractClient extends TransactionClient {
     /**
      * Transfer ERC20 token using EIP-1559 transaction
      *
+     * @param token                {@link ERC20Token} token to transfer
      * @param receivers            {@link Address} array
      * @param amounts              {@link Amount} array
      * @param gas                  gas at least 7000
@@ -119,7 +121,8 @@ public class ERC20ContractClient extends TransactionClient {
      * @return {@link TransferResult}
      * @throws ClientIOException
      */
-    public static TransferResult transferERC20TokenEIP1559(
+    public static TransferResult transferERC20Token(
+            ERC20Token token,
             Address[] receivers,
             Amount[] amounts,
             int gas,
@@ -127,6 +130,9 @@ public class ERC20ContractClient extends TransactionClient {
             BigInteger maxPriorityFeePerGas,
             int expiration,
             ECKeyPair keyPair) throws ClientIOException {
+        if (token == null) {
+            throw ClientArgumentException.exception("token is null");
+        }
         if (receivers == null) {
             throw ClientArgumentException.exception("receivers is null");
         }
@@ -144,7 +150,7 @@ public class ERC20ContractClient extends TransactionClient {
         }
 
         final ToClause clause = ERC20Contract.buildTranferToClause(
-                ERC20Token.VTHO,
+                token,
                 receivers[0], amounts[0]);
 
         final byte chainTag = BlockchainClient.getChainTag();
