@@ -15,10 +15,10 @@
 -docencoding
 'UTF-8'
 -doctitle
-'thor-client-sdk4j 0.0.14-SNAPSHOT API'
+'thor-client-sdk4j 0.1.0-SNAPSHOT API'
 -linkoffline
 'https://docs.oracle.com/javase/8/docs/api' '/home/runner/work/thor-client-sdk4j/thor-client-sdk4j/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'thor-client-sdk4j 0.0.14-SNAPSHOT API'
+'thor-client-sdk4j 0.1.0-SNAPSHOT API'
