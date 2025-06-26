@@ -19,6 +19,9 @@ jobs:
           java-version: 8
           cache: maven
 
+      - name: Start solo
+        run: make solo-up  
+
       - name: Set version from tag
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
@@ -32,3 +35,6 @@ jobs:
         run: mvn deploy -Pall
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stop solo
+        run: make solo-down  
