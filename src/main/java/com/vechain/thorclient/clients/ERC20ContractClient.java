@@ -164,8 +164,6 @@ public class ERC20ContractClient extends TransactionClient {
 
         rawTransaction.setDependsOn(null);
 
-        System.out.println("SendVTHO Raw: " + BytesUtils.toHexString(rawTransaction.encode(), Prefix.ZeroLowerX));
-
         return TransactionClient.signThenTransfer(rawTransaction, keyPair);
     }
 

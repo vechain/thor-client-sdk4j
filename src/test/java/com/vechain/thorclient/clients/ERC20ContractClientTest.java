@@ -163,8 +163,8 @@ public class ERC20ContractClientTest extends BaseTest {
             Assert.fail(String.format("Account %s not found!", toAddress.toHexString(Prefix.ZeroLowerX)));
         }
 
-        BigInteger maxFeePerGas = new BigInteger("5000000000"); // 5 gwei
-        BigInteger maxPriorityFeePerGas = new BigInteger("1000000000"); // 1 gwei
+        BigInteger maxFeePerGas = BigInteger.valueOf(1000000L);
+        BigInteger maxPriorityFeePerGas = BigInteger.valueOf(10000000000000L);
 
         final TransferResult transferResult = ERC20ContractClient.transferERC20TokenEIP1559(
                 new Address[] { toAddress },
