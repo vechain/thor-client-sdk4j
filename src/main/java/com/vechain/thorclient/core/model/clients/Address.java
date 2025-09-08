@@ -8,7 +8,47 @@ import com.vechain.thorclient.utils.StringUtils;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
- * Address object is wrapped address string or byte array.
+ * Represents a VeChain blockchain address with validation and conversion utilities.
+ * 
+ * <p>Address is a fundamental type in the VeChain ecosystem, representing 20-byte 
+ * hexadecimal identifiers for accounts and contracts. This class provides safe 
+ * construction, validation, and conversion methods.</p>
+ * 
+ * <h3>Address Format</h3>
+ * <p>VeChain addresses are 20-byte (160-bit) values typically represented as:</p>
+ * <ul>
+ *   <li>40-character hexadecimal strings (with or without 0x prefix)</li>
+ *   <li>20-byte arrays</li>
+ * </ul>
+ * 
+ * <h3>Special Addresses</h3>
+ * <ul>
+ *   <li><strong>{@link #NULL_ADDRESS}</strong>: Zero address (0x0000...0000)</li>
+ *   <li><strong>{@link #VTHO_Address}</strong>: VTHO token contract address</li>
+ * </ul>
+ * 
+ * <h3>Usage Examples</h3>
+ * <pre>{@code
+ * // Create from hex string
+ * Address addr1 = Address.fromHexString("0x1234567890123456789012345678901234567890");
+ * Address addr2 = Address.fromHexString("1234567890123456789012345678901234567890");
+ * 
+ * // Create from bytes
+ * byte[] addressBytes = new byte[20];
+ * Address addr3 = Address.fromBytes(addressBytes);
+ * 
+ * // Convert to different formats
+ * String hex = addr1.toHexString(Prefix.ZeroLowerX); // "0x1234..."
+ * String hexNoPrefix = addr1.toHexString(null);      // "1234..."
+ * byte[] bytes = addr1.getBytes();
+ * 
+ * // Use predefined addresses
+ * Address vthoContract = Address.VTHO_Address;
+ * Address nullAddr = Address.NULL_ADDRESS;
+ * }</pre>
+ * 
+ * @see Prefix
+ * @since 0.1.0
  */
 @JsonSerialize(using = AddressSerializer.class)
 public class Address {

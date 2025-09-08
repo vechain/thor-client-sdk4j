@@ -16,17 +16,75 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
+/**
+ * ERC20ContractClient provides specialized operations for ERC20 token contracts on VeChain.
+ * 
+ * <p>This client extends TransactionClient to provide convenient methods for interacting with 
+ * ERC20 token contracts, including balance queries and token transfers. It supports both the 
+ * native VTHO token and custom ERC20 tokens deployed on VeChain.</p>
+ * 
+ * <h3>Supported Tokens</h3>
+ * <ul>
+ *   <li><strong>VTHO</strong>: Native VeChain energy token ({@link ERC20Token#VTHO})</li>
+ *   <li><strong>Custom ERC20</strong>: Any ERC20-compliant token contract</li>
+ * </ul>
+ * 
+ * <h3>Transaction Types</h3>
+ * <p>Supports both legacy and EIP-1559 (Galactica) transaction types:</p>
+ * <ul>
+ *   <li><strong>Legacy</strong>: Uses gas price coefficient</li>
+ *   <li><strong>EIP-1559</strong>: Uses maxFeePerGas and maxPriorityFeePerGas</li>
+ * </ul>
+ * 
+ * <h3>Usage Examples</h3>
+ * <pre>{@code
+ * // Get VTHO balance
+ * Amount balance = ERC20ContractClient.getERC20Balance(
+ *     Address.fromHexString("0xYourAddress"),
+ *     ERC20Token.VTHO,
+ *     null
+ * );
+ * System.out.println("VTHO Balance: " + balance.getDecimalAmount());
+ * 
+ * // Transfer VTHO tokens (EIP-1559)
+ * TransferResult result = ERC20ContractClient.transferERC20Token(
+ *     ERC20Token.VTHO,
+ *     new Address[]{Address.fromHexString("0xRecipient")},
+ *     new Amount[]{Amount.createFromToken(ERC20Token.VTHO).setDecimalAmount("100")},
+ *     80000,
+ *     new BigInteger("1000000000"), // maxFeePerGas
+ *     new BigInteger("1000000000"), // maxPriorityFeePerGas
+ *     720,
+ *     keyPair
+ * );
+ * System.out.println("Transfer TX: " + result.getId());
+ * }</pre>
+ * 
+ * @see ERC20Token
+ * @see Amount
+ * @see TransactionClient
+ * @since 0.1.0
+ */
 public class ERC20ContractClient extends TransactionClient {
 
     /**
-     * Get amount from ERC20 contract.
-     *
-     * @param address  address of token holder.
-     * @param token    {@link ERC20Token} required, the token {@link ERC20Token}
-     * @param revision {@link Revision} if it is null, it will fallback to default
-     *                 {@link Revision#BEST}
-     * @return {@link Amount}
-     * @throws ClientIOException {@link ClientIOException}
+     * Retrieves the ERC20 token balance for a specific address.
+     * 
+     * <p>Queries the token contract's balanceOf function to get the current token balance.
+     * The returned amount includes proper decimal formatting based on the token's decimals.</p>
+     * 
+     * @param address the token holder's address to query
+     * @param token the ERC20 token specification including contract address and decimals.
+     *              Use {@link ERC20Token#VTHO} for VTHO or create custom token instances
+     * @param revision the block revision for the query. Use {@code null} for latest block,
+     *                 {@link Revision#BEST} for best block, or {@link Revision#create(long)}
+     *                 for a specific block number
+     * @return the token balance with proper decimal formatting
+     * @throws ClientIOException if there's a network error or the contract call fails
+     * 
+     * @see ERC20Token#VTHO
+     * @see Amount#getDecimalAmount()
+     * @see Revision#BEST
      */
     public static Amount getERC20Balance(Address address, ERC20Token token, Revision revision)
             throws ClientIOException {

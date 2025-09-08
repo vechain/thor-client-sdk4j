@@ -26,18 +26,82 @@ import com.vechain.thorclient.utils.StringUtils;
 import com.vechain.thorclient.utils.crypto.ECDSASign;
 import com.vechain.thorclient.utils.crypto.ECKeyPair;
 
+/**
+ * TransactionClient provides comprehensive transaction operations for the VeChain blockchain.
+ * 
+ * <p>Transactions are state-changing operations on the VeChain blockchain. This client provides 
+ * transaction creation, signing, submission, and querying capabilities for both legacy and 
+ * EIP-1559 (Galactica) transaction types.</p>
+ * 
+ * <h3>Transaction Structure</h3>
+ * <p>VeChain transactions contain:</p>
+ * <ul>
+ *   <li><strong>chainTag</strong>: Chain identifier (mainnet: 39, testnet: 39)</li>
+ *   <li><strong>blockRef</strong>: Reference block (8 bytes)</li>
+ *   <li><strong>expiration</strong>: Block expiration (typically 720 blocks ≈ 2 hours)</li>
+ *   <li><strong>clauses</strong>: Array of transaction clauses (recipient, value, data)</li>
+ *   <li><strong>gas</strong>: Gas limit (21000 for VET transfers, 80000+ for contracts)</li>
+ *   <li><strong>gasPriceCoef</strong>: Gas price coefficient (legacy transactions)</li>
+ *   <li><strong>maxFeePerGas</strong>: Maximum fee per gas (EIP-1559)</li>
+ *   <li><strong>maxPriorityFeePerGas</strong>: Priority fee (EIP-1559)</li>
+ * </ul>
+ * 
+ * <h3>Usage Examples</h3>
+ * <pre>{@code
+ * // Send VET transfer
+ * ToClause clause = TransactionClient.buildVETToClause(
+ *     Address.fromHexString("0xRecipientAddress"),
+ *     Amount.createFromToken(AbstractToken.VET).setDecimalAmount("1.5"),
+ *     ToData.ZERO
+ * );
+ * 
+ * RawTransaction rawTx = RawTransactionFactory.getInstance().createRawTransaction(
+ *     BlockchainClient.getChainTag(),
+ *     BlockchainClient.getBlockRef(null).toByteArray(),
+ *     720,  // expiration
+ *     21000, // gas limit
+ *     (byte) 0x0, // gas coefficient
+ *     CryptoUtils.generateTxNonce(),
+ *     clause
+ * );
+ * 
+ * // Sign and send
+ * TransferResult result = TransactionClient.signThenTransfer(rawTx, keyPair);
+ * System.out.println("Transaction ID: " + result.getId());
+ * 
+ * // Check transaction status
+ * Receipt receipt = TransactionClient.getTransactionReceipt(result.getId(), null);
+ * System.out.println("Success: " + !receipt.isReverted());
+ * }</pre>
+ * 
+ * @see Transaction
+ * @see RawTransaction
+ * @see Receipt
+ * @see ToClause
+ * @since 0.1.0
+ */
 public class TransactionClient extends AbstractClient {
 
     public final static int ContractGasLimit = 21000;
 
     /**
-     * Get transaction by transaction Id.
-     *
-     * @param txId     required transaction id .
-     * @param isRaw    is response raw transaction.
-     * @param revision {@link Revision} revision.
-     * @return Transaction {@link Transaction}
-     * @throws ClientIOException
+     * Retrieves transaction information by transaction ID.
+     * 
+     * <p>Returns complete transaction information including clauses, gas usage, 
+     * origin address, and execution metadata. The transaction must be included 
+     * in a block to be retrievable.</p>
+     * 
+     * @param txId the transaction ID (hex string with 0x prefix). Must be a valid 
+     *             64-character hex string representing a transaction hash
+     * @param isRaw whether to return raw transaction data format
+     * @param revision the block revision context for the query. Use {@code null} 
+     *                 for latest, or specify a block revision
+     * @return the transaction information, or {@code null} if not found
+     * @throws ClientIOException if there's a network error or the request fails
+     * @throws ClientArgumentException if the transaction ID format is invalid
+     * 
+     * @see #getTransactionReceipt(String, Revision)
+     * @see Transaction
      */
     public static Transaction getTransaction(String txId, boolean isRaw, Revision revision) throws ClientIOException {
         if (!BlockchainUtils.isId(txId)) {

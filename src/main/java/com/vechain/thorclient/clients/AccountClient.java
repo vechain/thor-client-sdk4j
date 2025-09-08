@@ -9,18 +9,77 @@ import com.vechain.thorclient.utils.Prefix;
 import java.util.HashMap;
 
 /**
- * Accounts module client. It can get Account,
+ * AccountClient provides access to VeChain blockchain account information and operations.
+ * 
+ * <p>Accounts represent addresses on the VeChain blockchain, containing VET/VTHO balances 
+ * and potentially smart contract code. This client provides comprehensive account querying 
+ * capabilities including balance checks, contract code retrieval, and contract calls.</p>
+ * 
+ * <h3>Account Information</h3>
+ * <p>Each account contains:</p>
+ * <ul>
+ *   <li><strong>balance</strong>: VET balance (hex string in wei)</li>
+ *   <li><strong>energy</strong>: VTHO balance (hex string in wei)</li>
+ *   <li><strong>hasCode</strong>: Whether address contains contract code</li>
+ * </ul>
+ * 
+ * <h3>Usage Examples</h3>
+ * <pre>{@code
+ * // Get account information
+ * Account account = AccountClient.getAccountInfo(
+ *     Address.fromHexString("0xYourAddress"),
+ *     null
+ * );
+ * System.out.println("VET Balance: " + account.getBalance());
+ * System.out.println("VTHO Balance: " + account.getEnergy());
+ * System.out.println("Has Code: " + account.isHasCode());
+ * 
+ * // Get contract code
+ * AccountCode code = AccountClient.getAccountCode(
+ *     Address.VTHO_Address,
+ *     null
+ * );
+ * System.out.println("Contract code: " + code.getCode());
+ * 
+ * // Perform contract call
+ * AccountCall call = new AccountCall();
+ * ArrayList<ToClause> clauses = new ArrayList<>();
+ * clauses.add(new ToClause(
+ *     Address.VTHO_Address,
+ *     Amount.ZERO,
+ *     new ToData("0x70a08231000000000000000000000000" + "YourAddress")
+ * ));
+ * call.setClauses(clauses);
+ * 
+ * AccountCallResult result = AccountClient.performAccountCall(null, call);
+ * System.out.println("Call result: " + result.getData());
+ * }</pre>
+ * 
+ * @see Account
+ * @see AccountCode
+ * @see AccountCall
+ * @see AccountCallResult
+ * @since 0.1.0
  */
 public class AccountClient extends AbstractClient {
 
     /**
-     * Get Account Info.
+     * Retrieves account information including VET/VTHO balances and contract status.
      * 
-     * @param address  required, if null will throw the
-     *                 {@link ClientArgumentException}.
-     * @param revision block revision.
-     * @return {@link Account}
-     * @throws ClientIOException if network error or invalid request.
+     * <p>Returns comprehensive account state information including native VET balance,
+     * VTHO energy balance, and whether the address contains smart contract code.</p>
+     * 
+     * @param address the account address to query. Must not be {@code null}
+     * @param revision the block revision for the query. Use {@code null} for latest block,
+     *                 {@link Revision#BEST} for best block, or {@link Revision#create(long)}
+     *                 for a specific block number
+     * @return the account information including balances and contract status
+     * @throws ClientIOException if there's a network error or the request fails
+     * @throws ClientArgumentException if the address is {@code null}
+     * 
+     * @see Account
+     * @see Revision#BEST
+     * @see Revision#create(long)
      */
     public static Account getAccountInfo(Address address, Revision revision) throws ClientIOException {
 
