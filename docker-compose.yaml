@@ -1,6 +1,6 @@
 services:
   thor-solo:
-    image: vechain/thor:latest
+    image: ghcr.io/vechain/thor:darren-fix-packer-balance-check-0ffe8bccb7c6c8edd4364080bbcfba3c6e3b1964
     hostname: thor-solo
     container_name: thor-solo
     user: root
@@ -29,7 +29,6 @@ services:
       retries: 10
     networks:
       - vechain-thor
-
 
 networks:
   vechain-thor:
