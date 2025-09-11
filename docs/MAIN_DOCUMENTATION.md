@@ -71,36 +71,13 @@ Blocks are the fundamental units of the VeChain blockchain, containing transacti
 ### Data Types
 
 #### Block
-Represents a complete blockchain block.
-
-**Fields**:
-- `number`: Block number (string)
-- `id`: Block ID (hex string)
-- `size`: Block size in bytes
-- `parentID`: Parent block ID
-- `timestamp`: Block timestamp (Unix)
-- `gasLimit`: Block gas limit
-- `gasUsed`: Gas used in block
-- `totalScore`: Cumulative difficulty
-- `txsRoot`: Transactions merkle root
-- `stateRoot`: State merkle root
-- `receiptsRoot`: Receipts merkle root
-- `signer`: Block signer address
-- `beneficiary`: Block reward recipient
-- `isTrunk`: Whether block is on main chain
-- `transactions`: Array of transaction IDs or full transactions
-- `baseFeePerGas`: Base fee per gas (Galactica)
+Represents a complete blockchain block. See [Block Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Block.html) for complete field reference.
 
 #### BlockRef
-Block reference used for transaction construction.
-
-**Methods**:
-- `toByteArray()`: Convert to 8-byte array for transactions
+Block reference used for transaction construction. See [BlockRef Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/BlockRef.html) for methods and usage.
 
 #### Revision
-Specifies which block to query.
-
-**Types**:
+Specifies which block to query. See [Revision Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Revision.html) for available options:
 - `Revision.BEST`: Latest block
 - `Revision.create(blockNumber)`: Specific block number
 - `null`: Defaults to best block
@@ -217,66 +194,22 @@ Transactions are state-changing operations on the VeChain blockchain. The SDK pr
 ### Data Types
 
 #### Transaction
-Complete transaction information.
-
-**Fields**:
-- `id`: Transaction ID (hex string)
-- `chainTag`: Chain identifier
-- `blockRef`: Reference block (8 bytes)
-- `expiration`: Block expiration
-- `clauses`: Array of transaction clauses
-- `gasPriceCoef`: Gas price coefficient
-- `gas`: Gas limit
-- `origin`: Transaction sender
-- `delegator`: Fee delegator (if applicable)
-- `size`: Transaction size
-- `meta`: Transaction metadata
-- `type`: Transaction type (0=legacy, 2=EIP-1559)
-- `maxFeePerGas`: Maximum fee per gas (EIP-1559)
-- `maxPriorityFeePerGas`: Maximum priority fee (EIP-1559)
+Complete transaction information. See [Transaction Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Transaction.html) for complete field reference including EIP-1559 support.
 
 #### RawTransaction
-Unsigned transaction data for construction.
-
-**Fields**:
-- `chainTag`: Chain identifier
-- `blockRef`: Reference block bytes
-- `expiration`: Block expiration
-- `clauses`: Transaction clauses
-- `gasPriceCoef`: Gas price coefficient
-- `gas`: Gas limit
-- `dependsOn`: Transaction dependency
-- `nonce`: Random nonce
-- `signature`: Transaction signature
-- `maxFeePerGas`: Maximum fee (EIP-1559)
-- `maxPriorityFeePerGas`: Priority fee (EIP-1559)
+Unsigned transaction data for construction. See [RawTransaction Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/RawTransaction.html) for all fields and methods.
 
 #### ToClause
-Transaction clause specifying recipient, value, and data.
-
-**Constructor**:
+Transaction clause specifying recipient, value, and data. See [ToClause Javadoc](../doc/com/vechain/thorclient/core/model/clients/ToClause.html) for constructor details:
 ```java
 ToClause(Address to, Amount value, ToData data)
 ```
 
 #### Receipt
-Transaction execution result.
-
-**Fields**:
-- `gasUsed`: Gas consumed
-- `gasPayer`: Address that paid gas
-- `paid`: Total VTHO paid
-- `reward`: Block reward
-- `reverted`: Whether execution failed
-- `meta`: Receipt metadata
-- `outputs`: Array of clause outputs
-- `type`: Transaction type
+Transaction execution result. See [Receipt Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Receipt.html) for complete field reference.
 
 #### TransferResult
-Result of transaction submission.
-
-**Fields**:
-- `id`: Transaction ID
+Result of transaction submission. See [TransferResult Javadoc](../doc/com/vechain/thorclient/core/model/clients/TransferResult.html) for details.
 
 ### Functions
 
@@ -474,38 +407,16 @@ Accounts represent addresses on the VeChain blockchain, containing VET/VTHO bala
 ### Data Types
 
 #### Account
-Account state information.
-
-**Fields**:
-- `balance`: VET balance (hex string in wei)
-- `energy`: VTHO balance (hex string in wei)  
-- `hasCode`: Whether address contains contract code
+Account state information. See [Account Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Account.html) for complete field reference.
 
 #### AccountCode
-Contract bytecode at an address.
-
-**Fields**:
-- `code`: Contract bytecode (hex string)
+Contract bytecode at an address. See [AccountCode Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/AccountCode.html) for details.
 
 #### AccountCall
-Request for contract view function calls.
-
-**Fields**:
-- `clauses`: Array of call clauses
-- `caller`: Caller address
-- `gas`: Gas limit
-- `gasPrice`: Gas price
+Request for contract view function calls. See [AccountCall Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/AccountCall.html) for field specifications.
 
 #### AccountCallResult
-Result of account call execution.
-
-**Fields**:
-- `data`: Return data
-- `events`: Emitted events
-- `transfers`: Value transfers
-- `gasUsed`: Gas consumed
-- `reverted`: Execution status
-- `vmError`: VM error message
+Result of account call execution. See [AccountCallResult Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/AccountCallResult.html) for complete result structure.
 
 ### Functions
 
@@ -589,25 +500,12 @@ ERC20 tokens on VeChain, including the native VTHO token. The SDK provides speci
 ### Data Types
 
 #### ERC20Token
-Token specification.
-
-**Constants**:
+Token specification. See [ERC20Token Javadoc](../doc/com/vechain/thorclient/core/model/clients/ERC20Token.html) for constants and field details:
 - `ERC20Token.VTHO`: VTHO token contract
 - `ERC20Token.VET`: VET compatibility token
 
-**Fields**:
-- `contractAddress`: Token contract address
-- `decimals`: Token decimal places
-- `symbol`: Token symbol
-
 #### Amount
-Token amount with decimal precision.
-
-**Methods**:
-- `createFromToken(token)`: Create for specific token
-- `setDecimalAmount(String)`: Set decimal amount
-- `toBigInteger()`: Convert to wei
-- `getDecimalAmount()`: Get decimal string
+Token amount with decimal precision. See [Amount Javadoc](../doc/com/vechain/thorclient/core/model/clients/Amount.html) for methods and usage.
 
 ### Functions
 

@@ -3,165 +3,55 @@
 ## Core Data Types
 
 ### Address
-Represents a VeChain address.
-
-**Methods**:
-- `fromHexString(String hex)`: Create from hex string
-- `toHexString(Prefix prefix)`: Convert to hex string
-- `getBytes()`: Get raw bytes
-
-**Constants**:
-- `Address.VTHO_Address`: VTHO token contract address
-- `Address.NULL_ADDRESS`: Zero address
+Represents a VeChain address. See [Address Javadoc](../doc/com/vechain/thorclient/core/model/clients/Address.html) for complete method reference and constants.
 
 ### Amount
-Represents token amounts with decimal precision.
-
-**Methods**:
-- `createFromToken(AbstractToken token)`: Create for specific token
-- `setDecimalAmount(String amount)`: Set decimal amount
-- `toBigInteger()`: Convert to BigInteger (wei)
-- `getDecimalAmount()`: Get decimal representation
+Represents token amounts with decimal precision. See [Amount Javadoc](../doc/com/vechain/thorclient/core/model/clients/Amount.html) for all methods and usage patterns.
 
 ### Revision
-Represents block revision for queries.
-
-**Static Methods**:
-- `Revision.BEST`: Latest block
-- `Revision.create(long blockNumber)`: Specific block number
+Represents block revision for queries. See [Revision Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Revision.html) for static methods and usage.
 
 ## Transaction Models
 
 ### RawTransaction
-Unsigned transaction data.
-
-**Fields**:
-- `chainTag`: Chain identifier
-- `blockRef`: Reference block
-- `expiration`: Block expiration
-- `clauses`: Transaction clauses
-- `gasPriceCoef`: Gas price coefficient
-- `gas`: Gas limit
-- `dependsOn`: Transaction dependency
-- `nonce`: Transaction nonce
-- `signature`: Transaction signature
+Unsigned transaction data. See [RawTransaction Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/RawTransaction.html) for complete field reference.
 
 ### ToClause
-Transaction clause specifying recipient, value, and data.
-
-**Constructor**:
-```java
-ToClause(Address to, Amount value, ToData data)
-```
+Transaction clause specifying recipient, value, and data. See [ToClause Javadoc](../doc/com/vechain/thorclient/core/model/clients/ToClause.html) for constructor details.
 
 ### ToData
-Transaction data payload.
-
-**Methods**:
-- `ToData.ZERO`: Empty data
-- `setData(String hexData)`: Set hex data
+Transaction data payload. See [ToData Javadoc](../doc/com/vechain/thorclient/core/model/clients/ToData.html) for methods and constants.
 
 ### TransferResult
-Result of transaction submission.
-
-**Fields**:
-- `id`: Transaction ID
-- `success`: Success status
+Result of transaction submission. See [TransferResult Javadoc](../doc/com/vechain/thorclient/core/model/clients/TransferResult.html) for field details.
 
 ### Transaction
-Complete transaction information.
-
-**Fields**:
-- `id`: Transaction ID
-- `chainTag`: Chain tag
-- `blockRef`: Block reference
-- `expiration`: Expiration
-- `clauses`: Transaction clauses
-- `gasPriceCoef`: Gas price coefficient
-- `gas`: Gas limit
-- `origin`: Transaction origin
-- `delegator`: Delegator address (if applicable)
-- `size`: Transaction size
-- `meta`: Transaction metadata
+Complete transaction information. See [Transaction Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Transaction.html) for complete field reference including EIP-1559 support.
 
 ### Receipt
-Transaction execution receipt.
-
-**Fields**:
-- `gasUsed`: Gas consumed
-- `gasPayer`: Address that paid gas
-- `paid`: Total payment
-- `reward`: Block reward
-- `reverted`: Execution status
-- `meta`: Receipt metadata
-- `outputs`: Transaction outputs
+Transaction execution receipt. See [Receipt Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Receipt.html) for complete field reference.
 
 ## Block Models
 
 ### Block
-Blockchain block information.
-
-**Fields**:
-- `number`: Block number
-- `id`: Block ID
-- `size`: Block size
-- `parentID`: Parent block ID
-- `timestamp`: Block timestamp
-- `gasLimit`: Gas limit
-- `gasUsed`: Gas used
-- `totalScore`: Total score
-- `txsRoot`: Transactions root
-- `stateRoot`: State root
-- `receiptsRoot`: Receipts root
-- `signer`: Block signer
-- `beneficiary`: Beneficiary address
-- `isTrunk`: Trunk status
-- `transactions`: Transaction list
-
-**Methods**:
-- `blockRef()`: Get BlockRef for transactions
+Blockchain block information. See [Block Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Block.html) for complete field reference and methods.
 
 ### BlockRef
-Block reference for transaction construction.
-
-**Methods**:
-- `toByteArray()`: Convert to byte array
+Block reference for transaction construction. See [BlockRef Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/BlockRef.html) for methods.
 
 ## Account Models
 
 ### Account
-Account state information.
-
-**Fields**:
-- `balance`: VET balance (hex string)
-- `energy`: VTHO balance (hex string)
-- `hasCode`: Contract indicator
+Account state information. See [Account Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/Account.html) for field details.
 
 ### AccountCode
-Contract bytecode information.
-
-**Fields**:
-- `code`: Contract bytecode (hex string)
+Contract bytecode information. See [AccountCode Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/AccountCode.html) for field details.
 
 ### AccountCall
-Account call request for contract interaction.
-
-**Fields**:
-- `clauses`: Call clauses
-- `caller`: Caller address
-- `gas`: Gas limit
-- `gasPrice`: Gas price
+Account call request for contract interaction. See [AccountCall Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/AccountCall.html) for field specifications.
 
 ### AccountCallResult
-Result of account call.
-
-**Fields**:
-- `data`: Return data
-- `events`: Emitted events
-- `transfers`: Value transfers
-- `gasUsed`: Gas consumed
-- `reverted`: Execution status
-- `vmError`: VM error message
+Result of account call. See [AccountCallResult Javadoc](../doc/com/vechain/thorclient/core/model/blockchain/AccountCallResult.html) for complete result structure.
 
 ## Contract Models
 
@@ -364,22 +254,10 @@ Result ordering specification.
 ## Token Models
 
 ### ERC20Token
-ERC20 token specification.
-
-**Constants**:
-- `ERC20Token.VTHO`: VTHO token
-- `ERC20Token.VET`: VET token (for compatibility)
-
-**Fields**:
-- `contractAddress`: Token contract address
-- `decimals`: Token decimals
-- `symbol`: Token symbol
+ERC20 token specification. See [ERC20Token Javadoc](../doc/com/vechain/thorclient/core/model/clients/ERC20Token.html) for constants and field details.
 
 ### AbstractToken
-Base token interface.
-
-**Constants**:
-- `AbstractToken.VET`: Native VET token
+Base token interface. See [AbstractToken Javadoc](../doc/com/vechain/thorclient/core/model/clients/AbstractToken.html) for constants and methods.
 
 ## Error Models
 

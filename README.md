@@ -4,6 +4,16 @@
 
 A SDK toolkit for JDK to call VeChainThor Restful API.
 
+## 📚 Documentation
+
+For comprehensive integration guides, API references, and examples, visit our detailed documentation:
+
+- **[Partner Integration Guide](docs/MAIN_DOCUMENTATION.md)** - Complete guide with all SDK functions and practical examples
+- **[Model Classes Reference](docs/MODEL_CLASSES_REFERENCE.md)** - Reference for all data models and types  
+- **[Multi-Party Payment Guide](docs/PROTOTYPE_CONTRACT_GUIDE.md)** - MPP implementation guide
+
+The documentation includes dynamic links to Javadoc for up-to-date type and field references.
+
 > [!WARNING]  
 > This repository is not actively maintained.
 >
