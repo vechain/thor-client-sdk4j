@@ -30,7 +30,6 @@ services:
     networks:
       - vechain-thor
 
-
 networks:
   vechain-thor:
     driver: bridge

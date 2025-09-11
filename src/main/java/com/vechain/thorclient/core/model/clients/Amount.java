@@ -12,7 +12,45 @@ import com.vechain.thorclient.utils.Prefix;
 import com.vechain.thorclient.utils.StringUtils;
 
 /**
- * Amount for {@link ToClause} to use.
+ * Represents token amounts with decimal precision for VeChain transactions.
+ * 
+ * <p>Amount handles token values with proper decimal formatting, supporting both 
+ * native VET and ERC20 tokens like VTHO. It provides conversion between decimal 
+ * representations and wei (smallest unit) values.</p>
+ * 
+ * <h3>Supported Tokens</h3>
+ * <ul>
+ *   <li><strong>VET</strong>: Native VeChain token (18 decimals)</li>
+ *   <li><strong>VTHO</strong>: VeChain energy token (18 decimals)</li>
+ *   <li><strong>Custom ERC20</strong>: Any ERC20 token with configurable decimals</li>
+ * </ul>
+ * 
+ * <h3>Usage Examples</h3>
+ * <pre>{@code
+ * // Create VET amount
+ * Amount vetAmount = Amount.createFromToken(AbstractToken.VET);
+ * vetAmount.setDecimalAmount("10.5");
+ * System.out.println("VET: " + vetAmount.getDecimalAmount());
+ * 
+ * // Create VTHO amount
+ * Amount vthoAmount = Amount.createFromToken(ERC20Token.VTHO);
+ * vthoAmount.setDecimalAmount("1000");
+ * 
+ * // Convert to wei (BigInteger)
+ * BigInteger weiValue = vetAmount.toBigInteger();
+ * 
+ * // Use zero amount
+ * Amount zero = Amount.ZERO;
+ * 
+ * // Convenient factory methods
+ * Amount vet = Amount.VET().setDecimalAmount("5.0");
+ * Amount vtho = Amount.VTHO().setDecimalAmount("100");
+ * }</pre>
+ * 
+ * @see AbstractToken
+ * @see ERC20Token
+ * @see ToClause
+ * @since 0.1.0
  */
 public class Amount {
     /**
