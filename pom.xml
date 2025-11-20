@@ -5,7 +5,7 @@
 
     <groupId>com.vechain.client</groupId>
     <artifactId>thor-client-sdk4j</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -246,19 +246,41 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <version>3.7.1</version>
-                        <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <archive>
-                                <manifest>
-                                    <mainClass>com.vechain.thorclient.console.Main</mainClass>
-                                </manifest>
-                            </archive>
-                        </configuration>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>3.6.0</version>
+
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- don't create dependency-reduced POM if you don't want it -->
+                                    <createDependencyReducedPom>false</createDependencyReducedPom>
+
+                                    <!-- strip existing signatures from all shaded dependencies -->
+                                    <filters>
+                                        <filter>
+                                            <artifact>*:*</artifact>
+                                            <excludes>
+                                                <exclude>META-INF/*.SF</exclude>
+                                                <exclude>META-INF/*.DSA</exclude>
+                                                <exclude>META-INF/*.RSA</exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+
+                                    <!-- set the Main-Class of the shaded jar -->
+                                    <transformers>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                            <mainClass>com.vechain.thorclient.console.Main</mainClass>
+                                        </transformer>
+                                    </transformers>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
