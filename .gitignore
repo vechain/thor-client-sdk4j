@@ -46,3 +46,5 @@ gen
 /thor-client-sdk4j.iml
 /.vscode/
 /target
+
+dependency-reduced-pom.xml
