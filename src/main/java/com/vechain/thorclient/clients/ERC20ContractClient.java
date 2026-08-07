@@ -44,7 +44,7 @@ import java.util.ArrayList;
  *     ERC20Token.VTHO,
  *     null
  * );
- * System.out.println("VTHO Balance: " + balance.getDecimalAmount());
+ * System.out.println("VTHO Balance: " + balance.getAmount());
  * 
  * // Transfer VTHO tokens (EIP-1559)
  * TransferResult result = ERC20ContractClient.transferERC20Token(
