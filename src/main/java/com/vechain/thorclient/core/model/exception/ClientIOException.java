@@ -24,7 +24,7 @@ public class ClientIOException extends ThorException {
 
     public ClientIOException(String message, int status) {
         super(message);
-        httpStatus = -1;
+        httpStatus = status;
     }
 
     /**

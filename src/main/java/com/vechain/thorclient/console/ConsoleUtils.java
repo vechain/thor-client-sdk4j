@@ -72,7 +72,7 @@ public class ConsoleUtils {
 
         List<String[]> results = new ArrayList<String[]>();
 
-        Workbook workbook = WorkbookFactory.create(new File(fiePath));
+        Workbook workbook = WorkbookFactory.create(new File(fiePath), null, true);
         Sheet sheet = workbook.getSheetAt(0);
         DataFormatter dataFormatter = new DataFormatter();
         sheet.forEach(row -> {

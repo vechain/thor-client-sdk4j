@@ -103,6 +103,26 @@ public abstract class AbstractClient {
     }
 
     /**
+     * Set only the connect timeout applied to every subsequent REST request.
+     *
+     * @param timeout milliseconds
+     */
+    public static void setConnectTimeout(int timeout) {
+        LOGGER.debug("setConnectTimeout: {}", timeout);
+        HttpTransport.setConnectTimeout(timeout);
+    }
+
+    /**
+     * Set only the read (socket) timeout applied to every subsequent REST request.
+     *
+     * @param timeout milliseconds
+     */
+    public static void setReadTimeout(int timeout) {
+        LOGGER.debug("setReadTimeout: {}", timeout);
+        HttpTransport.setReadTimeout(timeout);
+    }
+
+    /**
      * Get the request
      *
      * @param path        {@link Path}

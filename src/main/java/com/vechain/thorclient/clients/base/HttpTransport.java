@@ -28,14 +28,27 @@ final class HttpTransport {
 
     private static final String CONTENT_TYPE_JSON = "application/json";
 
-    /** Applied to both the connect and read phases; see AbstractClient#setTimeout. */
-    private static volatile int timeoutMillis = 5000;
+    private static final int DEFAULT_TIMEOUT_MILLIS = 5000;
+
+    private static volatile int connectTimeoutMillis = DEFAULT_TIMEOUT_MILLIS;
+
+    private static volatile int readTimeoutMillis = DEFAULT_TIMEOUT_MILLIS;
 
     private HttpTransport() {
     }
 
+    /** Sets the connect and read timeouts to the same value. */
     static void setTimeout(int millis) {
-        timeoutMillis = millis;
+        connectTimeoutMillis = millis;
+        readTimeoutMillis = millis;
+    }
+
+    static void setConnectTimeout(int millis) {
+        connectTimeoutMillis = millis;
+    }
+
+    static void setReadTimeout(int millis) {
+        readTimeoutMillis = millis;
     }
 
     /**
@@ -78,8 +91,8 @@ final class HttpTransport {
     private static HttpURLConnection open(final String url, final String method) throws IOException {
         final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod(method);
-        connection.setConnectTimeout(timeoutMillis);
-        connection.setReadTimeout(timeoutMillis);
+        connection.setConnectTimeout(connectTimeoutMillis);
+        connection.setReadTimeout(readTimeoutMillis);
         connection.setRequestProperty("Accept", CONTENT_TYPE_JSON);
         return connection;
     }
