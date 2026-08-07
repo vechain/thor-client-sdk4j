@@ -16,7 +16,7 @@ public class CertUtils {
 	/**
 	 * buildSignContent
 	 * 
-	 * @param certSha256Bytes
+	 * @param certString
 	 * @param params
 	 * @return
 	 * @throws CertificateEncodingException
@@ -121,7 +121,7 @@ public class CertUtils {
 	 * recover public key
 	 * 
 	 * @param signature
-	 * @param challengeHash
+	 * @param allMessage
 	 * @return
 	 */
 	public static String recoverPublicKey(byte[] signature, byte[] allMessage) {

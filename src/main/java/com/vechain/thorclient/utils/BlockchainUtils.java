@@ -178,7 +178,7 @@ public class BlockchainUtils {
 	 * @param amount
 	 *            amount {@link BigDecimal}
 	 * @param precision
-	 *            must >= 0
+	 *            must &gt;= 0
 	 * @return byte array.
 	 */
 	public static byte[] byteArrayAmount(BigDecimal amount, int precision) {

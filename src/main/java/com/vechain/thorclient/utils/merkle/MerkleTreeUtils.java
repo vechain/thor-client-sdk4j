@@ -12,8 +12,9 @@ public class MerkleTreeUtils {
     /**
      * Build a merkle tree
      *
-     * @param leaves the {@link List< MerkleLeaf >}
-     * @return
+     * @param leaves the {@link List} of {@link MerkleLeaf}
+     * @param digest the {@link MessageDigest} used to hash nodes
+     * @return {@link MerkleTree} the built tree.
      */
     public static MerkleTree build(List<MerkleLeaf> leaves, MessageDigest digest) {
         if (leaves == null || leaves.size() == 0 || digest == null) {

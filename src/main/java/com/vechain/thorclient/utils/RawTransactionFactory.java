@@ -18,8 +18,8 @@ public class RawTransactionFactory {
      * @param blockRef     byte[] the first 8 bytes of the block id. Get from
      *                     {@link com.vechain.thorclient.core.model.clients.BlockRef} toByteArray().
      * @param expiration   the expiration of block size from best block to block reference.
-     * @param gasInt       must >= 21000.
-     * @param gasPriceCoef must > 0
+     * @param gasInt       must &gt;= 21000.
+     * @param gasPriceCoef must &gt; 0
      * @param nonce        eight bytes array, random by cryptography method.
      * @param toClauses    to clauses array.
      * @return {@link RawTransaction} raw transaction.
@@ -44,8 +44,8 @@ public class RawTransactionFactory {
      * @param blockRef     byte[] the first 8 bytes of the block id. Get from
      *                     {@link com.vechain.thorclient.core.model.clients.BlockRef} toByteArray().
      * @param expiration   the expiration of block size from best block to block reference.
-     * @param gasInt       must >= 21000.
-     * @param gasPriceCoef must > 0
+     * @param gasInt       must &gt;= 21000.
+     * @param gasPriceCoef must &gt; 0
      * @param nonce        eight bytes array, random by cryptography method.
      * @param rawClauses   to clauses array.
      * @return {@link RawTransaction} raw transaction.

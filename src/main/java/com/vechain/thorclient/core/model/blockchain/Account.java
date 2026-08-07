@@ -36,8 +36,8 @@ public class Account implements Serializable {
     }
 
     /**
-     * Get VET token {@link Balance} object
-     * @return
+     * Get VET token balance.
+     * @return {@link Amount} the VET balance.
      */
     public Amount VETBalance(){
         Amount balance = Amount.createFromToken( AbstractToken.VET );

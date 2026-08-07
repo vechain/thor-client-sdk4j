@@ -1,0 +1,40 @@
+version: 2
+
+updates:
+  # Maven dependencies. Grouped so routine patch/minor bumps arrive as one PR
+  # rather than one per artifact, which is how the previous batch went stale.
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      maven-patch-and-minor:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Pinned to the Java 8 line. logback 1.5+ and 1.6+ require Java 11, so a
+      # major bump here would silently break the SDK's baseline.
+      - dependency-name: "ch.qos.logback:*"
+        update-types: ["version-update:semver-major"]
+      # 2.0.0 is compiled for Java 9 and cannot load on Java 8. It also derives
+      # VeChain transaction IDs, so any bump needs known-answer hash vectors.
+      - dependency-name: "com.rfksystems:blake2b"
+    labels:
+      - dependencies
+
+  # Workflow actions are currently several majors behind (checkout@v3,
+  # setup-java@v3), which Dependabot does not track without this entry.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    labels:
+      - dependencies

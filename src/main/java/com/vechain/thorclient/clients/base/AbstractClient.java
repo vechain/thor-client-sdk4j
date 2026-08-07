@@ -131,7 +131,7 @@ public abstract class AbstractClient {
      * @param tClass      the class of result java object.
      * @param <T>         Type of result java object.
      * @return response java object, could be null, mean cannot find any result.
-     * @throws IOException if the node is not reachable or the request is not valid.
+     * @throws ClientIOException if the node is not reachable or the request is not valid.
      */
     public static <T> T sendGetRequest(
             final Path path,
