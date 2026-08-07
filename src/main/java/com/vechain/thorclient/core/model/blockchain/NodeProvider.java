@@ -58,19 +58,23 @@ public class NodeProvider {
 	 */
 	public void setSocketTimeout(int timeout) {
 		this.socketTimeout = timeout;
+		AbstractClient.setReadTimeout(timeout);
 	}
 
 	/**
 	 * Set connect timeout, socket timeout
-	 * 
+	 *
 	 * @param timeout milliseconds
 	 */
 	public void setTimeout(int timeout) {
+		this.socketTimeout = timeout;
+		this.connectTimeout = timeout;
 		AbstractClient.setTimeout(timeout);
 	}
 
 	public void setConnectTimeout(int connectTimeout) {
 		this.connectTimeout = connectTimeout;
+		AbstractClient.setConnectTimeout(connectTimeout);
 	}
 
 	public int getConnectTimeout() {
