@@ -8,6 +8,9 @@ jobs:
   build-and-deploy-release:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -35,6 +38,14 @@ jobs:
         run: mvn deploy -Pall
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Without this the release ships no downloadable artifact: v0.1.0 and v0.1.1
+      # both published zero assets, so the runnable CLI jar was unobtainable
+      # except by building from source.
+      - name: Attach runnable jar to the release
+        run: gh release upload "${GITHUB_REF#refs/tags/}" target/*-with-dependencies.jar --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Stop solo
         run: make solo-down  
