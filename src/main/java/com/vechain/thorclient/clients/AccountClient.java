@@ -105,7 +105,7 @@ public class AccountClient extends AbstractClient {
      * @param contractCall {@link ContractCall}
      * @return {@link ContractCallResult}
      * @throws ClientIOException if network error or invalid request.
-     * @Deprecated please use {@link AccountClient.performAccountCall} instead.
+     * @see #performAccountCall(Revision, AccountCall)
      */
     @Deprecated
     public static ContractCallResult deployContractInfo(ContractCall contractCall) throws ClientIOException {

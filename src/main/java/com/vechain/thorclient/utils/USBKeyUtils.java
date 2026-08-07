@@ -13,7 +13,7 @@ public class USBKeyUtils {
 	/**
 	 * 发送usb交易
 	 * 
-	 * @param cerHexStr
+	 * @param cert
 	 * @param txRawHash
 	 * @param privateKey
 	 * @return

@@ -17,13 +17,30 @@
 ## Quick Start
 
 ### Maven Dependency
+
 ```xml
 <dependency>
-    <groupId>com.vechain</groupId>
+    <groupId>com.vechain.client</groupId>
     <artifactId>thor-client-sdk4j</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
+
+The artifact is published to GitHub Packages, not Maven Central, so the
+repository must also be declared:
+
+```xml
+<repositories>
+    <repository>
+        <id>github</id>
+        <url>https://maven.pkg.github.com/vechain/thor-client-sdk4j</url>
+    </repository>
+</repositories>
+```
+
+GitHub Packages requires authentication even for public artifacts, so a
+matching `<server>` entry with a personal access token (`read:packages`
+scope) is needed in your `~/.m2/settings.xml`.
 
 ### Basic Setup
 ```java

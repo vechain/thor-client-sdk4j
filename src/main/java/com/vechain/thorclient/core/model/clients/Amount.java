@@ -30,7 +30,7 @@ import com.vechain.thorclient.utils.StringUtils;
  * // Create VET amount
  * Amount vetAmount = Amount.createFromToken(AbstractToken.VET);
  * vetAmount.setDecimalAmount("10.5");
- * System.out.println("VET: " + vetAmount.getDecimalAmount());
+ * System.out.println("VET: " + vetAmount.getAmount());
  * 
  * // Create VTHO amount
  * Amount vthoAmount = Amount.createFromToken(ERC20Token.VTHO);

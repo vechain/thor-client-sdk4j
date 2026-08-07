@@ -44,7 +44,7 @@ import java.util.ArrayList;
  *     ERC20Token.VTHO,
  *     null
  * );
- * System.out.println("VTHO Balance: " + balance.getDecimalAmount());
+ * System.out.println("VTHO Balance: " + balance.getAmount());
  * 
  * // Transfer VTHO tokens (EIP-1559)
  * TransferResult result = ERC20ContractClient.transferERC20Token(
@@ -83,7 +83,7 @@ public class ERC20ContractClient extends TransactionClient {
      * @throws ClientIOException if there's a network error or the contract call fails
      * 
      * @see ERC20Token#VTHO
-     * @see Amount#getDecimalAmount()
+     * @see Amount#getAmount()
      * @see Revision#BEST
      */
     public static Amount getERC20Balance(Address address, ERC20Token token, Revision revision)

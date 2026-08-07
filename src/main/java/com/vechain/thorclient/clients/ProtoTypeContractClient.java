@@ -14,7 +14,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
 /**
  * ProtoType Contract is a native contract for user to do multiple parties payment(mpp).
  * <a href="https://github.com/vechain/thor/wiki/Prototype(CN)">Prototype</a>
- * <br>What is ProtoType for?</br>
+ * <br>What is ProtoType for?
  *
  * In common scenario, if a sender A want to make a transaction to target B,
  * the sender A need to pay the transaction fee(gas).
@@ -25,7 +25,7 @@ import com.vechain.thorclient.utils.crypto.ECKeyPair;
  * After all the things is done, then the sender A do transaction to target B, if the fee is less than the credit,
  * the ProtoType native contract is going to book fee(gas) from target B's account.
  *
- * <br>How to use ProtoType?</br>
+ * <br>How to use ProtoType?
  * First, you must be the master of the to address. By call {@link #setMasterAddress}, then you can query the master by
  * {@link #getMasterAddress(Address, Revision)}
  *
