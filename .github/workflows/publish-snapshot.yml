@@ -6,9 +6,18 @@ on:
       - master
   workflow_dispatch:
 
+# Two quick pushes to master would otherwise race each other's uploads.
+concurrency:
+  group: publish-snapshot
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy-snapshot:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout code
