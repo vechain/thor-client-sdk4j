@@ -18,7 +18,7 @@ public class SubscribeClient extends AbstractClient {
      * @param callback the callback instance.
      * @return
      */
-    public static SubscribeSocket subscribeBlock(BlockSubscribingRequest request,
+    public static SubscribeSocket<BlockSubscribingResponse> subscribeBlock(BlockSubscribingRequest request,
                                                  SubscribingCallback<BlockSubscribingResponse> callback) throws Exception {
 
         String url = compositeSubscribeURI(Path.GetSubBlockPath.getPath(), request);
@@ -31,7 +31,7 @@ public class SubscribeClient extends AbstractClient {
      * @param callback the callback instance.
      * @return
      */
-    public static SubscribeSocket subscribeEvent(EventSubscribingRequest request, SubscribingCallback<EventSubscribingResponse> callback) throws Exception {
+    public static SubscribeSocket<EventSubscribingResponse> subscribeEvent(EventSubscribingRequest request, SubscribingCallback<EventSubscribingResponse> callback) throws Exception {
         String url = compositeSubscribeURI(Path.GetSubEventPath.getPath(), request);
         return subscribeSocketConnect( url, callback );
     }
@@ -42,7 +42,7 @@ public class SubscribeClient extends AbstractClient {
      * @param callback the callback instance.
      * @return
      */
-    public static SubscribeSocket subscribeTransfer(TransferSubscribingRequest request, SubscribingCallback<TransferSubscribingResponse> callback) throws Exception {
+    public static SubscribeSocket<TransferSubscribingResponse> subscribeTransfer(TransferSubscribingRequest request, SubscribingCallback<TransferSubscribingResponse> callback) throws Exception {
         String url = compositeSubscribeURI(Path.GetSubTransferPath.getPath(), request );
         return subscribeSocketConnect( url, callback );
     }

@@ -8,7 +8,6 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.util.encoders.Hex;
-import org.eclipse.jetty.io.RuntimeIOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +119,7 @@ public class ECIESUtils {
 
 		if (!Hex.toHexString(calcD).equals(Hex.toHexString(dBytes))) {
 			logger.error("different d:{} calc:{}", Hex.toHexString(dBytes), Hex.toHexString(calcD));
-			throw new RuntimeIOException("decrypt error : 加密信息的tag验证失败");
+			throw new IllegalArgumentException("decrypt error : 加密信息的tag验证失败");
 		}
 
 

@@ -3,17 +3,10 @@ package com.vechain.thorclient.clients.base;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +28,9 @@ public abstract class AbstractClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractClient.class);
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    /** Bound on the subscription WebSocket handshake, independent of the REST timeout. */
+    private static final long SUBSCRIBE_CONNECT_TIMEOUT_SECONDS = 10;
 
     public enum Path {
 
@@ -88,8 +84,6 @@ public abstract class AbstractClient {
 
     }
 
-    protected WebSocketClient client = new WebSocketClient();
-
     static {
         setTimeout(5000);
     }
@@ -98,9 +92,14 @@ public abstract class AbstractClient {
         return NodeProvider.getNodeProvider().getProvider() + path.getPath();
     }
 
+    /**
+     * Set the connect and read timeout applied to every subsequent REST request.
+     *
+     * @param timeout milliseconds
+     */
     public static void setTimeout(int timeout) {
-        LOGGER.warn("setTimeout: " + timeout);
-        Unirest.setTimeouts(timeout, timeout);
+        LOGGER.debug("setTimeout: {}", timeout);
+        HttpTransport.setTimeout(timeout);
     }
 
     /**
@@ -122,18 +121,17 @@ public abstract class AbstractClient {
         final String rawURL = rawUrl(path);
         final String getURL = URLUtils.urlComposite(rawURL, uriParams, queryParams);
         try {
-            final HttpResponse<String> jsonNode = Unirest.get(getURL).asString();
-            return parseResult(tClass, jsonNode);
-        } catch (UnirestException e) {
+            return parseResult(tClass, HttpTransport.get(getURL));
+        } catch (IOException e) {
             throw new ClientIOException(e);
         }
     }
 
     private static <T> T parseResult(
             final Class<T> tClass,
-            final HttpResponse<String> jsonNode) throws ClientIOException {
-        final int status = jsonNode.getStatus();
-        final String body = jsonNode.getBody();
+            final HttpTransport.Response response) throws ClientIOException {
+        final int status = response.getStatus();
+        final String body = response.getBody();
         if (status != 200) {
             String exception_msg = "response exception";
             if (status == 400) {
@@ -175,9 +173,8 @@ public abstract class AbstractClient {
         try {
             final String postJSON = OBJECT_MAPPER.writeValueAsString(postBody);
             try {
-                final HttpResponse<String> jsonNode = Unirest.post(postURL).body(postJSON).asString();
-                return parseResult(tClass, jsonNode);
-            } catch (UnirestException e) {
+                return parseResult(tClass, HttpTransport.post(postURL, postJSON));
+            } catch (IOException e) {
                 throw new ClientIOException(e);
             }
         } catch (JsonProcessingException e) {
@@ -193,32 +190,30 @@ public abstract class AbstractClient {
      * @return {@link SubscribeSocket}
      * @throws Exception
      */
-    public static SubscribeSocket subscribeSocketConnect(String url, SubscribingCallback<?> callback) throws Exception {
+    public static <T> SubscribeSocket<T> subscribeSocketConnect(String url, SubscribingCallback<T> callback)
+            throws Exception {
         if (StringUtils.isBlank(url) || callback == null) {
             throw new ClientIOException("Invalid arguments ");
         }
-        WebSocketClient client = new WebSocketClient();
-        SubscribeSocket subscribeSocket = new SubscribeSocket(client, callback);
+        final SubscribeSocket<T> subscribeSocket = new SubscribeSocket<T>(new URI(url), callback);
         try {
             LOGGER.info("subscribeSocketConnect start connect ... {}", url);
-            client.start();
-            URI subUri = new URI(url);
-            ClientUpgradeRequest request = new ClientUpgradeRequest();
-            Future<Session> f = client.connect(subscribeSocket, subUri, request);
-            LOGGER.info("subscribeSocketConnect end connect...");
-            Session s = f.get(10, TimeUnit.SECONDS);
-            if (s.isOpen()) {
-                LOGGER.info("subscribeSocketConnect success: {}", s.getRemoteAddress().toString());
+            if (subscribeSocket.connectBlocking(SUBSCRIBE_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                LOGGER.info("subscribeSocketConnect success: {}", url);
             } else {
-                LOGGER.error("subscribeSocketConnect failed: " + s.isOpen());
+                LOGGER.error("subscribeSocketConnect failed: {}", url);
             }
+        } catch (InterruptedException e) {
+            // Restore the flag so callers up the stack can still observe the interrupt.
+            Thread.currentThread().interrupt();
+            LOGGER.error("subscribeSocketConnect interrupted", e);
         } catch (Exception e) {
             LOGGER.error("SubscribeSocket error", e);
         } finally {
             if (!subscribeSocket.isConnected()) {
                 LOGGER.info("subscribeSocketConnect stop...");
                 try {
-                    subscribeSocket.close(0, "WebSocket can't connect to: " + url);
+                    subscribeSocket.abort();
                 } catch (Exception e) {
                     LOGGER.error("SubscribeSocket stop error", e);
                 }

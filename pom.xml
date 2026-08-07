@@ -38,12 +38,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.9</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.rfksystems</groupId>
             <artifactId>blake2b</artifactId>
             <version>1.0.0</version>
@@ -55,10 +49,15 @@
             <version>2.0.9</version>
         </dependency>
 
+        <!-- Used only by com.vechain.thorclient.console (XLSX input for the CLI), never by the
+             SDK itself. Optional so that library consumers do not inherit poi's ~10 transitive
+             artifacts (xmlbeans, commons-compress, log4j-api, ...). The shaded 'all' jar still
+             bundles it, so the CLI keeps working. -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.5.1</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -67,16 +66,13 @@
             <version>1.85.2</version>
         </dependency>
 
+        <!-- Replaces org.eclipse.jetty.websocket:websocket-client, which reached end of life in
+             January 2025 and will not receive further security fixes. Java-WebSocket targets Java 7
+             bytecode and its only runtime dependency is slf4j-api, which logback already provides. -->
         <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-client</artifactId>
-            <version>9.4.57.v20241219</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.25</version>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.6.0</version>
         </dependency>
 
         <!-- TEST -->
@@ -88,31 +84,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- MAVEN -->
-        <!-- Used by maven to build the jar artifact, not included in the built jar - NOT SECURITY SENSITIVE -->
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.7.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.14.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>3.8.1</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- Maven plugins are declared under <build><plugins>, never here. Declaring them as
+             provided-scope dependencies put their entire build-time closure on this project's
+             compile classpath and into vulnerability reports for the published artifact, while
+             having no effect on which plugin versions actually run. -->
 
     </dependencies>
 
@@ -196,35 +171,11 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>aliyun</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyun</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+    <!-- No <repositories>/<pluginRepositories> are declared: every dependency above resolves from
+         Maven Central. The previous aliyun entries fetched artifacts over plaintext http, which
+         Maven 3.8+ refuses by default (maven-default-http-blocker) precisely because an unencrypted
+         artifact feed is trivially substitutable in transit. Anyone wanting a local mirror should
+         configure it in their own settings.xml, where it can be pinned to https. -->
 
     <distributionManagement>
         <repository>
