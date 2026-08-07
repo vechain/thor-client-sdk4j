@@ -13,7 +13,6 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <snapshot>${version}-SNAPSHOT</snapshot>
     </properties>
 
     <dependencies>
@@ -104,13 +103,30 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <!-- ✅ This sets the classifier for the fat jar -->
+                            <!-- The fat jar is an extra, classified artifact; the main artifact
+                                 stays thin. The POM must therefore keep declaring its dependencies,
+                                 so the dependency-reduced POM must not be generated: with it on,
+                                 `mvn install` writes a POM containing only junit and downstream
+                                 builds fail with ClassNotFoundException (issue #24). -->
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>with-dependencies</shadedClassifierName>
-                            <!-- ✅ Optional: include Main-Class in manifest -->
+                            <!-- BouncyCastle ships signed; carrying its META-INF signatures into a
+                                 repacked jar makes the JVM reject it at startup with
+                                 "Invalid signature file digest for Manifest main attributes". -->
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>fully.qualified.MainClass</mainClass>
+                                    <mainClass>com.vechain.thorclient.console.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -120,11 +136,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>fully.qualified.MainClass</mainClass>
+                            <mainClass>com.vechain.thorclient.console.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -236,6 +253,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.8.1</version>
                         <executions>
                             <execution>
                                 <id>copy-dependencies</id>
