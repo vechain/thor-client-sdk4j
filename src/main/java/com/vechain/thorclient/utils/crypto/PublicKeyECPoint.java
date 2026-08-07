@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.encoders.Hex;
-import org.eclipse.jetty.io.RuntimeIOException;
 
 public class PublicKeyECPoint {
 
@@ -17,7 +16,7 @@ public class PublicKeyECPoint {
 		this.point = point;
 		byte[] raw = point.getEncoded(false);
 		if (raw.length != 65) {
-			throw new RuntimeIOException("PublicKeyECPoint format error, must be 65 bytes");
+			throw new IllegalArgumentException("PublicKeyECPoint format error, must be 65 bytes");
 		}
 		byte[] p = Arrays.copyOfRange(raw, 1, 65);
 		System.arraycopy(p, 0, x, 0, x.length);
