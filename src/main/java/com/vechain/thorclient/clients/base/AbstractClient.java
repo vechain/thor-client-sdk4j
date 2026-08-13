@@ -203,12 +203,22 @@ public abstract class AbstractClient {
     }
 
     /**
-     * Make connection for subscription.
+     * Open a subscription connection.
+     *
+     * <p>
+     * <strong>This does not throw when the connection fails.</strong> A node that
+     * is unreachable, refuses the port, or fails the TLS handshake still yields a
+     * {@link SubscribeSocket} - one that is closed and will never deliver a
+     * callback. Callers must check {@link SubscribeSocket#isConnected()} before
+     * relying on the result, and {@link SubscribeSocket#getLastError()} reports
+     * why it failed.
+     * </p>
      *
      * @param url      long live connection url.
-     * @param callback {@link SubscribeSocket}
-     * @return {@link SubscribeSocket}
-     * @throws Exception
+     * @param callback {@link SubscribingCallback} receiving subscription events.
+     * @param <T>      type of the deserialized subscription response.
+     * @return {@link SubscribeSocket}, which may not be connected; see above.
+     * @throws Exception if the url is malformed or the arguments are invalid.
      */
     public static <T> SubscribeSocket<T> subscribeSocketConnect(String url, SubscribingCallback<T> callback)
             throws Exception {
@@ -221,7 +231,7 @@ public abstract class AbstractClient {
             if (subscribeSocket.connectBlocking(SUBSCRIBE_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
                 LOGGER.info("subscribeSocketConnect success: {}", url);
             } else {
-                LOGGER.error("subscribeSocketConnect failed: {}", url);
+                LOGGER.error("subscribeSocketConnect failed: {}", url, subscribeSocket.getLastError());
             }
         } catch (InterruptedException e) {
             // Restore the flag so callers up the stack can still observe the interrupt.

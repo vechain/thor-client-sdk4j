@@ -51,6 +51,12 @@ public class SubscribeSocket<T> {
     private final Connection connection;
 
     /**
+     * Written on the WebSocket read thread, read by the thread that opened the
+     * subscription, so it must be volatile.
+     */
+    private volatile Exception lastError;
+
+    /**
      * @param serverUri the {@code ws://} or {@code wss://} subscription endpoint
      * @param callback  receives connection, message and close events
      */
@@ -71,6 +77,24 @@ public class SubscribeSocket<T> {
      */
     public boolean isConnected() {
         return connection.isOpen();
+    }
+
+    /**
+     * The most recent transport-level error, or null if none occurred.
+     *
+     * <p>
+     * A failed connect leaves the subscription closed without telling the caller
+     * why; this is where the reason ends up, typically a
+     * {@link java.net.ConnectException} for a refused port, an
+     * {@link javax.net.ssl.SSLException} for a TLS mismatch, or an
+     * {@link java.net.UnknownHostException} for a bad host. Check it whenever
+     * {@link #isConnected()} is false.
+     * </p>
+     *
+     * @return the last error reported by the WebSocket, or null
+     */
+    public Exception getLastError() {
+        return lastError;
     }
 
     /**
@@ -134,6 +158,7 @@ public class SubscribeSocket<T> {
 
         @Override
         public void onError(final Exception ex) {
+            lastError = ex;
             LOGGER.error("Subscription error", ex);
         }
     }

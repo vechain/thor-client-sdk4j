@@ -16,7 +16,12 @@ public class SubscribeClient extends AbstractClient {
      * Subscribe the block event.
      * @param request can be null, the best block is by default.
      * @param callback the callback instance.
-     * @return
+     * @return {@link SubscribeSocket} the subscription, possibly not connected.
+     * <p>
+     * The returned socket may not be connected if the node was unreachable;
+     * check {@link SubscribeSocket#isConnected()} and
+     * {@link SubscribeSocket#getLastError()}.
+     * </p>
      */
     public static SubscribeSocket<BlockSubscribingResponse> subscribeBlock(BlockSubscribingRequest request,
                                                  SubscribingCallback<BlockSubscribingResponse> callback) throws Exception {
@@ -29,7 +34,12 @@ public class SubscribeClient extends AbstractClient {
      * Subscribe the event log.
      * @param request the query request.
      * @param callback the callback instance.
-     * @return
+     * @return {@link SubscribeSocket} the subscription, possibly not connected.
+     * <p>
+     * The returned socket may not be connected if the node was unreachable;
+     * check {@link SubscribeSocket#isConnected()} and
+     * {@link SubscribeSocket#getLastError()}.
+     * </p>
      */
     public static SubscribeSocket<EventSubscribingResponse> subscribeEvent(EventSubscribingRequest request, SubscribingCallback<EventSubscribingResponse> callback) throws Exception {
         String url = compositeSubscribeURI(Path.GetSubEventPath.getPath(), request);
@@ -40,7 +50,12 @@ public class SubscribeClient extends AbstractClient {
      * Subscribe the transfer log.
      * @param request the query request.
      * @param callback the callback instance.
-     * @return
+     * @return {@link SubscribeSocket} the subscription, possibly not connected.
+     * <p>
+     * The returned socket may not be connected if the node was unreachable;
+     * check {@link SubscribeSocket#isConnected()} and
+     * {@link SubscribeSocket#getLastError()}.
+     * </p>
      */
     public static SubscribeSocket<TransferSubscribingResponse> subscribeTransfer(TransferSubscribingRequest request, SubscribingCallback<TransferSubscribingResponse> callback) throws Exception {
         String url = compositeSubscribeURI(Path.GetSubTransferPath.getPath(), request );
