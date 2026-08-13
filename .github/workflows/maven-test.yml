@@ -3,8 +3,19 @@ name: Java CI with Maven
 on:
   push:
     branches: [ master ]
+  # Deliberately unfiltered by base branch. With `branches: [master]` a stacked
+  # pull request got no CI at all until its parent merged and it retargeted,
+  # which meant reviewing changes nothing had built.
   pull_request:
-    branches: [ master ]
+  workflow_dispatch:
+
+# A force-push should cancel the run it supersedes rather than queue behind it.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -22,9 +33,27 @@ jobs:
     - name: Start thor solo
       run:  make solo-up
       id: start-solo
-    - name: Run tests with Maven
+    # `package`, not `test`: this also builds the shaded jar so the smoke test
+    # below has something to run.
+    - name: Build and run tests with Maven
       id: run-tests
-      run: mvn -B test
+      run: mvn -B package
+    # The shaded jar crashed at startup with "Invalid signature file digest" for
+    # months without CI noticing, because nothing ever ran the jar it built.
+    # Note the CLI exits 0 even when a command fails, so the assertion is on
+    # output rather than exit status.
+    - name: Smoke test the runnable jar against solo
+      id: smoke-test
+      run: |
+        set -euo pipefail
+        JAR=$(ls target/*-with-dependencies.jar)
+        echo "Smoke testing $JAR"
+        OUTPUT=$(java -jar "$JAR" getChainTag http://localhost:8669 2>&1) || true
+        echo "$OUTPUT"
+        if ! echo "$OUTPUT" | grep -qE '^0x[0-9a-f]{2}$'; then
+          echo "::error::Runnable jar did not return a chain tag; the CLI is broken."
+          exit 1
+        fi
     - name: Stop thor solo
       id: stop-solo
       if: always()

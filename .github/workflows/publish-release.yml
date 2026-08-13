@@ -4,12 +4,20 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: publish-release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy-release:
     runs-on: ubuntu-latest
 
     permissions:
+      # contents: write to upload the release asset; packages: write for the
+      # GitHub Packages deploy. Naming any scope sets every other to none, so
+      # both must be listed explicitly.
       contents: write
+      packages: write
 
     steps:
       - name: Checkout code
@@ -31,11 +39,8 @@ jobs:
           echo "Using version $TAG_NAME"
           mvn versions:set -DnewVersion=$TAG_NAME
 
-      - name: Build Release jar
-        run: mvn clean package -Pall
-
-      - name: Deploy Release to GitHub Packages
-        run: mvn deploy -Pall
+      - name: Build and deploy Release to GitHub Packages
+        run: mvn clean deploy -Pall
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,3 +54,7 @@ jobs:
 
       - name: Stop solo
         run: make solo-down  
+
+  publish-javadoc:
+    needs: build-and-deploy-release
+    uses: ./.github/workflows/publish-javadoc.yml
