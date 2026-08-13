@@ -24,6 +24,20 @@ jobs:
       - name: Build Javadoc
         run: mvn javadoc:javadoc
 
+      # peaceiris/actions-gh-pages reports a missing publish_dir as
+      # "a branch named 'gh-pages' already exists", which says nothing about the
+      # real cause. Fail here instead, where the message is actionable.
+      - name: Verify javadoc output exists
+        run: |
+          set -euo pipefail
+          DIR=target/site/apidocs
+          if [ ! -f "$DIR/index.html" ]; then
+            echo "::error::No javadoc at $DIR. The maven-javadoc-plugin output directory has moved; check outputDirectory in pom.xml."
+            find target -name index.html -path '*apidocs*' -print 2>/dev/null || true
+            exit 1
+          fi
+          echo "Javadoc present: $(find "$DIR" -name '*.html' | wc -l) html files"
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

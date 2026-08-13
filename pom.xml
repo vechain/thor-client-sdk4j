@@ -204,6 +204,12 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <failOnWarnings>false</failOnWarnings>
+                    <!-- Pinned because the default moved: 3.6.x wrote to target/site/apidocs,
+                         while 3.12.0 defaults outputDirectory to target/reports. publish-javadoc.yml
+                         deploys a fixed path, so the plugin bump in #83 left it publishing a
+                         directory that no longer existed and gh-pages deployment broke. Setting this
+                         explicitly keeps the location stable across plugin versions. -->
+                    <outputDirectory>${project.build.directory}/site</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
