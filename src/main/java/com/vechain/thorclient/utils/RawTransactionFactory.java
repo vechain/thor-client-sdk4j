@@ -9,6 +9,15 @@ import java.math.BigInteger;
 
 public class RawTransactionFactory {
 
+    /**
+     * Upper bound for the gas limit of a single transaction, 2^24 (16,777,216).
+     *
+     * <p>Introduced by EIP-7825, which ships with the Interstellar hard fork. From that fork
+     * onwards a transaction whose gas limit exceeds this value is rejected by the network, so
+     * building one client-side can only ever produce a transaction that cannot be included.</p>
+     */
+    public static final int MAX_TRANSACTION_GAS = 1 << 24;
+
     private static final RawTransactionFactory INSTANCE = new RawTransactionFactory();
 
     /**
@@ -18,7 +27,7 @@ public class RawTransactionFactory {
      * @param blockRef     byte[] the first 8 bytes of the block id. Get from
      *                     {@link com.vechain.thorclient.core.model.clients.BlockRef} toByteArray().
      * @param expiration   the expiration of block size from best block to block reference.
-     * @param gasInt       must &gt;= 21000.
+     * @param gasInt       must be &gt;= 21000 and &lt;= {@link #MAX_TRANSACTION_GAS}.
      * @param gasPriceCoef must &gt; 0
      * @param nonce        eight bytes array, random by cryptography method.
      * @param toClauses    to clauses array.
@@ -44,7 +53,7 @@ public class RawTransactionFactory {
      * @param blockRef     byte[] the first 8 bytes of the block id. Get from
      *                     {@link com.vechain.thorclient.core.model.clients.BlockRef} toByteArray().
      * @param expiration   the expiration of block size from best block to block reference.
-     * @param gasInt       must &gt;= 21000.
+     * @param gasInt       must be &gt;= 21000 and &lt;= {@link #MAX_TRANSACTION_GAS}.
      * @param gasPriceCoef must &gt; 0
      * @param nonce        eight bytes array, random by cryptography method.
      * @param rawClauses   to clauses array.
@@ -63,6 +72,7 @@ public class RawTransactionFactory {
         if (chainTag == 0 || blockRef == null || expiration <= 0 || gasInt < 21000 || rawClauses == null) {
             throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
         }
+        checkGasCap(gasInt);
         final RawTransactionBuilder builder = new RawTransactionBuilder();
         // chainTag
         builder.update(Byte.valueOf(chainTag), "chainTag");
@@ -91,7 +101,7 @@ public class RawTransactionFactory {
      * @param chainTag The chain identifier byte, typically derived from the genesis block ID.
      * @param blockRef A byte array containing the first 8 bytes of the block ID, representing the block reference.
      * @param expiration The block expiration value, indicating the number of blocks from the block reference within which the transaction is valid.
-     * @param gas The gas limit for the transaction, must be greater than or equal to 21000.
+     * @param gas The gas limit for the transaction, must be greater than or equal to 21000 and no greater than {@link #MAX_TRANSACTION_GAS}.
      * @param maxPriorityFeePerGas The maximum priority fee in wei units for miners, used in EIP-1559 transactions.
      * @param maxFeePerGas The maximum fee per gas in wei units allowed for the transaction, used in EIP-1559 transactions.
      * @param nonce A unique 8-byte cryptographically generated random number to ensure transaction uniqueness.
@@ -117,14 +127,15 @@ public class RawTransactionFactory {
      * @param chainTag The chain identifier byte, typically derived from the genesis block ID.
      * @param blockRef A byte array containing the first 8 bytes of the block ID, representing the block reference.
      * @param expiration The block expiration value, indicating the number of blocks from the block reference within which the transaction is valid.
-     * @param gas The gas limit for the transaction, must be greater than or equal to 21000.
+     * @param gas The gas limit for the transaction, must be greater than or equal to 21000 and no greater than {@link #MAX_TRANSACTION_GAS}.
      * @param maxPriorityFeePerGas The maximum priority fee in wei for miners, used in EIP-1559 transactions.
      * @param maxFeePerGas The maximum fee per gas in wei allowed for the transaction, used in EIP-1559 transactions.
      * @param nonce A unique 8-byte cryptographically generated random number to ensure transaction uniqueness.
      * @param rawClauses An array of {@link RawClause} objects defining the recipients, values, and data for the transaction.
      * @return A {@link RawTransaction} object representing the created transaction.
      * @throws IllegalArgumentException If any of the parameters are invalid, such as a null blockRef,
-     *                                  an expiration less than or equal to 0, a gas value less than 21000,
+     *                                  an expiration less than or equal to 0, a gas value less than 21000
+     *                                  or greater than {@link #MAX_TRANSACTION_GAS},
      *                                  negative maxPriorityFeePerGas or maxFeePerGas, or a null rawClauses array.
      */
     public RawTransaction createRawTransaction(
@@ -140,6 +151,7 @@ public class RawTransactionFactory {
         if (chainTag == 0 || blockRef == null || expiration <= 0 || gas < 21000 || rawClauses == null) {
             throw new IllegalArgumentException("The arguments of create raw transaction is illegal.");
         }
+        checkGasCap(gas);
         // get user supplied or computed max fees
         MaxFees userProvidedMaxFees = new MaxFees(maxFeePerGas, maxPriorityFeePerGas);
         MaxFees maxFeeSettings = MaxFeeCalculator.calculateMaxFees(userProvidedMaxFees);
@@ -164,6 +176,20 @@ public class RawTransactionFactory {
         builder.update(trimedNonce, "nonce");
         return builder.build();
 
+    }
+
+    /**
+     * Rejects a gas limit above the per-transaction cap of {@link #MAX_TRANSACTION_GAS}.
+     *
+     * @param gas the requested transaction gas limit
+     * @throws IllegalArgumentException if {@code gas} exceeds {@link #MAX_TRANSACTION_GAS}
+     */
+    private static void checkGasCap(final int gas) {
+        if (gas > MAX_TRANSACTION_GAS) {
+            throw new IllegalArgumentException(
+                    "The gas of create raw transaction exceeds the per-transaction cap of "
+                            + MAX_TRANSACTION_GAS + " (EIP-7825).");
+        }
     }
 
     public static RawTransactionFactory getInstance() {
